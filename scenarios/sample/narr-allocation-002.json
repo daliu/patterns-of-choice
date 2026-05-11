@@ -1,0 +1,128 @@
+{
+  "id": "narr-allocation-002",
+  "type": "core-narrative",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "The credit",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Branching workplace narrative with four decision points, designed to surface how the user allocates credit — an intangible-but-real resource that affects career, recognition, and future opportunities. Credit is chosen because the dictator/ultimatum literature mostly studies cash allocation; intangible resources are under-tested ecologically and matter daily. Branches deliberately differ in observable signature (share immediately / acknowledge in framing / take credit then correct / take credit and let it pass) so the same underlying conflict can be measured at different cost thresholds.",
+    "domain_anchor": "Dictator game and credit-allocation literature (Engel 2011 meta on dictator behavior; Babcock et al. 2017 *AER* on non-promotable tasks at work — the credit-vs-task asymmetry). Hofmann et al. 2014 Science (mundane workplace moral situations dominate everyday moral life). No direct ecological-validity precedent for credit-allocation narratives; flagged as a probe whose external validity is partly being tested.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["workplace power dynamics"]
+  },
+  "setup": "You worked closely with a junior colleague — call them M. — on a complex project over the past six months. M. did substantive analytical work; you handled stakeholder management and led the synthesis. The project shipped and is being held up by leadership as a model.\n\nIt's Monday morning. You're in an all-hands. Your VP brings it up: 'You all might have heard about the project — that was a huge win. [Your name] led this; [Your name], can you tell us how you approached it?'\n\nM. is in the room, sitting two rows behind you, visible in your peripheral vision.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "What do you say?",
+      "choices": [
+        { "id": "c1", "text": "\"Thanks — yeah, here's the approach we took…\" (give the answer, take the framing as given)", "next": "scene-2-took", "tags": ["self_reliance", "counterparty:subordinate", "stake:medium-social", "value:self_reliance", "credit:take"] },
+        { "id": "c2", "text": "\"Before I answer — M. did a huge amount of this. M., come up here, we can do this together.\"", "next": "scene-2-shared", "tags": ["generosity", "counterparty:subordinate", "stake:medium-social", "value:generosity", "credit:share-active"] },
+        { "id": "c3", "text": "\"Sure. Let me set up the answer — M. actually built the analytical core; I'll cover the synthesis side.\"", "next": "scene-2-acknowledged", "tags": ["fairness", "counterparty:subordinate", "stake:medium-social", "value:fairness", "credit:share-passive"] },
+        { "id": "c4", "text": "\"Happy to — quick overview…\" (answer the question without naming M. or the team)", "next": "scene-2-skipped", "tags": ["self_reliance", "counterparty:subordinate", "stake:medium-social", "value:self_reliance", "credit:take", "credit:silent"] }
+      ]
+    },
+    {
+      "id": "scene-2-took",
+      "text": "You give a clean answer. The VP nods. Walking back to your desk afterward, you pass M.'s row. They make brief eye contact and look away. Throughout the rest of the day, two senior colleagues stop by to congratulate you specifically; the VP mentions you by name in a 1:1 with someone else.\n\nLater that afternoon you have a private moment near the kitchen with M.",
+      "choices": [
+        { "id": "c1", "text": "\"Hey — I should have brought you up in the meeting. You did the core analysis. I'm going to make sure leadership knows.\"", "next": "scene-3-corrected", "tags": ["truth:commission", "fairness", "stake:medium-social", "self-cost:reputation", "value:honesty", "value:fairness", "credit:redirect"] },
+        { "id": "c2", "text": "\"Nice work on the project, by the way — that analysis was strong.\" (don't address the all-hands moment)", "next": "scene-3-soft-skip", "tags": ["lie:omission", "credit:keep", "stake:medium-social", "value:self_reliance"] },
+        { "id": "c3", "text": "Walk past, friendly nod, no conversation.", "next": "scene-3-let-pass", "tags": ["avoid", "credit:keep", "stake:medium-social"] }
+      ]
+    },
+    {
+      "id": "scene-2-shared",
+      "text": "M. comes up. They're flustered but they speak well — they explain the analytical approach for about a minute. The VP is visibly pleased: 'Great — that's a partnership we want to see more of.' Afterward M. catches you alone: 'Thank you. I really didn't expect that.' The VP later messages you privately: 'Nice move bringing M. up. The leadership team noticed.'\n\nLater that week, when promotions come up in a planning meeting, you can advocate for M. directly or let the moment carry.",
+      "choices": [
+        { "id": "c1", "text": "Explicitly advocate for M.'s promotion based on the project's outcome.", "next": "scene-end-aligned-advocated", "tags": ["generosity", "fairness", "counterparty:subordinate", "stake:medium-financial", "value:generosity", "value:fairness", "credit:redirect"] },
+        { "id": "c2", "text": "Let the moment do its work; leadership now sees M. — no need to push.", "next": "scene-end-aligned-passive", "tags": ["fairness", "counterparty:subordinate", "stake:low", "value:trust", "credit:share-passive"] }
+      ]
+    },
+    {
+      "id": "scene-2-acknowledged",
+      "text": "You explain the project, naming M. as the analytical lead. M. stays in their seat but you can feel the room's awareness shift toward them. After the meeting, three people compliment you on your framing; one of them goes over to M. directly. The VP catches you afterward: 'Curious about your role structure — how do you decide what to delegate?'",
+      "choices": [
+        { "id": "c1", "text": "Use the moment to advocate for M.'s recognition and promotability.", "next": "scene-end-acknowledged-advocated", "tags": ["fairness", "generosity", "counterparty:senior", "stake:medium-social", "value:fairness", "value:generosity", "credit:redirect"] },
+        { "id": "c2", "text": "Answer the role-structure question generally — don't push the specifics about M.", "next": "scene-end-acknowledged-passive", "tags": ["fairness", "counterparty:senior", "stake:low", "value:fairness", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "scene-2-skipped",
+      "text": "You give a clean answer. M. is not mentioned. Afterward, walking back, you don't pass M.'s row. You don't speak about it for a few days. The project keeps coming up in conversations and you keep getting credit for it. M. seems quieter than usual in team meetings.\n\nA week later you have a 1:1 with M. on the calendar — a routine check-in.",
+      "choices": [
+        { "id": "c1", "text": "Bring it up: \"I want to acknowledge that the all-hands didn't represent your role accurately. I'm going to correct that with the VP.\"", "next": "scene-end-mistake-named", "tags": ["truth:deferred-confront", "fairness", "counterparty:subordinate", "stake:medium-social", "self-cost:reputation", "value:honesty", "value:fairness", "credit:redirect"] },
+        { "id": "c2", "text": "Don't bring it up. Keep the 1:1 routine. The project will come up again later and you can correct then.", "next": "scene-end-self-doubt", "tags": ["avoid", "credit:keep", "stake:medium-social", "self-cost:residual"] },
+        { "id": "c3", "text": "Bring it up softly: \"By the way — nice work on that project. I should have been clearer in the all-hands about your role.\" (mild acknowledgment without action)", "next": "scene-end-acknowledged-soft", "tags": ["truth:partial", "stake:low-social", "value:tact", "credit:acknowledge-only"] }
+      ]
+    },
+    {
+      "id": "scene-3-corrected",
+      "text": "M.'s face changes when you say it — relief that's been waiting to come out. You set up a brief follow-up with the VP that week and re-frame the project's credit, with specifics. The VP listens, doesn't push back, and adjusts M.'s name forward in subsequent references. Some weeks later M. is up for a promotion that the project work supports.",
+      "terminal": true,
+      "tags": ["resolution:credit-realigned", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-soft-skip",
+      "text": "M. says \"thanks\" but doesn't engage further. The conversation in the kitchen ends quickly. The project keeps being credited to you; M. is treated as a strong contributor but not specifically recognized for this work. Quarterly review season comes; M. is promoted on the strength of other work, not this one. You and M. continue to work together; something has shifted slightly in the working relationship.",
+      "terminal": true,
+      "tags": ["resolution:quiet-burn", "self-cost:residual"]
+    },
+    {
+      "id": "scene-3-let-pass",
+      "text": "The moment passes. The week goes on. The project continues to be credited to you. M. doesn't bring it up; you don't bring it up. A few months later, in the team retrospective, the project comes up again and you find yourself uncertain about how to frame it — knowing what you didn't say lives in the gap.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "self-cost:residual", "moral-residue"]
+    },
+    {
+      "id": "scene-end-aligned-advocated",
+      "text": "M. is recognized in the planning round. The promotion goes through partly on the strength of this project. M. later tells you it was the first time they'd had a senior person actually advocate for them by name in a leadership conversation. The working relationship deepens; you start collaborating more naturally with M. on subsequent work.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-aligned-passive",
+      "text": "M. is noticed and considered. They get the project on their record cleanly. The promotion conversation happens organically without your push; you trust the system, and the system mostly works. M. thanks you again, more briefly this time, before moving on to the next thing.",
+      "terminal": true,
+      "tags": ["resolution:positive", "trust:institutional"]
+    },
+    {
+      "id": "scene-end-acknowledged-advocated",
+      "text": "The VP files away the role-structure conversation. Three weeks later you see it surface: M.'s name comes up in a promotion discussion you're not even in, and the VP supports them based on what they remember from your framing plus the conversation. You learn about it secondhand. M. doesn't know exactly how it happened.",
+      "terminal": true,
+      "tags": ["resolution:positive", "credit:propagated"]
+    },
+    {
+      "id": "scene-end-acknowledged-passive",
+      "text": "You explain how the role-structure tends to work in general terms. The VP nods. The conversation ends without specifics. M. is on the radar, but vaguely; the promotion-cycle a few months later goes to someone else who advocated more directly for themselves. You're not sure whether you should have said more.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "self-cost:residual"]
+    },
+    {
+      "id": "scene-end-mistake-named",
+      "text": "M. is quiet for a moment when you say it. They nod, slowly. \"I appreciate that.\" The conversation with the VP happens that week; the correction is awkward but lands. M. gets cleaner recognition in subsequent discussions. The working relationship doesn't immediately heal — there's a stiffness for a few weeks — but you keep collaborating, and over months it settles into something more direct than what you had before.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-self-doubt",
+      "text": "The 1:1 goes by without it being raised. The next month the project comes up again at a different all-hands and gets credited to you again. M. is in the room. You notice yourself watching for their reaction. Some part of you is now keeping track of something — a debt, or maybe a wound — that the routine 1:1 framing isn't equipped to address.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "self-cost:residual", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-acknowledged-soft",
+      "text": "M. says \"thanks for saying that\" and the 1:1 moves on. Things continue. The project's framing is not corrected upstream; M.'s contribution stays mostly invisible to leadership. The acknowledgment between you and M. is real, but contained.",
+      "terminal": true,
+      "tags": ["resolution:acknowledge", "credit:contained"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "in_group_out_group",
+    "speed_vs_deliberation"
+  ]
+}
