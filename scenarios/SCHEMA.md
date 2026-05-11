@@ -103,22 +103,56 @@ Branching interactive-fiction scene. 4–6 decision points; branches may converg
 
 ## `type: cost-of-virtue-probe`
 
-Stake-laddering auction on a previously-stated value. The user's prior inventory data fills the slot at runtime.
+A stake-laddered probe that locates the user's break-point on a previously-stated value. Concrete framing of the trade-off plus a 4-rung amount ladder plus an explicit no-option; the user picks the smallest rung at which they'd act (or `never`). UI renders amount buttons after the framing.
 
 ```jsonc
 {
   // ...common fields...
-  "value_slot": "honesty",                  // matched to the inventory taxonomy
-  "framing_prompt": "You said earlier that {value} matters to you. Suppose you could trade it here:",
+  "value_slot": "honesty",                  // matches an ID from inventory/values-deck.json
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": "honesty",
+                                            // probe surfaces only if user has named this value;
+                                            // can be a single string or an array of acceptable values
+    "ladder_currency": "user-local"         // future i18n hook; "USD" until localization ships
+  },
+  "framing_prompt": "Multi-sentence concrete scenario describing the action and removing escape valves (no one would know; no realistic consequences).",
+  "framing_question": "What's the smallest amount at which you'd say yes?",
   "ladder": [
-    { "stake": 5,     "unit": "USD",  "description": "Write a positive review for a product you've never used." },
-    { "stake": 50,    "unit": "USD",  "description": "Same — for $50." },
-    { "stake": 500,   "unit": "USD",  "description": "Same — for $500." },
-    { "stake": 5000,  "unit": "USD",  "description": "Same — for $5,000." }
+    { "rung": 1, "stake": 10,    "unit": "USD", "label": "$10" },
+    { "rung": 2, "stake": 100,   "unit": "USD", "label": "$100" },
+    { "rung": 3, "stake": 1000,  "unit": "USD", "label": "$1,000" },
+    { "rung": 4, "stake": 10000, "unit": "USD", "label": "$10,000" }
   ],
-  "break_point_field": "first_accept_stake" // analysis field: the smallest stake at which the user accepts
+  "no_option": {
+    "id": "never",
+    "text": "I wouldn't do this at any of these amounts."
+  },
+  "alternate_no_option": {                  // optional — used by inverted probes (e.g.
+                                            // cov-allocation-001 asks "at what stake would you
+                                            // RETURN the overpayment" rather than accept the trade)
+    "id": "always_keep",
+    "text": "I'd keep it at any of these amounts."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code as Inf for break-point analysis; report separately as 'integrity ceiling above probe range'",
+    "interpretation_note": "...",            // per-probe nuance for the analyst
+    "longitudinal_signal": "...",            // what within-user trajectory means
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
 }
 ```
+
+### Probe-format design choices
+
+- **Same ladder scale across probes ($10 → $10,000) by default** so within-user break-points are cross-domain comparable, except where a domain's realistic stake floor is higher (loyalty/career-opportunity probes use $100 → $100,000).
+- **Explicit `framing_question` always present.** Users break their hypothetical action down into "would I do it for X?"; the question wording matters and gets pre-registered.
+- **`no_option` is mandatory; `alternate_no_option` is used only for inverted probes** where the ladder asks at what stake the user does the *ethical* action rather than the *unethical* one.
+- **Preconditions gate probe surfacing.** The probe is meaningful only if the user has stated the value matters; otherwise it tests an aspiration the user doesn't claim, which conflates revealed-vs-stated.
+
+### Inverted probes
+
+`cov-allocation-001` is the first inverted probe: the ladder asks at what overpayment the user would *return* it (ethical action), not accept the trade (unethical action). Analysis pipeline must read `break_point_field` together with direction-of-action from `analysis` to score correctly.
 
 ---
 
