@@ -23,6 +23,7 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`pre-registration.md`](pre-registration.md) — OSF-filing-ready template for MVP-1's measurement-validation study, with pre-specified hypotheses, analysis plan, and falsification thresholds
 - [`scoring.md`](scoring.md) — analytical specification: how raw session-log and inventory data become the revealed / stated / gap / cost-of-virtue scores referenced by the pre-registration
 - [`analysis/`](analysis/) — versioned data files the analyzer consumes (currently: the tag-to-axis mapping). Part of the pre-registration; locked at OSF filing
+- [`types.ts`](types.ts) — TypeScript type definitions for all the JSON content schemas. Declarative only; no runtime or framework commitment. Schema-in-code complement to `scenarios/SCHEMA.md` and `inventory/SCHEMA.md`. Any future implementation can typecheck against this contract.
 - [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schema (4 quick-fires, 4 cost-of-virtue probes, 1 branching narrative)
 - [`inventory/`](inventory/) — stated-values inventory module: values deck, forced-choice pairs, three-layer prompts, story prompts
 - [`literature/`](literature/) — literature notes and citations (iterated by research agents)
