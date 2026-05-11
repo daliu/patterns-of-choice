@@ -21,6 +21,7 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`mvp.md`](mvp.md) — proposed scope for the first measurement-validation build (MVP-1)
 - [`onboarding.md`](onboarding.md) — user-facing copy and sequence for the first 3 sessions and the profile reveal
 - [`pre-registration.md`](pre-registration.md) — OSF-filing-ready template for MVP-1's measurement-validation study, with pre-specified hypotheses, analysis plan, and falsification thresholds
+- [`pilot-protocol.md`](pilot-protocol.md) — n=10 usability/calibration pilot that precedes the OSF lock; defines go/no-go criteria for the main study
 - [`scoring.md`](scoring.md) — analytical specification: how raw session-log and inventory data become the revealed / stated / gap / cost-of-virtue scores referenced by the pre-registration
 - [`analysis/`](analysis/) — versioned data files the analyzer consumes (currently: the tag-to-axis mapping). Part of the pre-registration; locked at OSF filing
 - [`types.ts`](types.ts) — TypeScript type definitions for all the JSON content schemas. Declarative only; no runtime or framework commitment. Schema-in-code complement to `scenarios/SCHEMA.md` and `inventory/SCHEMA.md`. Any future implementation can typecheck against this contract.
