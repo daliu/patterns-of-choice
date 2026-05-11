@@ -19,7 +19,8 @@ Existing instruments measure one side or the other. None systematically operatio
 
 - [`concept.md`](concept.md) — the working concept document (Draft 0.2)
 - [`mvp.md`](mvp.md) — proposed scope for the first measurement-validation build (MVP-1)
-- [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schema (truth-telling samples shipped)
+- [`onboarding.md`](onboarding.md) — user-facing copy and sequence for the first 3 sessions and the profile reveal
+- [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schema (4 quick-fires, 4 cost-of-virtue probes, 1 branching narrative)
 - [`inventory/`](inventory/) — stated-values inventory module: values deck, forced-choice pairs, three-layer prompts, story prompts
 - [`literature/`](literature/) — literature notes and citations (iterated by research agents)
 
