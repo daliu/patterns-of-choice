@@ -1,0 +1,128 @@
+{
+  "id": "narr-ingroup-002",
+  "type": "core-narrative",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "New on the block",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Three-decision branching narrative set outside the workplace (the prior two narratives — truth-telling and resource-allocation — were both workplace; corpus needs domain-of-life diversity). Surfaces the loyalty-to-existing-community vs. hospitality-to-newcomers tension, plus the question of whether one acts publicly, privately, or not at all. The exclusionary voice in the chat is deliberately not a caricature; the user has to imagine a real neighbor whose other qualities they might appreciate.",
+    "domain_anchor": "Cikara & Bruneau on parochial empathy; Saroglou cross-cultural work on hospitality as a moral foundation. Allport contact-hypothesis literature is the closest intervention-side anchor. No direct ecological-validity precedent for community-scale narratives; flagged as a probe whose validity is partly being tested by inclusion.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["intergroup tension", "cultural/demographic difference (intentionally unspecified to allow reader projection)"]
+  },
+  "setup": "You moved into a tight residential block — small street, ten or so households — a few years ago. The community runs on a group chat: organizing events, sharing news, asking for favors. Most members are roughly similar in background: similar life stages, similar incomes, similar in the ways that go unremarked.\n\nRecently, a new family moved into one of the houses. They're visibly different from the rest of the block in some way — pick whatever way that lands for you: language, cultural background, family structure, life stage. The group-chat reactions have been mostly polite, but there's been a thread of comments from one or two prominent voices — your neighbor R., for instance, whom you've otherwise gotten along with for years — that range from gently exclusionary (\"hope they read the parking signs\") to more actively dismissive (\"hard to predict whether they'll fit in here\").\n\nYou've been part of the chat the whole time. You haven't been one of the louder voices either way.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "This morning R. posts something in the chat that's a clear step further — a half-joke about the new family's customs that lands as exclusionary. The chat has three reactions already, two affirming. The new family is in the chat. What do you do?",
+      "choices": [
+        { "id": "c1", "text": "Stay quiet. Not your fight; you don't need to be the one who fights it.", "next": "scene-2-quiet", "tags": ["loyalty", "counterparty:in-group-community", "stake:medium-social", "value:loyalty", "value:discretion"] },
+        { "id": "c2", "text": "Drop a brief positive note about the new family without referencing R.'s post (\"Saw their kid in the courtyard yesterday — really sweet.\")", "next": "scene-2-redirect", "tags": ["hospitality", "counterparty:in-group-community", "stake:low-social", "value:hospitality", "credit:share-passive"] },
+        { "id": "c3", "text": "Push back on R. directly in the chat (\"I'm uncomfortable with how this is being framed.\")", "next": "scene-2-pushback", "tags": ["universalism", "truth:confront-direct", "counterparty:in-group-community", "stake:high-social", "value:universalism", "value:honesty"] },
+        { "id": "c4", "text": "DM R. privately: \"Hey — I think that post landed harder than you meant. Take a look at the family's faces in the chat.\"", "next": "scene-2-dm", "tags": ["universalism", "truth:soft-confront", "counterparty:in-group-peer", "stake:medium-social", "value:universalism", "value:tact"] }
+      ]
+    },
+    {
+      "id": "scene-2-quiet",
+      "text": "You stay silent. The thread peters out over the next hour with no one objecting. A week later the block organizes a casual Saturday-morning coffee gathering in the courtyard. The chat goes back and forth about logistics. The new family is in the chat the whole time, but no one explicitly invites them; the invite is just \"come by\" in the general thread.",
+      "choices": [
+        { "id": "c1", "text": "Stop by the new family's door on Friday evening and invite them personally.", "next": "scene-end-quiet-then-private", "tags": ["hospitality", "counterparty:out-group-new", "stake:low-social", "value:hospitality", "credit:share-active"] },
+        { "id": "c2", "text": "Reply to the chat: \"Hope everyone on the block makes it — would love to meet our new neighbors.\"", "next": "scene-end-quiet-then-public", "tags": ["universalism", "counterparty:in-group-community", "stake:medium-social", "value:universalism", "value:hospitality"] },
+        { "id": "c3", "text": "Plan to go to the coffee yourself but take no action either way on the new family.", "next": "scene-end-quiet-throughout", "tags": ["avoid", "counterparty:in-group-community", "stake:low-social", "self-cost:residual"] }
+      ]
+    },
+    {
+      "id": "scene-2-redirect",
+      "text": "Your message lands as friendly. R. doesn't follow up; the thread shifts. The next week, when the block organizes a Saturday-morning coffee, you notice that no one's specifically invited the new family — they're in the chat but the invite is just \"come by.\" R. is going to be there.",
+      "choices": [
+        { "id": "c1", "text": "Privately invite the new family on Friday evening; mention you'll be there.", "next": "scene-end-redirect-then-private", "tags": ["hospitality", "counterparty:out-group-new", "stake:low-social", "value:hospitality"] },
+        { "id": "c2", "text": "Wait for R. or someone else to invite them; the redirect was enough for now.", "next": "scene-end-redirect-wait", "tags": ["trust:institutional", "counterparty:in-group-community", "stake:low", "value:trust"] }
+      ]
+    },
+    {
+      "id": "scene-2-pushback",
+      "text": "Your message reads as direct. Several reactions; some support, some are silent, R. doesn't reply right away. The thread quiets. R. DMs you that evening: \"Hey, just so you know — I wasn't being malicious. I think you read me harder than I meant.\" Whether or not you think that's true, R. has been a friend on the block for years.",
+      "choices": [
+        { "id": "c1", "text": "\"Okay — sorry if I came in too hot. Can we talk about it in person sometime?\" (open the door to a private conversation)", "next": "scene-end-pushback-talk", "tags": ["truth:partial", "counterparty:in-group-peer", "stake:medium-social", "value:tact", "value:loyalty"] },
+        { "id": "c2", "text": "\"I'll take that on board. I do think the post landed badly though.\" (hold the position without escalating)", "next": "scene-end-pushback-hold", "tags": ["truth:state", "counterparty:in-group-peer", "stake:medium-social", "value:honesty", "value:authenticity"] },
+        { "id": "c3", "text": "\"Yeah — happy to put it behind us.\" (back off; preserve the friendship)", "next": "scene-end-pushback-retreat", "tags": ["lie:protective", "counterparty:in-group-peer", "stake:low-social", "value:loyalty", "credit:contained"] }
+      ]
+    },
+    {
+      "id": "scene-2-dm",
+      "text": "R. replies a few hours later: \"You know what — fair point. Hadn't thought about it from their side.\" R. posts a follow-up in the chat: a light walk-back, not an apology, but a clear shift in tone. The chat's mood resettles. A week later the block plans a Saturday coffee.",
+      "choices": [
+        { "id": "c1", "text": "Invite the new family personally on Friday evening.", "next": "scene-end-dm-then-private", "tags": ["hospitality", "counterparty:out-group-new", "stake:low-social", "value:hospitality"] },
+        { "id": "c2", "text": "Let R.'s shift do the work; the block invites everyone organically now.", "next": "scene-end-dm-trust", "tags": ["trust", "counterparty:in-group-community", "stake:low", "value:trust"] }
+      ]
+    },
+    {
+      "id": "scene-end-quiet-then-private",
+      "text": "The new family answers the door and is surprised — and clearly glad. They show up Saturday morning. They sit a bit apart at first; you bring them into the conversations you're in. R. is polite but distant with them. By the end of the morning the new family has had three real conversations on the block, and you have a new neighbor relationship that didn't exist before.",
+      "terminal": true,
+      "tags": ["resolution:hospitality-private", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-quiet-then-public",
+      "text": "Two people reply with thumbs-up. The new family doesn't reply in the chat but shows up Saturday. They sit somewhat to the side; the conversations don't quite include them. R. is polite to them but doesn't initiate. You spend most of the morning talking to your usual block friends, looking over occasionally and not quite finding the moment.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-quiet-throughout",
+      "text": "The Saturday morning happens. The new family doesn't come; they were in the chat but never specifically invited. R.'s jokes continue periodically in the chat over the following weeks. The new family stays on the block but stays quiet in the chat. Some part of you is now aware that you've stayed quiet too.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "self-cost:residual", "moral-residue"]
+    },
+    {
+      "id": "scene-end-redirect-then-private",
+      "text": "The new family comes. The Saturday morning is friendly; the redirect-plus-invite combination shifted the block's mood a degree. R. is mildly cool with them but not hostile; the new family connects with two other neighbors who hadn't pushed back but were waiting for someone to break the ice. You don't make a thing of it; you just keep being friendly going forward.",
+      "terminal": true,
+      "tags": ["resolution:hospitality-quiet", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-redirect-wait",
+      "text": "Saturday morning comes. The new family doesn't show. No one specifically invited them, and the redirect message you sent earlier wasn't an invitation either. You realize this watching the courtyard fill with the usual faces.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "self-cost:residual"]
+    },
+    {
+      "id": "scene-end-pushback-talk",
+      "text": "You and R. talk over coffee a few days later. R. is defensive but listens; you don't entirely settle the issue, but you say what you needed to say, and R. drops the jokes in the chat going forward. The block's mood softens. The friendship with R. is slightly different now — a little more careful — but it survives.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-pushback-hold",
+      "text": "R. doesn't reply for a few days. The chat is quieter than usual for a week. R. eventually thaws and the block's rhythms resume, but you notice R. doesn't include you in some logistical threads they used to. The new family seems to have read the public moment though; they reach out to you to introduce themselves directly.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "social-cost:high"]
+    },
+    {
+      "id": "scene-end-pushback-retreat",
+      "text": "R. responds warmly to your retreat: \"Thanks. Means a lot.\" The friendship with R. is preserved. The chat continues mostly as before, with slightly fewer overt jokes — but the underlying mood didn't shift. The new family hasn't reached out to you and you haven't reached out to them. Some part of you knows you traded honesty for peer loyalty in that exchange.",
+      "terminal": true,
+      "tags": ["resolution:loyalty-over-honesty", "self-cost:residual"]
+    },
+    {
+      "id": "scene-end-dm-then-private",
+      "text": "The new family comes. Saturday morning goes well — R. is warmer than expected, partly because the public walk-back gave them an out to be welcoming. By the end of the morning the new family has been invited to two other things on the block. Things settle into something better than they were before R.'s post.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-dm-trust",
+      "text": "Saturday morning comes. The new family shows up; the chat-level shift carried, and one of the other neighbors specifically welcomed them when sending the day-of message. The block's tone has settled into something a little more inclusive. R. doesn't seem to hold the DM against you; you and R. are still friends, with one shared private moment that no one else knows about.",
+      "terminal": true,
+      "tags": ["resolution:positive", "trust:institutional", "stated-revealed-aligned"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "in_group_out_group",
+    "speed_vs_deliberation"
+  ]
+}
