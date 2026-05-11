@@ -1,0 +1,328 @@
+{
+  "version": "0.1",
+  "value_pool_size": 20,
+  "pair_count": 30,
+  "sampling_strategy": "From the 190 possible pairs across the 20-value deck, sample 30: (a) every pair where one value lists the other in its internal_tensions field (16 within-domain pairs), and (b) 14 cross-domain pairs targeting documented behavioral tensions from the moral-psychology literature (Haidt MFT loyalty-vs-fairness; cooperation-vs-defection in social dilemmas; whistleblowing as transparency-vs-loyalty; etc.). Pairs are randomized in presentation order per user. Each pair is shown twice across the onboarding sequence to estimate within-user consistency.",
+  "pairs": [
+    {
+      "id": "p01",
+      "pair_type": "within-domain",
+      "domain": "truth-telling",
+      "left_id": "honesty",
+      "right_id": "tact",
+      "tension_anchor": "Tell a hard truth bluntly, or wrap it so it lands gently.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Tell someone an uncomfortable truth, even if it lands badly.",
+      "right_text": "Soften the truth so it keeps the relationship intact."
+    },
+    {
+      "id": "p02",
+      "pair_type": "within-domain",
+      "domain": "truth-telling",
+      "left_id": "transparency",
+      "right_id": "discretion",
+      "tension_anchor": "Share what people have a right to know, or stay silent when it isn't asked for.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Volunteer information that the other person would want, even if no one asked.",
+      "right_text": "Wait to be asked; don't volunteer what isn't strictly needed."
+    },
+    {
+      "id": "p03",
+      "pair_type": "within-domain",
+      "domain": "truth-telling",
+      "left_id": "authenticity",
+      "right_id": "tact",
+      "tension_anchor": "Show what you actually feel, or adjust your expression for the context.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Let what you're feeling show, even if it's uncomfortable for the room.",
+      "right_text": "Read the room and modulate; what's inside doesn't need to be visible."
+    },
+    {
+      "id": "p04",
+      "pair_type": "within-domain",
+      "domain": "truth-telling",
+      "left_id": "honesty",
+      "right_id": "discretion",
+      "tension_anchor": "Volunteer the truth, or stay silent when no one's asking.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Volunteer the truth when you see it; don't wait to be asked.",
+      "right_text": "If it isn't asked for and the silence holds, let the silence hold."
+    },
+
+    {
+      "id": "p05",
+      "pair_type": "within-domain",
+      "domain": "resource-allocation",
+      "left_id": "generosity",
+      "right_id": "self_reliance",
+      "tension_anchor": "Give freely from your own, or expect everyone (including yourself) to carry their weight.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Give what you can, even if it means you have less to fall back on.",
+      "right_text": "Take care of your own footing before you offer; don't undermine yourself to help."
+    },
+    {
+      "id": "p06",
+      "pair_type": "within-domain",
+      "domain": "resource-allocation",
+      "left_id": "need_sensitivity",
+      "right_id": "reciprocity_pure",
+      "tension_anchor": "Help those who need it, or give back proportionally to those who gave.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Direct what you have toward who needs it most, regardless of what they put in.",
+      "right_text": "Give back to people in proportion to what they gave you."
+    },
+    {
+      "id": "p07",
+      "pair_type": "within-domain",
+      "domain": "resource-allocation",
+      "left_id": "fairness",
+      "right_id": "generosity",
+      "tension_anchor": "Distribute by clear rule, or give without strict accounting.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Distribute by a principle you could defend to anyone in the group.",
+      "right_text": "Give what feels right in the moment; the rules don't always serve the situation."
+    },
+    {
+      "id": "p08",
+      "pair_type": "within-domain",
+      "domain": "resource-allocation",
+      "left_id": "need_sensitivity",
+      "right_id": "self_reliance",
+      "tension_anchor": "Help those who can't carry their own weight, or expect everyone to.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Lend support to people who genuinely can't manage on their own.",
+      "right_text": "Hold the line that people need to carry their own weight; the help can become a trap."
+    },
+
+    {
+      "id": "p09",
+      "pair_type": "within-domain",
+      "domain": "in-group-out-group",
+      "left_id": "loyalty",
+      "right_id": "universalism",
+      "tension_anchor": "Stand with your people, or treat strangers as you'd treat your own.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Stand with the people closest to you, even when an outsider has the better claim.",
+      "right_text": "Treat the outsider the way you'd want to be treated; no extra weight to your own."
+    },
+    {
+      "id": "p10",
+      "pair_type": "within-domain",
+      "domain": "in-group-out-group",
+      "left_id": "particularism",
+      "right_id": "universalism",
+      "tension_anchor": "Recognize that close relationships carry weight, or hold them equal to strangers.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Recognize that what you owe family and close friends is different from what you owe a stranger.",
+      "right_text": "Hold yourself to the same standard for any person, regardless of relationship."
+    },
+    {
+      "id": "p11",
+      "pair_type": "within-domain",
+      "domain": "in-group-out-group",
+      "left_id": "hospitality",
+      "right_id": "boundaries",
+      "tension_anchor": "Welcome outsiders into care, or keep a clear line about who's inside.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Welcome the outsider in; expand the circle of care.",
+      "right_text": "Keep the circle clear; you can't be responsible to everyone."
+    },
+    {
+      "id": "p12",
+      "pair_type": "within-domain",
+      "domain": "in-group-out-group",
+      "left_id": "loyalty",
+      "right_id": "hospitality",
+      "tension_anchor": "Protect your existing people, or welcome new ones into care.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Tend to the people who are already in your life before extending to new ones.",
+      "right_text": "Make room for outsiders, even if it means less attention to your existing circle."
+    },
+
+    {
+      "id": "p13",
+      "pair_type": "within-domain",
+      "domain": "reciprocity-cooperation",
+      "left_id": "trust",
+      "right_id": "vigilance",
+      "tension_anchor": "Extend the benefit of the doubt, or stay protected against being used.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Default to trust; assume good intent until proven otherwise.",
+      "right_text": "Stay alert; people often act in their own interest, and you'll regret missing it."
+    },
+    {
+      "id": "p14",
+      "pair_type": "within-domain",
+      "domain": "reciprocity-cooperation",
+      "left_id": "cooperation",
+      "right_id": "independence",
+      "tension_anchor": "Work with others, or act on your own judgment.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Bring others in; the result is better when it's shared, even if slower.",
+      "right_text": "Act on your own judgment; consensus dilutes."
+    },
+    {
+      "id": "p15",
+      "pair_type": "within-domain",
+      "domain": "reciprocity-cooperation",
+      "left_id": "forgiveness",
+      "right_id": "vigilance",
+      "tension_anchor": "Re-open cooperation after someone let you down, or stay protected.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Re-open the door after someone has let you down; people change.",
+      "right_text": "Once someone has shown what they'll do, take it seriously and protect yourself."
+    },
+    {
+      "id": "p16",
+      "pair_type": "within-domain",
+      "domain": "reciprocity-cooperation",
+      "left_id": "cooperation",
+      "right_id": "vigilance",
+      "tension_anchor": "Engage cooperatively, or protect against being used.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Engage with the group; the relationship matters more than the worst-case.",
+      "right_text": "Watch for the pattern of being the one who carries the cost; protect yourself."
+    },
+
+    {
+      "id": "p17",
+      "pair_type": "cross-domain",
+      "left_id": "honesty",
+      "right_id": "loyalty",
+      "tension_anchor": "Tell the uncomfortable truth, or protect your people. Classic Haidt MFT tension; the happy-hour scenario.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Tell someone an uncomfortable truth that affects them, even if it costs your closest people.",
+      "right_text": "Protect your closest people, even if it means leaving an uncomfortable truth unsaid."
+    },
+    {
+      "id": "p18",
+      "pair_type": "cross-domain",
+      "left_id": "transparency",
+      "right_id": "loyalty",
+      "tension_anchor": "Whistleblower's dilemma: surface what should be known, or stay loyal to those affected.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Surface something that should be known, even though it will hurt people you're close to.",
+      "right_text": "Stay loyal to the people who'd be hurt; what's not asked doesn't have to be answered."
+    },
+    {
+      "id": "p19",
+      "pair_type": "cross-domain",
+      "left_id": "generosity",
+      "right_id": "vigilance",
+      "tension_anchor": "Give freely, or protect against being used.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Give what you can; the risk of being used is part of what generosity costs.",
+      "right_text": "Pay attention to who's asking and why; not everyone deserves your help."
+    },
+    {
+      "id": "p20",
+      "pair_type": "cross-domain",
+      "left_id": "universalism",
+      "right_id": "reciprocity_pure",
+      "tension_anchor": "Give to strangers without expecting return, or limit giving to those who give back.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Help strangers who can't return the favor; that's part of what helping is.",
+      "right_text": "Give back to people in proportion to what they put in; charity is for charity, not for everyone."
+    },
+    {
+      "id": "p21",
+      "pair_type": "cross-domain",
+      "left_id": "fairness",
+      "right_id": "particularism",
+      "tension_anchor": "Distribute by rule, or recognize that close relationships have special claim.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Treat the situation by clear principle, even when it disadvantages your own.",
+      "right_text": "Recognize that your own have a stronger claim on what you can give."
+    },
+    {
+      "id": "p22",
+      "pair_type": "cross-domain",
+      "left_id": "fairness",
+      "right_id": "loyalty",
+      "tension_anchor": "Treat by clear rule, or favor your people.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Apply the same standard to your closest people that you'd apply to anyone else.",
+      "right_text": "Give your people a little more benefit of the doubt; loyalty has weight that rules don't capture."
+    },
+    {
+      "id": "p23",
+      "pair_type": "cross-domain",
+      "left_id": "need_sensitivity",
+      "right_id": "boundaries",
+      "tension_anchor": "Help anyone in genuine need, or keep clear about who's in your circle.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Respond to need wherever you see it; the circle expands when it has to.",
+      "right_text": "Stay clear about who you're responsible to; otherwise the demands have no end."
+    },
+    {
+      "id": "p24",
+      "pair_type": "cross-domain",
+      "left_id": "cooperation",
+      "right_id": "honesty",
+      "tension_anchor": "Go along with the group, or voice the dissent.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Get behind the group's decision once it's made; collective action requires it.",
+      "right_text": "Say what you actually think, even when the group is moving the other way."
+    },
+    {
+      "id": "p25",
+      "pair_type": "cross-domain",
+      "left_id": "hospitality",
+      "right_id": "vigilance",
+      "tension_anchor": "Welcome outsiders, or be cautious about who you let in.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Welcome the newcomer; the risk of being taken advantage of is part of the cost of welcome.",
+      "right_text": "Be cautious about who you let in; not every stranger is what they appear."
+    },
+    {
+      "id": "p26",
+      "pair_type": "cross-domain",
+      "left_id": "trust",
+      "right_id": "honesty",
+      "tension_anchor": "Believe what someone tells you, or push back when something doesn't ring true.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Take what people say at face value; the alternative corrodes the relationship.",
+      "right_text": "Press when something doesn't quite add up; the truth matters more than the comfort."
+    },
+    {
+      "id": "p27",
+      "pair_type": "cross-domain",
+      "left_id": "independence",
+      "right_id": "loyalty",
+      "tension_anchor": "Act on your own judgment, or defer to your people.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Make the call you think is right, even when your people prefer a different one.",
+      "right_text": "Defer to your people; loyalty isn't loyalty if you only stay when you agree."
+    },
+    {
+      "id": "p28",
+      "pair_type": "cross-domain",
+      "left_id": "self_reliance",
+      "right_id": "cooperation",
+      "tension_anchor": "Handle it yourself, or ask for help.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Take care of it yourself; asking for help imposes a cost on others.",
+      "right_text": "Bring others in; getting help is part of how the relationship gets built."
+    },
+    {
+      "id": "p29",
+      "pair_type": "cross-domain",
+      "left_id": "forgiveness",
+      "right_id": "honesty",
+      "tension_anchor": "Move past what happened, or name it explicitly.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Let it go; rehashing isn't always useful, and the relationship is more than the offense.",
+      "right_text": "Name what happened; pretending it didn't will distort everything after it."
+    },
+    {
+      "id": "p30",
+      "pair_type": "cross-domain",
+      "left_id": "authenticity",
+      "right_id": "loyalty",
+      "tension_anchor": "Show what you actually feel, or protect your people by hiding it.",
+      "prompt": "When you can't fully have both:",
+      "left_text": "Let your honest reaction show, even when it makes things harder for your people.",
+      "right_text": "Hold what you're feeling; sometimes loyalty looks like not showing it."
+    }
+  ]
+}

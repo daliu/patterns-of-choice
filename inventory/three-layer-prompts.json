@@ -1,0 +1,44 @@
+{
+  "version": "0.1",
+  "rationale": "Three separately-captured layers expose distinct facets of self-knowledge. Current self is descriptive (and often defensive); aspirational is normative (and often inflated); admired-other is concrete (and often surprisingly informative — users will name traits in others they won't claim for themselves). The current↔aspirational gap defines a user-chosen growth direction; the admired-other layer functions as a partial check on aspirational inflation.",
+  "layers": {
+    "current_self": {
+      "label": "How I actually live",
+      "anchor_phrase": "I am a person who...",
+      "protocol_note": "Capture first, before aspiration colors the response. The behavioral-anchor description on each value card asks the user 'is this how you'd actually describe yourself?' — not 'is this important to you?'.",
+      "ux_pattern": "Card sort with this framing; then pairwise with 'which leans closer to what you actually do, even when it costs you?'"
+    },
+    "aspirational_self": {
+      "label": "Who I want to become",
+      "anchor_phrase": "I want to be a person who...",
+      "protocol_note": "Capture second, explicitly framed as different from current self. The framing matters: 'what kind of person do you want to be in a year?' surfaces less aspiration-inflation than 'what's important to you?'.",
+      "ux_pattern": "Card sort with this framing; then pairwise with 'which leans closer to who you want to become?'"
+    },
+    "admired_other": {
+      "label": "Someone I deeply respect",
+      "anchor_phrase": "Someone I deeply respect is a person who...",
+      "protocol_note": "Capture third, after asking the user to bring a specific person to mind. Naming someone specific (their initials, their relationship to the user) makes the layer concrete rather than abstract. Users will identify with traits in admired others that they won't claim for themselves, which is often the most informative gap.",
+      "ux_pattern": "First, ask: 'Bring to mind someone you deeply respect — not for their achievements, for their character. Just initials are fine.' Then card sort and pairwise with 'which of these leans closer to what they actually do?'"
+    }
+  },
+  "gap_analysis": {
+    "primary_gap": {
+      "name": "aspirational - current",
+      "interpretation": "Where the user wants to move. The basis for the opt-in growth direction in MVP-2."
+    },
+    "consistency_check": {
+      "name": "admired_other - aspirational",
+      "interpretation": "If a user's aspirational profile diverges sharply from what they say they admire, one of the two is inflated. Worth flagging in interpretation."
+    },
+    "honesty_check": {
+      "name": "current - admired_other",
+      "interpretation": "If a user rates themselves identically to whom they admire, suspect halo or self-flattery. Worth flagging in interpretation but not in user-facing copy."
+    }
+  },
+  "ordering": "All three layers presented in fixed order (current → aspirational → admired_other) across sessions 1–3. Order matters: a counterbalanced design would be cleaner but introduces user confusion. Fixed-order baseline is the right MVP-1 choice; order-effect analysis is a Phase-2 question.",
+  "presentation_modes": {
+    "pairwise": "Run the 30-pair protocol once per layer over sessions 1–3 (10 pairs/session). Each pair shown once per layer; duplicate-pair-within-layer used only for the consistency-check sample (~5 pairs).",
+    "card_sort": "Run the top-5 card sort once per layer; same deck, three framings.",
+    "behavioral_anchor_acknowledgment": "When a value card is selected, show the behavioral anchor and ask: 'is this how you'd actually describe yourself?' for current-self; 'is this what you'd want?' for aspirational; 'is this what they actually do?' for admired-other. This raises the cost of selecting a value casually."
+  }
+}

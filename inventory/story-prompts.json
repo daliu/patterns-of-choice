@@ -1,0 +1,67 @@
+{
+  "version": "0.1",
+  "protocol": "Five free-text prompts surfaced during session 3 (after card-sort + pairwise + three-layer framings have already given the user the vocabulary). Each prompt asks for one specific concrete memory or anticipation; 30–120 words is the target response length. The user can skip any prompt; declining is itself a signal.",
+  "coding_strategy": "LLM-coded post-hoc into (domain, value_id) tags with confidence scores; validation-cohort responses are human-verified by a second coder. Inter-rater reliability target κ ≥ 0.70 before LLM coding is trusted at scale. Coding extracts: which value(s) the story touches; which signature (cost-of-virtue, consistency, in-group/out-group, etc.); valence (proud / regret / aspirational / neutral).",
+  "design_intent": "Free text complements forced-choice. Pairwise tells us what the user picks when given options; story prompts tell us what they SURFACE unprompted. Spontaneous content is often more predictive than checked-list content. The five prompts span four temporal/evaluative frames (recent proud / recent regret / anticipated test / admired model / aspirational target) so the qualitative layer triangulates the quantitative one.",
+  "prompts": [
+    {
+      "id": "story-pride",
+      "category": "self-evaluation-positive",
+      "framing": "Recent moral self-reflection — proud",
+      "text": "Tell me about a time, recently, when you were quietly proud of how you handled something. Not a big moment; one of the small ones. Two or three sentences is plenty.",
+      "expected_word_count": "30–120",
+      "domains_likely_surfaced": ["any"],
+      "follow_up": "If you can: what was the alternative — what would the less-proud version of you have done in that moment?",
+      "coding_dimensions": ["domain", "value_id", "cost_acknowledged"]
+    },
+    {
+      "id": "story-regret",
+      "category": "self-evaluation-negative",
+      "framing": "Recent moral self-reflection — let yourself down",
+      "text": "Tell me about a time, recently, when you let yourself down — not catastrophically, just a small moment when you knew you didn't act like the person you want to be.",
+      "expected_word_count": "30–120",
+      "domains_likely_surfaced": ["any"],
+      "follow_up": "What would the version of you you'd respect have done instead?",
+      "coding_dimensions": ["domain", "value_id", "self_awareness_present", "cost_avoided"]
+    },
+    {
+      "id": "story-anticipated-test",
+      "category": "prospective",
+      "framing": "Upcoming test",
+      "text": "Is there a situation coming up — this week or this month — that you think will test you in some way? Just describe it briefly; you don't have to know what you'll do.",
+      "expected_word_count": "30–120",
+      "domains_likely_surfaced": ["any"],
+      "follow_up": null,
+      "coding_dimensions": ["domain", "value_id", "anticipated_stake"]
+    },
+    {
+      "id": "story-admired-model",
+      "category": "exemplar",
+      "framing": "Someone you respect — what they do",
+      "text": "Earlier you brought to mind someone you deeply respect. Tell me one specific thing they do — a behavior, a habit, a moment you witnessed — that earns that respect.",
+      "expected_word_count": "30–120",
+      "domains_likely_surfaced": ["any"],
+      "follow_up": "Do you do that thing yourself?",
+      "coding_dimensions": ["domain", "value_id", "specificity_level", "self_match"]
+    },
+    {
+      "id": "story-aspirational-target",
+      "category": "future-self",
+      "framing": "Who you want to become — one specific behavior",
+      "text": "Imagine the version of yourself you'd most like to be in five years — not in achievements, in character. Name one specific way they'd act that you don't, yet.",
+      "expected_word_count": "30–120",
+      "domains_likely_surfaced": ["any"],
+      "follow_up": "What gets in the way today?",
+      "coding_dimensions": ["domain", "value_id", "specificity_level", "barrier_named"]
+    }
+  ],
+  "ongoing_story_capture": {
+    "rationale": "After the session-3 batch, story prompts return on a slower cadence — roughly one every 5–7 sessions — to track drift and capture new context.",
+    "rotation_strategy": "Cycle through the five prompts in randomized order; never repeat a prompt within a 14-session window."
+  },
+  "what_we_do_not_do": [
+    "We do not ask 'what is the most ethical thing you've ever done?' or any other prompt that invites narrative inflation. Specificity + temporal proximity (recent / upcoming) is the consistent anti-inflation move.",
+    "We do not store the free text in cleartext on the server. The user's local-first store holds the original; only the LLM-extracted tag tuples sync (with consent).",
+    "We do not surface user stories back to the user in summarized form during MVP-1. The temptation to do 'here's what you wrote about yourself last month' is real but introduces a feedback loop the validation study can't control for. Defer to MVP-2."
+  ]
+}

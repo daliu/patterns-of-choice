@@ -1,0 +1,151 @@
+{
+  "version": "0.1",
+  "size": 20,
+  "card_sort_protocol": "User picks top 5 cards from a randomized 20-card deck by drag-and-drop. Behavioral anchor is shown on hover/tap. ~3 minutes. Used during onboarding session 1 (current self), session 2 (aspirational), session 3 (admired other). Same deck, three framings.",
+  "design_intent": "5 values per MVP-1 domain (truth-telling, resource-allocation, in-group-out-group, reciprocity-cooperation). Within each domain, intentional internal tensions so card-sort and pairwise data carry signal. Each value carries a one-sentence behavioral anchor with implicit cost rather than a pure virtue-word abstraction.",
+  "values": [
+    {
+      "id": "honesty",
+      "label": "Honesty",
+      "domain": "truth-telling",
+      "behavioral_anchor": "Saying what's true, even when it's costly for me or uncomfortable for others.",
+      "internal_tensions": ["tact", "discretion"]
+    },
+    {
+      "id": "tact",
+      "label": "Tact",
+      "domain": "truth-telling",
+      "behavioral_anchor": "Saying true things in a way that protects others' dignity.",
+      "internal_tensions": ["honesty", "authenticity"]
+    },
+    {
+      "id": "transparency",
+      "label": "Transparency",
+      "domain": "truth-telling",
+      "behavioral_anchor": "Not hiding from people things they have a right to know.",
+      "internal_tensions": ["discretion"]
+    },
+    {
+      "id": "discretion",
+      "label": "Discretion",
+      "domain": "truth-telling",
+      "behavioral_anchor": "Knowing what doesn't need to be said.",
+      "internal_tensions": ["honesty", "transparency"]
+    },
+    {
+      "id": "authenticity",
+      "label": "Authenticity",
+      "domain": "truth-telling",
+      "behavioral_anchor": "Keeping consistency between what I feel inside and what I show outside.",
+      "internal_tensions": ["tact"]
+    },
+
+    {
+      "id": "generosity",
+      "label": "Generosity",
+      "domain": "resource-allocation",
+      "behavioral_anchor": "Giving from my own resources, unprompted, when I can.",
+      "internal_tensions": ["self_reliance", "fairness"]
+    },
+    {
+      "id": "fairness",
+      "label": "Fairness",
+      "domain": "resource-allocation",
+      "behavioral_anchor": "Distributing resources by clear, defensible principle rather than mood or favor.",
+      "internal_tensions": ["generosity", "need_sensitivity"]
+    },
+    {
+      "id": "need_sensitivity",
+      "label": "Need-sensitivity",
+      "domain": "resource-allocation",
+      "behavioral_anchor": "Letting genuine need, not who-earned-it, guide where resources go.",
+      "internal_tensions": ["reciprocity_pure", "self_reliance"]
+    },
+    {
+      "id": "reciprocity_pure",
+      "label": "Reciprocity",
+      "domain": "resource-allocation",
+      "behavioral_anchor": "People get back from me what they put in.",
+      "internal_tensions": ["need_sensitivity", "generosity"]
+    },
+    {
+      "id": "self_reliance",
+      "label": "Self-reliance",
+      "domain": "resource-allocation",
+      "behavioral_anchor": "Carrying my own weight; not asking others to absorb my costs.",
+      "internal_tensions": ["generosity", "need_sensitivity"]
+    },
+
+    {
+      "id": "loyalty",
+      "label": "Loyalty",
+      "domain": "in-group-out-group",
+      "behavioral_anchor": "Standing with the people closest to me, especially when it costs me.",
+      "internal_tensions": ["universalism", "hospitality"]
+    },
+    {
+      "id": "universalism",
+      "label": "Universalism",
+      "domain": "in-group-out-group",
+      "behavioral_anchor": "Treating strangers the way I'd want to be treated; no extra weight to my own.",
+      "internal_tensions": ["loyalty", "particularism"]
+    },
+    {
+      "id": "particularism",
+      "label": "Particularism",
+      "domain": "in-group-out-group",
+      "behavioral_anchor": "Recognizing that close relationships carry special weight in what I owe.",
+      "internal_tensions": ["universalism"]
+    },
+    {
+      "id": "hospitality",
+      "label": "Hospitality",
+      "domain": "in-group-out-group",
+      "behavioral_anchor": "Welcoming outsiders into care, even when no one expects it of me.",
+      "internal_tensions": ["loyalty", "boundaries"]
+    },
+    {
+      "id": "boundaries",
+      "label": "Clear circle",
+      "domain": "in-group-out-group",
+      "behavioral_anchor": "Knowing who I'm responsible to, and not letting that line slide.",
+      "internal_tensions": ["hospitality", "universalism"]
+    },
+
+    {
+      "id": "trust",
+      "label": "Trust",
+      "domain": "reciprocity-cooperation",
+      "behavioral_anchor": "Extending the benefit of the doubt before I have to.",
+      "internal_tensions": ["vigilance"]
+    },
+    {
+      "id": "vigilance",
+      "label": "Vigilance",
+      "domain": "reciprocity-cooperation",
+      "behavioral_anchor": "Not letting myself be taken advantage of, especially repeatedly.",
+      "internal_tensions": ["trust", "forgiveness"]
+    },
+    {
+      "id": "cooperation",
+      "label": "Cooperation",
+      "domain": "reciprocity-cooperation",
+      "behavioral_anchor": "Working with others toward shared ends, even when it slows me down.",
+      "internal_tensions": ["independence", "vigilance"]
+    },
+    {
+      "id": "independence",
+      "label": "Independence",
+      "domain": "reciprocity-cooperation",
+      "behavioral_anchor": "Acting on my own judgment; not waiting for permission or consensus.",
+      "internal_tensions": ["cooperation"]
+    },
+    {
+      "id": "forgiveness",
+      "label": "Forgiveness",
+      "domain": "reciprocity-cooperation",
+      "behavioral_anchor": "Re-opening cooperation after someone has let me down.",
+      "internal_tensions": ["vigilance"]
+    }
+  ]
+}
