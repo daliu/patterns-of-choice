@@ -1,0 +1,108 @@
+{
+  "id": "narr-truth-002",
+  "type": "core-narrative",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "The happy hour",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Branching narrative scene with three decision points, designed to surface the tradeoff between peer-loyalty and truth-telling under varying social cost. Branches deliberately differ in observable signature (confront immediately / confront later / not at all) so the same underlying conflict can be measured at different cost thresholds.",
+    "domain_anchor": "Hofmann et al. 2014 Science (workplace moral situations dominate everyday morality); Vazire 2010 SOKA (peer-context honesty is exactly where informant validity is highest).",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["workplace conflict", "alcohol context"]
+  },
+  "setup": "You're at the office happy hour on a Friday evening. You've been at this company for two years. Your team is at a corner table; you've stepped over to the bar to get a refill. A senior colleague — someone you generally like, who's been at the company longer than you — is at the bar with their close friend from another team. As you wait for your drink you overhear them: your colleague is doing a sharp, mocking imitation of a client's accent and mannerisms. It lands several jokes about the client looking foolish. The friend is laughing. Neither has noticed you yet.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "The bartender hands you your drink. What do you do?",
+      "choices": [
+        { "id": "c1", "text": "Walk away and return to your table.", "next": "scene-2-walked", "tags": ["avoid", "social-cost:none", "counterparty:peer"] },
+        { "id": "c2", "text": "Quietly say: 'Hey, that's the client. Maybe not.'", "next": "scene-2-confronted", "tags": ["truth:confront-mild", "social-cost:medium", "counterparty:peer"] },
+        { "id": "c3", "text": "Stay at the bar but don't say anything; let them know you heard.", "next": "scene-2-silent", "tags": ["truth:implicit", "social-cost:low", "counterparty:peer"] }
+      ]
+    },
+    {
+      "id": "scene-2-walked",
+      "text": "At your table, the rest of your team is laughing about something else. You sit down. Your colleague glances over once and catches your eye — you can't tell if they saw you at the bar. The conversation moves on. Later, alone at home, you find yourself thinking about it. The client has a meeting with you and your colleague on Monday morning.",
+      "choices": [
+        { "id": "c1", "text": "Saturday: send a low-key text. 'Hey, I heard you at the bar Friday. Just — that's a real person.'", "next": "scene-end-followup-text", "tags": ["truth:deferred-confront", "stake:laddered-up", "social-cost:medium"] },
+        { "id": "c2", "text": "Mention it to a trusted peer on the team for advice.", "next": "scene-end-consult", "tags": ["truth:partial", "counterparty:peer-other", "social-cost:low"] },
+        { "id": "c3", "text": "Let it go.", "next": "scene-end-let-go", "tags": ["avoid", "self-cost:residual", "social-cost:none"] }
+      ]
+    },
+    {
+      "id": "scene-2-confronted",
+      "text": "Your colleague's face shifts — momentarily caught — then they laugh it off: 'Oh shit, you're right, sorry.' Their friend looks awkward. You take your drink and walk back to your table. The atmosphere at the bar behind you is briefly subdued.\n\nMonday morning, before the client meeting, your colleague catches you in the hallway. 'Hey, about Friday — that was a stupid moment. I know you'd say something to me. I want to know it stops with you, right?'",
+      "choices": [
+        { "id": "c1", "text": "'Yeah. We're good.'", "next": "scene-end-promise", "tags": ["resolution:loyalty-over-honesty", "counterparty:peer", "social-cost:none"] },
+        { "id": "c2", "text": "'I'm not going to bring it up. But I want you to know it bothered me.'", "next": "scene-end-honest-discomfort", "tags": ["resolution:honest-discomfort", "boundary-setting"] },
+        { "id": "c3", "text": "Pause. 'I have to think about that.'", "next": "scene-end-no-commitment", "tags": ["resolution:honest-costly", "social-cost:high"] }
+      ]
+    },
+    {
+      "id": "scene-2-silent",
+      "text": "Your colleague notices you. They stop mid-sentence. There's an awkward beat. You take your drink and walk back to your table. Nothing is said.\n\nLater that evening you get a text: 'You looked like you heard that. I was being dumb. Sorry — to the client too, I mean.' Then a follow-up: 'Can we pretend this didn't happen?'",
+      "choices": [
+        { "id": "c1", "text": "'Yeah, no big deal.'", "next": "scene-end-pretend", "tags": ["resolution:pretend", "truth:abandon", "social-cost:none"] },
+        { "id": "c2", "text": "'I appreciate the apology. I don't think we need to pretend, but I'm not going to bring it up either.'", "next": "scene-end-acknowledge", "tags": ["resolution:acknowledge", "balance"] },
+        { "id": "c3", "text": "'It was uncomfortable. I'm glad you saw it that way.'", "next": "scene-end-acknowledge", "tags": ["resolution:acknowledge", "truth:state"] }
+      ]
+    },
+    {
+      "id": "scene-end-followup-text",
+      "text": "Saturday afternoon, your colleague replies: 'Thanks — I know. I shouldn't have. Won't happen again.' That's it. Monday's meeting happens; your colleague is professional and warm with the client. Walking back to your desks, your colleague says quietly: 'I appreciated the text. Genuinely. Most people wouldn't.'",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-consult",
+      "text": "Your peer's advice: 'I don't know. They're senior. It's their call to make right. Maybe stay out of it.' Monday's meeting happens, professionally. The friction stays with you for a few weeks. Some part of you wonders if you should have done more.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-let-go",
+      "text": "Monday's meeting happens. Your colleague is professional with the client. Nothing more is said about Friday. Months later you can't quite remember it as either a clear moment of failure or a clear moment of doing the right thing. It just becomes something that happened.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "self-cost:residual"]
+    },
+    {
+      "id": "scene-end-promise",
+      "text": "You and your colleague get through the client meeting. The arrangement holds. Some part of you knows you traded honesty for peer loyalty in that hallway exchange.",
+      "terminal": true,
+      "tags": ["resolution:loyalty-over-honesty"]
+    },
+    {
+      "id": "scene-end-honest-discomfort",
+      "text": "Your colleague nods slowly. 'Yeah. Okay. Fair.' The meeting goes fine. They are slightly more guarded with you for a few weeks but the working relationship continues — perhaps with more respect.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort"]
+    },
+    {
+      "id": "scene-end-no-commitment",
+      "text": "Your colleague's face hardens. 'Okay.' They walk away. The meeting goes through, professionally. The friendship cools noticeably over the following weeks. You wonder if you handled it well. You also wonder what you'd have lost by saying yes.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "social-cost:high"]
+    },
+    {
+      "id": "scene-end-pretend",
+      "text": "Things go back to normal between you and your colleague. The client meeting happens; nothing about it is noticeable. The pretending becomes its own quiet thing.",
+      "terminal": true,
+      "tags": ["resolution:pretend"]
+    },
+    {
+      "id": "scene-end-acknowledge",
+      "text": "Your colleague replies: 'Fair. Thanks.' The Monday meeting goes through, professionally. There's a small new acknowledgment in your working relationship — not always comfortable, but not strained.",
+      "terminal": true,
+      "tags": ["resolution:acknowledge"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "in_group_out_group",
+    "speed_vs_deliberation"
+  ]
+}

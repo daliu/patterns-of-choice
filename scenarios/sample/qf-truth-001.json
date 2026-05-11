@@ -1,0 +1,65 @@
+{
+  "id": "qf-truth-001",
+  "type": "quick-fire-round",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Small lies in everyday contexts",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Captures System 1 honesty preferences across counterparty, stakes, and commission/omission variations. Each item is binary forced-choice under an 8-second visible timer.",
+    "domain_anchor": "Abeler et al. 2019 Econometrica (truth-telling meta, N≈44,000); Fischbacher & Föllmi-Heusi 2013 die-roll paradigm; Hofmann et al. 2014 Science (mundane moral life).",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-truth-001-i01",
+      "prompt": "Your housemate asks if you ate the leftovers they were saving. You did.",
+      "options": [
+        { "id": "a", "text": "Admit it.", "tags": ["truth:commission", "counterparty:close", "stake:micro", "self-cost:apologize"] },
+        { "id": "b", "text": "Say you didn't see them.", "tags": ["lie:omission", "counterparty:close", "stake:micro", "self-cost:none"] }
+      ]
+    },
+    {
+      "id": "qf-truth-001-i02",
+      "prompt": "A friend you don't see often asks if you liked their painting. You didn't.",
+      "options": [
+        { "id": "a", "text": "Say you loved it.", "tags": ["lie:white", "counterparty:close", "stake:micro", "social-cost:none"] },
+        { "id": "b", "text": "Say it wasn't quite your taste.", "tags": ["truth:partial", "counterparty:close", "stake:micro", "social-cost:low"] }
+      ]
+    },
+    {
+      "id": "qf-truth-001-i03",
+      "prompt": "A customer-service agent asks if you've already used the discount code. You have.",
+      "options": [
+        { "id": "a", "text": "Tell them yes.", "tags": ["truth:commission", "counterparty:stranger", "stake:low", "self-cost:money"] },
+        { "id": "b", "text": "Tell them no.", "tags": ["lie:commission", "counterparty:stranger", "stake:low", "self-cost:none"] }
+      ]
+    },
+    {
+      "id": "qf-truth-001-i04",
+      "prompt": "A senior colleague asks during a meeting if you've read the doc they sent. You haven't.",
+      "options": [
+        { "id": "a", "text": "Admit you haven't yet.", "tags": ["truth:commission", "counterparty:senior", "stake:medium-social", "self-cost:reputation"] },
+        { "id": "b", "text": "Imply you have.", "tags": ["lie:omission", "counterparty:senior", "stake:medium-social", "self-cost:none"] }
+      ]
+    },
+    {
+      "id": "qf-truth-001-i05",
+      "prompt": "An online survey, anonymous and unverifiable, asks how many hours you exercised this week. You did less than half what your aspirational answer would be.",
+      "options": [
+        { "id": "a", "text": "Report it accurately.", "tags": ["truth:commission", "counterparty:anonymous", "stake:micro", "social-cost:none"] },
+        { "id": "b", "text": "Inflate it.", "tags": ["lie:commission", "counterparty:anonymous", "stake:micro", "social-cost:none"] }
+      ]
+    },
+    {
+      "id": "qf-truth-001-i06",
+      "prompt": "A direct report asks if their recent work has been good. You think it's been mediocre.",
+      "options": [
+        { "id": "a", "text": "Say it's been good.", "tags": ["lie:protective", "counterparty:subordinate", "stake:medium-social", "self-cost:none", "later-cost:performance"] },
+        { "id": "b", "text": "Say there are some things you want to talk through.", "tags": ["truth:soft-confront", "counterparty:subordinate", "stake:medium-social", "self-cost:time"] }
+      ]
+    }
+  ]
+}
