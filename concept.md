@@ -1,6 +1,6 @@
 # Patterns of Choice — Concept Document
 
-**Status:** Draft 0.2 — incorporates first literature review pass. Inline `[lit:]` markers cite specific sources; full citations in References. See `literature/` for area notes.
+**Status:** Draft 0.3 — first and second literature passes integrated into prose; remaining inline `[lit:]` markers cite sources for specific contested or verified claims. Full citations in References. See `literature/` for area notes.
 
 ---
 
@@ -44,7 +44,7 @@ A 2D grid: **domains** (situational territory) × **behavioral signatures** (wha
 1. **Resource allocation** — dictator, ultimatum, public goods with varying recipients
 2. **Truth-telling under cost** — lies that benefit self / others / prevent harm; commission vs. omission
 3. **Harm tradeoffs** — trolley-class, but naturalistic and re-framed
-4. **In-group vs. out-group** — kin / friend / national / stranger gradients
+4. **In-group vs. out-group** — kin / friend / national / stranger gradients (the Cikara / Bruneau parochial-empathy literature provides the behavioral-signature framework)
 5. **Authority and rule-following** — defer vs. defy; whistleblowing
 6. **Reciprocity and cooperation** — iterated PD, trust games
 7. **Intergenerational / future others** — climate, debt, legacy
@@ -55,8 +55,8 @@ A 2D grid: **domains** (situational territory) × **behavioral signatures** (wha
 **Behavioral signatures** measured within each:
 
 - **Consistency under reframing** — same dilemma flipped positive/negative; in-group/out-group swap [lit: note — moral particularists (Dancy 2004) reject "consistency under reframing" as a moral failure mode; see `literature/ethical-frameworks.md`]
-- **Cost-of-virtue curve** — at what stake size does a stated principle break (most useful longitudinal signal) [lit: verified — Crockett et al. 2014 PNAS operationalizes this for harm aversion; Abeler et al. 2019 meta on die-roll honesty (N≈44,000) is the cleanest broader anchor. See `literature/moral-psychology.md`, `literature/ecological-validity.md`.]
-- **Speed vs. deliberation** — System 1 vs. reflected response [lit: contested — Bago & De Neys 2019 shows utilitarian responders typically *intuit* the utilitarian answer; the fast=deontological / slow=utilitarian Greene-style mapping does not hold up. See `literature/moral-psychology.md`.]
+- **Cost-of-virtue curve** — at what stake size does a stated principle break (most useful longitudinal signal). The probe inherits Crockett et al. 2014 *PNAS*'s harm-magnitude operationalization rather than re-inventing the stake-laddering wheel; Abeler et al. 2019 *Econometrica* meta on dishonesty games (N ≈ 44,000) provides population base rates for calibrating the honesty-domain probe.
+- **Speed vs. deliberation** — fast responses vs. deliberated revisions. *Note*: speed asymmetries are real and measurable, but should not be interpreted as evidence of a particular ethical framework — Bago & De Neys 2019 (*JEP:General*) showed that utilitarian responders typically *intuit* the utilitarian answer, so the older Greene-style fast=deontological / slow=utilitarian mapping does not hold up.
 - **Observed vs. anonymous** — observer effect [lit: verified — robust in die-roll and dictator-game literatures; Rotella et al. 2025 moderation analysis is recent.]
 - **Order / anchor effects** — context-dependence of principle [lit: verified for moral-domain choices; do NOT extend to broader social-priming claims, many of which have failed to replicate. See `literature/replication-concerns.md`.]
 - **Stated–revealed gap** — joint with inventory layer
@@ -141,7 +141,7 @@ This is where most self-improvement products fail. The literature is messier tha
 2. **Implementation intentions** (Gollwitzer) — "when [cue], I will [behavior]." Robust, replicates. Single highest-leverage software-deliverable intervention. [lit: verified — Gollwitzer & Sheeran 2006 meta, k=94, N≈8,000, d=0.65 on goal attainment. Effect sizes in recent better-powered work somewhat smaller but still medium. See `literature/behavior-change.md`.]
 3. **Scenario rehearsal** — practicing aspirational behavior in low-stakes simulated contexts. Native strength of this product. [lit: note — this is a relatively novel claim; the closest empirical analog is mental-contrasting-with-implementation-intentions (Oettingen) for which there is meta-analytic support, but "moral scenario rehearsal" specifically has no direct literature. Treat as design hypothesis, not validated mechanism.]
 4. **Real-world micro-commitments** — scaffold-able, not enforceable in-app.
-5. **Identity reinforcement** (Oyserman) — "I am someone who..." beats "I should..." [lit: verified — Oyserman School-to-Jobs RCTs; Walton/Yeager belonging interventions are the strongest adjacent identity-intervention literature; 2023 Walton et al. *Science* multi-site replication shows effects depend on context affordances.]
+5. **Identity reinforcement** (Oyserman; Walton/Yeager) — "I am someone who..." beats "I should..." The mediator linking an identity claim to actual behavior is best-modeled as self-efficacy (Bandura 1977, 1997): the identity claim takes effect only when the user also believes they can execute on it in the relevant moment. Interventions that build identity without scaffolding self-efficacy reliably under-perform. [lit: verified — Oyserman School-to-Jobs RCTs; 2023 Walton et al. *Science* multi-site replication shows effects depend heavily on context affordances. Bandura's self-efficacy framework is robustly replicated and is the standard mediator in the behavior-change literature for identity-action coupling.]
 6. **Social commitment / accountability** — strong but operationally heavy.
 7. **Environmental restructuring** — strongest long-term, hardest to deliver in software.
 
@@ -163,7 +163,7 @@ Layers 1–3, 5 are native to the product. 4 and 6 are scaffold-able. 7 is sugge
 
 ### Anti-patterns
 
-- **Don't gamify the values themselves.** Streaks for "honesty days" corrupt motivation via the crowding-out effect (Deci 1971+). Gamify *showing up to the system*; never the moral behavior itself. [lit: contested — the directional claim (extrinsic rewards can undermine intrinsic motivation in moral domains) has theoretical support (Deci/Koestner/Ryan 1999 meta d≈-0.34; Bénabou & Tirole 2006 signaling model) but the magnitude is disputed (Cameron & Pierce 1994 meta; Peters et al. 2022 failed direct replication of Deci 1971). The design choice is reasonable on precautionary grounds, but should not be framed as established empirical fact. See `literature/replication-concerns.md`.]
+- **Don't gamify the values themselves.** Streaks for "honesty days" corrupt motivation via a signaling dynamic — when external reward enters the picture, the user (and observers) can no longer infer intrinsic commitment from the behavior, which itself undermines the commitment (Bénabou & Tirole 2006 *AER* gives the formal signaling-model basis). Gamify *showing up to the system*; never the moral behavior itself. [lit: contested — the directional claim has theoretical and partial empirical support (Deci/Koestner/Ryan 1999 meta d ≈ -0.34) but the magnitude is disputed (Cameron & Pierce 1994 meta) and the original Deci 1971 finding failed a 2022 direct replication (Peters et al.). The Bénabou-Tirole signaling-model framing is the more defensible theoretical anchor; the crowding-out empirical claim should not be cited as settled fact. The design choice (no gamification of values) is reasonable on precautionary grounds either way.]
 - **Don't moralize.** The system never tells the user a choice was wrong. Descriptive, never prescriptive.
 - **Don't ship social comparison.** "More honest than 60% of users" is poisonous.
 - **Watch for moral self-licensing.** The game must stay tethered to real-life prompts; never function as a closed moral-debit account. [lit: note — moral licensing is real but smaller and more context-dependent than the early Sachdeva/Monin literature suggested; Blanken et al. 2015 meta d=0.31 with publication bias; three direct replications failed (Blanken et al.). Concern is appropriate; magnitude calibration should be modest. See `literature/replication-concerns.md`.]
