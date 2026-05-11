@@ -2,7 +2,7 @@
 
 A longitudinal instrument for measuring revealed ethical preferences, comparing them against stated values, and offering opt-in scaffolding for user-defined growth.
 
-**Status:** Concept stage. No code yet. See [`concept.md`](concept.md) for the working design.
+**Status:** Concept stage. No code yet. See [`concept.md`](concept.md) for the working design (Draft 0.2) and [`mvp.md`](mvp.md) for the proposed first build spec.
 
 ## What this is
 
@@ -17,7 +17,8 @@ Existing instruments measure one side or the other. None systematically operatio
 
 ## Repo layout
 
-- [`concept.md`](concept.md) — the working concept document
+- [`concept.md`](concept.md) — the working concept document (Draft 0.2)
+- [`mvp.md`](mvp.md) — proposed scope for the first measurement-validation build (MVP-1)
 - [`literature/`](literature/) — literature notes and citations (iterated by research agents)
 
 ## Operating constraints
@@ -33,4 +34,4 @@ These are design commitments, not nice-to-haves. They follow from the trust prem
 
 ## Status
 
-Concept draft 0.1. Not yet validated, not yet built.
+Concept Draft 0.2 (incorporates first literature review pass). MVP-1 spec drafted. Not yet validated, not yet built.
