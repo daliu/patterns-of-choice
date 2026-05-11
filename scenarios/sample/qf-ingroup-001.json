@@ -1,0 +1,65 @@
+{
+  "id": "qf-ingroup-001",
+  "type": "quick-fire-round",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Who gets the limited resource",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Captures System 1 preferences over social distance. Each item presents a forced choice where giving to one party means not giving to the other; the parties vary in relational closeness (close friend / family / acquaintance / out-group stranger / distant abstract). Two items vary tribal/political identity rather than personal closeness.",
+    "domain_anchor": "Cikara et al. 2011 / Bruneau, Cikara & Saxe 2017 on parochial empathy. Haidt MFT loyalty foundation. Singer 1972 'Famine, Affluence, and Morality' as the philosophical anchor for the universalism pole.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["political content", "intergroup conflict"]
+  },
+  "items": [
+    {
+      "id": "qf-ingroup-001-i01",
+      "prompt": "A close friend and an acquaintance both ask you to help them move on Saturday. You can only do one.",
+      "options": [
+        { "id": "a", "text": "Help the close friend.", "tags": ["loyalty", "counterparty:close-vs-peer", "stake:time", "value:loyalty"] },
+        { "id": "b", "text": "Help the acquaintance — they asked first, the friend has more options.", "tags": ["universalism", "counterparty:close-vs-peer", "stake:time", "value:universalism"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-001-i02",
+      "prompt": "You can volunteer 4 hours this month. Two options:",
+      "options": [
+        { "id": "a", "text": "A local cause where you'd see the impact firsthand.", "tags": ["particularism", "counterparty:near-vs-far", "stake:time", "value:particularism", "value:hospitality"] },
+        { "id": "b", "text": "A distant cause where the same hours produce more measurable benefit.", "tags": ["universalism", "counterparty:near-vs-far", "stake:time", "value:universalism", "consequentialist-lean"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-001-i03",
+      "prompt": "A family member is being unfair to a stranger in public — talking down to a service worker.",
+      "options": [
+        { "id": "a", "text": "Stay quiet; address it privately afterward.", "tags": ["loyalty", "counterparty:family-vs-stranger", "stake:social", "value:loyalty", "value:discretion"] },
+        { "id": "b", "text": "Push back in the moment, even though it's awkward.", "tags": ["universalism", "counterparty:family-vs-stranger", "stake:social", "value:universalism", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-001-i04",
+      "prompt": "Your political/cultural group is openly mocking someone from the 'other side' at a gathering.",
+      "options": [
+        { "id": "a", "text": "Stay quiet; you don't need to fight this fight here.", "tags": ["loyalty:tribal", "counterparty:in-group-tribal", "stake:social", "value:loyalty", "value:discretion"] },
+        { "id": "b", "text": "Push back or redirect the conversation.", "tags": ["universalism", "counterparty:in-group-tribal", "stake:social", "value:universalism", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-001-i05",
+      "prompt": "A cousin you barely know asks to crash at your place for a week while they sort out a job.",
+      "options": [
+        { "id": "a", "text": "Make it work; they're family.", "tags": ["particularism", "counterparty:distant-family", "stake:medium", "value:particularism", "value:hospitality"] },
+        { "id": "b", "text": "Help them find a short-term rental instead.", "tags": ["boundaries", "counterparty:distant-family", "stake:medium", "value:boundaries", "value:self_reliance:projected"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-001-i06",
+      "prompt": "You can give $100 to one cause. Both are well-run:",
+      "options": [
+        { "id": "a", "text": "A community organization in your own neighborhood.", "tags": ["particularism", "counterparty:local-vs-global", "stake:money", "value:particularism", "value:loyalty:community"] },
+        { "id": "b", "text": "A global effectiveness-rated charity where the dollar buys more impact.", "tags": ["universalism", "counterparty:local-vs-global", "stake:money", "value:universalism", "consequentialist-lean"] }
+      ]
+    }
+  ]
+}
