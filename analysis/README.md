@@ -8,7 +8,11 @@ Versioned data files that the analyzer consumes. These files are *part of the pr
 
 ## Versioning
 
-The `_v0.1` in the filename is intentional. When the tag-to-axis mapping changes (a new tag is added; an existing tag's weight is revised; a scoring axis is added), bump to `_v0.2` rather than overwriting. The pre-registration locks a specific version; future analyzers can run either version against the data.
+The `_v0.1` in the filename is intentional. The file is in two regimes:
+
+**Pre-OSF-lock (now).** The file is mutable. New tags get added, weights get revised, axes get re-thought. Filename stays at v0.1 until the next OSF lock event. Discipline: commit each material change with a clear message describing what changed and why.
+
+**Post-OSF-lock.** When the pre-registration is filed at OSF, the tag-axis map that the pre-reg analysis depends on is locked at its filing version (becoming the locked v0.1 / v0.2 / etc.). After that point, any changes get a version bump rather than an in-place edit; the previous version remains in the repo so post-hoc analyses can be re-run against the locked map.
 
 The version of the file used in the final write-up is reported alongside the results.
 

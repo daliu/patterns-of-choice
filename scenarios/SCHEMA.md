@@ -164,11 +164,14 @@ Tags are namespaced `category:value`. The analyzer reads only these tags, never 
 |---|---|
 | `truth:` | `commission`, `omission`, `confront-mild`, `confront-direct`, `partial`, `acknowledge`, `abandon` |
 | `lie:` | `omission`, `commission`, `white`, `protective` |
-| `counterparty:` | `close`, `peer`, `subordinate`, `senior`, `stranger`, `out-group`, `child` |
+| `value:` | `honesty`, `tact`, `loyalty`, `fairness`, `generosity`, `cooperation`, ... (references inventory/values-deck.json IDs) |
+| `counterparty:` | `close`, `peer`, `subordinate`, `senior`, `stranger`, `out-group`, `child`, `business`, `anonymous` |
 | `stake:` | `micro`, `low`, `medium-social`, `medium-financial`, `high-social`, `high-financial` |
 | `social-cost:` | `none`, `low`, `medium`, `high` |
-| `self-cost:` | `none`, `apologize`, `time`, `money`, `reputation` |
-| `resolution:` | `positive`, `ambivalent`, `avoidance`, `loyalty-over-honesty`, `honest-discomfort`, `honest-costly`, `pretend`, `acknowledge` |
+| `self-cost:` | `none`, `apologize`, `time`, `money`, `reputation`, `residual` |
+| `credit:` | `take`, `share-active`, `share-passive`, `silent`, `redirect`, `propagated`, `keep`, `contained`, `acknowledge-only` — used in resource-allocation narratives where credit/recognition is the resource |
+| `resolution:` | `positive`, `ambivalent`, `avoidance`, `loyalty-over-honesty`, `honest-discomfort`, `honest-costly`, `pretend`, `acknowledge`, `credit-realigned`, `quiet-burn` |
+| `trust:` | `default`, `full`, `withhold`, `asymmetric`, `institutional` |
 
 New tags can be added but require updating this vocabulary file and the analyzer.
 

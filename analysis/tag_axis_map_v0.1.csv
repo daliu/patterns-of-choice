@@ -4,6 +4,7 @@ truth-telling,honesty,truth:confront-direct,1.0,direct confrontation of an untru
 truth-telling,honesty,truth:confront-mild,0.7,gentle confrontation
 truth-telling,honesty,truth:state,0.7,stating what is true without confronting
 truth-telling,honesty,truth:partial,0.5,partial truth (omits or softens)
+truth-telling,honesty,value:tact,0.3,tact (per inventory deck — partial-honesty with care for dignity)
 truth-telling,honesty,truth:acknowledge,0.5,acknowledging without volunteering
 truth-telling,honesty,truth:soft-confront,0.5,framing as collaborative
 truth-telling,honesty,truth:deferred-confront,0.5,truth told but with delay
@@ -41,6 +42,7 @@ in-group-out-group,circle_radius,value:boundaries,-1.0,
 reciprocity-cooperation,trust,trust,1.0,extending benefit of the doubt
 reciprocity-cooperation,trust,trust:default,1.0,default-trust posture
 reciprocity-cooperation,trust,trust:full,1.0,full trust with no contingency
+reciprocity-cooperation,trust,trust:institutional,0.3,mild trust in institutional/system process (rather than individual)
 reciprocity-cooperation,trust,value:trust,1.0,
 reciprocity-cooperation,trust,trust:withhold,-1.0,withholding trust
 reciprocity-cooperation,trust,trust:asymmetric,0.5,partial trust; specific contingency
@@ -114,3 +116,16 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,stated-revealed-aligned,,outcome descriptor
 *,metadata,in-group-protection,,framing descriptor
 *,metadata,counterparty:peer-tribal,,counterparty stratifier
+*,metadata,credit:take,,credit-allocation resolution (user retained credit)
+*,metadata,credit:keep,,credit-allocation resolution (user did not redirect)
+*,metadata,credit:share-active,,credit-allocation resolution (user explicitly brought up another)
+*,metadata,credit:share-passive,,credit-allocation resolution (user named in framing)
+*,metadata,credit:silent,,credit-allocation resolution (user did not name)
+*,metadata,credit:redirect,,credit-allocation resolution (user re-allocated credit after)
+*,metadata,credit:propagated,,credit-allocation resolution (credit moved via institutional channels)
+*,metadata,credit:contained,,credit-allocation resolution (acknowledgment without institutional action)
+*,metadata,credit:acknowledge-only,,credit-allocation resolution (acknowledged without redirecting)
+*,metadata,resolution:credit-realigned,,narrative-resolution stratifier
+*,metadata,resolution:quiet-burn,,narrative-resolution stratifier
+*,metadata,stated-revealed-aligned-late,,outcome descriptor (late alignment)
+
