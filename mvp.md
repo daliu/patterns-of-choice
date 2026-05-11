@@ -34,7 +34,7 @@ Build the smallest thing that empirically tests **Claim 1** from the validation 
 - **4-week minimum, 8-week target** longitudinal protocol
 - **External validation hooks:**
   - HEXACO-60 at baseline (convergent validity)
-  - Opt-in informant-report wave at week 4 (2–3 informants per user)
+  - Opt-in informant-report wave at week 4 — recruit **≥2 informants per user, aim for 3** (Connelly & Ones 2010 meta shows reliability plateaus near 3; marginal validity gain from #3→#4 is small). Canonical pair: romantic partner + coworker, the configuration with strongest evaluative-trait agreement in the SOKA literature. HEXACO-60 is scored at the **facet level** (fairness, sincerity, modesty, greed avoidance) not just the domain total, since Pletzer 2019 and Lee-Ashton facet-level work show facet prediction frequently exceeds domain-level for specific behaviors
 - Local-first data; encrypted opt-in sync for the validation cohort
 
 ---
@@ -45,7 +45,7 @@ Pick the 4 domains with the **strongest existing literature anchors** and **clea
 
 | Domain | Why include | Operational anchor |
 |---|---|---|
-| Truth-telling under cost | Abeler et al. 2019 *Econometrica* meta-analysis (N≈44,000 across 90 games) gives the cleanest calibration in the field | Fischbacher & Föllmi-Heusi die-roll paradigm; matrix-task variants |
+| Truth-telling under cost | Abeler et al. 2019 *Econometrica* meta-analysis (N≈44,000 across 90 games) gives the cleanest calibration; Cohn et al. 2019 *Science* lost-wallet field study provides the closest lab→field analog | Fischbacher & Föllmi-Heusi 2013 die-roll and sender-receiver paradigms as the spine; matrix task as behavior elicitor but **not** the Mazar/Ariely 2008 moral-priming framing (failed Verschuere et al. 2018 RRR, 25 labs, N=5,786) |
 | Resource allocation | Dictator / ultimatum games are the most-replicated paradigm in behavioral economics | Real-money or imagined-money dictator with varying recipients |
 | In-group vs. out-group | Cikara parochial-empathy work; clean behavioral signature | Allocation / harm tradeoffs across kin / friend / national / stranger gradients |
 | Reciprocity & cooperation | Iterated trust games and iterated PD are well-established; show real-life correlates | Trust game with iterated rounds; PD variants |
@@ -137,8 +137,8 @@ Pick the 4 domains with the **strongest existing literature anchors** and **clea
 - Internal consistency per domain: α ≥ 0.65 (Cronbach), ω ≥ 0.70 (McDonald)
 
 **Convergent validity (pre-registered)**
-- Revealed *truth-telling* domain correlates r ≥ 0.30 with HEXACO honesty-humility
-- Informant H rating correlates r ≥ 0.25 with revealed truth-telling
+- Revealed *truth-telling* domain correlates **r ≥ 0.25** with HEXACO honesty-humility (calibrated to Thielmann 2020 meta ρ̂ ≈ 0.20 with prosocial behavior; the originally-drafted r ≥ 0.30 sat above the meta-analytic upper edge and would risk pre-registration failure even at the strongest replicable effect size)
+- Informant H rating correlates r ≥ 0.25 with revealed truth-telling (Pletzer 2019 informant-rated H ρ = −0.48 with workplace deviance is the upper bound; r ≥ 0.25 against a scenario-derived measure is the defensible lower target)
 - Stated and revealed scores correlate moderately (r between 0.20 and 0.60); too-high collapses the gap signal, too-low suggests measurement noise
 
 **Reliability**
