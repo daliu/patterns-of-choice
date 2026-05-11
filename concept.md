@@ -1,6 +1,6 @@
 # Patterns of Choice — Concept Document
 
-**Status:** Draft 0.1 — captured from initial design conversation. Pending literature review and revision.
+**Status:** Draft 0.2 — incorporates first literature review pass. Inline `[lit:]` markers cite specific sources; full citations in References. See `literature/` for area notes.
 
 ---
 
@@ -9,6 +9,8 @@
 Character is not a fixed trait; it is a pattern that emerges from the decisions a person makes, repeatedly, across many small situations. Most personality instruments measure what people *say* they value. Most "self-improvement" products tell users what they *should* value. This project proposes a third thing: a longitudinal instrument that measures what people *reveal* through low-stakes ethical decisions, surfaces the gap between revealed and stated values, and offers optional, opt-in scaffolding for users to close gaps they themselves identify.
 
 The product is not a quiz. It is a contemplative practice, delivered as software, with a research-grade measurement layer underneath.
+
+**Foundational empirical risk.** The premise that low-stakes scenario choices reveal something about real-life behavior is *contested in the literature, not established*. Bostyn et al. 2018 *Psychological Science* and FeldmanHall et al. 2012 *Cognition* show hypothetical moral choices fail to predict real-stakes ones in trolley- and dictator-style paradigms. Hofmann et al. 2014 *Science* experience-sampling work does support the design choice to use *mundane* over *dramatic* scenarios — daily moral life is gossip, fairness, loyalty in ordinary contexts, not trolleys — but the ecological-validity bridge for this specific format is a hypothesis to be empirically demonstrated, not assumed. The measurement layer, the gap analysis, and the intervention claims are all provisional until that bridge is shown. This framing changes everything downstream and should be visible to the user from onboarding: the instrument is an experiment they are part of, not a verdict.
 
 ## Core insight
 
@@ -97,7 +99,7 @@ A 2D grid: **domains** (situational territory) × **behavioral signatures** (wha
 
 ## 2. Inventory layer (stated values)
 
-Existing instruments (MFQ, Schwartz PVQ, VIA-IS) under-perform on predictive validity. Three failure modes to avoid:
+Existing self-report instruments — MFQ-2 (Atari et al. 2023), Schwartz PVQ-RR (Schwartz & Cieciuch 2022), VIA-IS — under-perform on predictive validity. Three structural failure modes to avoid:
 
 1. **Everyone endorses everything.** Likert lets users max all values.
 2. **No forced tradeoff.** Real ethics is allocation under scarcity.
@@ -174,11 +176,13 @@ Layers 1–3, 5 are native to the product. 4 and 6 are scaffold-able. 7 is sugge
 - **Weeks 4–12:** Intervention layer activates for chosen domain.
 - **Week 12+:** Maintenance. New gap or deepen current.
 
-**Stage-matching** (Prochaska TTM) matters most. Precontemplation, contemplation, preparation, action, maintenance — different stages need different interventions. Detect stage from engagement signals; modulate accordingly. Action-stage interventions on precontemplation users produce reactance; precontemplation reflection on action-stage users feels patronizing. [lit: contested — the descriptive stage distinction (TTM) is widely used, but the prescriptive claim that stage-matched interventions outperform non-matched controls is empirically weak. Aveyard et al. 2009 found no benefit for smoking cessation; West 2005 *Addiction* called for retiring the model. The doc's qualitative claim (different users at different stages need different framings) is intuitive; the strong "stage-matching matters most" framing overstates the evidence. See `literature/behavior-change.md`.]
+**Engagement-stage sensitivity.** Different points of engagement call for different framings: a user in "I don't see a problem" mode needs gentler reflection than a user actively trying to change. Detect engagement style from signals (do they read reflections, pick growth directions, engage with check-ins?) and modulate framing accordingly. Push action-style interventions on a reflection-stage user and you produce reactance; push reflection on an action-stage user and it feels patronizing.
+
+An earlier draft anchored this in Prochaska's transtheoretical model (TTM) — that scaffolding has been removed. The descriptive stage distinctions in TTM are widely used, but the *prescriptive* claim that stage-matched interventions outperform non-matched controls is empirically weak (Aveyard et al. 2009 on smoking cessation; West 2005 *Addiction* explicitly called for retiring the model). Keep the design intuition; drop the TTM citation.
 
 ### Honest positioning
 
-Realistic effect sizes on the strongest stack — implementation intentions + practice + identity work + accountability — are probably ~0.5–0.8 SD on targeted behavior, with significant attrition. A contemplative practice that may shift behavior over months, not a quick fix. [lit: caution — individual component effects support this range (II d≈0.65; identity-belonging d≈0.35; prosocial-spending effects modest), but *no meta-analysis of this combination exists*, and Yeager et al. 2019 *Nature* growth-mindset (d≈0.03 average with large context heterogeneity) and Milkman et al. 2021 *Nature* gym megastudy show that stacking interventions does not necessarily produce additive effects. Calibrate downward; ~0.3–0.5 SD on the strongest measurable outcomes, with substantial heterogeneity, is the more defensible expectation. See `literature/behavior-change.md`.]
+Realistic effect sizes on the strongest stack — implementation intentions + practice + identity work + accountability — are probably **~0.3–0.5 SD on the strongest measurable outcomes, with substantial subgroup heterogeneity** and meaningful attrition. Individual components do show medium effects in isolation (Gollwitzer & Sheeran 2006 meta on implementation intentions, k=94, d≈0.65; Oyserman / Walton identity-belonging work, d≈0.35), but the literature on combining them is clear: interventions do not stack additively. Yeager et al. 2019 *Nature* on growth mindset showed d≈0.03 average across schools with large context heterogeneity; Milkman et al. 2021 *Nature* gym megastudy found similar small-and-heterogeneous effects across 53 nudges. A contemplative practice that may shift behavior over months, not a quick fix — and may shift it materially for some users and not at all for others.
 
 Working framing: **"a long-form mirror, with optional scaffolding."**
 
@@ -189,6 +193,7 @@ Working framing: **"a long-form mirror, with optional scaffolding."**
 ### Intrinsic to the premise (cannot be designed away)
 
 - **Smuggled value claims in the taxonomy.** Every design choice is itself ethical. The set of values you include defines the moral universe for users. *Mitigation:* multiple selectable preset taxonomies (Haidt / Schwartz / Aristotelian / religious / secular humanist), user-editable inventory, transparency about authorship, open-source scenario library so academics and critics can audit.
+- **Individualist / liberal-secular framing is itself a value commitment.** The form of an individual app for personal moral self-cultivation is structurally individualist and secular. MacIntyre's *After Virtue* argues that coherent virtue formation requires tradition-constituted communities, not free-floating individual practice. Confucian role-ethics (Ames 2011) makes a related move: moral life is constituted by relational roles, not by personal traits to be developed. Users from those traditions may find the "I am someone who..." identity-anchoring framework awkward; an "as a daughter / colleague / friend, I am someone who..." *relational* variant would translate better. *Mitigation:* acknowledge in onboarding rather than pretending the framing is neutral; offer the relational variant as a presetable option.
 - **WEIRD bias.** Moral psychology is overwhelmingly Western. Collectivist or honor-based users may "fail" individualist trolley framings in ways that aren't moral failures. *Mitigation:* cultural variant scenarios, explicit acknowledgment, can't fully solve. [lit: verified and stronger — Atari et al. 2023 *JPSP* shows the *nomological network* of morality (how foundations correlate with outcomes) varies across 25 populations, not just the levels. MFQ-30 shows measurement non-invariance across most country pairs (Iurino & Saucier 2020). Practical: cross-cultural comparison of absolute scores is not statistically defensible without invariance testing. See `literature/cross-cultural.md`.]
 - **The mirror itself can harm.** Some users are genuinely worse off knowing their revealed values. *Mitigation:* informed consent, contemplative framing, easy deletion, never make profile feel permanent.
 - **False precision.** Single-subject psychometrics on noisy data produce numbers that look more rigorous than they are. *Mitigation:* always show confidence intervals, never a bare number; refuse to ship a single "ethics score" no matter how much users demand it.
@@ -223,7 +228,7 @@ Two claims to validate; different designs.
 
 ### Claim 1 — Measurement validity
 
-- **Convergent validity** with existing instruments (MFQ, Schwartz PVQ, HEXACO honesty-humility, VIA-IS, Dark Triad). Moderate correlations expected — perfect correlation means you reinvented something.
+- **Convergent validity** with existing instruments — MFQ-2 (Atari et al. 2023), Schwartz PVQ-RR (Schwartz & Cieciuch 2022), HEXACO honesty-humility (Lee & Ashton 2018), VIA-IS, SD3 Short Dark Triad. Moderate correlations expected; perfect correlation means you reinvented something.
 - **Discriminant validity** against unrelated constructs.
 - **Predictive validity** against real-stakes behavior (Fischbacher die-roll, Mazar/Ariely matrix task, real-money dictator games, charitable giving). [lit: caution — Mazar/Ariely 2008 Ten Commandments effect *did not replicate* in 2018 RRR (Verschuere et al., 25 labs, N=5,786). The task itself produces real cheating behavior and is fine for measurement; the moral-priming finding using it is not. Also: Ariely's broader honesty-research program is partially compromised by the Gino fraud case. See `literature/replication-concerns.md`, `literature/ecological-validity.md`. Fischbacher die-roll and Abeler et al. 2019 meta (N≈44,000) are the better-replicated honesty paradigms.]
 - **Test-retest reliability** over weeks/months (r ≈ 0.6–0.8 over 3 months — stable-ish but not rigid). [lit: verified — this range is consistent with HEXACO test-retest (Henry & Mõttus 2022: 13-day median r = 0.88 domains, 0.81 facets, 0.65 items), MFQ-30 (typically 0.6–0.8 over weeks-to-months), and VIA-IS (9-month median r = 0.73). 3-month r ≈ 0.6–0.8 is a reasonable target.]
@@ -246,11 +251,13 @@ Two claims to validate; different designs.
 ### Phasing
 
 - **Phase 1 (0–6m):** MVP measurement layer. n≈200. Construct + convergent + test-retest. Cheap and fast.
-- **Phase 2 (6–12m):** Behavioral validation via remote economic-game protocols and informant reports. n≈500–1000. The credibility moat.
+- **Phase 2 (6–12m):** Multi-source validation — *primarily* informant reports (partner / coworker / friend ratings), *plus* remote economic-game protocols. n≈500–1000. The credibility moat. Vazire 2010 SOKA and Connelly & Ones 2010 meta-analysis show informants outperform self-report for the most evaluative personality traits — honesty-humility especially, which is precisely what patterns-of-choice targets. Most consumer-grade instruments stop at construct + convergent validity; informant-report validation is the phase that separates a serious instrument from the lifestyle-app version of the same idea.
 - **Phase 3 (12–24m):** Pre-registered intervention RCT. n≈400–800 powered for medium effects. Published.
 - **Phase 4 (24m+):** Long-term follow-up, cross-cultural replication, mechanism studies.
 
 ### Open-science commitments
+
+Pre-registered validation, open instruments, and published findings are not generic virtue-signaling. They are the correct response to a documented credibility crisis in moral psychology specifically. Francesca Gino's Harvard tenure was revoked in 2025 following data-fraud findings (Data Colada 2021–2023). The broader Ariely honesty-research program is partially compromised. Multiple flagship findings — Deci 1971 overjustification (Peters et al. 2022 failed direct replication), Mazar et al. 2008 ten-commandments priming (Verschuere et al. 2018 RRR, 25 labs, N=5,786), several moral-licensing effects (Blanken et al. 2015 meta showed publication bias; three direct replications failed) — have not held up. The trust premise of patterns-of-choice depends on the field's credibility, and the field's credibility is exactly what's contested. The commitments below are the structural responses that distinguish a serious instrument from another lifestyle app:
 
 - Pre-register all confirmatory analyses (OSF)
 - Publish protocols and instruments openly
@@ -278,41 +285,35 @@ This is academic-grade rigor for what's typically a consumer product. Most apps 
 
 ---
 
-## Literature gaps identified
+## Literature gaps — status
 
-Areas where the literature supports additions or rebalancings that draft 0.1 doesn't yet incorporate. For the next revision.
+Tracking what the literature pass surfaced and what each revision has incorporated.
 
-1. **Hofmann et al. 2014 *Science* experience-sampling work** is the strongest empirical justification for the doc's design choice of mundane-daily over dramatic-dilemma scenarios. Should be cited directly. Real moral life is dominated by gossip, fairness, loyalty in mundane contexts, not trolley choices.
+### Incorporated in Draft 0.2
 
-2. **Bostyn et al. 2018 (and FeldmanHall et al. 2012)** on hypothetical-vs-real moral choice divergence is *the* key empirical concern for patterns-of-choice. The doc treats ecological validity as a Phase-2 validation question; the literature suggests it should be elevated to a foundational empirical premise the project must prove, not assume. The "is the gap from low-stakes-game to real-life behavior tractable at all?" question is the project's central empirical risk.
+- **Hofmann et al. 2014 *Science***: mundane-daily morality empirical anchor added to Premise.
+- **Bostyn et al. 2018 + FeldmanHall et al. 2012**: ecological-validity contestation elevated to a foundational empirical risk in Premise. The bridge from low-stakes scenario to real behavior is now framed as a hypothesis the project must demonstrate, not assume.
+- **Atari et al. 2023 *JPSP***: nomological-network caveat folded into the WEIRD-bias mitigation; current instrument now MFQ-2 (six foundations) rather than MFQ-30.
+- **Vazire 2010 SOKA + Connelly & Ones 2010 meta**: informant-report emphasis strengthened in Phase 2 of the validation plan.
+- **Yeager et al. 2019, Milkman et al. 2021, Walton et al. 2023**: effect-size estimates calibrated down to ~0.3–0.5 SD with substantial heterogeneity (from prior 0.5–0.8 SD).
+- **MacIntyre / Confucian role-ethics**: added as a smuggled-values bullet; relational variant of identity anchoring proposed.
+- **Post-Gino landscape**: open-science commitments now framed as response to a specific credibility crisis (Gino tenure revocation 2025; failed replications of Deci 1971, Mazar et al. 2008, several moral-licensing effects).
+- **TTM stage-matching**: prescriptive claim removed; design intuition retained without the discredited scaffolding.
+- **Schwartz PVQ-RR**: replaces PVQ-21/40 references throughout.
 
-3. **Atari et al. 2023 *JPSP*** on nomological-network variation across cultures is stronger than the doc's current "WEIRD bias" framing. Even when the *structure* of moral foundations is measurable across cultures, the *correlates* of those foundations with outcomes shift. This complicates the gap-analysis output ("you scored low on Loyalty") — what Loyalty *predicts* depends on the user's cultural context.
+### Remaining for next pass
 
-4. **Vazire 2010 SOKA model and Connelly & Ones 2010 meta-analysis** on informant validity. The doc's intuition that informant reports are the single most important credibility move is correct; the literature support is stronger than the doc currently invokes. Honesty-humility is *the* most-evaluative personality trait — exactly where informants outperform selves.
+- **Self-efficacy (Bandura 1977, 1997).** Not currently cited. Implicit throughout the intervention layer; should be made explicit as the mediator linking "I am someone who..." → action initiation → persistence.
+- **Bénabou & Tirole 2006 *AER* on incentives and prosocial behavior.** Formal signaling-model basis for the "don't gamify the values themselves" anti-pattern — a stronger theoretical foundation than the contested Deci-1971 citation that currently anchors it.
+- **Crockett et al. 2014 PNAS harm-magnitude paradigm.** Existing, validated, computationally tractable operationalization of "cost-of-virtue curve." The doc reinvents the stake-laddering wheel; should inherit Crockett's parameter-space rather than design from scratch.
+- **Abeler et al. 2019 *Econometrica* meta on dishonesty games (N≈44,000).** Single best empirical anchor for cost-of-virtue / honesty-under-stakes calibration. Cleaner numbers than the now-discredited Mazar/Ariely 2008.
+- **Aknin et al. 2013, 2022 on prosocial spending and well-being.** Robustly replicated cross-cultural finding; the underlying mechanism (prosocial action → affective benefit) is one of the few solidly-replicated findings and is directly relevant to the "Effort and self-sacrifice" domain.
+- **Bago & De Neys 2019** on intuitive utilitarian responses. Inline flag exists; prose-level rewrite of the speed-vs-deliberation signature description still pending.
+- **Cikara parochial-empathy work.** Should be measurable as a behavioral signature, not just a domain axis.
+- **Identity-anchoring relational variant.** Acknowledged as needed in the Smuggled-values section; not yet specified in inventory layer's three-layer (current / aspirational / admired) design. The "as a daughter / colleague / friend, I am someone who..." form needs to be authored as a parallel set of inventory items.
+- **Onboarding language for the foundational empirical risk.** The Premise now names it, but the user-facing copy that communicates "you are part of an experiment" without making the product feel unproven is its own design problem.
 
-5. **Walton & Wilson 2018 "wise interventions" framework and the recent multi-site replications (Walton et al. 2023 *Science*; Yeager et al. 2019 *Nature*).** These are the single most relevant analogous-intervention literature for patterns-of-choice. Both show: real effects, modest sizes, large heterogeneity, context-affordances matter enormously. Direct implication for marketing-honesty: claim small average effects with meaningful subgroup heterogeneity, not large effects.
-
-6. **Self-efficacy (Bandura).** Not currently cited. Implicit throughout the intervention layer; should be made explicit as the mediator linking "I am someone who..." → action initiation → persistence.
-
-7. **Bénabou & Tirole 2006 *AER* on incentives and prosocial behavior.** Provides a formal signaling-model basis for the "don't gamify the values themselves" anti-pattern. Stronger theoretical foundation than the Deci-1971 citation.
-
-8. **Crockett et al. 2014 PNAS harm-magnitude paradigm.** Existing, validated, computationally tractable operationalization of "cost-of-virtue curve." The doc reinvents the stake-laddering wheel; should be designed to inherit Crockett's parameter-space.
-
-9. **Abeler et al. 2019 *Econometrica* meta-analysis on dishonesty games (N≈44,000).** Single best empirical anchor for cost-of-virtue / honesty-under-stakes calibration. Cleaner numbers than Mazar/Ariely 2008.
-
-10. **Aknin et al. 2013, 2022 on prosocial spending and well-being.** Robustly replicated cross-cultural finding. Relevant for the doc's "Effort and self-sacrifice" domain — the underlying mechanism (prosocial action → affective benefit) is one of the few solidly-replicated moral-psychology findings.
-
-11. **Bago & De Neys 2019** finding that utilitarian responses are typically intuitive, not deliberative. The doc's speed-vs-deliberation signature should be measured but interpreted with explicit awareness that the Greene-style mapping (fast=deontological/slow=utilitarian) does not hold.
-
-12. **Cikara parochial-empathy work.** Relevant for the in-group/out-group domain — measurable as a behavioral signature, not just a domain axis.
-
-13. **MacIntyre / Annas / Confucian role-ethics positioning.** The doc's individualist-secular-optional framing is itself an ethical position that should be explicitly acknowledged. Identity-anchoring may translate awkwardly in role-ethics contexts (East Asian, religious users).
-
-14. **Name collision (resolved by renaming):** the original working name "Character Lab" collided with Angela Duckworth's nonprofit at characterlab.org. Project renamed to *patterns-of-choice* on identification of the collision.
-
-15. **The post-Gino landscape.** Doc's emphasis on pre-registration, open-source, published findings is the correct response to the credibility crisis in moral psychology; naming this rationale explicitly (rather than presenting it as generic open-science commitment) would strengthen the trust premise.
-
-See `literature/_index.md` and the area-specific files for sources and citations.
+See `literature/_index.md` and area-specific files for sources and citations.
 
 ---
 
