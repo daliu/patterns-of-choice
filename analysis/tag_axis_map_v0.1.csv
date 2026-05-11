@@ -1,0 +1,116 @@
+domain,axis,tag,contribution,notes
+truth-telling,honesty,truth:commission,1.0,full self-disclosure
+truth-telling,honesty,truth:confront-direct,1.0,direct confrontation of an untruth
+truth-telling,honesty,truth:confront-mild,0.7,gentle confrontation
+truth-telling,honesty,truth:state,0.7,stating what is true without confronting
+truth-telling,honesty,truth:partial,0.5,partial truth (omits or softens)
+truth-telling,honesty,truth:acknowledge,0.5,acknowledging without volunteering
+truth-telling,honesty,truth:soft-confront,0.5,framing as collaborative
+truth-telling,honesty,truth:deferred-confront,0.5,truth told but with delay
+truth-telling,honesty,truth:implicit,0.3,truth conveyed by silence/presence
+truth-telling,honesty,truth:abandon,-1.0,giving up on telling the truth
+truth-telling,honesty,lie:white,-0.5,small lie to spare feelings
+truth-telling,honesty,lie:protective,-0.5,lie to protect someone
+truth-telling,honesty,lie:omission,-0.7,withholding what should be known
+truth-telling,honesty,lie:commission,-1.0,active falsehood
+resource-allocation,generosity,generosity,1.0,giving from own resources
+resource-allocation,generosity,value:generosity,1.0,explicit generosity value-reference
+resource-allocation,generosity,self_reliance,-1.0,not giving; expecting self-sufficiency
+resource-allocation,generosity,self_reliance:projected,-0.7,projecting self-reliance onto others
+resource-allocation,generosity,value:self_reliance,-1.0,explicit self-reliance value-reference
+resource-allocation,generosity,need_sensitivity,0.5,giving by need; positive on the give axis
+resource-allocation,generosity,value:need_sensitivity,0.5,
+resource-allocation,generosity,reciprocity_pure,0.0,neutral on the give axis; reciprocity is its own dimension
+resource-allocation,generosity,value:reciprocity_pure,0.0,
+resource-allocation,generosity,fairness:equal,0.0,rule-based equal split; neutral on generosity
+resource-allocation,generosity,fairness:explicit,0.0,explicit accounting; neutral on generosity
+resource-allocation,generosity,fairness,0.0,
+resource-allocation,generosity,value:fairness,0.0,
+in-group-out-group,loyalty,loyalty,1.0,standing with own people
+in-group-out-group,loyalty,loyalty:tribal,1.0,tribal/political in-group loyalty
+in-group-out-group,loyalty,loyalty:community,0.7,community-level loyalty
+in-group-out-group,loyalty,value:loyalty,1.0,
+in-group-out-group,loyalty,universalism,-1.0,treating outsiders equally
+in-group-out-group,loyalty,value:universalism,-1.0,
+in-group-out-group,loyalty,particularism,0.5,relational weight without exclusion
+in-group-out-group,loyalty,value:particularism,0.5,
+in-group-out-group,circle_radius,hospitality,1.0,expanding the circle of care
+in-group-out-group,circle_radius,value:hospitality,1.0,
+in-group-out-group,circle_radius,boundaries,-1.0,maintaining a clear circle
+in-group-out-group,circle_radius,value:boundaries,-1.0,
+reciprocity-cooperation,trust,trust,1.0,extending benefit of the doubt
+reciprocity-cooperation,trust,trust:default,1.0,default-trust posture
+reciprocity-cooperation,trust,trust:full,1.0,full trust with no contingency
+reciprocity-cooperation,trust,value:trust,1.0,
+reciprocity-cooperation,trust,trust:withhold,-1.0,withholding trust
+reciprocity-cooperation,trust,trust:asymmetric,0.5,partial trust; specific contingency
+reciprocity-cooperation,trust,vigilance,-1.0,active vigilance against being used
+reciprocity-cooperation,trust,vigilance:mild,-0.7,mild caution
+reciprocity-cooperation,trust,value:vigilance,-1.0,
+reciprocity-cooperation,trust,forgiveness,0.7,re-extension of trust after defection
+reciprocity-cooperation,trust,value:forgiveness,0.7,
+reciprocity-cooperation,cooperation_orientation,cooperation,1.0,working with others
+reciprocity-cooperation,cooperation_orientation,value:cooperation,1.0,
+reciprocity-cooperation,cooperation_orientation,independence,-1.0,acting on own judgment
+reciprocity-cooperation,cooperation_orientation,value:independence,-1.0,
+reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured cooperation with explicit terms
+*,metadata,counterparty:close,,counterparty stratifier
+*,metadata,counterparty:peer,,counterparty stratifier
+*,metadata,counterparty:peer-other,,counterparty stratifier
+*,metadata,counterparty:peer-group,,counterparty stratifier
+*,metadata,counterparty:peer-distant,,counterparty stratifier
+*,metadata,counterparty:new-peer,,counterparty stratifier
+*,metadata,counterparty:stranger,,counterparty stratifier
+*,metadata,counterparty:senior,,counterparty stratifier
+*,metadata,counterparty:subordinate,,counterparty stratifier
+*,metadata,counterparty:anonymous,,counterparty stratifier
+*,metadata,counterparty:business,,counterparty stratifier
+*,metadata,counterparty:distant-family,,counterparty stratifier
+*,metadata,counterparty:family-vs-stranger,,counterparty stratifier
+*,metadata,counterparty:close-vs-peer,,counterparty stratifier
+*,metadata,counterparty:near-vs-far,,counterparty stratifier
+*,metadata,counterparty:local-vs-global,,counterparty stratifier
+*,metadata,counterparty:in-group-tribal,,counterparty stratifier
+*,metadata,stake:micro,,stake stratifier
+*,metadata,stake:low,,stake stratifier
+*,metadata,stake:low-money,,stake stratifier
+*,metadata,stake:low-social,,stake stratifier
+*,metadata,stake:medium,,stake stratifier
+*,metadata,stake:medium-social,,stake stratifier
+*,metadata,stake:medium-money,,stake stratifier
+*,metadata,stake:medium-trust,,stake stratifier
+*,metadata,stake:money,,stake stratifier
+*,metadata,stake:social,,stake stratifier
+*,metadata,stake:time,,stake stratifier
+*,metadata,stake:laddered-up,,stake stratifier
+*,metadata,social-cost:none,,cost stratifier
+*,metadata,social-cost:low,,cost stratifier
+*,metadata,social-cost:medium,,cost stratifier
+*,metadata,social-cost:high,,cost stratifier
+*,metadata,self-cost:none,,cost stratifier
+*,metadata,self-cost:apologize,,cost stratifier
+*,metadata,self-cost:money,,cost stratifier
+*,metadata,self-cost:reputation,,cost stratifier
+*,metadata,self-cost:time,,cost stratifier
+*,metadata,self-cost:residual,,cost stratifier
+*,metadata,later-cost:performance,,cost stratifier
+*,metadata,observed:no,,observer-effect stratifier
+*,metadata,private-channel,,modality stratifier
+*,metadata,boundary-setting,,resolution descriptor
+*,metadata,balance,,resolution descriptor
+*,metadata,consequentialist-lean,,framing descriptor
+*,metadata,tracked-discomfort,,resolution descriptor
+*,metadata,moral-residue,,resolution descriptor
+*,metadata,deferred-decision,,resolution descriptor
+*,metadata,avoid,,resolution descriptor
+*,metadata,resolution:positive,,narrative-resolution stratifier
+*,metadata,resolution:ambivalent,,narrative-resolution stratifier
+*,metadata,resolution:avoidance,,narrative-resolution stratifier
+*,metadata,resolution:loyalty-over-honesty,,narrative-resolution stratifier
+*,metadata,resolution:honest-discomfort,,narrative-resolution stratifier
+*,metadata,resolution:honest-costly,,narrative-resolution stratifier
+*,metadata,resolution:pretend,,narrative-resolution stratifier
+*,metadata,resolution:acknowledge,,narrative-resolution stratifier
+*,metadata,stated-revealed-aligned,,outcome descriptor
+*,metadata,in-group-protection,,framing descriptor
+*,metadata,counterparty:peer-tribal,,counterparty stratifier
