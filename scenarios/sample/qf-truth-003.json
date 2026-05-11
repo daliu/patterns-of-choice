@@ -1,0 +1,65 @@
+{
+  "id": "qf-truth-003",
+  "type": "quick-fire-round",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Truth across different rooms",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-truth-001. Whereas qf-truth-001 varied counterparty across a fixed in-person register (housemate, friend, customer-service, senior, anonymous survey, subordinate), this round varies modality and audience structure (digital channel, group, application form, child, brief in-person, family-confidence). Same binary forced-choice format under 8-second timer. Provides a second probe per session that triangulates qf-truth-001 — if a user is consistently honest across both, that's stronger signal than within-round consistency alone.",
+    "domain_anchor": "Abeler et al. 2019 Econometrica honesty-meta (calibration); Hofmann et al. 2014 Science (everyday-modality coverage matters more than dramatic dilemmas); Vrij 2008 detection-of-deception work on channel effects.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["mention of family illness (item 6)"]
+  },
+  "items": [
+    {
+      "id": "qf-truth-003-i01",
+      "prompt": "You realize you accidentally forwarded an internal email to someone outside the company an hour ago. The content isn't disastrous but isn't meant for them.",
+      "options": [
+        { "id": "a", "text": "Tell your manager what happened.", "tags": ["truth:commission", "counterparty:senior", "stake:medium-reputation", "self-cost:reputation", "value:honesty"] },
+        { "id": "b", "text": "Wait and see if anything comes of it.", "tags": ["lie:omission", "counterparty:senior", "stake:medium-reputation", "self-cost:none", "vigilance:self-protection"] }
+      ]
+    },
+    {
+      "id": "qf-truth-003-i02",
+      "prompt": "In a meeting, someone misattributes a quote to you that you didn't actually say. The misattribution makes you sound smarter than the actual conversation.",
+      "options": [
+        { "id": "a", "text": "Speak up: \"Actually I didn't say that — that was J.\"", "tags": ["truth:commission", "counterparty:peer-group", "stake:medium-social", "self-cost:reputation", "value:honesty", "credit:redirect"] },
+        { "id": "b", "text": "Let it pass; you can correct later if it comes up.", "tags": ["lie:omission", "counterparty:peer-group", "stake:medium-social", "self-cost:none", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-truth-003-i03",
+      "prompt": "A job application form asks how proficient you are in a skill where you'd describe yourself honestly as \"moderate.\" The form's options are: \"Basic,\" \"Proficient,\" \"Expert.\"",
+      "options": [
+        { "id": "a", "text": "Pick Basic — closer to honest than Proficient would be.", "tags": ["truth:partial", "counterparty:anonymous", "stake:medium-financial", "self-cost:reputation", "value:honesty"] },
+        { "id": "b", "text": "Pick Proficient — the question doesn't really capture nuance and Basic undersells you.", "tags": ["lie:white", "counterparty:anonymous", "stake:medium-financial", "self-cost:none", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-truth-003-i04",
+      "prompt": "A child you're close to (around 7 years old) asks about something the adults in their life have been actively avoiding telling them about. You're in the kitchen alone with them.",
+      "options": [
+        { "id": "a", "text": "Tell them, age-appropriately, what you actually know.", "tags": ["truth:partial", "counterparty:child", "stake:medium-social", "self-cost:reputation", "value:honesty", "value:tact"] },
+        { "id": "b", "text": "Redirect — \"That's something for your parents to talk about with you.\"", "tags": ["lie:omission", "counterparty:child", "stake:low-social", "self-cost:none", "value:loyalty", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-truth-003-i05",
+      "prompt": "A stranger at a party brings up a much-discussed recent book. They assume you've read it. You haven't, but you've absorbed the gist from podcasts.",
+      "options": [
+        { "id": "a", "text": "\"I haven't actually read it, but I've heard a lot about it.\"", "tags": ["truth:commission", "counterparty:stranger", "stake:micro", "self-cost:reputation", "value:honesty"] },
+        { "id": "b", "text": "Engage on the topic; you know enough to keep up.", "tags": ["lie:white", "counterparty:stranger", "stake:micro", "self-cost:none", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-truth-003-i06",
+      "prompt": "A close family member asks if their adult child — your cousin — is \"doing ok.\" You know your cousin is struggling but they confided in you in confidence.",
+      "options": [
+        { "id": "a", "text": "\"That's something to talk to them about directly.\" (don't reveal; don't pretend either)", "tags": ["truth:partial", "counterparty:close", "stake:medium-emotional", "value:loyalty", "value:tact", "lie:omission"] },
+        { "id": "b", "text": "\"They're doing fine.\" (reassure)", "tags": ["lie:protective", "counterparty:close", "stake:medium-emotional", "self-cost:none", "value:loyalty"] }
+      ]
+    }
+  ]
+}

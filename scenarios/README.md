@@ -30,7 +30,7 @@ The MVP scopes 4 domains; sample scenarios so far:
 
 | Domain | Quick-fire | Narrative | Cost-of-virtue probe | MVP-1 target |
 |---|---|---|---|---|
-| Truth-telling under cost | `qf-truth-001` ✓ | `narr-truth-002` ✓ | `cov-truth-001` ✓ | ~12 total |
+| Truth-telling under cost | `qf-truth-001`, `qf-truth-003` ✓ | `narr-truth-002` ✓ | `cov-truth-001` ✓ | ~12 total |
 | Resource allocation | `qf-allocation-001` ✓ | `narr-allocation-002` ✓ | `cov-allocation-001` ✓ (inverted) | ~12 total |
 | In-group / out-group | `qf-ingroup-001` ✓ | `narr-ingroup-002` ✓ | `cov-ingroup-001` ✓ | ~12 total |
 | Reciprocity / cooperation | `qf-reciprocity-001` ✓ | `narr-reciprocity-002` ✓ | `cov-reciprocity-001` ✓ | ~12 total |
