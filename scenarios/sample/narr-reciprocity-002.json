@@ -1,0 +1,127 @@
+{
+  "id": "narr-reciprocity-002",
+  "type": "core-narrative",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "The podcast",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Four-decision narrative surfacing trust-vs-vigilance, forgiveness-vs-vigilance, and cooperation-vs-independence in a long-running collaborative relationship that has drifted. Set in a creative-project context (podcast) — deliberately outside both workplace and residential per the corpus-diversity tracker. The collaborator has a real reason for under-delivering, so the user has to weigh forgiveness against the project and against their own time, not against an antagonist.",
+    "domain_anchor": "Axelrod iterated-PD work on tit-for-tat / generous tit-for-tat; Berg-Dickhaut-McCabe 1995 trust game; Karlan 2005 (trustworthiness predicting loan repayment) as the closest lab→field analog for repeated trust under cost. The Bénabou-Tirole signaling-model framework also applies — withdrawing effort signals something about the relationship beyond the immediate task.",
+    "estimated_duration_seconds": 280,
+    "content_warnings": ["personal-stress context — friend going through hardship"]
+  },
+  "setup": "You and your friend J. started a podcast together about a year ago. Originally a project for fun; it's gotten unexpected traction. The work split was meant to be roughly even — research, recording, editing, social, scheduling guests.\n\nFor the past four months J. has been doing maybe a fifth of what they used to. The reason isn't a mystery — J. has been going through a serious personal stretch (a long illness in their family, plus the breakup of a long relationship). They've apologized a few times and said it'll get better.\n\nIt's not getting better. You're now doing roughly 90% of the work. The podcast has just been offered something real: a sponsor wants to fund a six-episode season, with creative input expected from both of you.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "The sponsor wants an answer in a week. How do you approach J. about the offer?",
+      "choices": [
+        { "id": "c1", "text": "Tell J. about the offer and propose taking it, with the implicit assumption that the split stays as it has been.", "next": "scene-2-implicit", "tags": ["cooperation", "counterparty:close", "stake:medium-financial", "value:cooperation", "value:loyalty", "trust:default"] },
+        { "id": "c2", "text": "Tell J. about the offer and have a direct conversation about whether the split needs to change.", "next": "scene-2-confront", "tags": ["truth:confront-mild", "counterparty:close", "stake:medium-social", "value:honesty", "value:cooperation"] },
+        { "id": "c3", "text": "Sit on the offer for a few days; decide first whether you want to keep doing this with J. at all.", "next": "scene-2-reflect", "tags": ["independence", "counterparty:close", "stake:medium-financial", "value:independence", "vigilance"] },
+        { "id": "c4", "text": "Tell J. you want to take the offer but propose doing it solo for this season, with J. on hiatus.", "next": "scene-2-soloexit", "tags": ["independence", "truth:state", "counterparty:close", "stake:high-social", "value:independence", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "scene-2-implicit",
+      "text": "J. is grateful — relieved, even. They thank you for being so steady and say they'll \"try to do more\" for the new season. Two weeks in, the workload has not changed; if anything, the new season's demands have made the gap larger. J. is doing maybe 10% of the season's work and apologizing in earnest each time. The sponsor messages directly asking for J.'s input on episode four.",
+      "choices": [
+        { "id": "c1", "text": "Draft J.'s input yourself in their voice and run it past them; it's faster.", "next": "scene-3-ghostwrite", "tags": ["lie:omission", "cooperation", "counterparty:close", "stake:medium-social", "value:loyalty", "self-cost:time"] },
+        { "id": "c2", "text": "Press J.: \"This isn't sustainable. I love you. Can we actually have the conversation now?\"", "next": "scene-3-press", "tags": ["truth:confront-mild", "counterparty:close", "stake:high-social", "value:honesty", "value:cooperation"] },
+        { "id": "c3", "text": "Quietly accept that you're doing this alone now and re-frame your expectations internally.", "next": "scene-3-accept", "tags": ["forgiveness", "self_reliance", "counterparty:close", "stake:medium-social", "value:forgiveness", "self-cost:residual"] }
+      ]
+    },
+    {
+      "id": "scene-2-confront",
+      "text": "J. takes it harder than you expected. They thank you for raising it directly. They say they want to keep doing this and propose a new split — they'll handle a specific narrower slice (one segment per episode) reliably, and you take the rest with explicit credit. They also offer to drop their financial share of the sponsor money proportionally.",
+      "choices": [
+        { "id": "c1", "text": "Accept the new split as proposed.", "next": "scene-3-renegotiated", "tags": ["fairness", "trust", "counterparty:close", "stake:medium-financial", "value:fairness", "value:cooperation"] },
+        { "id": "c2", "text": "Accept but say you want the financial split to stay even — they're going through enough.", "next": "scene-3-renegotiated-generous", "tags": ["generosity", "counterparty:close", "stake:medium-financial", "value:generosity", "value:loyalty"] },
+        { "id": "c3", "text": "Express appreciation but say you need to think about whether this is the right structure for you long-term.", "next": "scene-3-renegotiated-pause", "tags": ["truth:state", "vigilance", "counterparty:close", "stake:medium-social", "value:vigilance", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "scene-2-reflect",
+      "text": "You sit on it for three days. Two things become clear to you: first, you want to take the offer; second, you're not sure whether you want to keep doing this with J., or alone, or with someone else. You haven't told J. about the offer yet. J. messages: \"Hey — anything new on the pod?\"",
+      "choices": [
+        { "id": "c1", "text": "\"Yes — sponsor offer. Want to grab coffee tomorrow? There's a lot to talk through.\"", "next": "scene-3-honest-late", "tags": ["truth:deferred-confront", "counterparty:close", "stake:medium-social", "value:honesty"] },
+        { "id": "c2", "text": "\"Not much yet, still working through some stuff.\" (buy more time)", "next": "scene-3-buy-time", "tags": ["lie:commission", "counterparty:close", "stake:low-social", "self-cost:reputation", "vigilance"] }
+      ]
+    },
+    {
+      "id": "scene-2-soloexit",
+      "text": "J. is quiet for a long beat. They say: \"Okay. I think that's fair. I'm sad, but it's fair. Can we leave the door open?\" The conversation is honest. J. seems relieved that you didn't pretend everything was fine.",
+      "choices": [
+        { "id": "c1", "text": "\"Of course. This isn't permanent — it's just for this season. We can revisit when things settle for you.\"", "next": "scene-end-clean-pause", "tags": ["forgiveness", "trust", "counterparty:close", "stake:medium-social", "value:forgiveness", "value:loyalty"] },
+        { "id": "c2", "text": "\"I want to be honest — I don't know yet. Let me see how the season goes and we can talk then.\"", "next": "scene-end-honest-uncertain", "tags": ["truth:commission", "vigilance", "counterparty:close", "stake:medium-social", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "scene-3-ghostwrite",
+      "text": "The episode goes well; J. is publicly part of it. The sponsor doesn't notice. By the end of the season you've ghostwritten three of J.'s contributions. J. has thanked you but you can feel the pattern setting. Something inside you has shifted — a tally is keeping itself.",
+      "terminal": true,
+      "tags": ["resolution:quiet-burn", "self-cost:residual", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-3-press",
+      "text": "J. takes the pressing harder than the first conversation. They get tearful; they say they've felt awful about the workload and didn't know how to bring it up themselves. You and J. spend two hours working out a new arrangement — smaller slice, explicit credit, financial split adjusted. The next two episodes feel more like a partnership again. J. isn't fully back, but the relationship is honest.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-accept",
+      "text": "You finish the season doing 90% of it. The sponsor extends the contract. J. is grateful, contrite, and largely absent. You and J. are still friends but there's a private accounting now — you doing this work, them taking the visible credit. You're not sure whether you'll do another season this way.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "self-cost:residual", "moral-residue"]
+    },
+    {
+      "id": "scene-3-renegotiated",
+      "text": "The new split holds. J. delivers their narrower slice reliably; you do the rest with explicit credit. The season goes well; the financial split feels fair to both of you. J. thanks you in real terms for raising it. The friendship is better than before — you both know what the agreement actually is.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-renegotiated-generous",
+      "text": "J. is moved by your offer to keep the financial split even and resists for a moment before accepting. The season goes well. The financial gesture meant a lot to J. during their stretch; you've reinforced something about who you are to each other. The arrangement is generous, and you're aware you can sustain that without resentment because you're choosing it openly.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned", "value:generosity"]
+    },
+    {
+      "id": "scene-3-renegotiated-pause",
+      "text": "J. respects the pause. The season happens with the existing structure; you take the time to figure out what you actually want. By the end of the season you've decided — you want to keep going, but with the new split as J. proposed. You tell them. The conversation is calmer than the first one.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-3-honest-late",
+      "text": "You meet J. for coffee. You tell them about the offer, the workload, and the question. The conversation is hard — J. is hurt that you sat on it for three days, but they hear you. You work out a path together. The season happens with a renegotiated split; the friendship survives but it's now something the two of you have to maintain rather than coast on.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-3-buy-time",
+      "text": "J. accepts the deflection for now. You take another week and finally tell them. The conversation is much harder than it would have been — J. has noticed you being weird and concluded that you've been planning behind their back. You spend the conversation managing what you said as well as what you decided. The renegotiation eventually happens but the friendship has a new fault line that takes months to recover from.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "social-cost:high", "moral-residue"]
+    },
+    {
+      "id": "scene-end-clean-pause",
+      "text": "J. is moved. The pause is real — three months later you're doing the season solo, and J. messages now and then to say what they're hearing in episodes. When their personal stretch eases, the two of you talk about coming back to it together. By then the project has changed and J. coming back is a real decision rather than a default. You make it together, openly.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-honest-uncertain",
+      "text": "J. nods slowly. The season happens solo. J. listens but doesn't push; they respect that you didn't make false promises. Six months later you message J. — you've decided, and you tell them honestly what the decision is. The friendship survives the honesty better than it would have survived a managed-around fiction.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "speed_vs_deliberation"
+  ]
+}
