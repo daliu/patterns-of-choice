@@ -12,6 +12,7 @@ The inventory and the scenarios share a 1:1 domain taxonomy (`truth-telling`, `r
 | [`pairwise-pairs.json`](pairwise-pairs.json) | 30 forced-choice pairs for Bradley-Terry ranking: 16 within-domain (internal tensions) + 14 cross-domain |
 | [`three-layer-prompts.json`](three-layer-prompts.json) | Phrasing templates for current / aspirational / admired-other framings |
 | [`story-prompts.json`](story-prompts.json) | Free-text prompts for the qualitative layer; LLM-coded back to taxonomy post-hoc |
+| [`relational-variant.json`](relational-variant.json) | Opt-in role-anchored framing variant ("as a daughter/colleague/friend, I am someone who...") — addresses the MacIntyre/Confucian role-ethics critique that personal-trait anchoring is itself a value commitment. Content authored, MVP-1 deferred. |
 | [`SCHEMA.md`](SCHEMA.md) | Full field definitions for the JSON files |
 
 ## Design choices and why
