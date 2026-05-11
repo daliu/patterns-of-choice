@@ -26,14 +26,16 @@ See [`SCHEMA.md`](SCHEMA.md) for full field definitions.
 
 ## Domain coverage (MVP-1)
 
-The MVP scopes 4 domains; sample scenarios currently illustrate only `truth-telling`:
+The MVP scopes 4 domains; sample scenarios so far:
 
-- [ ] Truth-telling under cost — 2 samples (this directory)
-- [ ] Resource allocation — pending
-- [ ] In-group / out-group — pending
-- [ ] Reciprocity / cooperation — pending
+| Domain | Quick-fire | Narrative | Cost-of-virtue probe | MVP-1 target |
+|---|---|---|---|---|
+| Truth-telling under cost | `qf-truth-001` ✓ | `narr-truth-002` ✓ | — | ~12 total |
+| Resource allocation | `qf-allocation-001` ✓ | — | — | ~12 total |
+| In-group / out-group | `qf-ingroup-001` ✓ | — | — | ~12 total |
+| Reciprocity / cooperation | `qf-reciprocity-001` ✓ | — | — | ~12 total |
 
-Each domain needs ~12 scenarios at MVP-1 scale, mixed across the three types.
+All 4 domains now have at least one quick-fire round. Three narratives and four cost-of-virtue probes are still pending to demonstrate the full scenario-type set per domain. Authoring estimate: ~30 min per quick-fire, ~90 min per narrative, ~20 min per cost-of-virtue probe. Full MVP-1 corpus is realistically 3–4 weeks of focused editorial work.
 
 ## Open authorship questions
 
