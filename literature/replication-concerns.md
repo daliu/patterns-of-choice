@@ -54,4 +54,4 @@ For balance — not everything is in trouble. Robustly replicated:
 
 ## What's missing from concept doc
 
-- Explicit acknowledgment that **the most prominent ethics-research lab (Ariely) and an adjacent honesty-research lab (Gino) are partially or wholly in disrepute** — character-lab's "research-grade" positioning needs to be aware of this. The doc's emphasis on pre-registration and open science is the correct response, but should be tied to *why* — naming the post-Gino landscape directly is one way to signal that character-lab knows the standards have changed.
+- Explicit acknowledgment that **the most prominent ethics-research lab (Ariely) and an adjacent honesty-research lab (Gino) are partially or wholly in disrepute** — patterns-of-choice's "research-grade" positioning needs to be aware of this. The doc's emphasis on pre-registration and open science is the correct response, but should be tied to *why* — naming the post-Gino landscape directly is one way to signal that patterns-of-choice knows the standards have changed.

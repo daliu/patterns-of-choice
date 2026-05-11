@@ -1,4 +1,4 @@
-# Character Lab — Concept Document
+# Patterns of Choice — Concept Document
 
 **Status:** Draft 0.1 — captured from initial design conversation. Pending literature review and revision.
 
@@ -227,7 +227,7 @@ Two claims to validate; different designs.
 - **Discriminant validity** against unrelated constructs.
 - **Predictive validity** against real-stakes behavior (Fischbacher die-roll, Mazar/Ariely matrix task, real-money dictator games, charitable giving). [lit: caution — Mazar/Ariely 2008 Ten Commandments effect *did not replicate* in 2018 RRR (Verschuere et al., 25 labs, N=5,786). The task itself produces real cheating behavior and is fine for measurement; the moral-priming finding using it is not. Also: Ariely's broader honesty-research program is partially compromised by the Gino fraud case. See `literature/replication-concerns.md`, `literature/ecological-validity.md`. Fischbacher die-roll and Abeler et al. 2019 meta (N≈44,000) are the better-replicated honesty paradigms.]
 - **Test-retest reliability** over weeks/months (r ≈ 0.6–0.8 over 3 months — stable-ish but not rigid). [lit: verified — this range is consistent with HEXACO test-retest (Henry & Mõttus 2022: 13-day median r = 0.88 domains, 0.81 facets, 0.65 items), MFQ-30 (typically 0.6–0.8 over weeks-to-months), and VIA-IS (9-month median r = 0.73). 3-month r ≈ 0.6–0.8 is a reasonable target.]
-- **Ecological validity** — pre-registered studies with real-stakes follow-up; opt-in lab tasks. [lit: critical — Bostyn et al. 2018 *Psychological Science* showed hypothetical trolley responses do not predict real-stakes trolley behavior; FeldmanHall et al. 2012 found similar divergence. The doc's measurement premise (low-stakes choices reveal real character) is *contested* in the literature; the burden of empirical proof is on character-lab. See `literature/ecological-validity.md`. Hofmann et al. 2014 *Science* experience-sampling work supports the design choice to use mundane scenarios over dramatic ones.]
+- **Ecological validity** — pre-registered studies with real-stakes follow-up; opt-in lab tasks. [lit: critical — Bostyn et al. 2018 *Psychological Science* showed hypothetical trolley responses do not predict real-stakes trolley behavior; FeldmanHall et al. 2012 found similar divergence. The doc's measurement premise (low-stakes choices reveal real character) is *contested* in the literature; the burden of empirical proof is on patterns-of-choice. See `literature/ecological-validity.md`. Hofmann et al. 2014 *Science* experience-sampling work supports the design choice to use mundane scenarios over dramatic ones.]
 - **Informant reports** — partner / coworker / friend ratings (under-used in this field; probably the single most important credibility move). [lit: strongly verified — Vazire 2010 SOKA model shows informants are *more* accurate than selves on observable evaluative traits including honesty; Connelly & Ones 2010 meta-analysis shows multi-informant ratings outperform self-report for predicting honest/conscientious/agreeable behavior. The doc's intuition here is correct and well-supported. See `literature/ecological-validity.md`.]
 - **Measurement invariance** across non-WEIRD samples, ages, education, religious backgrounds.
 
@@ -284,13 +284,13 @@ Areas where the literature supports additions or rebalancings that draft 0.1 doe
 
 1. **Hofmann et al. 2014 *Science* experience-sampling work** is the strongest empirical justification for the doc's design choice of mundane-daily over dramatic-dilemma scenarios. Should be cited directly. Real moral life is dominated by gossip, fairness, loyalty in mundane contexts, not trolley choices.
 
-2. **Bostyn et al. 2018 (and FeldmanHall et al. 2012)** on hypothetical-vs-real moral choice divergence is *the* key empirical concern for character-lab. The doc treats ecological validity as a Phase-2 validation question; the literature suggests it should be elevated to a foundational empirical premise the project must prove, not assume. The "is the gap from low-stakes-game to real-life behavior tractable at all?" question is the project's central empirical risk.
+2. **Bostyn et al. 2018 (and FeldmanHall et al. 2012)** on hypothetical-vs-real moral choice divergence is *the* key empirical concern for patterns-of-choice. The doc treats ecological validity as a Phase-2 validation question; the literature suggests it should be elevated to a foundational empirical premise the project must prove, not assume. The "is the gap from low-stakes-game to real-life behavior tractable at all?" question is the project's central empirical risk.
 
 3. **Atari et al. 2023 *JPSP*** on nomological-network variation across cultures is stronger than the doc's current "WEIRD bias" framing. Even when the *structure* of moral foundations is measurable across cultures, the *correlates* of those foundations with outcomes shift. This complicates the gap-analysis output ("you scored low on Loyalty") — what Loyalty *predicts* depends on the user's cultural context.
 
 4. **Vazire 2010 SOKA model and Connelly & Ones 2010 meta-analysis** on informant validity. The doc's intuition that informant reports are the single most important credibility move is correct; the literature support is stronger than the doc currently invokes. Honesty-humility is *the* most-evaluative personality trait — exactly where informants outperform selves.
 
-5. **Walton & Wilson 2018 "wise interventions" framework and the recent multi-site replications (Walton et al. 2023 *Science*; Yeager et al. 2019 *Nature*).** These are the single most relevant analogous-intervention literature for character-lab. Both show: real effects, modest sizes, large heterogeneity, context-affordances matter enormously. Direct implication for marketing-honesty: claim small average effects with meaningful subgroup heterogeneity, not large effects.
+5. **Walton & Wilson 2018 "wise interventions" framework and the recent multi-site replications (Walton et al. 2023 *Science*; Yeager et al. 2019 *Nature*).** These are the single most relevant analogous-intervention literature for patterns-of-choice. Both show: real effects, modest sizes, large heterogeneity, context-affordances matter enormously. Direct implication for marketing-honesty: claim small average effects with meaningful subgroup heterogeneity, not large effects.
 
 6. **Self-efficacy (Bandura).** Not currently cited. Implicit throughout the intervention layer; should be made explicit as the mediator linking "I am someone who..." → action initiation → persistence.
 
@@ -308,7 +308,7 @@ Areas where the literature supports additions or rebalancings that draft 0.1 doe
 
 13. **MacIntyre / Annas / Confucian role-ethics positioning.** The doc's individualist-secular-optional framing is itself an ethical position that should be explicitly acknowledged. Identity-anchoring may translate awkwardly in role-ethics contexts (East Asian, religious users).
 
-14. **Name collision: Angela Duckworth's "Character Lab"** (characterlab.org) is a separate nonprofit doing character-education research. Public-facing branding will need to differentiate.
+14. **Name collision (resolved by renaming):** the original working name "Character Lab" collided with Angela Duckworth's nonprofit at characterlab.org. Project renamed to *patterns-of-choice* on identification of the collision.
 
 15. **The post-Gino landscape.** Doc's emphasis on pre-registration, open-source, published findings is the correct response to the credibility crisis in moral psychology; naming this rationale explicitly (rather than presenting it as generic open-science commitment) would strengthen the trust premise.
 

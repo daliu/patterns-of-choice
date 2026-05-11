@@ -6,7 +6,7 @@
 - **Henrich, J. (2020).** *The WEIRDest People in the World.* Farrar, Straus and Giroux. — Book-length elaboration; traces WEIRD psychology to the Catholic Church's marriage and family rules in medieval Europe.
 - **Apicella, C., Norenzayan, A., & Henrich, J. (2020).** *Beyond WEIRD: A review of the last decade and a look ahead to the global laboratory of the future.* Evolution and Human Behavior, 41, 319–329. — Progress is slow; most published studies still use WEIRD samples.
 
-**Concept-doc relevance:** Doc acknowledges WEIRD bias as an "intrinsic-to-the-premise" risk that "cannot be designed away." Correct framing. The Henrich literature supports this strongly. Specific implications for character-lab:
+**Concept-doc relevance:** Doc acknowledges WEIRD bias as an "intrinsic-to-the-premise" risk that "cannot be designed away." Correct framing. The Henrich literature supports this strongly. Specific implications for patterns-of-choice:
 - Trolley-style "personal sacrifice for stranger" framings activate impersonal-prosociality intuitions that are WEIRD-specific.
 - Honor-based and shame-based moral cultures (Mediterranean, East Asian, MENA) have different default weightings on the loyalty/authority/purity foundations.
 - Even seemingly universal constructs like "honesty" carry different content (e.g., loyalty-honesty trade-off in collectivist contexts).
@@ -16,7 +16,7 @@
 - **Atari, M., Haidt, J., Graham, J., Koleva, S., Stevens, S. T., & Dehghani, M. (2023).** *Morality beyond the WEIRD: How the nomological network of morality varies across cultures.* JPSP, 125, 1157–1188. — N = 7,262 across 25 populations; introduces MFQ-2 with six foundations. Demonstrates that even when foundations are measurable in non-WEIRD populations, their *correlates and predictive validities* shift substantially. The structure may travel; the network does not.
 - **Iurino, K., & Saucier, G. (2020).** *Testing measurement invariance of the Moral Foundations Questionnaire across 27 countries.* Assessment, 27, 365–372. — Measurement non-invariance across most country pairs. Direct cross-cultural comparison of MFQ scores is not statistically defensible.
 
-**Concept-doc relevance — important:** Atari 2023 is essential. The concept doc invokes "Haidt's foundations" generally; the relevant updated finding is that *the foundations exist but their relationships to outcomes are culturally specific*. This is a stronger version of the WEIRD problem than the original concept doc captures. Practical implication: character-lab's gap-analysis output ("you scored 0.3 SD low on Loyalty relative to your Aspirational profile") may be *meaningful within a culture* but not portable across cultures, and the inferences from Loyalty-low → predicted real-world behavior will differ by cultural context.
+**Concept-doc relevance — important:** Atari 2023 is essential. The concept doc invokes "Haidt's foundations" generally; the relevant updated finding is that *the foundations exist but their relationships to outcomes are culturally specific*. This is a stronger version of the WEIRD problem than the original concept doc captures. Practical implication: patterns-of-choice's gap-analysis output ("you scored 0.3 SD low on Loyalty relative to your Aspirational profile") may be *meaningful within a culture* but not portable across cultures, and the inferences from Loyalty-low → predicted real-world behavior will differ by cultural context.
 
 ## Honor cultures and moral psychology
 
@@ -39,7 +39,7 @@
 - **Saroglou, V. (2011).** *Believing, bonding, behaving, and belonging: The big four religious dimensions and cultural variation.* Journal of Cross-Cultural Psychology, 42, 1320–1340.
 - **Purzycki, B. G., et al. (2016).** *Moralistic gods, supernatural punishment and the expansion of human sociality.* Nature, 530, 327–330.
 
-**Concept-doc relevance:** Doc mentions "religious and secular variants" as an inventory-taxonomy option. The Saroglou four-dimension framework is a usable structural target. Religious users of character-lab may interpret purity / loyalty / authority dimensions through doctrinal lenses that need explicit acknowledgment in the inventory wording.
+**Concept-doc relevance:** Doc mentions "religious and secular variants" as an inventory-taxonomy option. The Saroglou four-dimension framework is a usable structural target. Religious users of patterns-of-choice may interpret purity / loyalty / authority dimensions through doctrinal lenses that need explicit acknowledgment in the inventory wording.
 
 ## What's missing from the concept doc
 

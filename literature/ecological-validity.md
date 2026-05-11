@@ -1,6 +1,6 @@
 # Ecological Validity: Lab vs. Life in Moral Psychology
 
-The single biggest credibility risk for character-lab is the "it's just a game" problem. The literature here is concerning.
+The single biggest credibility risk for patterns-of-choice is the "it's just a game" problem. The literature here is concerning.
 
 ## Hypothetical vs. real-life moral choices
 
@@ -9,7 +9,7 @@ The single biggest credibility risk for character-lab is the "it's just a game" 
 - **Bauman, C. W., McGraw, A. P., Bartels, D. M., & Warren, C. (2014).** *Revisiting external validity: Concerns about trolley problems and other sacrificial dilemmas in moral psychology.* Social and Personality Psychology Compass, 8, 536–554. — Methodological critique of trolley dilemmas as moral-psychology research tools.
 - **Colman, A. M., Gold, N., & Pulford, B. D. (2019).** *Comparing hypothetical and real-life trolley problems: Commentary on Bostyn, Sevenhant, and Roets (2018).* Psychological Science, 30, 1380–1383. — Counter-perspective: argues the lab-real divergence is partly an artifact of stake asymmetry and small-N.
 
-**Concept-doc relevance — critical:** This is the single most important piece of literature for character-lab. The doc's premise — that low-stakes choices reveal something about high-stakes behavior — is *contested* by Bostyn/FeldmanHall. The doc's mitigation (cost-of-virtue probe, real-stakes nights, informant reports) is exactly the right response. But the doc should be explicit that the burden of proof is on character-lab to *empirically demonstrate* that its low-stakes measures track real-life behavior — this is not an assumption that can be made. Flag as a foundational empirical question, not a side concern.
+**Concept-doc relevance — critical:** This is the single most important piece of literature for patterns-of-choice. The doc's premise — that low-stakes choices reveal something about high-stakes behavior — is *contested* by Bostyn/FeldmanHall. The doc's mitigation (cost-of-virtue probe, real-stakes nights, informant reports) is exactly the right response. But the doc should be explicit that the burden of proof is on patterns-of-choice to *empirically demonstrate* that its low-stakes measures track real-life behavior — this is not an assumption that can be made. Flag as a foundational empirical question, not a side concern.
 
 ## Mazar/Ariely matrix task failure
 

@@ -7,7 +7,7 @@
 - **Graham, J., Haidt, J., Koleva, S., Motyl, M., Iyer, R., Wojcik, S., & Ditto, P. H. (2013).** *Moral foundations theory: The pragmatic validity of moral pluralism.* Advances in Experimental Social Psychology, 47, 55–130. — Most-cited review.
 - **Atari, M., Haidt, J., Graham, J., Koleva, S., Stevens, S. T., & Dehghani, M. (2023).** *Morality beyond the WEIRD: How the nomological network of morality varies across cultures.* JPSP, 125(5), 1157–1188. — Introduces MFQ-2; separates Fairness into Equality + Proportionality; demonstrates that the *nomological network* (how foundations correlate with outcomes) varies substantially across 19–25 populations.
 
-**Relevance to concept doc:** The concept doc invokes Haidt's foundations as one possible taxonomy preset. The 2023 Atari paper is essential reading: the six-foundation MFQ-2 is the current state of the art; the older five-foundation MFQ-30 is superseded but still in wide use. The big result for character-lab is that *the binding/individualizing higher-order grouping is not cross-culturally invariant* — concept doc currently doesn't acknowledge this. See `cross-cultural.md`.
+**Relevance to concept doc:** The concept doc invokes Haidt's foundations as one possible taxonomy preset. The 2023 Atari paper is essential reading: the six-foundation MFQ-2 is the current state of the art; the older five-foundation MFQ-30 is superseded but still in wide use. The big result for patterns-of-choice is that *the binding/individualizing higher-order grouping is not cross-culturally invariant* — concept doc currently doesn't acknowledge this. See `cross-cultural.md`.
 
 ## Kohlberg and stages of moral development
 
@@ -30,7 +30,7 @@
 
 - **Cushman, F. (2013).** *Action, outcome, and value: A dual-system framework for morality.* PSPR, 17, 273–292. — Model-free / model-based distinction in moral learning; relevant for habit-vs-choice framing.
 - **Crockett, M. J., Kurth-Nelson, Z., Siegel, J. Z., Dayan, P., & Dolan, R. J. (2014).** *Harm to others outweighs harm to self in moral decision making.* PNAS, 111, 17320–17325. — People require ~2× more compensation to inflict pain on others than themselves. Strong harm-aversion signal.
-- **Crockett, M. J. (2016).** *How formal models can illuminate mechanisms of moral cognition.* — Computational framing of moral cognition; useful methodological inspiration for character-lab's cost-of-virtue probe.
+- **Crockett, M. J. (2016).** *How formal models can illuminate mechanisms of moral cognition.* — Computational framing of moral cognition; useful methodological inspiration for patterns-of-choice's cost-of-virtue probe.
 - **Crockett, M. J., Clark, L., Hauser, M. D., & Robbins, T. W. (2010).** *Serotonin selectively influences moral judgment and behavior through effects on harm aversion.* PNAS, 107, 17433–17438.
 
 **Relevance:** Crockett's harm-magnitude paradigm is the cleanest existing operationalization of a "cost-of-virtue curve" in the literature — concept doc's stake-laddering auction should reference / adapt this. Cushman's model-free/model-based distinction is relevant to the habit-formation framing in the intervention layer.
@@ -45,6 +45,6 @@
 
 ## What's missing from the concept doc
 
-- **Skinner-box dimension of moral learning.** Cushman's model-free / Crockett's reinforcement framings imply that what character-lab is doing — repeated low-stakes choices with feedback — is itself an intervention, not a measurement. The doc separates these layers conceptually but the literature suggests they're not fully separable.
+- **Skinner-box dimension of moral learning.** Cushman's model-free / Crockett's reinforcement framings imply that what patterns-of-choice is doing — repeated low-stakes choices with feedback — is itself an intervention, not a measurement. The doc separates these layers conceptually but the literature suggests they're not fully separable.
 - **Bago/De Neys finding.** Concept doc's speed-vs-deliberation framing implicitly relies on Greene's older dual-process claim. Should be flagged.
 - **The Crockett-style stake-paramaterization paradigm.** Existing, validated, computationally tractable. Could anchor the cost-of-virtue probe rather than reinventing it.

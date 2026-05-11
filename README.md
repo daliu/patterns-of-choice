@@ -1,4 +1,4 @@
-# character-lab
+# Patterns of Choice
 
 A longitudinal instrument for measuring revealed ethical preferences, comparing them against stated values, and offering opt-in scaffolding for user-defined growth.
 

@@ -5,13 +5,13 @@ Concept doc explicitly acknowledges "smuggled value claims in the taxonomy." Thi
 ## Virtue ethics (Aristotelian / neo-Aristotelian)
 
 - **Aristotle.** *Nicomachean Ethics.* (c. 350 BCE) — Foundational text. Virtue as a stable disposition (*hexis*) cultivated through habituation toward the mean between extremes; *phronesis* (practical wisdom) as integrative.
-- **MacIntyre, A. (1981).** *After Virtue.* Notre Dame UP. — Argues that modern ethics is incoherent absent a teleological framework; calls for return to virtue ethics within "tradition-constituted" practices. Important for the question of whether a free-floating, secular, individual-user values practice (which character-lab is) can coherently support virtue formation at all — MacIntyre's answer is largely no.
+- **MacIntyre, A. (1981).** *After Virtue.* Notre Dame UP. — Argues that modern ethics is incoherent absent a teleological framework; calls for return to virtue ethics within "tradition-constituted" practices. Important for the question of whether a free-floating, secular, individual-user values practice (which patterns-of-choice is) can coherently support virtue formation at all — MacIntyre's answer is largely no.
 - **Annas, J. (2011).** *Intelligent Virtue.* Oxford UP. — Virtue as skill; emphasizes that habituation in the Aristotelian sense is *intelligent practice*, not rote routine. Each virtue exercise should be a fresh judgment, not a reflex.
 - **Hursthouse, R. (1999).** *On Virtue Ethics.* Oxford UP. — Canonical contemporary statement; "right action is what a virtuous person would characteristically do."
 
-**Concept-doc relevance — important:** Concept doc's intervention layer (especially identity-anchored, repeated-practice framings) maps onto Aristotelian habituation. Annas's emphasis that virtue-as-skill requires *intelligent* practice (not routine) is directly relevant to the anti-pattern "don't gamify the values themselves." The character-lab system that varies scenarios, requires fresh judgment, and refuses to teach "the right answer" is consistent with Annas-style intelligent habituation.
+**Concept-doc relevance — important:** Concept doc's intervention layer (especially identity-anchored, repeated-practice framings) maps onto Aristotelian habituation. Annas's emphasis that virtue-as-skill requires *intelligent* practice (not routine) is directly relevant to the anti-pattern "don't gamify the values themselves." The patterns-of-choice system that varies scenarios, requires fresh judgment, and refuses to teach "the right answer" is consistent with Annas-style intelligent habituation.
 
-**MacIntyre challenge:** The doc's individualist, secular, optional framing is precisely what MacIntyre argued is *insufficient* for virtue formation — he requires tradition-constituted communities. Character-lab cannot answer this challenge fully but should not pretend the challenge doesn't exist. Worth a sentence in the "smuggled values" section acknowledging that the very form of an individual app for personal moral self-cultivation is itself a (modern, liberal, individualist) ethical commitment.
+**MacIntyre challenge:** The doc's individualist, secular, optional framing is precisely what MacIntyre argued is *insufficient* for virtue formation — he requires tradition-constituted communities. Patterns of Choice cannot answer this challenge fully but should not pretend the challenge doesn't exist. Worth a sentence in the "smuggled values" section acknowledging that the very form of an individual app for personal moral self-cultivation is itself a (modern, liberal, individualist) ethical commitment.
 
 ## Deontology
 
@@ -19,7 +19,7 @@ Concept doc explicitly acknowledges "smuggled value claims in the taxonomy." Thi
 - **Korsgaard, C. M. (1996).** *The Sources of Normativity.* Cambridge UP. — Most influential contemporary Kantian.
 - **Scanlon, T. M. (1998).** *What We Owe to Each Other.* Harvard UP. — Contractualism; what is wrong is what cannot be justified to others.
 
-**Concept-doc relevance:** Deontological framings tend to favor stated-values measurement over revealed-behavior — what matters is the principle, not the outcome. Character-lab's revealed/stated *gap* is interesting from a Kantian view because it surfaces hypocrisy (claimed principle, contradicted action). The doc is implicitly compatible with deontology but not derived from it.
+**Concept-doc relevance:** Deontological framings tend to favor stated-values measurement over revealed-behavior — what matters is the principle, not the outcome. Patterns of Choice's revealed/stated *gap* is interesting from a Kantian view because it surfaces hypocrisy (claimed principle, contradicted action). The doc is implicitly compatible with deontology but not derived from it.
 
 ## Consequentialism / utilitarianism
 
@@ -42,15 +42,15 @@ Concept doc explicitly acknowledges "smuggled value claims in the taxonomy." Thi
 - **Ames, R. T. (2011).** *Confucian Role Ethics: A Vocabulary.* University of Hawaii Press. — Argues Confucian ethics is fundamentally role-based, not virtue-as-individual-quality. Different ontology of the self.
 - **Slingerland, E. (2014).** *Trying Not to Try.* Crown. — Wuwei / spontaneity in Confucian and Daoist ethics; *de* as efficacious virtue.
 
-**Concept-doc relevance:** A non-trivial portion of character-lab's potential global user base (East Asian, including the user's own ancestry per CLAUDE.md notes) operates implicitly from role-ethics rather than virtue-as-personal-quality. The concept doc's identity-anchoring ("I am someone who...") may translate awkwardly. The Confucian alternative would be relational-role anchoring ("As a daughter / colleague / friend, I am someone who...").
+**Concept-doc relevance:** A non-trivial portion of patterns-of-choice's potential global user base (East Asian, including the user's own ancestry per CLAUDE.md notes) operates implicitly from role-ethics rather than virtue-as-personal-quality. The concept doc's identity-anchoring ("I am someone who...") may translate awkwardly. The Confucian alternative would be relational-role anchoring ("As a daughter / colleague / friend, I am someone who...").
 
 ## Moral particularism vs. generalism
 
 - **Dancy, J. (2004).** *Ethics Without Principles.* Oxford UP. — Moral particularism: features that are reasons in one context need not be reasons (or may be opposite-valenced reasons) in another.
 
-**Concept-doc relevance:** The concept doc's "Consistency under reframing" signature implicitly assumes a generalist view (the same principle should apply across reframings). A particularist would dispute that this is even a *failure mode* — they would argue contextual sensitivity is *what moral judgment is*. This is a real philosophical objection to the consistency signature. Doesn't undermine the design but should be acknowledged as one philosophical position character-lab is implicitly taking.
+**Concept-doc relevance:** The concept doc's "Consistency under reframing" signature implicitly assumes a generalist view (the same principle should apply across reframings). A particularist would dispute that this is even a *failure mode* — they would argue contextual sensitivity is *what moral judgment is*. This is a real philosophical objection to the consistency signature. Doesn't undermine the design but should be acknowledged as one philosophical position patterns-of-choice is implicitly taking.
 
-## Implications for character-lab's taxonomy choices
+## Implications for patterns-of-choice's taxonomy choices
 
 Concept doc names "multiple selectable preset taxonomies (Haidt / Schwartz / Aristotelian / religious / secular humanist)" as a mitigation. Reasonable. Some practical notes:
 

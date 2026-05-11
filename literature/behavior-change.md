@@ -25,7 +25,7 @@
 - **Walton, G. M., et al. (2023).** *Where and with whom does a brief social-belonging intervention promote progress in college?* Science, 380, 499–505. — Multi-site replication across 22 colleges, N = ~26,000. Effects depend on context — works where belonging affordances exist.
 - **Yeager, D. S., Hanselman, P., Walton, G. M., et al. (2019).** *A national experiment reveals where a growth mindset improves achievement.* Nature, 573, 364–369. — Growth-mindset effect d ≈ 0.03 average, with heterogeneity by school context.
 
-**Relevance — important:** Walton/Yeager's recent work is *the* model for how character-lab should think about effect sizes and context-dependence. The 2019 *Nature* mindset paper and 2023 *Science* belonging paper both show: small average effects, large heterogeneity, *context affordances matter as much as the intervention*. This should shape character-lab's effect-size honesty in marketing (concept doc Open Questions §8). Flag inline.
+**Relevance — important:** Walton/Yeager's recent work is *the* model for how patterns-of-choice should think about effect sizes and context-dependence. The 2019 *Nature* mindset paper and 2023 *Science* belonging paper both show: small average effects, large heterogeneity, *context affordances matter as much as the intervention*. This should shape patterns-of-choice's effect-size honesty in marketing (concept doc Open Questions §8). Flag inline.
 
 ## Self-Determination Theory (Deci & Ryan)
 

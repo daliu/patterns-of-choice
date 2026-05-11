@@ -18,7 +18,7 @@
 - **Lee, K., & Ashton, M. C. (2018).** *Psychometric properties of the HEXACO-100.* Assessment, 25, 543–556.
 - **Henry, S., & Mõttus, R. (2022).** *Test-retest reliability of the HEXACO-100.* PLOS ONE. — 13-day test-retest correlations: median 0.88 (domains), 0.81 (facets), 0.65 (items). Strong stability.
 
-**Concept-doc relevance:** HEXACO honesty-humility is the closest existing personality construct to what character-lab is trying to measure behaviorally. Convergent validity against H is the *single most informative* benchmark in concept doc's Phase 1. Doc currently references HEXACO once — should be more central in the validation plan.
+**Concept-doc relevance:** HEXACO honesty-humility is the closest existing personality construct to what patterns-of-choice is trying to measure behaviorally. Convergent validity against H is the *single most informative* benchmark in concept doc's Phase 1. Doc currently references HEXACO once — should be more central in the validation plan.
 
 ## Schwartz values theory (PVQ / PVQ-RR)
 
@@ -26,7 +26,7 @@
 - **Schwartz, S. H., Cieciuch, J., Vecchione, M., et al. (2012).** *Refining the theory of basic individual values.* JPSP, 103, 663–688. — 19-value refined theory.
 - **Schwartz, S. H., & Cieciuch, J. (2022).** *Measuring the refined theory of individual values in 49 cultural groups: Psychometrics of the revised Portrait Value Questionnaire.* Assessment, 29, 1005–1019. — Validates PVQ-RR across 49 cultures. 15 of 19 values measured invariantly at metric level across most groups; scalar invariance only across subsets.
 
-**Concept-doc relevance:** Concept doc names Schwartz PVQ as a candidate inventory baseline. PVQ-RR (2022) supersedes the older PVQ-21/PVQ-40 in research use. Note that *scalar invariance is not universal* — comparing absolute Schwartz value levels across cultures is not statistically defensible without group-specific adjustments. This matters if character-lab tries to do cross-cultural baselining.
+**Concept-doc relevance:** Concept doc names Schwartz PVQ as a candidate inventory baseline. PVQ-RR (2022) supersedes the older PVQ-21/PVQ-40 in research use. Note that *scalar invariance is not universal* — comparing absolute Schwartz value levels across cultures is not statistically defensible without group-specific adjustments. This matters if patterns-of-choice tries to do cross-cultural baselining.
 
 ## VIA-IS character strengths
 
