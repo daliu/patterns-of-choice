@@ -30,12 +30,12 @@ The MVP scopes 4 domains; sample scenarios so far:
 
 | Domain | Quick-fire | Narrative | Cost-of-virtue probe | MVP-1 target |
 |---|---|---|---|---|
-| Truth-telling under cost | `qf-truth-001` ✓ | `narr-truth-002` ✓ | — | ~12 total |
-| Resource allocation | `qf-allocation-001` ✓ | — | — | ~12 total |
-| In-group / out-group | `qf-ingroup-001` ✓ | — | — | ~12 total |
-| Reciprocity / cooperation | `qf-reciprocity-001` ✓ | — | — | ~12 total |
+| Truth-telling under cost | `qf-truth-001` ✓ | `narr-truth-002` ✓ | `cov-truth-001` ✓ | ~12 total |
+| Resource allocation | `qf-allocation-001` ✓ | — | `cov-allocation-001` ✓ (inverted) | ~12 total |
+| In-group / out-group | `qf-ingroup-001` ✓ | — | `cov-ingroup-001` ✓ | ~12 total |
+| Reciprocity / cooperation | `qf-reciprocity-001` ✓ | — | `cov-reciprocity-001` ✓ | ~12 total |
 
-All 4 domains now have at least one quick-fire round. Three narratives and four cost-of-virtue probes are still pending to demonstrate the full scenario-type set per domain. Authoring estimate: ~30 min per quick-fire, ~90 min per narrative, ~20 min per cost-of-virtue probe. Full MVP-1 corpus is realistically 3–4 weeks of focused editorial work.
+All 4 domains now have a quick-fire round and a cost-of-virtue probe — the two scenario types most leveraged for the validation plan (quick-fire for breadth; cost-of-virtue for the longitudinal break-point trajectory). Three more narratives are pending. Authoring estimate: ~30 min per quick-fire, ~90 min per narrative, ~20 min per cost-of-virtue probe. Full MVP-1 corpus (~12 scenarios per domain) is realistically 3–4 weeks of focused editorial work.
 
 ## Open authorship questions
 

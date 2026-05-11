@@ -1,0 +1,37 @@
+{
+  "id": "cov-reciprocity-001",
+  "type": "cost-of-virtue-probe",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Cost-of-virtue: silent extra share",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Locate the break-point stake at which the user takes more than their fair share of a group resource when they could do so undetected. This is essentially a one-shot dictator game with the recipient being the group rather than a single party, and with the user's stated value of cooperation/fairness explicitly in scope.",
+    "domain_anchor": "Dictator/ultimatum literature (Forsythe 1994; Engel 2011 meta). Public-goods game literature. Galizzi & Navarro-Martinez 2019 lab-to-field meta on cooperation (mean r = 0.14 — individual-level signal is weaker than honesty-stakes paradigms; flagged as a probe whose external validity should be empirically demonstrated, not assumed).",
+    "estimated_duration_seconds": 90,
+    "content_warnings": []
+  },
+  "value_slot": "cooperation",
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": ["cooperation", "fairness", "reciprocity_pure"],
+    "ladder_currency": "user-local"
+  },
+  "framing_prompt": "You and a small group did a project together — could be at work, a side gig, a volunteer thing. The group is now splitting a windfall (a bonus, a tip pool, a thank-you check from a client) and you're the one handling the math. No one will check your work. You could pay yourself more than your equal share.",
+  "framing_question": "What's the smallest amount of 'extra' at which you'd take it?",
+  "ladder": [
+    { "rung": 1, "stake": 10, "unit": "USD", "label": "$10 extra" },
+    { "rung": 2, "stake": 100, "unit": "USD", "label": "$100 extra" },
+    { "rung": 3, "stake": 1000, "unit": "USD", "label": "$1,000 extra" },
+    { "rung": 4, "stake": 10000, "unit": "USD", "label": "$10,000 extra" }
+  ],
+  "no_option": {
+    "id": "never",
+    "text": "I wouldn't take extra at any of these amounts."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "interpretation_note": "Group size is deliberately unspecified — a $1,000 extra share from a 2-person windfall is different from a 20-person windfall. The probe captures the threshold for *the action of skimming* rather than its scale. If group-size sensitivity becomes the design question, a counterbalanced variant (cov-reciprocity-002) should vary group size while holding ladder constant.",
+    "longitudinal_signal": "Within-user trajectory tracks cooperation-under-stakes drift. Cooperation break-point may correlate weakly with trust break-point on a separate probe; the construct space is empirically open.",
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
+}
