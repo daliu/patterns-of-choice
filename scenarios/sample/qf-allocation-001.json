@@ -1,0 +1,65 @@
+{
+  "id": "qf-allocation-001",
+  "type": "quick-fire-round",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Money and the small splits",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Captures System 1 allocation preferences across varying counterparty, stake, and what's-at-stake (effort / money / status). Six binary items under an 8-second visible timer. Stakes are deliberately small enough that the answers reveal default tendencies rather than deliberation.",
+    "domain_anchor": "Dictator and ultimatum game literatures (Forsythe et al. 1994; Engel 2011 meta-analysis); Cohn et al. 2019 Science lost-wallet field experiment.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-allocation-001-i01",
+      "prompt": "Splitting a utility bill with your roommate. The actual split puts you $3 ahead.",
+      "options": [
+        { "id": "a", "text": "Note it and adjust next month.", "tags": ["fairness", "counterparty:close", "stake:micro", "value:fairness"] },
+        { "id": "b", "text": "Let it go; it's $3.", "tags": ["generosity", "counterparty:close", "stake:micro", "value:generosity"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-001-i02",
+      "prompt": "Friends are pitching in for a birthday gift. You earn substantially more than the others.",
+      "options": [
+        { "id": "a", "text": "Pitch in equally; that's how the group does it.", "tags": ["fairness:equal", "counterparty:close", "stake:low", "value:fairness"] },
+        { "id": "b", "text": "Quietly cover more than your share.", "tags": ["generosity", "counterparty:close", "stake:low", "value:need_sensitivity"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-001-i03",
+      "prompt": "A stranger approaches you on the street asking for spare change for food.",
+      "options": [
+        { "id": "a", "text": "Give cash without questioning.", "tags": ["generosity", "counterparty:stranger", "stake:low", "value:universalism", "trust:default"] },
+        { "id": "b", "text": "Decline and keep walking.", "tags": ["vigilance", "counterparty:stranger", "stake:low", "value:self_reliance:projected", "trust:withhold"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-001-i04",
+      "prompt": "Coworker forgot their wallet for the lunch order. Their share is $15.",
+      "options": [
+        { "id": "a", "text": "Cover it; expect to be paid back later.", "tags": ["reciprocity_pure", "counterparty:peer", "stake:low", "trust:default"] },
+        { "id": "b", "text": "Cover it and don't mention it again.", "tags": ["generosity", "counterparty:peer", "stake:low", "value:generosity"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-001-i05",
+      "prompt": "A friend asks to borrow $50. You can afford it.",
+      "options": [
+        { "id": "a", "text": "Lend it with an explicit timeline for return.", "tags": ["fairness:explicit", "counterparty:close", "stake:low", "value:reciprocity_pure", "vigilance:mild"] },
+        { "id": "b", "text": "Give it without expectation of return.", "tags": ["generosity", "counterparty:close", "stake:low", "value:generosity", "trust:full"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-001-i06",
+      "prompt": "An online creator who entertained you for hours has an anonymous tip jar. No one will know if you skip it.",
+      "options": [
+        { "id": "a", "text": "Tip something reasonable for what you got.", "tags": ["reciprocity_pure", "counterparty:anonymous", "stake:low", "value:reciprocity_pure", "observed:no"] },
+        { "id": "b", "text": "Skip it; you didn't agree to pay.", "tags": ["self_reliance:projected", "counterparty:anonymous", "stake:low", "value:self_reliance", "observed:no"] }
+      ]
+    }
+  ]
+}
