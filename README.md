@@ -21,6 +21,7 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`mvp.md`](mvp.md) — proposed scope for the first measurement-validation build (MVP-1)
 - [`onboarding.md`](onboarding.md) — user-facing copy and sequence for the first 3 sessions and the profile reveal
 - [`pre-registration.md`](pre-registration.md) — OSF-filing-ready template for MVP-1's measurement-validation study, with pre-specified hypotheses, analysis plan, and falsification thresholds
+- [`scoring.md`](scoring.md) — analytical specification: how raw session-log and inventory data become the revealed / stated / gap / cost-of-virtue scores referenced by the pre-registration
 - [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schema (4 quick-fires, 4 cost-of-virtue probes, 1 branching narrative)
 - [`inventory/`](inventory/) — stated-values inventory module: values deck, forced-choice pairs, three-layer prompts, story prompts
 - [`literature/`](literature/) — literature notes and citations (iterated by research agents)
