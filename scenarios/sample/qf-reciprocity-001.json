@@ -1,0 +1,65 @@
+{
+  "id": "qf-reciprocity-001",
+  "type": "quick-fire-round",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When to lean in, when to step back",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Captures default tendencies on the trust-vs-vigilance, cooperation-vs-independence, and forgiveness-vs-vigilance axes. Items 3 and 4 are deliberate parallel tests of forgiveness with different counterparty types (close friend vs. business vendor) to surface whether the user generalizes their forgiveness threshold across domains.",
+    "domain_anchor": "Axelrod tit-for-tat and reciprocity literature; iterated PD and trust game paradigms (Berg, Dickhaut & McCabe 1995); van Lange et al. on cooperation orientation.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-reciprocity-001-i01",
+      "prompt": "A new colleague who started this week asks if they can use your work laptop for an hour while theirs gets set up.",
+      "options": [
+        { "id": "a", "text": "Lend it; everyone needs help getting started.", "tags": ["trust", "counterparty:new-peer", "stake:medium-trust", "value:trust", "value:hospitality"] },
+        { "id": "b", "text": "Politely say no; IT can sort it out.", "tags": ["vigilance", "counterparty:new-peer", "stake:medium-trust", "value:vigilance", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-001-i02",
+      "prompt": "You're on a group project. The decisions would go faster if you just made them yourself.",
+      "options": [
+        { "id": "a", "text": "Take ownership; the group will follow your lead.", "tags": ["independence", "counterparty:peer-group", "stake:medium-social", "value:independence"] },
+        { "id": "b", "text": "Defer to consensus; the result is better when everyone owns it.", "tags": ["cooperation", "counterparty:peer-group", "stake:medium-social", "value:cooperation"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-001-i03",
+      "prompt": "A friend who flaked on you a few months ago asks to make plans again.",
+      "options": [
+        { "id": "a", "text": "Re-open the door; people have bad stretches.", "tags": ["forgiveness", "counterparty:close", "stake:low-social", "value:forgiveness", "value:trust"] },
+        { "id": "b", "text": "Stay cautious; once they flake, they tend to keep flaking.", "tags": ["vigilance", "counterparty:close", "stake:low-social", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-001-i04",
+      "prompt": "A vendor missed last month's deadline by a week. They've apologized and want to keep the contract.",
+      "options": [
+        { "id": "a", "text": "Give them another shot; people make mistakes.", "tags": ["forgiveness", "counterparty:business", "stake:medium-money", "value:forgiveness"] },
+        { "id": "b", "text": "Move on; the pattern is what matters, not the apology.", "tags": ["vigilance", "counterparty:business", "stake:medium-money", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-001-i05",
+      "prompt": "An online-community member helped you out last month. They now ask for your help on something time-consuming.",
+      "options": [
+        { "id": "a", "text": "Help them; that's how communities work.", "tags": ["reciprocity_pure", "counterparty:peer-distant", "stake:time", "value:reciprocity_pure", "value:cooperation"] },
+        { "id": "b", "text": "Decline; you didn't sign up for a barter contract.", "tags": ["independence", "counterparty:peer-distant", "stake:time", "value:independence", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-001-i06",
+      "prompt": "You owed your roommate $20 from last month. They haven't brought it up.",
+      "options": [
+        { "id": "a", "text": "Pay them back anyway; the debt is the debt.", "tags": ["reciprocity_pure", "counterparty:close", "stake:low-money", "value:reciprocity_pure", "value:honesty"] },
+        { "id": "b", "text": "Let it be; if it mattered they'd say so.", "tags": ["trust:asymmetric", "counterparty:close", "stake:low-money", "self-cost:none"] }
+      ]
+    }
+  ]
+}
