@@ -301,17 +301,24 @@ Tracking what the literature pass surfaced and what each revision has incorporat
 - **TTM stage-matching**: prescriptive claim removed; design intuition retained without the discredited scaffolding.
 - **Schwartz PVQ-RR**: replaces PVQ-21/40 references throughout.
 
-### Remaining for next pass
+### Incorporated in Draft 0.3 (prose-level lit integration)
 
-- **Self-efficacy (Bandura 1977, 1997).** Not currently cited. Implicit throughout the intervention layer; should be made explicit as the mediator linking "I am someone who..." → action initiation → persistence.
-- **Bénabou & Tirole 2006 *AER* on incentives and prosocial behavior.** Formal signaling-model basis for the "don't gamify the values themselves" anti-pattern — a stronger theoretical foundation than the contested Deci-1971 citation that currently anchors it.
-- **Crockett et al. 2014 PNAS harm-magnitude paradigm.** Existing, validated, computationally tractable operationalization of "cost-of-virtue curve." The doc reinvents the stake-laddering wheel; should inherit Crockett's parameter-space rather than design from scratch.
-- **Abeler et al. 2019 *Econometrica* meta on dishonesty games (N≈44,000).** Single best empirical anchor for cost-of-virtue / honesty-under-stakes calibration. Cleaner numbers than the now-discredited Mazar/Ariely 2008.
-- **Aknin et al. 2013, 2022 on prosocial spending and well-being.** Robustly replicated cross-cultural finding; the underlying mechanism (prosocial action → affective benefit) is one of the few solidly-replicated findings and is directly relevant to the "Effort and self-sacrifice" domain.
-- **Bago & De Neys 2019** on intuitive utilitarian responses. Inline flag exists; prose-level rewrite of the speed-vs-deliberation signature description still pending.
-- **Cikara parochial-empathy work.** Should be measurable as a behavioral signature, not just a domain axis.
-- ~~**Identity-anchoring relational variant.**~~ Content authored at `inventory/relational-variant.json` — 11 role options across 5 categories (family / work / social / civic / tradition), role-anchored framing wrappers for all three layers, role-specific overrides for all five story prompts, scoring implications spelled out, MVP-1 deferred (engineering swap-layer not yet built; pre-registration unchanged). Remaining: actually enabling the role-picker behind a feature flag during MVP-1 piloting.
-- **Onboarding language for the foundational empirical risk.** The Premise now names it, but the user-facing copy that communicates "you are part of an experiment" without making the product feel unproven is its own design problem.
+- **Self-efficacy (Bandura 1977, 1997).** Now in the intervention stack as the mediator linking identity claim to action; interventions building identity without scaffolding self-efficacy under-perform.
+- **Bénabou & Tirole 2006 *AER***. Replaces the contested Deci-1971 anchor for "don't gamify the values themselves"; signaling-model framing now in prose.
+- **Crockett et al. 2014 *PNAS* harm-magnitude paradigm.** Cost-of-virtue curve description now names the inheriting paradigm in prose.
+- **Abeler et al. 2019 *Econometrica***. Promoted to in-prose calibration anchor for honesty-domain probes.
+- **Bago & De Neys 2019** on intuitive utilitarian responses. Speed-vs-deliberation signature rewritten; the older Greene-style mapping explicitly disclaimed.
+- **Cikara / Bruneau parochial-empathy**. Now anchors the in-group/out-group domain description.
+- **Identity-anchoring relational variant.** Content authored at `inventory/relational-variant.json` — 11 role options across 5 categories, role-anchored framing wrappers for all three layers, scoring implications spelled out, MVP-1 deferred.
+- **Onboarding language for the foundational empirical risk.** Closed at `onboarding.md` — full session-1 to profile-reveal copy including a "candor moment" that names the contested empirical premise and offers a real "step away" CTA.
+
+### Remaining for the next pass
+
+- **Aknin et al. 2013, 2022 on prosocial spending and well-being.** Robustly replicated cross-cultural finding directly relevant to the "Effort and self-sacrifice" domain — which is itself excluded from MVP-1. The Aknin work would inform the design when that domain enters scope (MVP-2 or later).
+- **Engineering: deciding whether to start.** Repo has spec coverage for the entire pipeline (content → scoring → analysis → pre-reg). No code exists. First-commit options enumerated in commit-message threads on `mvp.md`, `scoring.md`, and `analysis/README.md`.
+- **Additional scenarios.** 9 of ~48 target authored. Each subsequent quick-fire is ~30 min editorial; each narrative ~90 min; each cost-of-virtue probe ~20 min. The MVP-1 corpus is on a 3–4 week authoring timeline once started in earnest.
+- **CI hook for tag-mapping validation.** `analysis/README.md` flags this as TODO; would prevent drift between scenario tags and the analyzer.
+- **LLM story-coding inter-rater reliability calibration.** Per `inventory/story-prompts.json` and `scoring.md`, the LLM coding pipeline needs κ ≥ 0.70 against gold-standard manual coding before story data folds into primary analyses; ~200 gold-standard manual codes (50 per domain by 2 raters) is the prerequisite.
 
 See `literature/_index.md` and area-specific files for sources and citations.
 
