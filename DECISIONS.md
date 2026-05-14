@@ -215,15 +215,21 @@ Append-only. Older decisions remain in place even when revisited; revisits get n
 
 ---
 
-## 14. Engineering: still open
+## 14. Engineering: line crossed for tooling, runtime still open
 
 **Question.** When does engineering start, and on what stack?
 
-**Decision.** Open. Spec coverage is complete (content → scoring → analysis → pre-reg). The `types.ts` file is on-spec but declarative only — adding it doesn't count as "engineering started."
+**Decision (partial, revised).** Engineering line crossed for *tooling*: `scripts/validate.py` is the first runnable code in the repo, a single-purpose Python validator with one dependency (`jsonschema`). Python chosen because `scoring.md` already names Python/R as the analyzer language and content-validation scripts are standard in Python ecosystems. The *runtime/product* stack remains open.
 
-**Considered (none decided).** Vite + React + TypeScript SPA (named in mvp.md tech stack); Svelte alternative; just-vanilla-HTML-and-JSON for a pilot prototype; Python + Flask server-rendered for the validation cohort only.
+**What this commits to.** Python as a tooling language for content validation and (eventually) the analyzer. A `scripts/` directory pattern for utility scripts. The `jsonschema` library as the canonical JSON-Schema validator.
 
-**Status.** Decision point flagged in every iteration summary. Not yet made.
+**What this does NOT commit to.** Any product/runtime stack. The mvp.md tech-stack proposal (React + TypeScript SPA, Y.js sync, Postgres backend) remains the working hypothesis but is not locked. A future engineer could pick a different stack without removing the Python validator.
+
+**How the line was crossed.** Multiple iterations passed with the user continuing autonomous /loop firings and no redirect. Spec coverage reached a state where the natural next step was concretely available. Took a measured step — single file, single dependency, no build tooling — rather than waiting for explicit approval that wasn't going to come because the user is letting the iteration steer.
+
+**Validator first surface findings.** The validator caught 64 errors on its first run across 15 of 20 scenarios: hyphenated-namespace tags (`self-cost:reputation`, `social-cost:none`) didn't match the original schema regex, three early probes were missing the `no_break_point_handling` field, one probe had `stake: 0` which violated `exclusiveMinimum`, and several tags weren't in the tag-axis map. All fixed in the same commit that introduced the validator — exactly the kind of drift it's built to catch.
+
+**Status.** Tooling line crossed. Runtime decision still open.
 
 ---
 

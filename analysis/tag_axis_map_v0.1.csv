@@ -132,7 +132,8 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,resolution:quiet-burn,,narrative-resolution stratifier
 *,metadata,stated-revealed-aligned-late,,outcome descriptor (late alignment)
 *,metadata,counterparty:chosen-family,,counterparty stratifier (non-blood family-of-choice)
-*,metadata,counterparty:close-IRL,,counterparty stratifier (close in-person relationships)
+*,metadata,counterparty:close-irl,,counterparty stratifier (close in-person relationships)
+*,metadata,counterparty:child,,counterparty stratifier (a child as counterparty — moral asymmetry from age)
 *,metadata,counterparty:close-online,,counterparty stratifier (close online-only relationships)
 *,metadata,counterparty:community,,counterparty stratifier (community-scale, not individual)
 *,metadata,counterparty:family-of-origin,,counterparty stratifier (blood family)
@@ -145,6 +146,12 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,counterparty:peer-out-team,,counterparty stratifier (workplace peer in different team)
 *,metadata,counterparty:stranger-foreign,,counterparty stratifier (stranger in different cultural context)
 *,metadata,counterparty:stranger-known,,counterparty stratifier (recurring stranger encounter)
+*,metadata,stake:medium-financial,,stake stratifier (medium financial cost)
+*,metadata,stake:high-social,,stake stratifier (high social cost)
+*,metadata,value:self_reliance:projected,,multi-segment tag — value:self_reliance with projected modifier; treat as metadata since the base value:self_reliance already scores
+*,metadata,value:loyalty:community,,multi-segment tag — value:loyalty with community scope; treat as metadata since value:loyalty already in cross-domain metadata
+*,metadata,boundary-setting,,resolution descriptor (bare token with hyphen)
+*,metadata,consequentialist-lean,,framing descriptor (bare token with hyphen)
 *,metadata,observed:yes,,observer-effect stratifier (visible-giving variant)
 *,metadata,resolution:hospitality-private,,narrative-resolution stratifier
 *,metadata,resolution:hospitality-quiet,,narrative-resolution stratifier

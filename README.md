@@ -26,6 +26,7 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`analysis/`](analysis/) — versioned data files the analyzer consumes (currently: the tag-to-axis mapping). Part of the pre-registration; locked at OSF filing
 - [`types.ts`](types.ts) — TypeScript type definitions for all the JSON content schemas. Declarative only; no runtime or framework commitment. Schema-in-code complement to `scenarios/SCHEMA.md` and `inventory/SCHEMA.md`. Any future implementation can typecheck against this contract.
 - [`DECISIONS.md`](DECISIONS.md) — running log of load-bearing design choices with rationale; lightweight ADR format. Append-only.
+- [`scripts/`](scripts/) — utility scripts. Currently: `validate.py` (content-validation, Python, single dependency `jsonschema`). The first executable code in the repo. See [`scripts/README.md`](scripts/README.md) for the engineering-line-crossing rationale.
 - [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schema (4 quick-fires, 4 cost-of-virtue probes, 1 branching narrative)
 - [`inventory/`](inventory/) — stated-values inventory module: values deck, forced-choice pairs, three-layer prompts, story prompts
 - [`literature/`](literature/) — literature notes and citations (iterated by research agents)

@@ -30,6 +30,7 @@
   },
   "analysis": {
     "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code 'never' as Inf for break-point analysis; report separately as 'loyalty ceiling above probe range'.",
     "interpretation_note": "Loyalty break-point is highly sensitive to counterparty closeness and visibility-of-betrayal framing. The 'no realistic way you'd be discovered' clause is load-bearing — without it, the probe measures vigilance-against-consequence rather than loyalty-under-stakes. The probe is also more emotionally loaded than cov-truth-001 and cov-allocation-001; expect higher skip rates and longer response times. Both are themselves signals.",
     "longitudinal_signal": "Within-user trajectory tracks loyalty-under-stakes drift.",
     "domain_signature_captured": "cost_of_virtue_curve"

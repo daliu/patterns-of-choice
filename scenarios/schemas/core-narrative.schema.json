@@ -152,7 +152,7 @@
           "type": "array",
           "items": {
             "type": "string",
-            "pattern": "^[a-z_]+(:[a-z_-]+)?$"
+            "pattern": "^[a-z_-]+(:[a-z_-]+)*$"
           },
           "minItems": 1,
           "uniqueItems": true

@@ -26,7 +26,7 @@
       "prompt": "Saturday: a close online friend (you've never met in person, talked for years) is moving and asks for two hours of voice-call help debugging a stressful logistics situation. Your IRL friend group is hosting a casual brunch the same morning.",
       "options": [
         { "id": "a", "text": "Skip brunch; the online friend has more concrete need today.", "tags": ["need_sensitivity", "counterparty:close-online", "stake:medium-social", "value:need_sensitivity", "value:hospitality"] },
-        { "id": "b", "text": "Go to brunch; in-person relationships need the recurring time.", "tags": ["loyalty", "particularism", "counterparty:close-IRL", "stake:medium-social", "value:loyalty", "value:particularism"] }
+        { "id": "b", "text": "Go to brunch; in-person relationships need the recurring time.", "tags": ["loyalty", "particularism", "counterparty:close-irl", "stake:medium-social", "value:loyalty", "value:particularism"] }
       ]
     },
     {

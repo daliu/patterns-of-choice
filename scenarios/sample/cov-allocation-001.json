@@ -34,6 +34,7 @@
   },
   "analysis": {
     "break_point_field": "first_return_stake",
+    "no_break_point_handling": "Code 'always_return' as 0 (returns at every amount; strongest fairness) and 'always_keep' as Inf (would keep at any amount). Inverted probe convention: lower break-point = more ethical.",
     "interpretation_note": "Note that this probe is *inverted* relative to cov-truth-001: there, the smallest stake at which the user accepts the unethical action is the break point; here, the smallest stake at which the user does the ethical action is the break point. Analysis pipeline should handle both directions.",
     "longitudinal_signal": "Within-user trajectory tracks fairness-under-stakes drift.",
     "domain_signature_captured": "cost_of_virtue_curve"

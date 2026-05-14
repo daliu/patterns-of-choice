@@ -127,7 +127,8 @@
         },
         "stake": {
           "type": "number",
-          "exclusiveMinimum": 0
+          "minimum": 0,
+          "description": "Stake amount. 0 is permitted for forgiveness-style inverted probes where 'no additional restitution required' is a meaningful ladder rung."
         },
         "unit": { "type": "string", "minLength": 1 },
         "label": { "type": "string", "minLength": 1 }

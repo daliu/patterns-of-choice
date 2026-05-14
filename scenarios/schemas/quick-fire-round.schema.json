@@ -103,8 +103,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "pattern": "^[a-z_]+(:[a-z_-]+)?$",
-            "description": "Tag in 'namespace:value' format or single bare token. Must resolve in analysis/tag_axis_map_v*.csv."
+            "pattern": "^[a-z_-]+(:[a-z_-]+)*$",
+            "description": "Tag in 'namespace:value' format (with optional multi-segment chaining like value:self_reliance:projected), or single bare token. Hyphens permitted in namespace and value parts. Must resolve in analysis/tag_axis_map_v*.csv."
           },
           "minItems": 1,
           "uniqueItems": true
