@@ -1,0 +1,65 @@
+{
+  "id": "qf-allocation-003",
+  "type": "quick-fire-round",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When the resource itself is fuzzy",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-allocation-001. Whereas the first round varied counterparty across clean cash-allocation contexts (roommate, friend, stranger, coworker, friend-loan, anonymous tip), this one varies the *shape* of the resource: gift overpayment (windfall), repeat-giving recalibration, asymmetric consumption with equal-split norm, gift sizing by recipient circumstance, named-vs-anonymous donation, family-inheritance redirect. Each item still maps cleanly onto the values-deck (generosity / fairness / need_sensitivity / reciprocity_pure / self_reliance) but the resource itself is shaped differently per item.",
+    "domain_anchor": "Dictator-game meta (Engel 2011) for cash-allocation calibration; Aknin 2013 prosocial-spending for the anonymity-of-donation item; Henrich 2020 cross-cultural fairness work for inheritance norm variation.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["mention of family inheritance"]
+  },
+  "items": [
+    {
+      "id": "qf-allocation-003-i01",
+      "prompt": "A relative gives you a wedding gift envelope containing twice the amount you'd expect. You suspect a counting mistake.",
+      "options": [
+        { "id": "a", "text": "Mention it tactfully when you thank them.", "tags": ["truth:commission", "fairness", "counterparty:close", "stake:low-money", "value:honesty", "value:fairness"] },
+        { "id": "b", "text": "Accept it; they meant it as a gesture and pointing this out diminishes the gift.", "tags": ["generosity", "counterparty:close", "stake:low-money", "value:loyalty", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-003-i02",
+      "prompt": "An unhoused person you've helped a few times before (small amounts) asks today for $40 — specifically, for a transit pass for a job interview.",
+      "options": [
+        { "id": "a", "text": "Give the full amount; the stated need is concrete and you can afford it.", "tags": ["generosity", "need_sensitivity", "counterparty:stranger-known", "stake:medium-money", "value:generosity", "value:need_sensitivity", "trust:default"] },
+        { "id": "b", "text": "Give a smaller amount; the larger ask is a pattern shift worth being cautious about.", "tags": ["vigilance", "counterparty:stranger-known", "stake:medium-money", "value:vigilance", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-003-i03",
+      "prompt": "Group dinner. The bill is $300; the suggestion is equal-split at $50 each. You ordered the cheapest thing on the menu and didn't drink. Speaking up changes the math by ~$15 in your favor.",
+      "options": [
+        { "id": "a", "text": "Let the equal split stand; it's the social norm here.", "tags": ["fairness:equal", "cooperation", "counterparty:peer-group", "stake:low-money", "value:loyalty", "value:cooperation"] },
+        { "id": "b", "text": "Mention the asymmetry and propose itemizing.", "tags": ["fairness:explicit", "counterparty:peer-group", "stake:low-money", "value:fairness", "value:reciprocity_pure"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-003-i04",
+      "prompt": "A cousin's birthday. You typically spend $80 on close friends' birthday gifts. Your cousin is in a tight financial spot right now; you suspect a more practical gift at higher value would help materially.",
+      "options": [
+        { "id": "a", "text": "Stick to the $80 norm; treating them as a charity case would be its own slight.", "tags": ["fairness:equal", "counterparty:close", "stake:low-money", "value:fairness", "value:tact"] },
+        { "id": "b", "text": "Spend more, framed as a practical-gift choice rather than charity.", "tags": ["generosity", "need_sensitivity", "counterparty:close", "stake:medium-money", "value:generosity", "value:need_sensitivity"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-003-i05",
+      "prompt": "A community fundraiser is $100 short of its goal. You can put your name on the donor list at $100, or donate the $100 anonymously.",
+      "options": [
+        { "id": "a", "text": "Donate publicly; visible giving signals to others to give too.", "tags": ["generosity", "counterparty:community", "stake:low-money", "value:generosity", "value:cooperation", "observed:yes"] },
+        { "id": "b", "text": "Donate anonymously; the giving shouldn't be about you.", "tags": ["generosity", "counterparty:community", "stake:low-money", "value:generosity", "value:authenticity", "observed:no"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-003-i06",
+      "prompt": "A family inheritance has been split equally among siblings. Your share is modest. One sibling is in significantly tighter circumstances than the rest. You could quietly redirect a portion of your share to them.",
+      "options": [
+        { "id": "a", "text": "Redirect a portion privately; the equal split doesn't reflect actual need.", "tags": ["need_sensitivity", "generosity", "counterparty:close", "stake:medium-money", "value:need_sensitivity", "value:generosity"] },
+        { "id": "b", "text": "Keep the split as the family decided; quietly adjusting would create a new asymmetry you'd have to maintain.", "tags": ["fairness", "self_reliance:projected", "counterparty:close", "stake:medium-money", "value:fairness", "value:boundaries"] }
+      ]
+    }
+  ]
+}
