@@ -1,0 +1,38 @@
+{
+  "id": "cov-truth-002",
+  "type": "cost-of-virtue-probe",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Cost-of-virtue: paid omission",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to cov-truth-001. Where the first probe tests honesty under *commission* (paid to write a fabricated positive review), this one tests honesty under *omission* (paid to leave out a substantive criticism in a review of a product you've actually used). Within-user comparison of the two break-points is itself an individual-differences signal — many users report lower break-points for commission than omission, consistent with the lab finding that commission lies feel more morally weighted than omission lies (Spranca et al. 1991 omission bias).",
+    "domain_anchor": "Spranca, Minsk & Baron 1991 on the omission bias; Haran, Ritov & Mellers 2010 on partial disclosure. Abeler 2019 Econometrica honesty-meta also provides commission-vs-omission base rates.",
+    "estimated_duration_seconds": 90,
+    "content_warnings": []
+  },
+  "value_slot": "honesty",
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": "honesty",
+    "ladder_currency": "user-local"
+  },
+  "framing_prompt": "A company asks you to write a review for one of their products you've actually used. They'll pay you a flat fee. Your review will run under your real name and they want it to be candid. There's one condition: they'd prefer you not mention a specific shortcoming of the product — not lie about it, just leave it out. You'd ordinarily mention it. There's no realistic way you'd be caught omitting it.",
+  "framing_question": "What's the smallest fee at which you'd take the offer?",
+  "ladder": [
+    { "rung": 1, "stake": 10, "unit": "USD", "label": "$10" },
+    { "rung": 2, "stake": 100, "unit": "USD", "label": "$100" },
+    { "rung": 3, "stake": 1000, "unit": "USD", "label": "$1,000" },
+    { "rung": 4, "stake": 10000, "unit": "USD", "label": "$10,000" }
+  ],
+  "no_option": {
+    "id": "never",
+    "text": "I wouldn't do this at any of these amounts."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code as Inf for break-point analysis; report separately as 'integrity ceiling above probe range'",
+    "interpretation_note": "Pair-with-cov-truth-001 analysis is the headline use: within-user (commission break-point) − (omission break-point) measures the user's omission-bias differential. Negative differential (omission cheaper than commission) is the modal finding in the literature; users for whom the differential is near zero are more committed to active disclosure as part of honesty; users for whom omission is much cheaper accept a narrower definition of honesty.",
+    "longitudinal_signal": "Within-user trajectory of log10(break_point) across sessions; convergence of commission and omission break-points over time would be evidence of consolidation of an active-disclosure honesty norm.",
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
+}
