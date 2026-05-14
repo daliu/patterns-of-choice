@@ -1,0 +1,65 @@
+{
+  "id": "qf-reciprocity-005",
+  "type": "quick-fire-round",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Asymmetric reciprocity",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-reciprocity-001 (basic trust-vs-vigilance) and qf-reciprocity-003 (pattern-vs-moment tension). This round probes situations where direct symmetric reciprocity isn't possible: helping in advance, power-asymmetric help, stranger-favor reciprocation, formal-vs-informal arrangements. Tests whether the user's cooperation/reciprocity instincts hold up when the ledger metaphor breaks down.",
+    "domain_anchor": "Mauss 1925 The Gift on non-equivalent reciprocity; Sahlins 1972 on generalized vs balanced reciprocity; Cropanzano & Mitchell social-exchange theory for power-asymmetric contexts.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-reciprocity-005-i01",
+      "prompt": "You see a colleague struggling on a project that's not connected to yours. They haven't asked for help. You have an hour you could give.",
+      "options": [
+        { "id": "a", "text": "Offer help unprompted — generosity in advance, no expectation of return.", "tags": ["generosity", "cooperation", "counterparty:peer", "stake:low-time", "value:generosity", "value:hospitality"] },
+        { "id": "b", "text": "Wait until they ask. Unrequested help can be patronizing, and you can't really know what they need without being told.", "tags": ["boundaries", "vigilance", "counterparty:peer", "stake:low-time", "value:boundaries", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-005-i02",
+      "prompt": "A wealthy friend has been generous to you over the years (treating you to meals, picking up checks, lending things freely). They now ask for a favor that's modest for them but moderately costly for you.",
+      "options": [
+        { "id": "a", "text": "Do it. The asymmetric giving over the years is real even if neither of you keeps a ledger.", "tags": ["reciprocity_pure", "loyalty", "counterparty:close", "stake:medium-time", "value:reciprocity_pure", "value:loyalty"] },
+        { "id": "b", "text": "Decline if it doesn't work for you. Their generosity was their choice; it doesn't create an obligation that costs you.", "tags": ["boundaries", "self_reliance", "counterparty:close", "stake:medium-time", "value:boundaries", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-005-i03",
+      "prompt": "You're in a senior position. A junior colleague needs substantial help on something. The asymmetry means they can't reciprocate directly to you in any near future.",
+      "options": [
+        { "id": "a", "text": "Help generously. Pay-it-forward toward the field is the way the asymmetric reciprocity actually closes.", "tags": ["generosity", "cooperation", "counterparty:subordinate", "stake:medium-time", "value:generosity", "value:hospitality"] },
+        { "id": "b", "text": "Help, but make the expectations clear: a specific scope, not unlimited. Even pay-it-forward requires structure.", "tags": ["cooperation", "boundaries", "counterparty:subordinate", "stake:medium-time", "value:cooperation", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-005-i04",
+      "prompt": "A stranger does you a real favor — returns your wallet with cash intact, helps in a medical situation, lets you in a critical line. The interaction will be one-shot; you'll never see them again.",
+      "options": [
+        { "id": "a", "text": "Press a meaningful gesture on them — a substantial tip, a follow-up gift sent later, an explicit thank-you note.", "tags": ["reciprocity_pure", "generosity", "counterparty:stranger", "stake:low-financial", "value:reciprocity_pure", "value:generosity"] },
+        { "id": "b", "text": "Thank them warmly in the moment. Pay it forward to the next stranger you encounter who needs something.", "tags": ["universalism", "counterparty:stranger", "stake:low", "value:universalism", "value:generosity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-005-i05",
+      "prompt": "You and a friend have a written, informal agreement (shared business expense, joint subscription, splitting a recurring cost). They want to switch from the written terms to 'we'll just figure it out.'",
+      "options": [
+        { "id": "a", "text": "Agree. The friendship is closer than the agreement; written terms can be more about distrust than fairness.", "tags": ["trust", "forgiveness", "counterparty:close", "stake:medium-financial", "value:trust", "value:cooperation"] },
+        { "id": "b", "text": "Keep the written terms. Friction now is better than the larger frictions that often follow informal arrangements.", "tags": ["fairness:explicit", "vigilance", "counterparty:close", "stake:medium-financial", "value:fairness", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-005-i06",
+      "prompt": "A friend who's been generous to you in the past is going through a hard time. You'd like to help substantially. They explicitly don't want it framed as 'paying back' — they say their past help was unconditional.",
+      "options": [
+        { "id": "a", "text": "Help anyway, and respect the framing — don't reference the past. The help is generosity in the present.", "tags": ["generosity", "forgiveness", "counterparty:close", "stake:high-emotional", "value:generosity", "value:tact"] },
+        { "id": "b", "text": "Help but quietly hold the ledger acknowledgment in your own head. They get the help they need; you get to honor the actual history.", "tags": ["generosity", "value:reciprocity_pure", "counterparty:close", "stake:medium-emotional", "value:authenticity"] }
+      ]
+    }
+  ]
+}

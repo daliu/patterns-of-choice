@@ -1,0 +1,65 @@
+{
+  "id": "qf-ingroup-005",
+  "type": "quick-fire-round",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When circles overlap",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-ingroup-001 (clean social-distance gradients) and qf-ingroup-003 (different kinds of community). This round probes more layered situations where the user is in multiple groups at once — generational, tradition-vs-newcomer, dual-community, moderator-with-conflicting-loyalties. The same loyalty-vs-universalism axis, but the choice is now often between two in-groups rather than in-group-vs-out-group.",
+    "domain_anchor": "Brewer optimal-distinctiveness theory; Roccas & Brewer 2002 on social identity complexity; Cikara/Bruneau parochial-empathy extended to multi-group identification.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["family tradition / generational tension"]
+  },
+  "items": [
+    {
+      "id": "qf-ingroup-005-i01",
+      "prompt": "A younger family member is breaking from an established family tradition you grew up with. Older family members are quietly upset. The younger person asks for your support.",
+      "options": [
+        { "id": "a", "text": "Support the younger family member openly. Traditions adapt; your loyalty is to the person, not the inherited form.", "tags": ["universalism", "particularism", "counterparty:family-of-origin", "stake:high-emotional", "value:authenticity", "value:loyalty"] },
+        { "id": "b", "text": "Stay neutral or gently encourage them to compromise; the tradition has held the family together for a reason.", "tags": ["loyalty", "discretion", "counterparty:family-of-origin", "stake:medium-emotional", "value:loyalty", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-005-i02",
+      "prompt": "A stranger you've never met reaches out — they're an alum of your school / former member of a group you belonged to. They're asking for help that's reasonable but real.",
+      "options": [
+        { "id": "a", "text": "Help them. The shared affiliation creates a real obligation worth honoring.", "tags": ["particularism", "hospitality", "counterparty:stranger-affiliated", "stake:medium-time", "value:hospitality", "value:loyalty"] },
+        { "id": "b", "text": "Treat them like any other stranger asking the same question. The shared affiliation is thin grounds for special treatment.", "tags": ["universalism", "boundaries", "counterparty:stranger-affiliated", "stake:low-time", "value:universalism", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-005-i03",
+      "prompt": "You moderate (informally or formally) an online community. A long-time member is being repeatedly hostile to a newer member in ways that fall just short of the explicit rules but clearly violate the spirit.",
+      "options": [
+        { "id": "a", "text": "Defend the newer member publicly: 'This isn't how we treat people who join here.'", "tags": ["universalism", "truth:confront-direct", "counterparty:in-group-tribal", "stake:high-social", "value:universalism", "value:hospitality"] },
+        { "id": "b", "text": "Reach out privately to the long-timer first; they've been part of the community a long time and deserve direct rather than public correction.", "tags": ["loyalty", "tact", "counterparty:in-group-peer", "stake:medium-social", "value:tact", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-005-i04",
+      "prompt": "Two of your friend groups have an unspoken dislike of each other. A close friend from Group A asks you to bring them to an event you'd normally attend with Group B.",
+      "options": [
+        { "id": "a", "text": "Bring them. Your friend is your friend; the inter-group tension isn't theirs to navigate.", "tags": ["loyalty", "counterparty:close", "stake:medium-social", "value:loyalty", "value:hospitality"] },
+        { "id": "b", "text": "Suggest going separately; the Group B event isn't a context where you can integrate Group A without friction for everyone.", "tags": ["boundaries", "tact", "counterparty:close", "stake:medium-social", "value:tact", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-005-i05",
+      "prompt": "Someone wants to join a niche community you're part of (a hobby, a profession, a creative scene). They share the interest sincerely but don't yet have any of the markers established members use to recognize each other.",
+      "options": [
+        { "id": "a", "text": "Welcome them in actively — introduce them, lower the markers' importance, help them find their footing.", "tags": ["hospitality", "universalism", "counterparty:out-group-new", "stake:medium-social", "value:hospitality"] },
+        { "id": "b", "text": "Be friendly but let them earn their place the way you and others did. The markers exist for a reason.", "tags": ["loyalty", "boundaries", "counterparty:in-group-community", "stake:low-social", "value:loyalty", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-005-i06",
+      "prompt": "Two of your peer groups (e.g., work friends and college friends) are going to overlap at a shared event. One group makes inside jokes about something the other group will visibly not get.",
+      "options": [
+        { "id": "a", "text": "Quietly defuse — change the subject if the joke starts, make space for the other group.", "tags": ["universalism", "tact", "counterparty:in-group-peer", "stake:low-social", "value:hospitality", "value:tact"] },
+        { "id": "b", "text": "Let it play out. Both groups can handle a little awkwardness; you don't need to be the social mediator.", "tags": ["independence", "boundaries", "counterparty:in-group-peer", "stake:low-social", "value:independence"] }
+      ]
+    }
+  ]
+}

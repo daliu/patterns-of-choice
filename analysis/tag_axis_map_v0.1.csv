@@ -11,6 +11,7 @@ truth-telling,honesty,discretion,-0.3,bare-token form of value:discretion
 truth-telling,honesty,value:honesty,1.0,honesty value-reference (matches the home-domain primary value)
 truth-telling,honesty,value:transparency,0.7,transparency (volunteering what others have a right to know; positive on honesty axis)
 truth-telling,honesty,transparency,0.7,bare-token form of value:transparency
+truth-telling,honesty,tact,0.3,bare-token form of value:tact
 truth-telling,honesty,truth:acknowledge,0.5,acknowledging without volunteering
 truth-telling,honesty,truth:soft-confront,0.5,framing as collaborative
 truth-telling,honesty,truth:deferred-confront,0.5,truth told but with delay
@@ -155,6 +156,8 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,stake:high-reputation,,stake stratifier (substantial reputation/career stake)
 *,metadata,stake:medium-time,,stake stratifier (a few hours of discretionary time)
 *,metadata,stake:high-time,,stake stratifier (a substantial ongoing time commitment)
+*,metadata,stake:low-time,,stake stratifier (under an hour of discretionary time)
+*,metadata,counterparty:stranger-affiliated,,counterparty stratifier (stranger sharing a thin affiliation like alma mater or alumni group)
 *,metadata,boundaries-held,,resolution descriptor (user maintained a stated boundary)
 *,metadata,stake:high-social,,stake stratifier (high social cost)
 *,metadata,value:self_reliance:projected,,multi-segment tag — value:self_reliance with projected modifier; treat as metadata since the base value:self_reliance already scores
