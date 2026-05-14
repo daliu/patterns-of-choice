@@ -1,0 +1,42 @@
+{
+  "id": "cov-reciprocity-002",
+  "type": "cost-of-virtue-probe",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Cost-of-virtue: restitution required to re-extend trust",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to cov-reciprocity-001. Where the first probe tests cooperation under self-gain pressure (silent extra share of group windfall), this one tests forgiveness break-point: at what restitution amount the user re-extends meaningful trust to someone who previously betrayed it. INVERTED probe pattern — the stake represents what the other party offers; the user's choice indicates how much they require before forgiving. Smaller break-point = more forgiveness-prone; larger break-point = more vigilance-prone.",
+    "domain_anchor": "Worthington et al. 2007 forgiveness literature; McCullough et al. on restorative-justice psychology; Axelrod tit-for-tat extension to generous-TFT and forgiving-TFT. The Berg-Dickhaut-McCabe 1995 trust game in iterated form is the closest behavioral analog — restitution after defection has been studied in lab settings.",
+    "estimated_duration_seconds": 90,
+    "content_warnings": ["mention of past significant betrayal"]
+  },
+  "value_slot": "forgiveness",
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": ["forgiveness", "trust"],
+    "ladder_currency": "user-local"
+  },
+  "framing_prompt": "A year ago someone significantly betrayed your trust — pick whatever fits your life (a friend who borrowed money and disappeared; a collaborator who took credit for joint work; a business partner who reneged at a key moment). They've reappeared. They want to make amends and re-engage in something significant with you. They have already fully repaid the original harm and apologized. The question is what *additional* gesture beyond that you'd require before extending meaningful trust again.",
+  "framing_question": "What's the smallest *additional* amount (beyond full repayment) at which you'd re-extend significant trust?",
+  "ladder": [
+    { "rung": 1, "stake": 0, "unit": "USD", "label": "$0 — full repayment is enough" },
+    { "rung": 2, "stake": 1000, "unit": "USD", "label": "$1,000 additional gesture" },
+    { "rung": 3, "stake": 10000, "unit": "USD", "label": "$10,000 additional gesture" },
+    { "rung": 4, "stake": 100000, "unit": "USD", "label": "$100,000 additional gesture" }
+  ],
+  "no_option": {
+    "id": "never",
+    "text": "No amount of additional restitution would lead me to re-extend significant trust."
+  },
+  "alternate_no_option": {
+    "id": "always_forgive",
+    "text": "I would re-extend trust without requiring anything beyond the repayment and apology."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code 'never' as Inf; code 'always_forgive' as 0. Both extremes are themselves informative endpoints; not all users will be in the interior of the ladder.",
+    "interpretation_note": "INVERTED probe: lower break-point = more forgiveness-prone (the ethical pole). Higher break-point = more vigilance-prone. Analyzer must read the inverted convention from analysis.break_point_field together with the alternate_no_option. Pair-with-cov-reciprocity-001 analysis: a user with low cooperation break-point (skims windfall at $10) and high forgiveness break-point (requires $100K to re-extend trust) shows a coherent self-interested profile; a user with high cooperation break-point and low forgiveness break-point shows generous-tit-for-tat behavior (Axelrod's GTFT). Mismatches across the two probes are an individual-differences signal.",
+    "longitudinal_signal": "Within-user trajectory of log10(break_point + 1) across sessions. Downward over time = forgiveness consolidation; upward = vigilance consolidation (perhaps after a real-life event reinforces caution).",
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
+}
