@@ -54,24 +54,14 @@ Exits 0 on success, 1 on validation failure, 2 on script error.
 
 ## CI integration
 
-Recommended pre-commit / PR hook:
+Active at [`.github/workflows/validate.yml`](../.github/workflows/validate.yml). Runs on push to `main` and on every pull request, but only when files under `scenarios/`, `inventory/`, `analysis/`, `scripts/`, or the workflow itself change. Path-filtering keeps the actions-minutes cost negligible (a validation run takes ~10 seconds; the filter skips it on most pushes).
 
-```yaml
-# .github/workflows/validate.yml
-name: validate scenarios
-on: [push, pull_request]
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
-      - run: pip install -r scripts/requirements.txt
-      - run: python scripts/validate.py --quiet
-```
+Triggers:
+- `push` to `main` (filtered)
+- `pull_request` (filtered)
+- `workflow_dispatch` (manual run from the GitHub UI)
 
-Not yet committed as a workflow file; this README documents the intended pattern.
+The workflow can be deleted without affecting the validator itself — `scripts/validate.py` runs identically locally.
 
 ## Future scripts
 
