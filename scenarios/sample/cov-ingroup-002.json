@@ -1,0 +1,38 @@
+{
+  "id": "cov-ingroup-002",
+  "type": "cost-of-virtue-probe",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Cost-of-virtue: inflated reference for in-group member",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to cov-ingroup-001. The first probe monetized loyalty by paying the user to share private information; this one monetizes loyalty differently — by scaling the benefit to an in-group member that the user's mild dishonesty would enable. The user isn't paid; the in-group member is helped. Tests at what benefit-magnitude-to-friend the user inflates a professional reference beyond strict accuracy. The ladder represents what the opportunity is worth to the in-group member, not what the user receives.",
+    "domain_anchor": "Haidt MFT loyalty foundation; Cikara/Bruneau parochial empathy. Lab analog: Erat & Gneezy 2012 'White Lies' studies where users lie to help others rather than themselves — the consistent finding is that pro-social lies have substantially lower break-points than self-serving ones.",
+    "estimated_duration_seconds": 90,
+    "content_warnings": []
+  },
+  "value_slot": "loyalty",
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": ["loyalty", "honesty", "particularism"],
+    "ladder_currency": "user-local"
+  },
+  "framing_prompt": "A close friend is applying for a major opportunity (job / grant / scholarship — whatever fits). You're a professional reference. You could write a letter that's somewhat stronger than is strictly warranted — emphasizing strengths, soft-pedaling weaknesses, framing ambiguous things favorably. Your friend would have a meaningfully better chance with the inflated version. No realistic way it would be caught.",
+  "framing_question": "What's the smallest opportunity-value-to-your-friend at which you'd write the inflated letter?",
+  "ladder": [
+    { "rung": 1, "stake": 5000, "unit": "USD", "label": "$5,000 opportunity" },
+    { "rung": 2, "stake": 50000, "unit": "USD", "label": "$50,000 opportunity" },
+    { "rung": 3, "stake": 500000, "unit": "USD", "label": "$500,000 opportunity (life-changing)" },
+    { "rung": 4, "stake": 5000000, "unit": "USD", "label": "$5,000,000 opportunity (truly transformative)" }
+  ],
+  "no_option": {
+    "id": "never",
+    "text": "I wouldn't inflate the letter regardless of what's at stake for them."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code as Inf for break-point analysis; report separately as 'in-group honesty norm at any stake'",
+    "interpretation_note": "Critical pair-analysis with cov-truth-001 and cov-truth-002: a user with low break-point on the truth probes (will lie for themselves at $100) but high break-point here (won't inflate even for a $5M opportunity for a friend) suggests *self-interested honesty norms*. A user with high truth-probe break-points but low here (won't lie for themselves but will for a friend) is the pro-social-lie pattern that Erat-Gneezy 2012 found is common. The within-user vector across these three probes locates the user in a 2D honesty-by-beneficiary space.",
+    "longitudinal_signal": "Within-user trajectory matters mostly in light of life events — a real reference-writing event in the user's life shortly after this probe is the kind of natural experiment that would surface drift.",
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
+}
