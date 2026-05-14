@@ -1,0 +1,113 @@
+{
+  "id": "narr-allocation-004",
+  "type": "core-narrative",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "The contribution",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Second narrative for resource-allocation. Where narr-allocation-002 covered intangible credit in a workplace, this covers concrete financial allocation in family-of-origin context. Three decision points across roughly a year, surfacing the fairness-vs-generosity-vs-need_sensitivity tensions that intensify when allocation isn't a one-shot but an ongoing arrangement. Mirrors narr-truth-004's three-decisions-across-months temporal structure — the corpus needs more scenarios with this longitudinal-within-narrative shape since real moral life looks like this far more than single-evening dilemmas do.",
+    "domain_anchor": "Adult financial-support-of-parents literature (Pillemer et al. on intergenerational ambivalence); economic-theory on within-family transfers (Becker, Cox). Aknin 2013 prosocial-spending is the most directly relevant empirical anchor for what sustained giving feels like over time.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["family financial dynamics", "aging parents"]
+  },
+  "setup": "Your parents are in their late 70s. Their savings ran short — not catastrophically, but enough that they need ongoing monthly support to maintain their current standard of living. They've talked to you and your one sibling about it. They were embarrassed to ask.\n\nYou earn substantially more than your sibling — roughly 3x their income. Your sibling has two young kids in expensive childcare; your finances are fine without dependents to support.\n\nYour parents need about $1,500/month in support. The family is meeting to discuss how to split the contribution.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "At the family meeting, when the question of split comes up, what do you propose?",
+      "choices": [
+        { "id": "c1", "text": "Strict 50/50. You and your sibling split equally; the principle of equal contribution between adult children matters.", "next": "scene-2-equal", "tags": ["fairness:equal", "counterparty:family-of-origin", "stake:high-financial", "value:fairness", "value:reciprocity_pure"] },
+        { "id": "c2", "text": "Proportional to income. You cover the larger share — roughly 75/25 — based on what you each can afford.", "next": "scene-2-proportional", "tags": ["fairness", "need_sensitivity", "counterparty:family-of-origin", "stake:high-financial", "value:fairness", "value:need_sensitivity"] },
+        { "id": "c3", "text": "You cover the whole thing. Your sibling can use what they would have contributed for the kids. Keep it simple.", "next": "scene-2-cover-all", "tags": ["generosity", "need_sensitivity", "counterparty:family-of-origin", "stake:high-financial", "value:generosity", "value:hospitality"] },
+        { "id": "c4", "text": "Suggest the parents talk to a financial planner first; you'd rather not lock into a contribution structure before understanding the longer trajectory.", "next": "scene-2-defer", "tags": ["vigilance", "independence", "counterparty:family-of-origin", "stake:medium-financial", "value:vigilance", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "scene-2-equal",
+      "text": "The 50/50 split is agreed to. Six months in, your sibling has missed two payments. They mentioned it briefly — the kids' childcare went up, one had a medical thing. They asked for understanding. The parents are unaware which sibling has been carrying which months; you've been quietly covering the gap.",
+      "choices": [
+        { "id": "c1", "text": "Bring it up with your sibling: \"We agreed 50/50; if it's not working, let's restructure.\"", "next": "scene-3-equal-restructure", "tags": ["truth:confront-mild", "fairness", "counterparty:close", "stake:medium-emotional", "value:honesty", "value:fairness"] },
+        { "id": "c2", "text": "Keep covering. They're family, the situation is real, and bringing it up creates conflict for $1,500 a month.", "next": "scene-3-equal-cover", "tags": ["generosity", "lie:omission", "counterparty:close", "stake:medium-emotional", "value:generosity", "value:loyalty", "self-cost:money"] }
+      ]
+    },
+    {
+      "id": "scene-2-proportional",
+      "text": "The proportional split is agreed to. Six months in, your sibling has missed one payment. They apologized briefly. You've been quietly covering. The structure is closer to 90/10 in practice than 75/25.",
+      "choices": [
+        { "id": "c1", "text": "Re-open the conversation. The arrangement isn't holding; better to formalize a new one than let it drift.", "next": "scene-3-proportional-renegotiate", "tags": ["truth:confront-mild", "fairness", "counterparty:close", "stake:medium-emotional", "value:honesty", "value:fairness"] },
+        { "id": "c2", "text": "Accept the drift. The proportional principle was right; the actual proportion is just sharper than agreed.", "next": "scene-3-proportional-accept", "tags": ["forgiveness", "generosity", "counterparty:close", "stake:low-emotional", "value:forgiveness", "value:generosity"] }
+      ]
+    },
+    {
+      "id": "scene-2-cover-all",
+      "text": "You cover the full amount. Six months in, your sibling has begun to thank you regularly in small ways — sending photos of the kids, mentioning when they think of you. The arrangement feels generous on your side and grateful on theirs. Your parents don't know; they assume an even split.",
+      "choices": [
+        { "id": "c1", "text": "Tell your parents the actual structure when they next ask. They have a right to know how this is working.", "next": "scene-3-coverall-transparent", "tags": ["truth:commission", "transparency", "counterparty:family-of-origin", "stake:medium-emotional", "value:honesty", "value:transparency"] },
+        { "id": "c2", "text": "Don't tell your parents. It's a private arrangement between you and your sibling; the parents don't need to know.", "next": "scene-3-coverall-private", "tags": ["lie:omission", "discretion", "counterparty:family-of-origin", "stake:medium-emotional", "value:loyalty", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "scene-2-defer",
+      "text": "The family agrees to talk to a financial planner. The planner gives clear numbers — your parents have about 5 years of runway with $1,500/month support, longer with less. The conversation resumes a month later. With clearer information, your sibling now proposes a 60/40 split (you covering more), citing their kids and the differential income.",
+      "choices": [
+        { "id": "c1", "text": "Accept the 60/40.", "next": "scene-end-defer-accept", "tags": ["fairness", "cooperation", "counterparty:close", "stake:medium-financial", "value:fairness", "value:cooperation"] },
+        { "id": "c2", "text": "Suggest 80/20 — closer to actual income ratio.", "next": "scene-end-defer-counter", "tags": ["fairness", "truth:confront-mild", "counterparty:close", "stake:medium-emotional", "value:fairness", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "scene-3-equal-restructure",
+      "text": "Your sibling is briefly defensive but ultimately relieved — they'd been dreading the conversation themselves. You restructure to 70/30. The financial pressure on them eases; the arrangement feels honest. A year later, both parents are stable, and you and your sibling have a closer working relationship than you'd had before the original meeting.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-equal-cover",
+      "text": "A year on, the unspoken arrangement is that you cover whenever your sibling can't. They've stopped mentioning the misses. Your parents are stable; the relationship between you and your sibling is intact on the surface. There's a small private tally in your head; you wonder sometimes whether it would matter to name it.",
+      "terminal": true,
+      "tags": ["resolution:quiet-burn", "moral-residue", "self-cost:money"]
+    },
+    {
+      "id": "scene-3-proportional-renegotiate",
+      "text": "You and your sibling work through it. The proportional principle stays; the actual split moves to 85/15. Your sibling apologizes for not raising it earlier. The conversation is harder than you expected and easier than your sibling expected. The arrangement going forward feels stable.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-proportional-accept",
+      "text": "You stop tracking which months your sibling missed. The de-facto split settles around 90/10. Your sibling thanks you twice a year, around the holidays. The relationship is warm. You and your parents are closer; you and your sibling are roughly as close as before.",
+      "terminal": true,
+      "tags": ["resolution:positive", "self-cost:money"]
+    },
+    {
+      "id": "scene-3-coverall-transparent",
+      "text": "Your parents are uncomfortable when they learn. They feel a debt of gratitude they hadn't realized they owed. Your sibling is briefly embarrassed. The transparency simplifies things in the long run — there's nothing private to manage. Your parents adjust by spending slightly less, which they could have done all along.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-coverall-private",
+      "text": "The arrangement holds. Your parents don't ask; your sibling doesn't volunteer. Over time, the asymmetry becomes invisible to everyone but you. You're not sure whether that's discretion or omission, and the conversations that would clarify it never happen.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "moral-residue"]
+    },
+    {
+      "id": "scene-end-defer-accept",
+      "text": "60/40 settles in. Six months later, your sibling has missed one payment; the kids' situation got harder. You absorb it without raising it. Twelve months later, the arrangement is closer to 70/30 in practice. The relationship with your sibling is intact and a bit more honest than it might have been.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-defer-counter",
+      "text": "Your sibling pushes back: 80/20 feels like being told their income matters more than the equal-children principle. The negotiation runs through one more conversation before settling at 70/30. The friction is real but resolves; the arrangement is well-understood by both of you afterward.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "speed_vs_deliberation"
+  ]
+}

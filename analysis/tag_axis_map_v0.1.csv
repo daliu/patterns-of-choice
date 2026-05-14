@@ -7,7 +7,10 @@ truth-telling,honesty,truth:partial,0.5,partial truth (omits or softens)
 truth-telling,honesty,value:tact,0.3,tact (per inventory deck — partial-honesty with care for dignity)
 truth-telling,honesty,value:authenticity,0.5,authenticity (consistency between felt and shown is honesty-adjacent)
 truth-telling,honesty,value:discretion,-0.3,discretion (partial-honesty toward withholding; same axis as honesty but at the silence pole)
+truth-telling,honesty,discretion,-0.3,bare-token form of value:discretion
 truth-telling,honesty,value:honesty,1.0,honesty value-reference (matches the home-domain primary value)
+truth-telling,honesty,value:transparency,0.7,transparency (volunteering what others have a right to know; positive on honesty axis)
+truth-telling,honesty,transparency,0.7,bare-token form of value:transparency
 truth-telling,honesty,truth:acknowledge,0.5,acknowledging without volunteering
 truth-telling,honesty,truth:soft-confront,0.5,framing as collaborative
 truth-telling,honesty,truth:deferred-confront,0.5,truth told but with delay
@@ -147,6 +150,7 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,counterparty:stranger-foreign,,counterparty stratifier (stranger in different cultural context)
 *,metadata,counterparty:stranger-known,,counterparty stratifier (recurring stranger encounter)
 *,metadata,stake:medium-financial,,stake stratifier (medium financial cost)
+*,metadata,stake:high-financial,,stake stratifier (large financial cost)
 *,metadata,stake:high-social,,stake stratifier (high social cost)
 *,metadata,value:self_reliance:projected,,multi-segment tag — value:self_reliance with projected modifier; treat as metadata since the base value:self_reliance already scores
 *,metadata,value:loyalty:community,,multi-segment tag — value:loyalty with community scope; treat as metadata since value:loyalty already in cross-domain metadata

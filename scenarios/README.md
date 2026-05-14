@@ -31,7 +31,7 @@ The MVP scopes 4 domains; sample scenarios so far:
 | Domain | Quick-fire | Narrative | Cost-of-virtue probe | MVP-1 target |
 |---|---|---|---|---|
 | Truth-telling under cost | `qf-truth-001`, `qf-truth-003` ✓ | `narr-truth-002`, `narr-truth-004` ✓ | `cov-truth-001`, `cov-truth-002` ✓ | ~12 total |
-| Resource allocation | `qf-allocation-001`, `qf-allocation-003` ✓ | `narr-allocation-002` ✓ | `cov-allocation-001`, `cov-allocation-002` ✓ (both inverted) | ~12 total |
+| Resource allocation | `qf-allocation-001`, `qf-allocation-003` ✓ | `narr-allocation-002`, `narr-allocation-004` ✓ | `cov-allocation-001`, `cov-allocation-002` ✓ (both inverted) | ~12 total |
 | In-group / out-group | `qf-ingroup-001`, `qf-ingroup-003` ✓ | `narr-ingroup-002` ✓ | `cov-ingroup-001`, `cov-ingroup-002` ✓ | ~12 total |
 | Reciprocity / cooperation | `qf-reciprocity-001`, `qf-reciprocity-003` ✓ | `narr-reciprocity-002` ✓ | `cov-reciprocity-001`, `cov-reciprocity-002` ✓ (inverted) | ~12 total |
 
@@ -40,7 +40,8 @@ All 4 domains have 2 quick-fires + 1 narrative + 2 cost-of-virtue probes = 20 sc
 Setting diversity across narratives:
 - `narr-truth-002` — workplace happy hour (peer-to-peer)
 - `narr-truth-004` — family, aging parent decision (three decision points across months)
-- `narr-allocation-002` — workplace all-hands (subordinate)
+- `narr-allocation-002` — workplace all-hands (subordinate, intangible credit)
+- `narr-allocation-004` — family financial dynamics (parents' retirement support, three decisions across a year)
 - `narr-ingroup-002` — residential community / neighborhood
 - `narr-reciprocity-002` — creative collaboration / podcast partnership (long-running friendship)
 
