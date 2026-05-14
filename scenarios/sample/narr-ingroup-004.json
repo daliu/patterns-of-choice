@@ -1,0 +1,114 @@
+{
+  "id": "narr-ingroup-004",
+  "type": "core-narrative",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "The two sides",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Second narrative for in-group/out-group. narr-ingroup-002 was residential-community scale; this is workplace-faction scale. The factions are the in-group/out-group: faction A is the user's social in-group (lunch friends, peer support over years), faction B is the out-group (people the user respects professionally but isn't as close with). The strategic disagreement is real — both factions have a defensible position — but the user's social loyalty pulls one way and their technical judgment pulls the other. Three decisions across weeks, mirroring the longitudinal-within-narrative structure that's emerging as the corpus's 2nd-narrative pattern.",
+    "domain_anchor": "Cikara/Bruneau parochial-empathy / parochial-reasoning literature. Janis's groupthink (1972) as a clear case where in-group loyalty distorts technical judgment. Asch's conformity work as the foundational anchor for the within-group pressure dynamic.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["workplace conflict / political dynamics"]
+  },
+  "setup": "Your team is debating a major architectural decision — call it whatever fits your work (rewrite vs. extend the legacy system; in-house vs. outsource the new product line; aggressive vs. conservative timeline). The debate has solidified into two factions.\n\nFaction A is your social in-group at work: the people you have lunch with, the ones who've covered for you, the friendships you've built over years. They're advocating Position X.\n\nFaction B is people you respect professionally but aren't as close with — a few of them you don't know well personally. They're advocating Position Y.\n\nYou've thought about this carefully. You believe Position Y is the more defensible technical answer. You also know Position X is what your friends want.\n\nThere's a team meeting tomorrow where the question gets discussed in front of leadership.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "At the meeting, leadership asks for honest assessments. Each team member is invited to weigh in. What do you say when it's your turn?",
+      "choices": [
+        { "id": "c1", "text": "Support Position X — your social in-group's position. You frame the support carefully but you back them publicly.", "next": "scene-2-supported-a", "tags": ["loyalty", "lie:white", "counterparty:peer-in-team", "stake:high-social", "value:loyalty", "value:authenticity"] },
+        { "id": "c2", "text": "Support Position Y — what you actually believe. Even though it puts you publicly on the other side of your closest work friendships.", "next": "scene-2-supported-b", "tags": ["universalism", "truth:commission", "counterparty:peer-in-team", "stake:high-social", "value:universalism", "value:honesty"] },
+        { "id": "c3", "text": "Propose a synthesis — try to find a third path that incorporates both factions' best concerns.", "next": "scene-2-synthesis", "tags": ["cooperation", "truth:partial", "counterparty:peer-in-team", "stake:medium-social", "value:cooperation", "value:tact"] },
+        { "id": "c4", "text": "Stay neutral. \"I see strong points on both sides; I want to think more before committing publicly.\"", "next": "scene-2-neutral", "tags": ["avoid", "truth:abandon", "counterparty:peer-in-team", "stake:low-social", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "scene-2-supported-a",
+      "text": "Faction A is visibly grateful. Faction B looks faintly puzzled — they thought, from past conversations, that you might have leaned their way. After the meeting, a close friend in Faction A messages you: \"Thanks for that. Honestly thought you might wobble.\" The wording sits with you.",
+      "choices": [
+        { "id": "c1", "text": "Reply candidly: \"I'm not fully sold on Position X. I supported it for our friendship more than the technicals.\"", "next": "scene-3-a-then-private-truth", "tags": ["truth:deferred-confront", "counterparty:close", "stake:medium-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "c2", "text": "Reply lightly: \"Of course. The faction lines aren't that clean anyway.\"", "next": "scene-3-a-then-soft", "tags": ["lie:protective", "loyalty", "counterparty:close", "stake:low-social", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "scene-2-supported-b",
+      "text": "Your support for Position Y is professional and clear. The room reorganizes a bit — Faction A is briefly off-balance, Faction B picks up your reasoning and runs with it. Leadership thanks you. After the meeting, a close friend in Faction A catches you in the hallway: \"I have to admit, that surprised me.\"",
+      "choices": [
+        { "id": "c1", "text": "Explain warmly: \"I should have flagged it earlier — I've been thinking about this for a while. The friendship hasn't changed.\"", "next": "scene-3-b-then-explain", "tags": ["truth:commission", "loyalty", "counterparty:close", "stake:medium-emotional", "value:honesty", "value:loyalty"] },
+        { "id": "c2", "text": "Acknowledge briefly: \"Yeah. I wanted to be honest about it.\" Don't elaborate.", "next": "scene-3-b-then-brief", "tags": ["truth:state", "counterparty:close", "stake:low-social", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "scene-2-synthesis",
+      "text": "The synthesis lands awkwardly. Faction A reads it as you not fully backing them; Faction B reads it as you not fully backing them. Leadership thanks you for the framing but the underlying disagreement isn't resolved — they ask the original factions to come back with refined positions. A close friend in Faction A messages: \"Were you trying to dodge that?\"",
+      "choices": [
+        { "id": "c1", "text": "\"No — I really think both have points. I'll think more carefully about the tradeoffs before the next meeting.\"", "next": "scene-end-synthesis-honest", "tags": ["truth:state", "counterparty:close", "stake:medium-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "c2", "text": "\"Fair point. Maybe I was hedging. I'll be clearer next time.\"", "next": "scene-end-synthesis-concede", "tags": ["truth:commission", "counterparty:close", "stake:medium-emotional", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "scene-2-neutral",
+      "text": "The meeting moves on. Both factions are mildly disappointed that you didn't back them. Three weeks later the decision is made (Position X wins via team consensus — Faction A had the numbers). Implementation begins. Within a month, problems start surfacing exactly where Faction B predicted.",
+      "choices": [
+        { "id": "c1", "text": "Bring up the past prediction in a team retrospective: \"Faction B's concerns were actually substantive; we should have weighed them more carefully.\"", "next": "scene-end-neutral-late-truth", "tags": ["truth:deferred-confront", "universalism", "counterparty:peer-in-team", "stake:medium-social", "value:honesty"] },
+        { "id": "c2", "text": "Stay focused on fixing the current problems; revisiting the original decision is just blame-attribution.", "next": "scene-end-neutral-forward", "tags": ["cooperation", "discretion", "counterparty:peer-in-team", "stake:low-social", "value:cooperation"] }
+      ]
+    },
+    {
+      "id": "scene-3-a-then-private-truth",
+      "text": "Your friend is briefly hurt — partly that you held it back, partly that you supported them out of loyalty rather than analysis. The conversation is hard. But it's also clearer than it would have been if you'd kept up the agreement. A few weeks later, when implementation problems start surfacing, you and your friend have a shared framework for talking about it honestly. The friendship is intact and somewhat realer than before.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-a-then-soft",
+      "text": "Your friend takes the reply at face value. The friendship stays warm. Implementation begins. Six weeks in, the problems Faction B predicted are real. You and your friend talk around the issue without naming what's happening. You wonder whether the loyalty you protected has actually changed the trajectory of anything — or whether you've just kept your social comfort in exchange for a less honest relationship.",
+      "terminal": true,
+      "tags": ["resolution:loyalty-over-honesty", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-3-b-then-explain",
+      "text": "Your friend listens. There's a small frost between you for two or three weeks — they're hurt by the surprise, not the position. By week four, they bring you coffee. The friendship survives the disagreement, and over the next few months your friend privately tells you they came around to seeing Position Y was probably right.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-b-then-brief",
+      "text": "Your friend respects the brevity. Things between you are cooler for a few weeks but functional. Position Y wins the broader debate over the following month. Your friend never explicitly comes around but stops referencing the original dispute. The friendship continues, slightly more professional than before.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "social-cost:medium"]
+    },
+    {
+      "id": "scene-end-synthesis-honest",
+      "text": "The next meeting, you come prepared and back Position Y clearly. The reversal is visible. Some Faction A members are disappointed; others appreciate that you'd done the homework. Leadership values the considered shift. The friendship strain is real but mostly resolves within a quarter.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-synthesis-concede",
+      "text": "Your friend appreciates the candor about hedging. The next time you come back to the question, you support Position Y. The friendship absorbs the shift. The whole arc — synthesis, candid acknowledgment, eventual position — feels harder than just being clear up front would have been, but it doesn't break anything.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-neutral-late-truth",
+      "text": "Faction A members are defensive in the retrospective; Faction B members are quietly vindicated. The implementation gets adjusted to incorporate some of Faction B's concerns. Your social standing with Faction A is slightly cooler for a quarter or so, but the team's outcomes are better than they would have been. You're not sure if early honesty would have prevented the issue entirely or just moved the friction earlier.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-neutral-forward",
+      "text": "You spend the next few months helping fix the problems Faction B predicted. You don't explicitly say \"told you so\" because you didn't say so. The friendships in Faction A stay warm; you and Faction B never have the explicit conversation either. Something about your role on the team has subtly shifted — you're treated as a moderate, not as someone with strong views. You're not sure how to feel about that.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "moral-residue", "tracked-discomfort"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "in_group_out_group",
+    "speed_vs_deliberation"
+  ]
+}
