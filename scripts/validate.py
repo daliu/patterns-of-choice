@@ -99,23 +99,100 @@ def validate_schema(data: dict, schema: dict) -> list[str]:
 
 
 def validate_narrative_paths(data: dict) -> list[str]:
-    """choice.next references resolve to in-file scene IDs."""
+    """
+    For a core-narrative scenario, verify:
+      (1) every choice.next resolves to a scene ID within the file,
+      (2) every choice path eventually reaches a terminal scene,
+      (3) every scene is reachable from some starting scene (no orphans).
+    """
     errors = []
-    scene_ids = {s["id"] for s in data.get("scenes", [])}
-    for scene in data.get("scenes", []):
+    scenes_list = data.get("scenes", [])
+    scenes = {s["id"]: s for s in scenes_list}
+    terminals = {sid for sid, s in scenes.items() if s.get("terminal")}
+
+    # (1) choice.next references resolve
+    for scene in scenes_list:
         sid = scene["id"]
-        for choice in scene.get("choices", []) or []:
+        if scene.get("terminal"):
+            continue
+        for choice in scene.get("choices") or []:
             nxt = choice.get("next")
             if nxt is None:
                 errors.append(
-                    f"narrative-paths: scene {sid} choice {choice.get('id')} has no 'next' "
-                    f"and parent scene is not terminal"
+                    f"narrative-paths: scene {sid} choice {choice.get('id')} "
+                    f"has no 'next' and parent scene is not terminal"
                 )
-            elif nxt not in scene_ids:
+            elif nxt not in scenes:
                 errors.append(
                     f"narrative-paths: scene {sid} choice {choice.get('id')} "
                     f"references unknown scene '{nxt}'"
                 )
+
+    # (2) every choice path reaches a terminal scene
+    def reaches_terminal(start_id: str) -> bool:
+        if start_id not in scenes:
+            return False
+        visited = set()
+        stack = [start_id]
+        while stack:
+            cur = stack.pop()
+            if cur in visited:
+                continue
+            visited.add(cur)
+            if cur in terminals:
+                return True
+            scene = scenes.get(cur)
+            if not scene:
+                return False
+            for choice in scene.get("choices") or []:
+                nxt = choice.get("next")
+                if nxt and nxt != cur:
+                    stack.append(nxt)
+        return False
+
+    for scene in scenes_list:
+        sid = scene["id"]
+        if scene.get("terminal"):
+            continue
+        for choice in scene.get("choices") or []:
+            nxt = choice.get("next")
+            if nxt and nxt in scenes and not reaches_terminal(nxt):
+                errors.append(
+                    f"narrative-paths: scene {sid} choice {choice.get('id')} → "
+                    f"{nxt} leads to a path that never reaches a terminal scene"
+                )
+
+    # (3) every scene reachable from some root
+    # Roots = scenes that are not the target of any choice.next
+    targets = {
+        choice["next"]
+        for s in scenes_list
+        for choice in (s.get("choices") or [])
+        if choice.get("next")
+    }
+    roots = [sid for sid in scenes if sid not in targets]
+
+    reachable: set[str] = set()
+    stack: list[str] = list(roots)
+    while stack:
+        cur = stack.pop()
+        if cur in reachable:
+            continue
+        reachable.add(cur)
+        scene = scenes.get(cur)
+        if not scene:
+            continue
+        for choice in scene.get("choices") or []:
+            nxt = choice.get("next")
+            if nxt:
+                stack.append(nxt)
+
+    orphans = set(scenes) - reachable
+    for sid in sorted(orphans):
+        errors.append(
+            f"narrative-paths: scene {sid} is unreachable from any starting scene"
+        )
+
     return errors
 
 
