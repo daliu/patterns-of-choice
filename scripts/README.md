@@ -24,16 +24,25 @@ Exits 0 on success, 1 on validation failure, 2 on script error.
 
 ## What `validate.py` catches
 
+**Scenarios:**
+
 - Schema violations (each scenario file matched against the appropriate JSON Schema in `scenarios/schemas/`)
 - Duplicate scenario IDs across the corpus
 - Tags not in `analysis/tag_axis_map_v0.1.csv` (catches typos and undocumented additions)
 - Narrative `choice.next` references that don't resolve to a scene ID in the same file
 - Cost-of-virtue probe `value_slot` and `preconditions` that don't reference a value in `inventory/values-deck.json`
 - Choices without `next` whose parent scene isn't terminal
+- Every choice path eventually reaches a terminal scene (no infinite loops, no dead-end branches)
+- No orphan scenes (every scene reachable from some starting scene)
+
+**Inventory (structural Python-level checks; no JSON Schema):**
+
+- `values-deck.json`: value IDs unique; `internal_tensions` references resolve; declared `size` matches actual count; all values have a valid `domain`
+- `pairwise-pairs.json`: pair IDs unique; `left_id`/`right_id` resolve in the values-deck; `left_id != right_id`; `pair_type` in canonical enum; within-domain pairs declare `domain`; within-domain pairs have both values in that domain; declared `pair_count` matches actual
 
 ## What it doesn't catch yet
 
-- Inventory JSON files (pairwise-pairs.json, three-layer-prompts.json, story-prompts.json, relational-variant.json) — no JSON Schemas authored for inventory yet; only `types.ts` types exist
+- Three-layer prompts, story prompts, and relational-variant inventory files — no structural checks; only `types.ts` types exist as a contract
 - Semantic validity — a `truth:` tag on a `lie:`-marked option would parse but should be flagged by editorial review
 - Cross-domain tag consistency — e.g., flagging when a tag's scoring direction would conflict with the scenario's domain
 

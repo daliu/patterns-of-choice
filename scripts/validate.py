@@ -217,6 +217,131 @@ def validate_probe_values(data: dict, value_ids: set[str]) -> list[str]:
     return errors
 
 
+def validate_inventory() -> list[str]:
+    """
+    Structural integrity checks for inventory files. Done at the Python level
+    rather than via JSON Schema — the inventory module is small and rarely
+    authored by multiple people; full Schema files would be defense-in-depth
+    rather than catching real drift.
+
+    Checks:
+    - values-deck: value IDs are unique, internal_tensions references resolve,
+      declared `size` matches actual count, all values have a `domain` from
+      the canonical enum.
+    - pairwise-pairs: pair IDs are unique; left_id/right_id resolve in
+      values-deck; left_id != right_id; within-domain pairs declare a domain;
+      within-domain pairs have both values in that domain; declared pair_count
+      matches.
+    """
+    errors: list[str] = []
+    valid_domains = {
+        "truth-telling",
+        "resource-allocation",
+        "in-group-out-group",
+        "reciprocity-cooperation",
+    }
+
+    # ----- values-deck -----
+    try:
+        deck = load_json(INVENTORY_DIR / "values-deck.json")
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        return [f"values-deck.json: cannot load ({e})"]
+
+    seen_ids: set[str] = set()
+    for v in deck.get("values", []):
+        vid = v.get("id")
+        if not vid:
+            errors.append("values-deck: value missing 'id'")
+            continue
+        if vid in seen_ids:
+            errors.append(f"values-deck: duplicate value id '{vid}'")
+        seen_ids.add(vid)
+        dom = v.get("domain")
+        if dom and dom not in valid_domains:
+            errors.append(
+                f"values-deck: value '{vid}' has invalid domain '{dom}' "
+                f"(must be one of {sorted(valid_domains)})"
+            )
+
+    for v in deck.get("values", []):
+        for ref in v.get("internal_tensions", []) or []:
+            if ref not in seen_ids:
+                errors.append(
+                    f"values-deck: value '{v.get('id')}' references unknown "
+                    f"internal_tensions value '{ref}'"
+                )
+
+    declared_size = deck.get("size")
+    actual_size = len(deck.get("values", []))
+    if declared_size is not None and declared_size != actual_size:
+        errors.append(
+            f"values-deck: declared size={declared_size}, actual count={actual_size}"
+        )
+
+    # ----- pairwise-pairs -----
+    try:
+        pairs = load_json(INVENTORY_DIR / "pairwise-pairs.json")
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        return errors + [f"pairwise-pairs.json: cannot load ({e})"]
+
+    value_domain_lookup = {v["id"]: v.get("domain") for v in deck.get("values", [])}
+
+    seen_pair_ids: set[str] = set()
+    for p in pairs.get("pairs", []):
+        pid = p.get("id", "<missing>")
+        if pid in seen_pair_ids:
+            errors.append(f"pairwise-pairs: duplicate pair id '{pid}'")
+        seen_pair_ids.add(pid)
+
+        for ref_field in ("left_id", "right_id"):
+            ref = p.get(ref_field)
+            if ref and ref not in seen_ids:
+                errors.append(
+                    f"pairwise-pairs: pair {pid} {ref_field}='{ref}' not in values-deck"
+                )
+
+        if p.get("left_id") and p.get("left_id") == p.get("right_id"):
+            errors.append(
+                f"pairwise-pairs: pair {pid} has identical left_id and right_id"
+            )
+
+        pair_type = p.get("pair_type")
+        if pair_type not in {"within-domain", "cross-domain"}:
+            errors.append(
+                f"pairwise-pairs: pair {pid} has invalid pair_type '{pair_type}'"
+            )
+
+        if pair_type == "within-domain":
+            decl_domain = p.get("domain")
+            if not decl_domain:
+                errors.append(
+                    f"pairwise-pairs: pair {pid} is within-domain but missing 'domain' field"
+                )
+            elif decl_domain not in valid_domains:
+                errors.append(
+                    f"pairwise-pairs: pair {pid} declared domain '{decl_domain}' not in canonical enum"
+                )
+            else:
+                for ref_field in ("left_id", "right_id"):
+                    ref = p.get(ref_field)
+                    if ref:
+                        actual_domain = value_domain_lookup.get(ref)
+                        if actual_domain and actual_domain != decl_domain:
+                            errors.append(
+                                f"pairwise-pairs: pair {pid} within-domain='{decl_domain}' "
+                                f"but {ref_field}='{ref}' has domain '{actual_domain}'"
+                            )
+
+    declared_count = pairs.get("pair_count")
+    actual_count = len(pairs.get("pairs", []))
+    if declared_count is not None and declared_count != actual_count:
+        errors.append(
+            f"pairwise-pairs: declared pair_count={declared_count}, actual count={actual_count}"
+        )
+
+    return errors
+
+
 def validate_tags(data: dict, known_tags: set[str]) -> list[str]:
     """Find all 'tags' arrays in the data tree; check each tag is in the map."""
     errors = []
@@ -298,9 +423,14 @@ def main() -> int:
     seen_ids: set[str] = set()
     file_errors: dict[str, list[str]] = {}
 
+    # Inventory structural integrity (separate pass; not per-file)
+    inv_errors = validate_inventory()
+    if inv_errors:
+        file_errors["inventory/"] = inv_errors
+
     scenario_paths = sorted(SCENARIOS_DIR.glob("*.json"))
     if not args.quiet:
-        print(f"Validating {len(scenario_paths)} scenarios...")
+        print(f"Validating inventory + {len(scenario_paths)} scenarios...")
 
     for path in scenario_paths:
         errors = validate_scenario_file(path, schemas, known_tags, value_ids, seen_ids)
