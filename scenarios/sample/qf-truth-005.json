@@ -1,0 +1,65 @@
+{
+  "id": "qf-truth-005",
+  "type": "quick-fire-round",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Past misrepresentations reactivated",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-truth-001 (in-person counterparty variation) and qf-truth-003 (modality variation). Where those test in-the-moment honesty decisions, this round tests truth-telling-with-time-lag: each item presents a past misrepresentation (white lie, exaggeration, omission, missed deadline-commitment) that has now been reactivated by changed circumstances. Does the user come clean, double down, or let the moment pass? The structure deliberately removes the social-pressure element that drives qf-truth-001 in favor of a more solitary correction-or-not decision.",
+    "domain_anchor": "Vrij 2008 on the dynamics of cumulative deception (each unrevealed lie costs increasing cognitive load over time); Mazar/Ariely self-concept maintenance framework (the moment of opportunity to correct is also a moment to consolidate a self-image). Abeler 2019 honesty meta provides population base rates for active deception under stakes.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-truth-005-i01",
+      "prompt": "Last week you told a friend you couldn't make their party. You ended up going to a different one. The party hosts of the second event mention you to your friend, in passing.",
+      "options": [
+        { "id": "a", "text": "Bring it up first: \"Hey, you'll probably hear I was at X's. I should have just told you.\"", "tags": ["truth:commission", "counterparty:close", "stake:medium-emotional", "self-cost:reputation", "value:honesty"] },
+        { "id": "b", "text": "Wait and see. If they bring it up you can address it then.", "tags": ["lie:omission", "counterparty:close", "stake:medium-emotional", "self-cost:none", "vigilance:self-protection"] }
+      ]
+    },
+    {
+      "id": "qf-truth-005-i02",
+      "prompt": "In a recent job interview you slightly overstated your role on a past project. You got the offer. In your second week your manager is referencing 'the work you did on X' and asking for similar work.",
+      "options": [
+        { "id": "a", "text": "Clarify: \"I should be clear about how much of X was mine vs my team — I want to set the right expectation.\"", "tags": ["truth:partial", "counterparty:senior", "stake:medium-reputation", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Deliver as if the overstatement were true and adjust as you go.", "tags": ["lie:commission", "counterparty:senior", "stake:medium-financial", "self-cost:none", "vigilance:self-protection"] }
+      ]
+    },
+    {
+      "id": "qf-truth-005-i03",
+      "prompt": "You told your partner a casual estimate of what you spent on something recently. You underestimated by roughly 30%. The credit card bill is going to arrive in the joint inbox in two days.",
+      "options": [
+        { "id": "a", "text": "Mention it now: 'Heads up — I undercounted by about $X when I told you the estimate.'", "tags": ["truth:commission", "counterparty:close", "stake:low-financial", "self-cost:reputation", "value:honesty", "value:transparency"] },
+        { "id": "b", "text": "Let them notice if they notice. If asked, explain then.", "tags": ["lie:omission", "counterparty:close", "stake:low-financial", "self-cost:none"] }
+      ]
+    },
+    {
+      "id": "qf-truth-005-i04",
+      "prompt": "Three weeks ago you agreed to a project deadline that you privately thought was unrealistic. You didn't push back at the time. You're now halfway in and you can see clearly you won't make it.",
+      "options": [
+        { "id": "a", "text": "Flag now: 'I should have raised this when we set the deadline. I'm not going to make it; what can we restructure?'", "tags": ["truth:deferred-confront", "counterparty:senior", "stake:medium-reputation", "self-cost:reputation", "value:honesty"] },
+        { "id": "b", "text": "Wait until closer to the deadline; maybe the situation will change and you'll find a way.", "tags": ["lie:omission", "counterparty:senior", "stake:medium-reputation", "self-cost:none", "vigilance:self-protection"] }
+      ]
+    },
+    {
+      "id": "qf-truth-005-i05",
+      "prompt": "A year ago in a brainstorm you mildly took credit for an idea that was actually a coworker's. The coworker is now interviewing for a promotion. You hear that idea has come up positively, attributed to you, in their interview committee's discussion.",
+      "options": [
+        { "id": "a", "text": "Reach out to the committee chair: 'I want to clarify — that idea was actually [coworker's]. They should get the credit.'", "tags": ["truth:commission", "counterparty:senior", "stake:high-reputation", "self-cost:reputation", "value:honesty", "credit:redirect"] },
+        { "id": "b", "text": "Stay out of it. Bringing it up now would muddy the waters for the coworker and you both.", "tags": ["lie:omission", "counterparty:senior", "stake:medium-reputation", "self-cost:none", "credit:keep"] }
+      ]
+    },
+    {
+      "id": "qf-truth-005-i06",
+      "prompt": "Six months ago a now-distant family member asked how you were doing. You said 'great' — you were actually struggling. They text again today asking the same.",
+      "options": [
+        { "id": "a", "text": "Be more honest this time: 'It's been a hard stretch, actually. Can we catch up properly sometime?'", "tags": ["truth:commission", "counterparty:family-of-origin", "stake:medium-emotional", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Keep the surface-friendly reply. The distance is real for a reason.", "tags": ["lie:protective", "counterparty:family-of-origin", "stake:low-emotional", "self-cost:none", "value:boundaries"] }
+      ]
+    }
+  ]
+}

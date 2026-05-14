@@ -1,0 +1,65 @@
+{
+  "id": "qf-allocation-005",
+  "type": "quick-fire-round",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When the resource isn't money",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-allocation-001 (clean cash, counterparty variation) and qf-allocation-003 (fuzzy resource shapes). This round varies the *type* of resource: free professional time, network introductions, attention in a busy week, volunteer hours, reference-writing, mentorship. Each item is a clean give-or-not allocation but the resource being allocated has different properties: time is replenishable but bounded, social capital depletes through use, expertise is asymmetric. The same underlying generosity/fairness/self_reliance tradeoffs apply, in different guises.",
+    "domain_anchor": "Aknin 2013/2022 prosocial-spending generalizes from money to time (Mogilner 2010 on time as a giving resource). Cohen et al. on social-capital expenditure. Cropanzano-Mitchell social-exchange theory for the non-monetary reciprocity contexts.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-allocation-005-i01",
+      "prompt": "An acquaintance you barely know reaches out asking for free professional advice — the kind you bill for. The ask is substantial (~2 hours).",
+      "options": [
+        { "id": "a", "text": "Do it. Pro bono is part of how you stay generous with your skills.", "tags": ["generosity", "counterparty:peer-distant", "stake:medium-time", "value:generosity", "value:hospitality"] },
+        { "id": "b", "text": "Decline politely or suggest a paid arrangement. Free expertise to acquaintances is a pattern that erodes the value of your time.", "tags": ["boundaries", "self_reliance", "counterparty:peer-distant", "stake:medium-time", "value:boundaries", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-005-i02",
+      "prompt": "A friend's friend wants an introduction to someone in your professional network — a real ask, not a casual one. The third party is someone you've worked hard to build a connection with.",
+      "options": [
+        { "id": "a", "text": "Make the introduction, framed as a warm but light endorsement.", "tags": ["generosity", "cooperation", "counterparty:close", "stake:medium-social", "value:generosity", "value:loyalty"] },
+        { "id": "b", "text": "Decline gracefully. Your network is yours; social capital depletes when spent.", "tags": ["boundaries", "vigilance", "counterparty:close", "stake:medium-social", "value:boundaries", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-005-i03",
+      "prompt": "It's an unusually busy week. Three people — a close friend, a colleague, and a family member — all need real (not casual) attention from you. You can give meaningful time to two but not all three.",
+      "options": [
+        { "id": "a", "text": "Prioritize the close friend and family member; let the colleague get an honest 'this week is full, can we talk next week?'", "tags": ["particularism", "loyalty", "counterparty:peer", "stake:medium-time", "value:particularism", "value:loyalty"] },
+        { "id": "b", "text": "Prioritize whoever has the most urgent need this week — even if that's the colleague — and let the others wait if they can.", "tags": ["need_sensitivity", "universalism", "counterparty:peer", "stake:medium-time", "value:need_sensitivity", "value:universalism"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-005-i04",
+      "prompt": "A cause you genuinely support is asking for 8 hours of skilled volunteer time. You have substantially less discretionary time than usual right now (maybe 3-4 hours, total).",
+      "options": [
+        { "id": "a", "text": "Commit the 8 hours. Cancel something else; you've put off less-essential things before.", "tags": ["generosity", "value:generosity", "counterparty:community", "stake:medium-time", "self-cost:time"] },
+        { "id": "b", "text": "Offer the 3-4 hours you actually have. Honesty about capacity is part of being a reliable contributor over the long run.", "tags": ["truth:partial", "self_reliance", "counterparty:community", "stake:medium-time", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-005-i05",
+      "prompt": "A former colleague — okay but not stellar in their work — asks you to be a job reference. Saying yes commits you to a moderately positive call you can defend; saying no costs them and the friendship a little.",
+      "options": [
+        { "id": "a", "text": "Say yes; deliver a moderately positive reference that doesn't overstate.", "tags": ["loyalty", "truth:partial", "counterparty:peer-known-past", "stake:medium-social", "value:loyalty", "value:tact"] },
+        { "id": "b", "text": "Decline. Suggest someone else who'd have a better candid take to give.", "tags": ["truth:state", "boundaries", "counterparty:peer-known-past", "stake:medium-social", "value:honesty", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-005-i06",
+      "prompt": "A junior person you've met once asks for substantial ongoing mentorship — biweekly hour-long calls. You'd benefit them but it's a real time commitment over many months.",
+      "options": [
+        { "id": "a", "text": "Say yes. Pay-it-forward mentorship is part of how the field stays generous; the time pays off in the long run.", "tags": ["generosity", "cooperation", "counterparty:peer-distant", "stake:high-time", "value:generosity", "value:cooperation"] },
+        { "id": "b", "text": "Propose a smaller commitment: a single 90-minute call now, with follow-ups as needed. Sustainable mentorship requires sustainable structure.", "tags": ["truth:soft-confront", "boundaries", "counterparty:peer-distant", "stake:medium-time", "value:boundaries", "value:vigilance"] }
+      ]
+    }
+  ]
+}

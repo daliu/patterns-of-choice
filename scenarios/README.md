@@ -30,8 +30,8 @@ The MVP scopes 4 domains; sample scenarios so far:
 
 | Domain | Quick-fire | Narrative | Cost-of-virtue probe | MVP-1 target |
 |---|---|---|---|---|
-| Truth-telling under cost | `qf-truth-001`, `qf-truth-003` ✓ | `narr-truth-002`, `narr-truth-004` ✓ | `cov-truth-001`, `cov-truth-002` ✓ | ~12 total |
-| Resource allocation | `qf-allocation-001`, `qf-allocation-003` ✓ | `narr-allocation-002`, `narr-allocation-004` ✓ | `cov-allocation-001`, `cov-allocation-002` ✓ (both inverted) | ~12 total |
+| Truth-telling under cost | `qf-truth-001`, `qf-truth-003`, `qf-truth-005` ✓ | `narr-truth-002`, `narr-truth-004` ✓ | `cov-truth-001`, `cov-truth-002` ✓ | ~12 total |
+| Resource allocation | `qf-allocation-001`, `qf-allocation-003`, `qf-allocation-005` ✓ | `narr-allocation-002`, `narr-allocation-004` ✓ | `cov-allocation-001`, `cov-allocation-002` ✓ (both inverted) | ~12 total |
 | In-group / out-group | `qf-ingroup-001`, `qf-ingroup-003` ✓ | `narr-ingroup-002`, `narr-ingroup-004` ✓ | `cov-ingroup-001`, `cov-ingroup-002` ✓ | ~12 total |
 | Reciprocity / cooperation | `qf-reciprocity-001`, `qf-reciprocity-003` ✓ | `narr-reciprocity-002`, `narr-reciprocity-004` ✓ | `cov-reciprocity-001`, `cov-reciprocity-002` ✓ (inverted) | ~12 total |
 
