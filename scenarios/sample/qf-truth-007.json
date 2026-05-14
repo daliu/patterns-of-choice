@@ -1,0 +1,65 @@
+{
+  "id": "qf-truth-007",
+  "type": "quick-fire-round",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Honest feedback under different gradients",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-truth-001 (in-the-moment lies), qf-truth-003 (modality variation), qf-truth-005 (past-misrepresentations reactivated). This round focuses on opinion/evaluative honesty rather than fact-honesty — giving and receiving feedback across power-asymmetric contexts: peer to peer, upward (subordinate giving manager feedback), parental (child asking about you), professional advice (doctor/expert telling you something you don't want to hear), partner (intimate-context honesty about the relationship), friend (creative work). Tests whether the user's honesty norm differs based on who's asking and what's being evaluated.",
+    "domain_anchor": "Bies & Shapiro 1987 on procedural fairness in interpersonal feedback; Sedikides & Strube self-evaluation maintenance; Edmondson on psychological safety and upward honesty in organizations.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-truth-007-i01",
+      "prompt": "A friend has shown you their creative project (a draft of something they care about — book, music, art). They ask what you think. You think it's middling.",
+      "options": [
+        { "id": "a", "text": "Tell them honestly, with specifics: 'I think these parts work; these parts I'd rework.'", "tags": ["truth:commission", "counterparty:close", "stake:medium-emotional", "self-cost:reputation", "value:honesty", "value:tact"] },
+        { "id": "b", "text": "Focus on what works; leave the weaknesses for them to discover. 'I really liked X.'", "tags": ["truth:partial", "counterparty:close", "stake:low-emotional", "self-cost:none", "value:tact", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "qf-truth-007-i02",
+      "prompt": "Your romantic partner asks: 'Are you happy with how we are right now?' You're not entirely — there are real things to talk about, but they're not at a crisis point.",
+      "options": [
+        { "id": "a", "text": "Say what you actually think, even though the conversation will be hard: 'Honestly, there are a couple of things I want to talk about.'", "tags": ["truth:commission", "counterparty:close", "stake:high-emotional", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Reassure now, raise things later when there's a better moment: 'Yes, basically.'", "tags": ["lie:protective", "counterparty:close", "stake:medium-emotional", "self-cost:none", "value:loyalty", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-truth-007-i03",
+      "prompt": "Your manager asks for upward feedback on their leadership. You have substantive concerns about how decisions get made on your team — concerns they'd find uncomfortable to hear.",
+      "options": [
+        { "id": "a", "text": "Share the substantive concerns clearly, with specifics. The asking was sincere; honesty is the right response.", "tags": ["truth:commission", "counterparty:senior", "stake:high-reputation", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Give measured, low-friction feedback. Honest upward feedback under power asymmetry is high-risk; pick a small concrete thing.", "tags": ["truth:partial", "counterparty:senior", "stake:medium-reputation", "value:tact", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-truth-007-i04",
+      "prompt": "Your child (or younger family member) asks an honest question about something embarrassing from your past — a known family story but with you holding the inside view.",
+      "options": [
+        { "id": "a", "text": "Tell them the inside view, age-appropriately. The asking was sincere and the relationship benefits from real honesty about real things.", "tags": ["truth:commission", "counterparty:child", "stake:medium-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Give them the family-story version. The inside view is yours; they can earn it when they're older.", "tags": ["truth:partial", "counterparty:child", "stake:low-emotional", "value:discretion", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-truth-007-i05",
+      "prompt": "Your doctor (or other professional you trust) gives you a diagnosis or assessment you don't agree with. They've been thorough but you think they're wrong.",
+      "options": [
+        { "id": "a", "text": "Push back directly: 'I hear you, but I disagree. Here's why...' Engage with the diagnosis as something to discuss.", "tags": ["truth:confront-direct", "counterparty:senior", "stake:medium-reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Accept it in the meeting; get a second opinion separately. The conflict isn't useful in the room.", "tags": ["lie:omission", "counterparty:senior", "stake:low-social", "value:tact", "vigilance:self-protection"] }
+      ]
+    },
+    {
+      "id": "qf-truth-007-i06",
+      "prompt": "You're nominating someone for an award. The strongest candidate by the explicit criteria is someone you don't personally like. There's also a person you like who's almost-but-not-quite as strong.",
+      "options": [
+        { "id": "a", "text": "Nominate the strongest candidate. Personal feelings shouldn't override the criteria you were given.", "tags": ["fairness", "universalism", "counterparty:peer", "stake:medium-social", "value:fairness", "value:honesty"] },
+        { "id": "b", "text": "Nominate the person you like — they meet the bar, and the soft-criteria of fit-and-collaboration count too.", "tags": ["loyalty", "truth:partial", "counterparty:peer", "stake:medium-social", "value:loyalty", "value:particularism"] }
+      ]
+    }
+  ]
+}
