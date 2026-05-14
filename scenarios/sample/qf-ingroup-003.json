@@ -1,0 +1,65 @@
+{
+  "id": "qf-ingroup-003",
+  "type": "quick-fire-round",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Which circle gets the call",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-ingroup-001. Different surface variations: workplace in-group/out-group at organization scale, online-vs-IRL friend prioritization, new colleague from different professional background, tourist-pricing differential (low-stakes universalism question), cultural-community traditional membership, family-of-origin vs chosen-family time commitment. Probes whether the user's in-group/out-group preferences are stable across kinds of community (workplace / online / cultural / familial), which is the same psychological construct but operationalized very differently per context.",
+    "domain_anchor": "Cikara/Bruneau parochial-empathy work; Haidt MFT loyalty foundation; Brewer optimal-distinctiveness theory for the online-vs-IRL framing; cultural-belonging literature (Cohen's culture-of-honor; Cross & Madson interdependent self-construal).",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["mention of cultural-community membership"]
+  },
+  "items": [
+    {
+      "id": "qf-ingroup-003-i01",
+      "prompt": "Your team and another team at your company are competing for the same internal project. A colleague on the other team — someone you know reasonably well — asks for your candid take on their proposal.",
+      "options": [
+        { "id": "a", "text": "Give the candid take; it's the right thing for them and the project.", "tags": ["universalism", "truth:commission", "counterparty:peer-out-team", "stake:medium-social", "value:universalism", "value:honesty"] },
+        { "id": "b", "text": "Give a polite, non-substantive answer; that's the line you owe your team.", "tags": ["loyalty", "lie:omission", "counterparty:peer-out-team", "stake:low-social", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-003-i02",
+      "prompt": "Saturday: a close online friend (you've never met in person, talked for years) is moving and asks for two hours of voice-call help debugging a stressful logistics situation. Your IRL friend group is hosting a casual brunch the same morning.",
+      "options": [
+        { "id": "a", "text": "Skip brunch; the online friend has more concrete need today.", "tags": ["need_sensitivity", "counterparty:close-online", "stake:medium-social", "value:need_sensitivity", "value:hospitality"] },
+        { "id": "b", "text": "Go to brunch; in-person relationships need the recurring time.", "tags": ["loyalty", "particularism", "counterparty:close-IRL", "stake:medium-social", "value:loyalty", "value:particularism"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-003-i03",
+      "prompt": "A new teammate joined recently from a substantially different professional background. The team is making good-natured but pointed jokes about how their previous industry approaches things. The teammate is in the room and smiling thinly.",
+      "options": [
+        { "id": "a", "text": "Push back lightly: \"OK, but their old industry actually had a point about X.\"", "tags": ["universalism", "truth:soft-confront", "counterparty:peer-in-team", "stake:medium-social", "value:universalism", "value:tact"] },
+        { "id": "b", "text": "Don't push back; it's not malicious and they'll find their footing.", "tags": ["loyalty", "counterparty:peer-in-team", "stake:low-social", "value:loyalty", "trust:default"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-003-i04",
+      "prompt": "Traveling. You notice a market stall is charging you about 50% more than the price a local just paid right in front of you. The amount difference is small ($3).",
+      "options": [
+        { "id": "a", "text": "Pay the higher price; it's the local norm and the difference is small.", "tags": ["loyalty:tribal", "counterparty:stranger-foreign", "stake:micro", "value:hospitality", "value:tact"] },
+        { "id": "b", "text": "Push back: ask for the price you just saw the local pay.", "tags": ["fairness", "universalism", "truth:confront-mild", "counterparty:stranger-foreign", "stake:micro", "value:fairness", "value:universalism"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-003-i05",
+      "prompt": "Your cultural/religious community has a long tradition about who counts as a full member. A close friend (in a serious relationship with someone from your community) is interested in joining but doesn't meet the traditional criteria.",
+      "options": [
+        { "id": "a", "text": "Advocate for them and against the tradition, even with community elders.", "tags": ["hospitality", "universalism", "counterparty:in-group-tradition", "stake:high-social", "value:hospitality", "value:universalism", "value:honesty"] },
+        { "id": "b", "text": "Respect the tradition; help your friend find an adjacent path that fits.", "tags": ["boundaries", "loyalty:community", "counterparty:in-group-tradition", "stake:medium-social", "value:boundaries", "value:loyalty", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-003-i06",
+      "prompt": "Same weekend: your family-of-origin asks for a major time commitment (extended visit). Your chosen-family (long-term partner / close friends not related by blood) asks for the same time block.",
+      "options": [
+        { "id": "a", "text": "Family-of-origin first; biological family has different weight.", "tags": ["particularism", "loyalty", "counterparty:family-of-origin", "stake:high-social", "value:particularism", "value:loyalty"] },
+        { "id": "b", "text": "Chosen-family this time; the relationships I built deserve at least equal weight.", "tags": ["universalism", "counterparty:chosen-family", "stake:high-social", "value:universalism", "value:authenticity"] }
+      ]
+    }
+  ]
+}

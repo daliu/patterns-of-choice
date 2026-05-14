@@ -32,7 +32,7 @@ The MVP scopes 4 domains; sample scenarios so far:
 |---|---|---|---|---|
 | Truth-telling under cost | `qf-truth-001`, `qf-truth-003` ✓ | `narr-truth-002` ✓ | `cov-truth-001` ✓ | ~12 total |
 | Resource allocation | `qf-allocation-001`, `qf-allocation-003` ✓ | `narr-allocation-002` ✓ | `cov-allocation-001` ✓ (inverted) | ~12 total |
-| In-group / out-group | `qf-ingroup-001` ✓ | `narr-ingroup-002` ✓ | `cov-ingroup-001` ✓ | ~12 total |
+| In-group / out-group | `qf-ingroup-001`, `qf-ingroup-003` ✓ | `narr-ingroup-002` ✓ | `cov-ingroup-001` ✓ | ~12 total |
 | Reciprocity / cooperation | `qf-reciprocity-001` ✓ | `narr-reciprocity-002` ✓ | `cov-reciprocity-001` ✓ | ~12 total |
 
 All 4 domains now have all three scenario types — one each. The minimum-viable scenario set for MVP-1 piloting exists. Beyond this point, scale-up to ~12 per domain is the remaining editorial work: ~30 min per quick-fire, ~90 min per narrative, ~20 min per cost-of-virtue probe. Full MVP-1 corpus is realistically 3–4 weeks of focused authoring once committed.
