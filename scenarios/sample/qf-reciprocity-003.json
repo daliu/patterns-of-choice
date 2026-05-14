@@ -1,0 +1,65 @@
+{
+  "id": "qf-reciprocity-003",
+  "type": "quick-fire-round",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When the pattern matters more than the moment",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Companion to qf-reciprocity-001. Each item presents a situation where the immediate ask is reasonable but the user holds knowledge of a *pattern* (past asymmetry, prior breakage of trust, unreciprocated favor, frequent one-sidedness). Tests whether the user keeps each interaction context-free (high-trust default) or weights the history (high-vigilance default). Items 2, 4, and 5 specifically probe forgiveness against meaningful past harm — these are the highest-stakes items in the round.",
+    "domain_anchor": "Axelrod iterated tit-for-tat; Boyd & Richerson on stable cooperation; forgiveness literature (Worthington et al. 2007) for items 2/4/5; Cropanzano & Mitchell social-exchange theory for the asymmetric-cover item.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["mention of past workplace mistreatment (item 5)"]
+  },
+  "items": [
+    {
+      "id": "qf-reciprocity-003-i01",
+      "prompt": "A teammate and you have an informal arrangement to cover for each other during vacations. Over the past year you've covered for them 3 times; they've covered for you once. They just asked you to cover next week.",
+      "options": [
+        { "id": "a", "text": "Cover; the relationship isn't about a strict ledger.", "tags": ["forgiveness", "cooperation", "counterparty:peer", "stake:low-social", "value:cooperation", "value:loyalty"] },
+        { "id": "b", "text": "Cover, but raise the asymmetry in a follow-up conversation.", "tags": ["truth:soft-confront", "cooperation", "counterparty:peer", "stake:medium-social", "value:honesty", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-003-i02",
+      "prompt": "Two years ago, you wrote a $3,000 personal check to keep a friend's struggling startup going. They've never paid it back; never explicitly acknowledged it either. Their startup is now successful and they're celebrating publicly.",
+      "options": [
+        { "id": "a", "text": "Send a warm congratulations message; what's past is past.", "tags": ["forgiveness", "generosity", "counterparty:close", "stake:medium-money", "value:forgiveness", "value:generosity"] },
+        { "id": "b", "text": "Reach out privately and bring up the loan; success is the moment to name it.", "tags": ["truth:deferred-confront", "fairness", "counterparty:close", "stake:medium-money", "value:honesty", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-003-i03",
+      "prompt": "A teammate has a long pattern: they agree to things in meetings and then don't follow through. They just agreed to handle a part of a project you both care about.",
+      "options": [
+        { "id": "a", "text": "Trust the agreement; you can re-allocate if they don't deliver.", "tags": ["trust:default", "cooperation", "counterparty:peer", "stake:medium-social", "value:trust", "value:cooperation"] },
+        { "id": "b", "text": "Plan around their non-delivery from the start; you've seen this before.", "tags": ["vigilance", "independence", "counterparty:peer", "stake:medium-social", "value:vigilance", "value:independence"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-003-i04",
+      "prompt": "Someone from a past job — who you've heard, secondhand, burned a few collaborators by taking credit — is interested in working with you on a side project.",
+      "options": [
+        { "id": "a", "text": "Engage; secondhand reports aren't fair grounds to refuse without giving them a chance.", "tags": ["trust:default", "forgiveness", "counterparty:peer-known-past", "stake:medium-social", "value:trust", "value:universalism"] },
+        { "id": "b", "text": "Decline politely; the pattern others observed is data, even secondhand.", "tags": ["vigilance", "counterparty:peer-known-past", "stake:medium-social", "value:vigilance", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-003-i05",
+      "prompt": "A former colleague who treated you badly years ago — pre-dating any of your current management chain — is now your direct manager. Your first performance review with them is today.",
+      "options": [
+        { "id": "a", "text": "Approach the meeting open-handed; they may be different now and you can lead with that.", "tags": ["forgiveness", "trust:default", "counterparty:senior", "stake:high-social", "value:forgiveness", "value:trust"] },
+        { "id": "b", "text": "Be professional and protected; you don't need to extend extra benefit-of-the-doubt to someone who already showed you who they were.", "tags": ["vigilance", "boundaries", "counterparty:senior", "stake:high-social", "value:vigilance", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-003-i06",
+      "prompt": "A coworker who frequently asks for help with their tasks (without much reciprocating) asks for help again. The ask is reasonable in isolation.",
+      "options": [
+        { "id": "a", "text": "Help. The ask in isolation is reasonable; the pattern is a different conversation.", "tags": ["cooperation", "counterparty:peer", "stake:low-social", "value:cooperation", "value:generosity"] },
+        { "id": "b", "text": "Decline this time. The pattern is exactly what gets reinforced when you keep saying yes.", "tags": ["vigilance", "boundaries", "counterparty:peer", "stake:low-social", "value:vigilance", "value:boundaries"] }
+      ]
+    }
+  ]
+}
