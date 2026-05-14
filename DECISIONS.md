@@ -199,6 +199,22 @@ Append-only. Older decisions remain in place even when revisited; revisits get n
 
 ---
 
+## 15. Per-scenario-domain scoring (no cross-domain value-tag aggregation for MVP-1)
+
+**Question.** When a `value:X` tag appears in a scenario whose primary domain is *not* X's home domain (e.g. `value:loyalty` appearing in a truth-telling item), should it contribute to scoring on the loyalty axis?
+
+**Decision.** No, for MVP-1. Cross-domain `value:X` tags are descriptive metadata only; the analyzer scores each item exclusively on its parent scenario's primary axis.
+
+**Rationale.** The pre-registered CFA assumes 4-domain factor structure with item-level loadings on intended factor (`pre-registration.md` H1, `scoring.md` §7). Cross-domain scoring would create cross-loadings and change the factor structure to something not pre-registered. The cost is that some signal is left on the table — a user choosing a `value:loyalty`-tagged option in a truth-telling scenario IS revealing something about loyalty, and we're not capturing it. The benefit is a clean factor structure that's actually testable at n=200 with the simple model.
+
+**Considered and rejected.** Cross-domain scoring with corrective CFA (allowing cross-loadings) — would have more degrees of freedom and confuse the validation. Cross-domain scoring as an exploratory analysis only — defensible but adds analyzer complexity without affecting the primary validation; defer to MVP-2.
+
+**Status.** Locked for MVP-1. Documented in `analysis/README.md` §"Open scoring question — cross-domain value tags". Cross-domain `value:X` tags are entered in `analysis/tag_axis_map_v0.1.csv` as `*,metadata,value:X,,note` rows so the analyzer recognizes them as intentional rather than typos.
+
+**Revisit at MVP-2.** Once MVP-1 confirms the 4-factor structure (or doesn't), a Phase-2 design could specifically test whether cross-domain `value:X` scoring improves predictive validity. Held as a candidate revision.
+
+---
+
 ## 14. Engineering: still open
 
 **Question.** When does engineering start, and on what stack?
