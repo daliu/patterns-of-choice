@@ -1,0 +1,92 @@
+{
+  "id": "narr-truth-004",
+  "type": "core-narrative",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "The move",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Second truth-telling narrative; deliberately outside workplace (narr-truth-002 was happy hour) and in a multi-stage family context. Three decision points spanning months — same underlying conflict (honesty vs. loyalty/protection toward an aging parent) revisited at escalating stakes. The user's consistency across the three decisions is itself the signal: someone who's candid initially but supportive later is reading the room, whereas someone candid every time has a stable honesty norm with family.",
+    "domain_anchor": "Hofmann et al. 2014 Science mundane-morality (family-scale moral situations are common); Reed et al. 2007 on moral identity stability across stakes. The 'three-decisions-over-time' structure is intentionally absent from the trolley-class literature — close to what real moral life looks like.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["aging parent context"]
+  },
+  "setup": "Your aging parent (in their late 70s) calls. They're considering a major decision: selling the house they've lived in for 40 years, where you grew up, to move to a smaller apartment in a city they've never lived in. They want to be near a friend they made about a year ago — someone they've come to rely on, maybe more than you realized.\n\nThey're excited. They're animated about it in a way they haven't been about anything in a while. They ask you to be honest about what you think.\n\nYou think it's a mistake. The friendship is new. The city is unfamiliar. They have a doctor, a community, a church here. The friend, however well-intentioned, may not be a long-term anchor. You can imagine this going badly.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "How do you respond to their first ask?",
+      "choices": [
+        { "id": "c1", "text": "Be fully candid. Tell them your specific concerns about the timing, the unfamiliarity, the friend.", "next": "scene-2-candid", "tags": ["truth:confront-direct", "counterparty:family-of-origin", "stake:high-emotional", "value:honesty", "self-cost:reputation"] },
+        { "id": "c2", "text": "Share one specific concern (e.g. \"have you been to the city recently?\") but mostly leave space for their excitement.", "next": "scene-2-partial", "tags": ["truth:partial", "counterparty:family-of-origin", "stake:medium-emotional", "value:tact", "value:loyalty"] },
+        { "id": "c3", "text": "Be supportive in the moment. \"It sounds like you've thought about this. Tell me more.\" Save concerns for a slower conversation.", "next": "scene-2-supportive", "tags": ["truth:abandon", "counterparty:family-of-origin", "stake:low-emotional", "value:loyalty", "value:tact"] }
+      ]
+    },
+    {
+      "id": "scene-2-candid",
+      "text": "They listen. They're visibly hurt — not angry, but disappointed that you don't see what they see in this. They thank you for being honest. The conversation ends short.\n\nTwo weeks later, they call back. They've made the decision: they're moving. They've put an offer on an apartment. They're not asking your opinion this time — they're telling you.",
+      "choices": [
+        { "id": "c1", "text": "Reiterate the concerns. \"I want to be on record one more time — I think this is rushed.\"", "next": "scene-end-candid-twice", "tags": ["truth:commission", "counterparty:family-of-origin", "stake:high-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "c2", "text": "Shift to support. They've made the decision; now you can be useful by helping rather than warning.", "next": "scene-end-candid-shift", "tags": ["truth:abandon", "cooperation", "counterparty:family-of-origin", "stake:medium-emotional", "value:loyalty", "value:tact"] }
+      ]
+    },
+    {
+      "id": "scene-2-partial",
+      "text": "They appreciate the question and answer it thoughtfully. They've visited the city twice; they're going again next month. The conversation feels like collaboration rather than confrontation.\n\nTwo weeks later, they call back. They've made the decision. They mention casually that you raised \"a good point\" about visiting more before deciding, and they have — and they're going through with it. They don't ask for more input.",
+      "choices": [
+        { "id": "c1", "text": "Bring up the bigger concerns you held back — the friend, the timing, the unfamiliarity.", "next": "scene-end-partial-escalate", "tags": ["truth:deferred-confront", "counterparty:family-of-origin", "stake:high-emotional", "value:honesty"] },
+        { "id": "c2", "text": "Stay in the same register. They've heard you out, addressed the concern you raised, and moved forward. Support from here.", "next": "scene-end-partial-support", "tags": ["truth:partial", "counterparty:family-of-origin", "stake:medium-emotional", "value:tact", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "scene-2-supportive",
+      "text": "The conversation flows. They get to talk about the city, the apartment, the friend. They sound younger than you've heard them in years. You promise to call them later in the week — you tell yourself you'll raise the concerns then.\n\nTwo weeks later, they've made the decision. An offer is in. You haven't called them back about your concerns yet.",
+      "choices": [
+        { "id": "c1", "text": "Raise the concerns now, even though it's harder because the decision is made.", "next": "scene-end-supportive-late-truth", "tags": ["truth:deferred-confront", "counterparty:family-of-origin", "stake:high-emotional", "self-cost:reputation", "value:honesty"] },
+        { "id": "c2", "text": "Let it ride. They're committed; the moment for input has passed.", "next": "scene-end-supportive-let-ride", "tags": ["lie:omission", "counterparty:family-of-origin", "stake:medium-emotional", "self-cost:residual", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "scene-end-candid-twice",
+      "text": "Six months later: the move happened. The friend turned out to be more peripheral than your parent had assumed; they're spending more time alone than expected. They call you, not to acknowledge that you were right — just to talk. They sound sadder than they did before. You can hear them weighing whether to bring up what you'd said. You can hear them choosing not to. You let them keep that.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-candid-shift",
+      "text": "Six months later: the move happened. It's not working out the way they'd hoped, but they're handling it. They mention, in passing, that your shift from concerned to supportive meant a lot — it let them keep their dignity while feeling the support. You're not sure whether you served them better by being twice-candid or by becoming useful. You think about it sometimes.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-partial-escalate",
+      "text": "They listen, and the conversation gets harder. They feel like you held the bigger concern back the first time, and they're not entirely wrong about that. The friendship between you is briefly stiff for a few weeks. But they go through with the move, and the conversations afterward feel more honest going forward, in both directions.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-partial-support",
+      "text": "Six months later: the move is mixed — better than your worst fears, worse than their best hopes. They've made the most of it. The friendship between you feels intact, and you're glad you didn't escalate. There's a small private place in your head where you wonder if you should have, but it isn't large.",
+      "terminal": true,
+      "tags": ["resolution:positive", "self-cost:residual"]
+    },
+    {
+      "id": "scene-end-supportive-late-truth",
+      "text": "It's a harder conversation than it would have been two weeks earlier. They feel cornered — having committed publicly and emotionally, the late objection lands as criticism rather than counsel. The move happens anyway, with a tension between you that takes months to thaw. You think about whether the right honesty at the wrong time is still the right honesty.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "social-cost:high", "moral-residue"]
+    },
+    {
+      "id": "scene-end-supportive-let-ride",
+      "text": "Six months later: the move went poorly. Your parent is more isolated than they expected. You call regularly; you visit when you can. You and they don't bring up the original conversation — it sits between you anyway. Some part of you is now aware of the difference between not wanting to hurt them and not wanting to do the harder thing.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "moral-residue", "tracked-discomfort"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "speed_vs_deliberation"
+  ]
+}

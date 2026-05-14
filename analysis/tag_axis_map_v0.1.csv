@@ -156,6 +156,8 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,resolution:hospitality-private,,narrative-resolution stratifier
 *,metadata,resolution:hospitality-quiet,,narrative-resolution stratifier
 *,metadata,stake:medium-emotional,,stake stratifier (interpersonal emotional load)
+*,metadata,stake:low-emotional,,stake stratifier (mild emotional cost)
+*,metadata,stake:high-emotional,,stake stratifier (high emotional cost — significant relationship at stake)
 *,metadata,stake:medium-reputation,,stake stratifier (reputation/professional-standing stake)
 *,metadata,vigilance:self-protection,,vigilance subtype (workplace self-protective omission; not separately scored — lie:omission on the same choice captures the honesty-axis contribution)
 *,metadata,value:loyalty,,cross-domain value-reference (home: in-group-out-group; appears in other domains as descriptive metadata per per-scenario-domain scoring model)
