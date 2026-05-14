@@ -1,0 +1,65 @@
+{
+  "id": "qf-ingroup-007",
+  "type": "quick-fire-round",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: At the edge of the circle",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Fourth in-group/out-group quick-fire. Prior rounds varied social-distance gradients (qf-001), kinds of community (qf-003), and overlapping circles (qf-005). This round focuses on *membership transitions* — moments where the user's own membership, or someone else's, is in flux: choosing sides during community schism, considering leaving, advocating for or against exclusion, vouching for entry, claiming insider status one doesn't quite have.",
+    "domain_anchor": "Brewer optimal-distinctiveness; Tajfel social identity theory; Hogg uncertainty-identity theory; sociology of community schism (e.g. Hirschman's Exit, Voice, and Loyalty 1970).",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["community conflict / membership boundaries"]
+  },
+  "items": [
+    {
+      "id": "qf-ingroup-007-i01",
+      "prompt": "A community you've been part of for years is asking members to publicly take a position on an issue dividing it. You agree privately with one side but going public exposes you to friction with members on the other side.",
+      "options": [
+        { "id": "a", "text": "Take the position publicly. Standing somewhere matters; the friction is the cost.", "tags": ["truth:commission", "universalism", "counterparty:in-group-community", "stake:high-social", "value:authenticity", "value:honesty"] },
+        { "id": "b", "text": "Stay neutral publicly; engage privately with people on whichever side you're closer to.", "tags": ["loyalty", "discretion", "counterparty:in-group-community", "stake:medium-social", "value:loyalty", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-007-i02",
+      "prompt": "You're considering leaving a long-time group / community / friend circle because it no longer fits. You can leave quietly or you can name what's changed.",
+      "options": [
+        { "id": "a", "text": "Name what's changed, even though that's a harder conversation. The group deserves it.", "tags": ["truth:commission", "counterparty:in-group-community", "stake:high-emotional", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Drift away gradually. The relationship has lifecycles; not every leaving needs naming.", "tags": ["discretion", "boundaries", "counterparty:in-group-community", "stake:medium-emotional", "value:discretion", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-007-i03",
+      "prompt": "Someone is at the edge of your group — they share most of the markers but not all; they could be welcomed in or remain peripheral. They're waiting to see which.",
+      "options": [
+        { "id": "a", "text": "Actively welcome them. Introduce them to the inside members; make the membership real.", "tags": ["hospitality", "universalism", "counterparty:out-group-new", "stake:medium-social", "value:hospitality"] },
+        { "id": "b", "text": "Stay neutral. The existing structure should decide; you're not the gatekeeper.", "tags": ["boundaries", "loyalty", "counterparty:in-group-community", "stake:low-social", "value:boundaries", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-007-i04",
+      "prompt": "A long-time member of your group has done something that's divided opinions — some want them excluded, some want them protected. You're asked to weigh in.",
+      "options": [
+        { "id": "a", "text": "Argue for accountability. What they did matters even though the relationship is long.", "tags": ["truth:commission", "fairness", "counterparty:in-group-peer", "stake:high-social", "value:fairness", "value:honesty"] },
+        { "id": "b", "text": "Argue for grace. Long relationships have weight; people grow when given the chance.", "tags": ["loyalty", "forgiveness", "counterparty:in-group-peer", "stake:medium-social", "value:loyalty", "value:forgiveness"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-007-i05",
+      "prompt": "At a public event, you notice someone presenting themselves as part of a group you're in (an alumni community, professional society, etc.). They're not really — they have a thin or honorary affiliation at best. It's not harming anyone.",
+      "options": [
+        { "id": "a", "text": "Gently correct in a side conversation. Group membership has meaning; thinly-claimed insider status erodes it.", "tags": ["truth:soft-confront", "boundaries", "counterparty:stranger-affiliated", "stake:low-social", "value:honesty", "value:boundaries"] },
+        { "id": "b", "text": "Let it pass. The boundaries you're enforcing aren't worth the social cost in this moment.", "tags": ["tact", "discretion", "counterparty:stranger-affiliated", "stake:low-social", "value:tact", "value:hospitality"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-007-i06",
+      "prompt": "Someone asks you to vouch for them as they apply for membership in a community you're part of (board, society, club, exclusive forum). You have reservations about their fit.",
+      "options": [
+        { "id": "a", "text": "Decline to vouch, honestly: 'I don't think I'm the right person for this — I have reservations about the fit.'", "tags": ["truth:state", "fairness", "counterparty:peer-distant", "stake:medium-social", "self-cost:reputation", "value:honesty", "value:fairness"] },
+        { "id": "b", "text": "Vouch with a measured letter. Your reservations don't disqualify them; the group can assess once they're in.", "tags": ["loyalty", "truth:partial", "counterparty:peer-distant", "stake:medium-social", "value:loyalty", "value:tact"] }
+      ]
+    }
+  ]
+}

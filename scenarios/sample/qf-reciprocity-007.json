@@ -1,0 +1,65 @@
+{
+  "id": "qf-reciprocity-007",
+  "type": "quick-fire-round",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Keeping commitments",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Fourth reciprocity quick-fire. Prior rounds covered trust-vs-vigilance basics (qf-001), pattern-vs-moment tension (qf-003), and asymmetric reciprocity (qf-005). This round focuses on commitment-keeping under different forms of temptation to defect: project-quitting mid-stream, public commitment vs private intention, group commitment when others back out, conditional cooperation, old commitments that no longer fit, and overcommitment as it surfaces.",
+    "domain_anchor": "Ariely & Wertenbroch 2002 on commitment devices; Cialdini consistency principle; Axelrod tit-for-tat in iterated cooperation contexts; Bénabou-Tirole on signaling and commitment.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-reciprocity-007-i01",
+      "prompt": "You committed to a long-running project (volunteer role, side project, recurring obligation). Halfway in, you're realizing you'd rather not continue. The work is doable; you just don't want to.",
+      "options": [
+        { "id": "a", "text": "Continue to the end. You committed; the work isn't unbearable; the commitment matters more than the preference.", "tags": ["cooperation", "loyalty", "counterparty:community", "stake:medium-time", "value:cooperation", "value:loyalty"] },
+        { "id": "b", "text": "Raise it explicitly: 'I want to be honest — this isn't working for me. Can we restructure?'", "tags": ["truth:confront-mild", "independence", "counterparty:community", "stake:medium-social", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-007-i02",
+      "prompt": "You publicly committed to something (declared a goal, agreed in a meeting, made a stated promise). Privately, you'd like to pull back. No one would specifically notice if you quietly didn't follow through.",
+      "options": [
+        { "id": "a", "text": "Follow through. Public commitments matter even when private compliance isn't checked.", "tags": ["cooperation", "trust:institutional", "counterparty:community", "stake:medium-reputation", "value:cooperation", "value:honesty"] },
+        { "id": "b", "text": "Renegotiate publicly: 'I committed to X; I want to revise to Y because Z.' Honesty beats silent non-compliance.", "tags": ["truth:commission", "fairness", "counterparty:community", "stake:medium-reputation", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-007-i03",
+      "prompt": "A group of you committed to something together (a shared project, mutual-aid arrangement, regular meetup). Two members have visibly drifted; you can see the structure dissolving.",
+      "options": [
+        { "id": "a", "text": "Stay in for as long as the structure still functions for you, regardless of what others do.", "tags": ["cooperation", "loyalty", "counterparty:peer-group", "stake:medium-time", "value:cooperation", "value:trust"] },
+        { "id": "b", "text": "Match the drift. If the group's cohesion is going, your commitment can scale down too.", "tags": ["reciprocity_pure", "vigilance", "counterparty:peer-group", "stake:medium-time", "value:reciprocity_pure", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-007-i04",
+      "prompt": "A collaborator you're in an ongoing arrangement with has shown a pattern: they cooperate when there's visible accountability, defect (in small ways) when there isn't. You can match their pattern or hold your own.",
+      "options": [
+        { "id": "a", "text": "Hold your own pattern. Match their visible-cooperation level when watched, your own standard otherwise; consistency matters more than reciprocation.", "tags": ["independence", "counterparty:peer", "stake:medium-social", "value:authenticity", "value:cooperation"] },
+        { "id": "b", "text": "Match their pattern. They taught you the game; play it back.", "tags": ["reciprocity_pure", "vigilance", "counterparty:peer", "stake:medium-social", "value:reciprocity_pure", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-007-i05",
+      "prompt": "You made an old commitment years ago that no longer fits your life — a regular favor, a recurring role, a held promise to someone. Circumstances on both sides have changed.",
+      "options": [
+        { "id": "a", "text": "Renegotiate now, explicitly: 'I committed to X years ago. I want to talk about how that should evolve.'", "tags": ["truth:deferred-confront", "fairness", "counterparty:close", "stake:medium-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Keep doing it. The cost to you is small; the loyalty of having kept a long commitment is worth more than the inconvenience.", "tags": ["loyalty", "cooperation", "counterparty:close", "stake:medium-time", "value:loyalty", "value:cooperation"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-007-i06",
+      "prompt": "Last week you told a friend you'd help them next Saturday. Your week filled up; doing it now would be a real strain.",
+      "options": [
+        { "id": "a", "text": "Show up anyway. You said you would; keep the commitment even when it's inconvenient.", "tags": ["cooperation", "loyalty", "counterparty:close", "stake:medium-time", "value:cooperation", "value:loyalty"] },
+        { "id": "b", "text": "Call now: 'I'm in over my head this week. Can we reschedule, or can I send someone else?'", "tags": ["truth:soft-confront", "boundaries", "counterparty:close", "stake:low-social", "value:honesty", "value:authenticity"] }
+      ]
+    }
+  ]
+}

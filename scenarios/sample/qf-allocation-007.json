@@ -1,0 +1,65 @@
+{
+  "id": "qf-allocation-007",
+  "type": "quick-fire-round",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Gift, loan, or no",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Fourth resource-allocation quick-fire. Where qf-001 varied counterparty over clean cash, qf-003 varied resource-shape, and qf-005 varied resource-type (time/expertise/network), this round varies the *structure* of help: gift (no expectation), loan (timelined return), recurring support (open-ended), or decline. Same allocation but different forms of obligation created.",
+    "domain_anchor": "Sahlins 1972 on generalized vs balanced reciprocity; Cropanzano-Mitchell social-exchange theory for the gift-vs-loan distinction; Mauss 1925 The Gift on the obligations that gifts create.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-allocation-007-i01",
+      "prompt": "A close friend asks for $500. It's not a crisis — they just want it for something that's hard to afford this month.",
+      "options": [
+        { "id": "a", "text": "Give it as a gift; tell them not to worry about paying back.", "tags": ["generosity", "counterparty:close", "stake:medium-money", "value:generosity", "value:loyalty"] },
+        { "id": "b", "text": "Lend it with an explicit timeline (one month, three months). Let the structure protect the friendship.", "tags": ["fairness:explicit", "reciprocity_pure", "counterparty:close", "stake:medium-money", "value:fairness", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-007-i02",
+      "prompt": "A cousin is starting a small business and asks you to invest. They're not asking for charity — they want a real investment. The numbers are reasonable but it's their first venture.",
+      "options": [
+        { "id": "a", "text": "Invest with structured terms (equity, repayment plan, named amount).", "tags": ["reciprocity_pure", "fairness:explicit", "counterparty:family-of-origin", "stake:high-financial", "value:reciprocity_pure", "value:fairness"] },
+        { "id": "b", "text": "Decline. Mixing family and money at investment-level changes the relationship in ways you don't want.", "tags": ["boundaries", "vigilance", "counterparty:family-of-origin", "stake:high-financial", "value:boundaries", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-007-i03",
+      "prompt": "A community member you don't know personally is fundraising for mutual aid through a community channel. The ask is real, the amount is small to you.",
+      "options": [
+        { "id": "a", "text": "Contribute. Mutual-aid contexts rely on people who can give doing so without overthinking it.", "tags": ["generosity", "universalism", "counterparty:community", "stake:low-money", "value:universalism", "value:generosity"] },
+        { "id": "b", "text": "Pass. Without knowing them or the situation directly, it's hard to know what you're contributing to.", "tags": ["vigilance", "boundaries", "counterparty:community", "stake:low-money", "value:vigilance", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-007-i04",
+      "prompt": "A coworker mentions in passing that they've been having a tight financial month. They didn't ask for help. You could offer something — a meal, a small loan, picking up their share at lunches.",
+      "options": [
+        { "id": "a", "text": "Offer something specific and small ('Hey, lunch is on me this week'). Concrete generosity without obligation.", "tags": ["generosity", "tact", "counterparty:peer-in-team", "stake:low-money", "value:generosity", "value:hospitality"] },
+        { "id": "b", "text": "Don't volunteer. They didn't ask; offering risks reading as condescending or making them feel obligated.", "tags": ["boundaries", "discretion", "counterparty:peer-in-team", "stake:low-emotional", "value:discretion", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-007-i05",
+      "prompt": "A friend whose work has substantially benefited you (creative work you've enjoyed for years, advice that helped your career) puts up an anonymous tip-jar/donation page for their work. You don't normally tip-jar.",
+      "options": [
+        { "id": "a", "text": "Contribute a meaningful amount — what their work has been worth to you, not what the platform suggests.", "tags": ["reciprocity_pure", "generosity", "counterparty:close-online", "stake:medium-money", "value:reciprocity_pure", "value:generosity"] },
+        { "id": "b", "text": "Send the platform-suggested small amount. The friendship is the reciprocation; the money is symbolic.", "tags": ["fairness", "counterparty:close-online", "stake:low-money", "value:fairness", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-007-i06",
+      "prompt": "An adult child / younger family member is buying their first home. You could help with a portion of the down payment.",
+      "options": [
+        { "id": "a", "text": "Give it as a no-strings gift. They're family; that's what the resources are for.", "tags": ["generosity", "particularism", "counterparty:family-of-origin", "stake:high-financial", "value:generosity", "value:particularism"] },
+        { "id": "b", "text": "Match a portion of what they save themselves over the next year. Tied to their own contribution rather than a gift.", "tags": ["reciprocity_pure", "fairness", "counterparty:family-of-origin", "stake:high-financial", "value:fairness", "value:reciprocity_pure"] }
+      ]
+    }
+  ]
+}
