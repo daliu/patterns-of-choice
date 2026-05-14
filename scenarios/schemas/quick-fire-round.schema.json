@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daliu/patterns-of-choice/scenarios/schemas/quick-fire-round.schema.json",
+  "title": "Quick-fire round scenario",
+  "description": "A timed sequence of binary forced-choice items. ~60 seconds total. Captures System 1 responses.",
+  "type": "object",
+  "required": ["id", "type", "domain", "version", "metadata", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^qf-[a-z-]+-[0-9]{3}$",
+      "description": "Globally unique scenario ID. Format: qf-{domain-slug}-{nnn}."
+    },
+    "type": { "const": "quick-fire-round" },
+    "domain": { "$ref": "#/$defs/domain" },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "items": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 10,
+      "items": { "$ref": "#/$defs/item" },
+      "description": "4-10 binary forced-choice items. Each shown under the metadata.timer_seconds_per_item timer."
+    }
+  },
+  "$defs": {
+    "domain": {
+      "enum": [
+        "truth-telling",
+        "resource-allocation",
+        "in-group-out-group",
+        "reciprocity-cooperation"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "title",
+        "author",
+        "design_intent",
+        "domain_anchor",
+        "estimated_duration_seconds",
+        "timer_seconds_per_item"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "author": { "type": "string", "minLength": 1 },
+        "design_intent": { "type": "string", "minLength": 20 },
+        "domain_anchor": { "type": "string", "minLength": 20 },
+        "estimated_duration_seconds": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 600
+        },
+        "timer_seconds_per_item": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 30
+        },
+        "content_warnings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "required": ["id", "prompt", "options"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^qf-[a-z-]+-[0-9]{3}-i[0-9]{2}$",
+          "description": "Globally unique item ID. Format: {scenario-id}-i{nn}."
+        },
+        "prompt": { "type": "string", "minLength": 5 },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/option" }
+        }
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": ["id", "text", "tags"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z]$",
+          "description": "Single lowercase letter — 'a' or 'b' for the two options."
+        },
+        "text": { "type": "string", "minLength": 1 },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z_]+(:[a-z_-]+)?$",
+            "description": "Tag in 'namespace:value' format or single bare token. Must resolve in analysis/tag_axis_map_v*.csv."
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

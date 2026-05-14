@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daliu/patterns-of-choice/scenarios/schemas/cost-of-virtue-probe.schema.json",
+  "title": "Cost-of-virtue probe scenario",
+  "description": "A stake-laddered probe locating the user's break-point on a previously-stated value. ~90 seconds. Probably the single most useful longitudinal signal per concept.md.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "domain",
+    "version",
+    "metadata",
+    "value_slot",
+    "preconditions",
+    "framing_prompt",
+    "framing_question",
+    "ladder",
+    "no_option",
+    "analysis"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^cov-[a-z-]+-[0-9]{3}$"
+    },
+    "type": { "const": "cost-of-virtue-probe" },
+    "domain": { "$ref": "#/$defs/domain" },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "value_slot": {
+      "type": "string",
+      "pattern": "^[a-z_]+$",
+      "description": "Must reference an ID present in inventory/values-deck.json."
+    },
+    "preconditions": { "$ref": "#/$defs/preconditions" },
+    "framing_prompt": {
+      "type": "string",
+      "minLength": 50,
+      "description": "Multi-sentence scenario describing the action and removing escape valves."
+    },
+    "framing_question": {
+      "type": "string",
+      "minLength": 5
+    },
+    "ladder": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/ladder_rung" }
+    },
+    "no_option": { "$ref": "#/$defs/no_option" },
+    "alternate_no_option": { "$ref": "#/$defs/no_option" },
+    "analysis": { "$ref": "#/$defs/analysis" }
+  },
+  "$defs": {
+    "domain": {
+      "enum": [
+        "truth-telling",
+        "resource-allocation",
+        "in-group-out-group",
+        "reciprocity-cooperation"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "title",
+        "author",
+        "design_intent",
+        "domain_anchor",
+        "estimated_duration_seconds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "author": { "type": "string", "minLength": 1 },
+        "design_intent": { "type": "string", "minLength": 20 },
+        "domain_anchor": { "type": "string", "minLength": 20 },
+        "estimated_duration_seconds": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 300
+        },
+        "content_warnings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        }
+      }
+    },
+    "preconditions": {
+      "type": "object",
+      "required": [
+        "value_must_be_in_user_top_5_for_at_least_one_layer",
+        "ladder_currency"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "value_must_be_in_user_top_5_for_at_least_one_layer": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[a-z_]+$" },
+            {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^[a-z_]+$" },
+              "minItems": 1
+            }
+          ]
+        },
+        "ladder_currency": {
+          "enum": ["user-local", "USD"]
+        }
+      }
+    },
+    "ladder_rung": {
+      "type": "object",
+      "required": ["rung", "stake", "unit", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "rung": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "stake": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "unit": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 }
+      }
+    },
+    "no_option": {
+      "type": "object",
+      "required": ["id", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "required": [
+        "break_point_field",
+        "no_break_point_handling",
+        "longitudinal_signal",
+        "domain_signature_captured"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "break_point_field": {
+          "enum": ["first_accept_stake", "first_return_stake"],
+          "description": "first_return_stake denotes an inverted probe (e.g. cov-allocation-001)."
+        },
+        "no_break_point_handling": { "type": "string", "minLength": 10 },
+        "interpretation_note": { "type": "string" },
+        "longitudinal_signal": { "type": "string", "minLength": 10 },
+        "domain_signature_captured": {
+          "const": "cost_of_virtue_curve"
+        }
+      }
+    }
+  }
+}

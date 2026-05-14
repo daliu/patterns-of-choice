@@ -1,6 +1,10 @@
 # Scenario JSON Schema
 
-**Version:** 0.1 (draft; will harden once a third domain is authored and edge cases surface)
+**Version:** 0.1.
+
+This document is the human-readable reference. Machine-readable JSON Schema (draft 2020-12) files for each scenario type live in [`schemas/`](schemas/) and can be consumed by any validator in any language; see [`schemas/README.md`](schemas/README.md).
+
+If you change a schema, change both files in the same commit.
 
 All scenario files are UTF-8 JSON. Top-level required fields are `id`, `type`, `domain`, `version`, `metadata`. Type-specific fields follow.
 

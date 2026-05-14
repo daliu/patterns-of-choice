@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/daliu/patterns-of-choice/scenarios/schemas/core-narrative.schema.json",
+  "title": "Core narrative scenario",
+  "description": "A branching interactive-fiction scene with 3-6 decision points. ~3-5 minutes. The format where domain-level data is richest.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "domain",
+    "version",
+    "metadata",
+    "setup",
+    "scenes",
+    "reflection_prompt",
+    "domain_signatures_captured"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^narr-[a-z-]+-[0-9]{3}$"
+    },
+    "type": { "const": "core-narrative" },
+    "domain": { "$ref": "#/$defs/domain" },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "setup": {
+      "type": "string",
+      "minLength": 50,
+      "description": "Multi-paragraph context shown before the first decision."
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 4,
+      "items": { "$ref": "#/$defs/scene" },
+      "description": "Decision-point and terminal scenes. Validation tooling should verify every choice.next resolves to a scene id within this array, and that every choice path eventually reaches a terminal scene."
+    },
+    "reflection_prompt": {
+      "type": "string",
+      "minLength": 20
+    },
+    "domain_signatures_captured": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/domain_signature" },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "domain": {
+      "enum": [
+        "truth-telling",
+        "resource-allocation",
+        "in-group-out-group",
+        "reciprocity-cooperation"
+      ]
+    },
+    "domain_signature": {
+      "enum": [
+        "consistency_under_reframing",
+        "cost_of_virtue_curve",
+        "speed_vs_deliberation",
+        "observed_vs_anonymous",
+        "order_effects",
+        "in_group_out_group",
+        "stated_revealed_gap"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "title",
+        "author",
+        "design_intent",
+        "domain_anchor",
+        "estimated_duration_seconds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "author": { "type": "string", "minLength": 1 },
+        "design_intent": { "type": "string", "minLength": 20 },
+        "domain_anchor": { "type": "string", "minLength": 20 },
+        "estimated_duration_seconds": {
+          "type": "integer",
+          "minimum": 120,
+          "maximum": 600
+        },
+        "content_warnings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "required": ["id", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^scene-[a-z0-9-]+$"
+        },
+        "text": { "type": "string", "minLength": 10 },
+        "choices": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": { "$ref": "#/$defs/choice" }
+        },
+        "terminal": { "type": "boolean" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true,
+          "description": "Resolution tags on terminal scenes; describes the path outcome."
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["choices"],
+          "not": { "required": ["terminal"] }
+        },
+        {
+          "required": ["terminal"],
+          "properties": { "terminal": { "const": true } },
+          "not": { "required": ["choices"] }
+        }
+      ]
+    },
+    "choice": {
+      "type": "object",
+      "required": ["id", "text", "tags"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^c[0-9]+$"
+        },
+        "text": { "type": "string", "minLength": 1 },
+        "next": {
+          "type": "string",
+          "pattern": "^scene-[a-z0-9-]+$",
+          "description": "ID of the destination scene. Validator must check this resolves within scenes[]."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z_]+(:[a-z_-]+)?$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
