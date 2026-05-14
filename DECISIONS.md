@@ -231,6 +231,8 @@ Append-only. Older decisions remain in place even when revisited; revisits get n
 
 **Status.** Tooling line crossed. Runtime decision still open.
 
+**Further engineering: analyzer prototype shipped.** `scripts/analyze.py` (added later) implements scoring.md §2-3 (per-item → per-session → per-user-per-domain revealed-score aggregation). Standard library only; no dependency added beyond what `validate.py` already brought in. Demonstrates that the scoring spec is implementable and surfaces any latent ambiguities. Reserved for the validation-cohort analyzer: Bradley-Terry inventory scoring (§5.2), gap computation (§6), bootstrap CIs (§8), CFA (§7), cost-of-virtue longitudinal trajectories (§4.3). The runtime product stack remains open; this is research-side tooling on the path scoring.md already named.
+
 ---
 
 ## How to add to this file

@@ -5,7 +5,8 @@ Utility scripts. **This is the first executable code in the repo.** Crosses the 
 ## Files
 
 - [`validate.py`](validate.py) — validates all scenario JSON files against their JSON Schemas and the cross-file integrity constraints scoring.md and SCHEMA.md require.
-- [`requirements.txt`](requirements.txt) — single dependency: `jsonschema>=4.18`.
+- [`analyze.py`](analyze.py) — minimal analyzer implementing scoring.md §2-3 (per-item / per-session / per-user-per-domain revealed scores). Standard library only — no external dependency needed.
+- [`requirements.txt`](requirements.txt) — single dependency for `validate.py`: `jsonschema>=4.18`. `analyze.py` is standard library only.
 
 ## Usage
 
@@ -63,10 +64,37 @@ Triggers:
 
 The workflow can be deleted without affecting the validator itself — `scripts/validate.py` runs identically locally.
 
+## `analyze.py` — minimal scoring-spec analyzer
+
+Implements scoring.md §2-3 only. Reserved for the future validation-cohort analyzer: inventory scoring via Bradley-Terry (§5.2), gap computation (§6), bootstrap CIs (§8), CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
+
+```sh
+python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
+python scripts/analyze.py --log <path> --json    # JSON output
+python scripts/analyze.py --log <path> --min-items 3
+```
+
+Output (table by default):
+
+```
+user_id                  domain                        mean  sess      se
+-------------------------------------------------------------------------
+user-alice               resource-allocation         +0.667     1     nan
+user-alice               truth-telling               +0.875     1     nan
+user-bob                 truth-telling               -0.396     2   0.329
+user-carla               truth-telling               +0.200     1     nan
+```
+
+Range: `[-1, +1]` per the clamp in scoring.md §2.2. Positive = ethical pole of the domain's primary axis. `se` is a placeholder ±1 standard error; production analyzer would do bootstrap CI per scoring.md §8.
+
+## Fixtures
+
+[`analysis/fixtures/sample-session-log.json`](../analysis/fixtures/sample-session-log.json) — synthetic session-log data demonstrating three user profiles (high-honesty, low-honesty, mixed). Used for analyzer development and as a worked example of the runtime data shape.
+
 ## Future scripts
 
 - `validate-inventory.py` — once inventory schemas are authored, parallel script for inventory files
-- `analyze.py` (or `.R`) — the scoring-spec analyzer; out-of-scope for MVP-1 content validation, in-scope when the validation cohort produces data
-- `seed-fixtures.py` — generate synthetic session-log entries for testing the eventual scenario engine
+- A full validation-cohort analyzer (Python or R) when the cohort produces data. Will use `analyze.py` as a starting point and add inventory scoring, gap computation, bootstrap CIs, CFA.
+- `seed-fixtures.py` — programmatic synthesis of session-log entries for stress-testing the scenario engine
 
 Each script should be self-contained, minimally-dependent, and runnable from repo root.
