@@ -33,9 +33,9 @@ The MVP scopes 4 domains; sample scenarios so far:
 | Truth-telling under cost | `qf-truth-001`, `qf-truth-003` ✓ | `narr-truth-002`, `narr-truth-004` ✓ | `cov-truth-001`, `cov-truth-002` ✓ | ~12 total |
 | Resource allocation | `qf-allocation-001`, `qf-allocation-003` ✓ | `narr-allocation-002`, `narr-allocation-004` ✓ | `cov-allocation-001`, `cov-allocation-002` ✓ (both inverted) | ~12 total |
 | In-group / out-group | `qf-ingroup-001`, `qf-ingroup-003` ✓ | `narr-ingroup-002`, `narr-ingroup-004` ✓ | `cov-ingroup-001`, `cov-ingroup-002` ✓ | ~12 total |
-| Reciprocity / cooperation | `qf-reciprocity-001`, `qf-reciprocity-003` ✓ | `narr-reciprocity-002` ✓ | `cov-reciprocity-001`, `cov-reciprocity-002` ✓ (inverted) | ~12 total |
+| Reciprocity / cooperation | `qf-reciprocity-001`, `qf-reciprocity-003` ✓ | `narr-reciprocity-002`, `narr-reciprocity-004` ✓ | `cov-reciprocity-001`, `cov-reciprocity-002` ✓ (inverted) | ~12 total |
 
-All 4 domains have 2 quick-fires + 1 narrative + 2 cost-of-virtue probes = 20 scenarios of ~48 target. Symmetric 5-per-domain coverage. Scale-up authoring pattern is well-established. Remaining: ~28 more scenarios (2nd narratives per domain are the highest-value gap; additional quick-fires and cost-of-virtue probes fill in coverage). Realistically 3–4 weeks of focused authoring once committed.
+All 4 domains have 2 quick-fires + 2 narratives + 2 cost-of-virtue probes = **24 scenarios of ~48 target — exactly half of MVP-1's full corpus, with full structural symmetry at 6-per-domain**. Scale-up authoring pattern well-established. Remaining: ~24 more scenarios to fill out the 12-per-domain target. Realistically ~3 weeks of focused authoring from this point.
 
 Setting diversity across narratives:
 - `narr-truth-002` — workplace happy hour (peer-to-peer)
@@ -45,6 +45,7 @@ Setting diversity across narratives:
 - `narr-ingroup-002` — residential community / neighborhood
 - `narr-ingroup-004` — workplace team factionalism (strategic-decision split between social-in-group and technical-judgment positions)
 - `narr-reciprocity-002` — creative collaboration / podcast partnership (long-running friendship)
+- `narr-reciprocity-004` — long-term sibling reciprocity (15+ year mutual-help arc; multi-month stay-with-you ask)
 
 ## Open authorship questions
 

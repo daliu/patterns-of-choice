@@ -151,6 +151,7 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,counterparty:stranger-known,,counterparty stratifier (recurring stranger encounter)
 *,metadata,stake:medium-financial,,stake stratifier (medium financial cost)
 *,metadata,stake:high-financial,,stake stratifier (large financial cost)
+*,metadata,boundaries-held,,resolution descriptor (user maintained a stated boundary)
 *,metadata,stake:high-social,,stake stratifier (high social cost)
 *,metadata,value:self_reliance:projected,,multi-segment tag — value:self_reliance with projected modifier; treat as metadata since the base value:self_reliance already scores
 *,metadata,value:loyalty:community,,multi-segment tag — value:loyalty with community scope; treat as metadata since value:loyalty already in cross-domain metadata

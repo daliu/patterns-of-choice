@@ -1,0 +1,99 @@
+{
+  "id": "narr-reciprocity-004",
+  "type": "core-narrative",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "The visit",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Second narrative for reciprocity. narr-reciprocity-002 covered a creative-collaboration friendship with a sympathetic backstory; this covers long-term family reciprocity — a sibling who helped you significantly in your youth and has, over decades, become the one asking. The deep history (15+ years of mutual-help arc) is the key texture this narrative captures and the single-evening or short-window narratives can't. Three decisions across months mirroring narr-truth-004 and narr-allocation-004.",
+    "domain_anchor": "Cropanzano & Mitchell social-exchange theory; Mauss 1925 The Gift on long-cycle reciprocity in close relationships; Pillemer et al. on intergenerational ambivalence (extended to sibling-of-origin context); Roberts-Hellberg-Lüscher on family solidarity-ambivalence.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["family financial dynamics", "long-term debt-of-gratitude themes"]
+  },
+  "setup": "When you were in college, your older sibling carried you through a rough patch — emotional support during a bad breakup, money you never quite paid back, a cross-country drive to help you move. You've never forgotten.\n\nOver the past fifteen years, the mutual help has continued in both directions, but the balance has shifted. Your sibling has had a series of harder periods — job changes, health, relationship endings. You've been the one helping more recently. They've thanked you each time, but the rhythm is no longer balanced.\n\nNow they're calling with another ask. They'd like to come stay with you for a few months — three, maybe four — while figuring out the next job. They've thought it through; they have a rough plan; they need a stable place to work from while they execute it.\n\nYou can technically host them. It would be a real commitment.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "How do you respond?",
+      "choices": [
+        { "id": "c1", "text": "Yes, of course. They were there for you when it mattered.", "next": "scene-2-yes-warm", "tags": ["forgiveness", "loyalty", "counterparty:family-of-origin", "stake:high-emotional", "value:loyalty", "value:forgiveness"] },
+        { "id": "c2", "text": "Yes, but acknowledge the pattern: \"I want to do this, and I also want to be honest that the help has gone one direction for a while. Can we talk about that?\"", "next": "scene-2-yes-honest", "tags": ["truth:confront-mild", "cooperation", "counterparty:close", "stake:medium-emotional", "value:honesty", "value:fairness"] },
+        { "id": "c3", "text": "Conditional yes — set a clear timeline (e.g. 90 days) and ask them to commit to specific milestones.", "next": "scene-2-yes-bounded", "tags": ["truth:soft-confront", "vigilance", "counterparty:close", "stake:medium-emotional", "value:vigilance", "value:fairness"] },
+        { "id": "c4", "text": "No, suggest alternatives: a co-living arrangement, financial help with a short-term rental, networking introductions.", "next": "scene-2-no-help", "tags": ["truth:state", "boundaries", "counterparty:close", "stake:high-emotional", "value:boundaries", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "scene-2-yes-warm",
+      "text": "They move in. The first few weeks are warm. They cook a few times, take out the trash, share the rent on groceries. Two months in, the pattern you half-expected has settled in: they're working on the job transition slowly, you're absorbing the larger share of household costs and emotional attention. They thank you in small ways but haven't proposed any structural change.",
+      "choices": [
+        { "id": "c1", "text": "Bring up the pattern directly: \"I love having you here. I also want us to talk about how this is working.\"", "next": "scene-3-warm-then-truth", "tags": ["truth:deferred-confront", "counterparty:close", "stake:medium-emotional", "value:honesty"] },
+        { "id": "c2", "text": "Keep absorbing. It's only a few more months; they're family; the help they gave you was unconditional and so is yours.", "next": "scene-3-warm-then-absorb", "tags": ["forgiveness", "generosity", "counterparty:close", "stake:medium-emotional", "value:generosity", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "scene-2-yes-honest",
+      "text": "They listen, briefly hurt. They acknowledge the pattern — they've felt it too. They say they're not sure how to make it more even given where they are. The conversation ends with both of you agreeing to talk again as the stay unfolds. They move in. Two months in, the practical dynamic is what you expected, but the talking-about-it part is happening — small check-ins, an acknowledgment when they cover groceries.",
+      "choices": [
+        { "id": "c1", "text": "Propose specifics: \"After you land the job, what would help me feel like this is mutual? Could be money, could be specific commitments going forward.\"", "next": "scene-3-honest-then-specific", "tags": ["truth:commission", "fairness", "counterparty:close", "stake:medium-emotional", "value:fairness", "value:honesty"] },
+        { "id": "c2", "text": "Let the open conversation be enough. The acknowledgment changed the texture; you don't need formal restructuring.", "next": "scene-3-honest-then-open", "tags": ["trust", "forgiveness", "counterparty:close", "stake:low-emotional", "value:trust", "value:forgiveness"] }
+      ]
+    },
+    {
+      "id": "scene-2-yes-bounded",
+      "text": "They agree to the 90-day timeline and the milestones. The structure helps — they treat the visit as a sprint rather than open-ended. At day 60, they're slightly behind on the milestones. They mention it casually; you can extend or hold the line.",
+      "choices": [
+        { "id": "c1", "text": "Hold the line at 90 days. The structure was the point; if they need more time, they should figure out a separate arrangement.", "next": "scene-3-bounded-hold", "tags": ["vigilance", "boundaries", "counterparty:close", "stake:medium-emotional", "value:vigilance", "value:boundaries"] },
+        { "id": "c2", "text": "Extend to 120 days with a renegotiated milestone schedule. The structure works; it just needs an honest update.", "next": "scene-3-bounded-extend", "tags": ["cooperation", "forgiveness", "fairness", "counterparty:close", "stake:medium-emotional", "value:cooperation", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "scene-2-no-help",
+      "text": "They take it harder than you anticipated. The conversation is brief and stiff. Over the next two weeks they find a short-term rental that you help fund. Over the next two months they work through the job transition, slowly at first and faster as it gains traction. Six months in, they've landed something. They thank you for the practical help and for being honest about the boundary. The relationship is intact but slightly more formal than it was.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "boundaries-held", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-warm-then-truth",
+      "text": "They're caught off-guard but they hear you. The conversation is harder than you wanted but better than the unspoken accumulation. They propose covering a larger share of household costs for the rest of the stay; they make it a real effort. By the end of their stay, the relationship has been re-leveled by the explicit conversation rather than slipping further into asymmetry.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-3-warm-then-absorb",
+      "text": "They stay four months instead of three. They land a job, thank you warmly, leave. They don't bring up the asymmetry; you don't bring it up. Two years later, when they call about something else entirely, you find yourself noticing a small reluctance you didn't have before. The relationship is intact; some part of the mutual-help arc has shifted in a way that doesn't have a name yet.",
+      "terminal": true,
+      "tags": ["resolution:quiet-burn", "moral-residue", "self-cost:money"]
+    },
+    {
+      "id": "scene-3-honest-then-specific",
+      "text": "They propose a concrete commitment: monthly contributions for a year after they land the job, plus making explicit space to be the helper next time you need it. The agreement isn't airtight — life will be life — but the framework is mutual. They follow through on roughly two-thirds of the contributions; you let the rest go. The relationship deepens through the explicit structure.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-honest-then-open",
+      "text": "The open framing carries through the rest of the stay. They cover groceries more often; they offer small gestures of acknowledgment. There's no formal restructuring but the relationship feels balanced in conversation even if the practical asymmetry persists. When they leave, you feel okay about it. You're not sure whether you should have asked for more concrete reciprocity; you decide to let it sit.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-bounded-hold",
+      "text": "Holding the line is hard but they respect it. They find a short-term rental nearby for the remaining time; they land the job at day 105. They thank you for the structure — they tell you the deadline pressure was useful, even though they were briefly hurt at the time. The relationship is intact and a bit more grown-up than it was.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-3-bounded-extend",
+      "text": "The extension works. They land the job at day 110. The renegotiation was small but real — both of you treated the structure as something you both maintained rather than something you imposed. The relationship comes out stronger; the explicit-but-flexible framework feels sustainable for future episodes if they happen.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "speed_vs_deliberation"
+  ]
+}
