@@ -9,6 +9,7 @@ Operational documents needed to actually run the n=10 usability/calibration pilo
 - [`weekly-interview-script.md`](weekly-interview-script.md) — 30-minute semi-structured weekly check-in template, with 4 week-specific question variants per pilot-protocol.md §4 (Week 1: candor reaction; Week 2: noticing daily decisions; Week 3: pre-reveal expectations; Week 4: post-reveal findings).
 - [`exit-interview-script.md`](exit-interview-script.md) — 45-minute structured exit interview across 5 sections (usability / scenario interpretability / honesty-of-self-reporting / wellbeing / open). Most-leveraged single conversation per participant.
 - [`informant-recruitment.md`](informant-recruitment.md) — week-4 opt-in informant wave operationalized: participant opt-in copy, informant invitation email, separate informant consent screen, HEXACO-60 instrument anchor, follow-up cadence, data-handling specifics, target metrics.
+- [`data-handling-policy.md`](data-handling-policy.md) — internal-facing technical and procedural backing for the consent form's data-handling commitments: storage / encryption / access controls / deletion process / verification / audit / edge cases.
 
 ## Open
 
@@ -26,5 +27,5 @@ Approximate timeline from "co-PI identified" to "recruitment open": 8-12 weeks, 
 
 To be added when authored:
 
-- `data-handling-policy.md` — what happens to pilot data after the pilot ends, in more operational detail than the consent form (encryption-at-rest specifics, key custody, backup retention, deletion-verification protocol)
-- `scenario-editorial-review-queue.md` — running list of scenarios flagged for editorial review based on weekly + exit interview feedback (populated during pilot)
+- `scenario-editorial-review-queue.md` — running list of scenarios flagged for editorial review based on weekly + exit interview feedback (populated during the pilot run itself, so authored at pilot-start, not now)
+- `irb-application-template.md` — the actual IRB submission package; depends on the institutional IRB's specific format requirements (varies substantially across institutions) and so is best authored at the moment a specific co-PI is recruited
