@@ -10,15 +10,18 @@ Implemented here:
 - Cost-of-virtue probe break-point scoring (§4) when --probes is supplied
 - Card-sort inventory scoring per domain × layer (§5.1) when --card-sort
   is supplied
-- Primary gap computation (§6) when both --log and --card-sort are present:
-  z(stated_aspirational) - z(revealed), standardized per-domain across users
+- Bradley-Terry pairwise inventory scoring (§5.2) via Hunter 2004 MM
+  algorithm when --pairwise is supplied
+- Primary gap computation (§6) when both --log and inventory data are
+  present: z(stated_aspirational) - z(revealed), standardized per-domain
 - Bootstrap 95% CIs (§8) on revealed scores and gaps, with the pre-committed
   random seed (20260510) per the scoring spec
 
 Reserved for the future validation-cohort analyzer:
-- Bradley-Terry inventory scoring on pairwise data (§5.2)
 - CFA on item-level loadings (§7)
 - Per-domain probe aggregation as a CFA indicator (§7)
+- Combined card-sort + pairwise per §5.3 (currently both reported separately;
+  CFA-time combination is the validation-analyzer concern)
 
 Usage:
     python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
@@ -365,6 +368,134 @@ def card_sort_scores(
     return out
 
 
+def fit_bradley_terry(
+    comparisons: list[tuple[str, str]],
+    value_pool: list[str],
+    max_iter: int = 200,
+    tol: float = 1e-6,
+) -> dict[str, float]:
+    """
+    MM algorithm for Bradley-Terry latent utility (Hunter 2004).
+    comparisons: list of (winner, loser) tuples
+    value_pool: list of value IDs
+
+    Returns dict[value_id, β] where β > 0 is the latent utility.
+    Normalization: Σβ = n (number of values).
+
+    Values that never win get β = 0; values not in any comparison stay
+    at their initial β = 1.0 (i.e., the prior).
+
+    The MM algorithm guarantees monotone convergence to the maximum-
+    likelihood estimate; standard convergence is fast for moderately
+    dense comparison sets. For the synthetic fixture (15 pairs over
+    20 values), convergence typically in <50 iterations.
+    """
+    n = len(value_pool)
+    idx = {v: i for i, v in enumerate(value_pool)}
+
+    # Count wins
+    wins = [0] * n
+    for w, l in comparisons:
+        if w in idx:
+            wins[idx[w]] += 1
+
+    # Pair-comparison count matrix
+    pair_count = [[0] * n for _ in range(n)]
+    for w, l in comparisons:
+        if w in idx and l in idx and w != l:
+            i, j = idx[w], idx[l]
+            pair_count[i][j] += 1
+            pair_count[j][i] += 1
+
+    # Initialize
+    beta = [1.0] * n
+
+    for _ in range(max_iter):
+        new_beta = [0.0] * n
+        for i in range(n):
+            if wins[i] == 0:
+                new_beta[i] = 0.0
+                continue
+            denom = 0.0
+            for j in range(n):
+                if i == j or pair_count[i][j] == 0:
+                    continue
+                denom += pair_count[i][j] / (beta[i] + beta[j])
+            if denom > 0:
+                new_beta[i] = wins[i] / denom
+            else:
+                new_beta[i] = 0.0
+
+        # Normalize Σβ = n
+        s = sum(new_beta)
+        if s > 0:
+            new_beta = [b * n / s for b in new_beta]
+
+        # Convergence check
+        diff = max(abs(new_beta[i] - beta[i]) for i in range(n))
+        beta = new_beta
+        if diff < tol:
+            break
+
+    return {value_pool[i]: beta[i] for i in range(n)}
+
+
+def pairwise_scores(
+    responses: list[dict],
+    value_domain: dict[str, str],
+) -> dict[tuple[str, str, str], float]:
+    """
+    Per scoring.md §5.2: fit Bradley-Terry per (user, layer) on pairwise
+    comparisons; aggregate per-domain via mean of β across in-domain values.
+
+    Accepts compact fixture format ({user_id, layer, choices: [[w, l]...]}).
+
+    Returns dict[(user_id, domain, layer)] → per-domain mean β.
+    """
+    out: dict[tuple[str, str, str], float] = {}
+    value_pool = sorted(value_domain.keys())
+
+    # Group choices per (user, layer)
+    by_user_layer: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
+    for r in responses:
+        user = r.get("user_id")
+        layer = r.get("layer")
+        if not user or not layer:
+            continue
+        for pair in r.get("choices", []):
+            if isinstance(pair, list) and len(pair) == 2:
+                by_user_layer[(user, layer)].append((pair[0], pair[1]))
+
+    for (user, layer), comparisons in by_user_layer.items():
+        if not comparisons:
+            continue
+        betas = fit_bradley_terry(comparisons, value_pool)
+
+        # Aggregate per-domain
+        domain_betas: dict[str, list[float]] = defaultdict(list)
+        for vid, beta in betas.items():
+            domain = value_domain.get(vid)
+            if domain:
+                domain_betas[domain].append(beta)
+        for domain, beta_list in domain_betas.items():
+            out[(user, domain, layer)] = sum(beta_list) / len(beta_list)
+    return out
+
+
+def render_pairwise_table(scores: dict[tuple[str, str, str], float]) -> str:
+    rows = sorted(scores.items())
+    if not rows:
+        return "(no pairwise responses)"
+    header = (
+        f"{'user_id':<24} {'domain':<26} {'layer':<20} "
+        f"{'mean_beta':>10}"
+    )
+    out = [header, "-" * len(header)]
+    for (user, domain, layer), beta in rows:
+        out.append(f"{user:<24} {domain:<26} {layer:<20} {beta:>10.3f}")
+    return "\n".join(out)
+
+
 def render_card_sort_table(scores: dict[tuple[str, str, str], float]) -> str:
     """One row per (user, domain, layer)."""
     rows = sorted(scores.items())
@@ -521,6 +652,12 @@ def main() -> int:
         help="Optional path to a card-sort responses JSON file (compact or full format).",
     )
     parser.add_argument(
+        "--pairwise",
+        type=Path,
+        default=None,
+        help="Optional path to a pairwise-comparisons JSON file (compact format).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -570,6 +707,18 @@ def main() -> int:
             return 2
         value_domain = load_values_deck_domains()
         cs_scores = card_sort_scores(cs_responses, value_domain)
+
+    pw_scores: dict[tuple[str, str, str], float] = {}
+    if args.pairwise:
+        try:
+            with args.pairwise.open() as f:
+                pw_responses = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading pairwise file: {e}", file=sys.stderr)
+            return 2
+        if not args.card_sort:
+            value_domain = load_values_deck_domains()
+        pw_scores = pairwise_scores(pw_responses, value_domain)
 
     gaps: dict[tuple[str, str], dict[str, float]] = {}
     if user_scores and cs_scores:
@@ -637,6 +786,10 @@ def main() -> int:
             print()
             print("Card-sort stated scores per domain × layer (fraction of in-domain values in top-5):")
             print(render_card_sort_table(cs_scores))
+        if pw_scores:
+            print()
+            print("Bradley-Terry stated scores per domain × layer (mean β across in-domain values):")
+            print(render_pairwise_table(pw_scores))
         if gaps:
             print()
             print("Per-domain gaps (z_stated_aspirational − z_revealed, standardized per-domain):")

@@ -1,0 +1,193 @@
+[
+  {
+    "user_id": "user-alice",
+    "layer": "current_self",
+    "choices": [
+      ["honesty", "tact"],
+      ["honesty", "discretion"],
+      ["transparency", "discretion"],
+      ["authenticity", "tact"],
+      ["honesty", "loyalty"],
+      ["transparency", "loyalty"],
+      ["fairness", "loyalty"],
+      ["generosity", "self_reliance"],
+      ["need_sensitivity", "reciprocity_pure"],
+      ["fairness", "particularism"],
+      ["universalism", "loyalty"],
+      ["trust", "vigilance"],
+      ["forgiveness", "vigilance"],
+      ["cooperation", "independence"],
+      ["honesty", "vigilance"]
+    ]
+  },
+  {
+    "user_id": "user-alice",
+    "layer": "aspirational_self",
+    "choices": [
+      ["honesty", "tact"],
+      ["honesty", "discretion"],
+      ["authenticity", "tact"],
+      ["transparency", "discretion"],
+      ["honesty", "loyalty"],
+      ["universalism", "loyalty"],
+      ["generosity", "self_reliance"],
+      ["need_sensitivity", "self_reliance"],
+      ["fairness", "particularism"],
+      ["trust", "vigilance"],
+      ["forgiveness", "vigilance"],
+      ["cooperation", "independence"],
+      ["hospitality", "boundaries"],
+      ["transparency", "loyalty"],
+      ["honesty", "vigilance"]
+    ]
+  },
+  {
+    "user_id": "user-alice",
+    "layer": "admired_other",
+    "choices": [
+      ["honesty", "tact"],
+      ["transparency", "discretion"],
+      ["authenticity", "tact"],
+      ["fairness", "generosity"],
+      ["fairness", "loyalty"],
+      ["universalism", "particularism"],
+      ["need_sensitivity", "reciprocity_pure"],
+      ["trust", "vigilance"],
+      ["forgiveness", "vigilance"],
+      ["cooperation", "independence"],
+      ["honesty", "loyalty"],
+      ["hospitality", "boundaries"],
+      ["transparency", "loyalty"],
+      ["generosity", "self_reliance"],
+      ["fairness", "particularism"]
+    ]
+  },
+
+  {
+    "user_id": "user-bob",
+    "layer": "current_self",
+    "choices": [
+      ["tact", "honesty"],
+      ["discretion", "honesty"],
+      ["discretion", "transparency"],
+      ["self_reliance", "generosity"],
+      ["self_reliance", "need_sensitivity"],
+      ["reciprocity_pure", "need_sensitivity"],
+      ["vigilance", "trust"],
+      ["vigilance", "forgiveness"],
+      ["independence", "cooperation"],
+      ["boundaries", "hospitality"],
+      ["loyalty", "universalism"],
+      ["particularism", "universalism"],
+      ["self_reliance", "loyalty"],
+      ["independence", "loyalty"],
+      ["discretion", "authenticity"]
+    ]
+  },
+  {
+    "user_id": "user-bob",
+    "layer": "aspirational_self",
+    "choices": [
+      ["honesty", "tact"],
+      ["self_reliance", "generosity"],
+      ["self_reliance", "need_sensitivity"],
+      ["vigilance", "trust"],
+      ["independence", "cooperation"],
+      ["loyalty", "universalism"],
+      ["honesty", "discretion"],
+      ["boundaries", "hospitality"],
+      ["fairness", "particularism"],
+      ["reciprocity_pure", "need_sensitivity"],
+      ["authenticity", "tact"],
+      ["forgiveness", "vigilance"],
+      ["cooperation", "independence"],
+      ["honesty", "loyalty"],
+      ["particularism", "universalism"]
+    ]
+  },
+  {
+    "user_id": "user-bob",
+    "layer": "admired_other",
+    "choices": [
+      ["self_reliance", "generosity"],
+      ["independence", "cooperation"],
+      ["vigilance", "trust"],
+      ["discretion", "transparency"],
+      ["boundaries", "hospitality"],
+      ["self_reliance", "loyalty"],
+      ["fairness", "generosity"],
+      ["honesty", "tact"],
+      ["particularism", "universalism"],
+      ["loyalty", "hospitality"],
+      ["independence", "loyalty"],
+      ["reciprocity_pure", "need_sensitivity"],
+      ["vigilance", "forgiveness"],
+      ["fairness", "loyalty"],
+      ["discretion", "authenticity"]
+    ]
+  },
+
+  {
+    "user_id": "user-carla",
+    "layer": "current_self",
+    "choices": [
+      ["tact", "honesty"],
+      ["loyalty", "universalism"],
+      ["particularism", "universalism"],
+      ["cooperation", "independence"],
+      ["forgiveness", "vigilance"],
+      ["loyalty", "fairness"],
+      ["tact", "authenticity"],
+      ["generosity", "fairness"],
+      ["need_sensitivity", "fairness"],
+      ["loyalty", "honesty"],
+      ["hospitality", "boundaries"],
+      ["trust", "vigilance"],
+      ["generosity", "self_reliance"],
+      ["cooperation", "vigilance"],
+      ["particularism", "boundaries"]
+    ]
+  },
+  {
+    "user_id": "user-carla",
+    "layer": "aspirational_self",
+    "choices": [
+      ["honesty", "tact"],
+      ["universalism", "loyalty"],
+      ["fairness", "particularism"],
+      ["honesty", "loyalty"],
+      ["cooperation", "vigilance"],
+      ["forgiveness", "vigilance"],
+      ["transparency", "discretion"],
+      ["authenticity", "tact"],
+      ["fairness", "generosity"],
+      ["hospitality", "boundaries"],
+      ["trust", "vigilance"],
+      ["universalism", "particularism"],
+      ["generosity", "self_reliance"],
+      ["need_sensitivity", "reciprocity_pure"],
+      ["honesty", "discretion"]
+    ]
+  },
+  {
+    "user_id": "user-carla",
+    "layer": "admired_other",
+    "choices": [
+      ["honesty", "tact"],
+      ["fairness", "loyalty"],
+      ["universalism", "particularism"],
+      ["cooperation", "independence"],
+      ["forgiveness", "vigilance"],
+      ["transparency", "discretion"],
+      ["hospitality", "boundaries"],
+      ["trust", "vigilance"],
+      ["generosity", "self_reliance"],
+      ["authenticity", "tact"],
+      ["fairness", "generosity"],
+      ["need_sensitivity", "reciprocity_pure"],
+      ["honesty", "loyalty"],
+      ["universalism", "loyalty"],
+      ["cooperation", "vigilance"]
+    ]
+  }
+]
