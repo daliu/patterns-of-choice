@@ -1,0 +1,65 @@
+{
+  "id": "qf-reciprocity-009",
+  "type": "quick-fire-round",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Pay-it-forward",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Fifth reciprocity quick-fire. Where prior rounds covered trust-vs-vigilance basics (qf-001), pattern-vs-moment tension (qf-003), asymmetric reciprocity (qf-005), and commitment-keeping (qf-007), this round focuses on help-you-received-that-can't-be-repaid-to-its-source. The reciprocity isn't to the original giver; it's forward to someone else who occupies the position you used to occupy. Tests whether the user feels the obligation generationally / generally, or whether reciprocity is strictly bilateral.",
+    "domain_anchor": "Pleasant & Barclay on pay-it-forward generosity. Gouldner 1960 norm-of-reciprocity work (the generalized variant). The 'social capital across generations' framing from Putnam's Bowling Alone. Pay-it-forward studies show the behavior is real but smaller in magnitude than reciprocal direct repayment.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-reciprocity-009-i01",
+      "prompt": "Someone mentored you generously early in your career. They've since retired and you've lost touch. A junior person at your work is now where you were. Helping them would mean substantial time you don't have to spare.",
+      "options": [
+        { "id": "a", "text": "Make the time. The original mentorship can't be repaid; passing it on is the closest you get.", "tags": ["generosity", "particularism", "counterparty:subordinate", "stake:medium-time", "value:generosity", "value:cooperation"] },
+        { "id": "b", "text": "Decline or defer. You have less capacity than your mentor did; honoring that limit doesn't dishonor the original gift.", "tags": ["boundaries", "self_reliance", "counterparty:subordinate", "stake:medium-time", "value:boundaries", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-009-i02",
+      "prompt": "Your parents helped you financially through a tight stretch years ago. They never expected repayment. A friend's adult child is in a similar stretch now and your friend mentions it in passing.",
+      "options": [
+        { "id": "a", "text": "Offer financial help to the friend's adult child, even though there's no direct obligation.", "tags": ["generosity", "need_sensitivity", "counterparty:close-distant", "stake:medium-financial", "value:generosity", "value:hospitality"] },
+        { "id": "b", "text": "Don't volunteer. The original generosity from your parents was their relationship with you, not an obligation to broadcast.", "tags": ["boundaries", "discretion", "counterparty:close-distant", "stake:low-financial", "value:boundaries", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-009-i03",
+      "prompt": "A teacher made a substantial difference in your life. They've passed away. You learn about a fundraising effort for a memorial — modest, optional, in their name.",
+      "options": [
+        { "id": "a", "text": "Contribute meaningfully. The reciprocity is symbolic but the gesture is real.", "tags": ["reciprocity_pure", "generosity", "counterparty:community", "stake:low-financial", "value:reciprocity_pure", "value:loyalty"] },
+        { "id": "b", "text": "Pass. Carry the gratitude in how you teach others; that's the more durable repayment.", "tags": ["truth:state", "boundaries", "counterparty:community", "stake:low-financial", "value:authenticity", "value:cooperation"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-009-i04",
+      "prompt": "A community supported you during a vulnerable stretch — you've since moved away. Someone in your current community is now in a similar vulnerable stretch and isn't reaching out for help.",
+      "options": [
+        { "id": "a", "text": "Reach out to them proactively, offer what you wish someone had offered you.", "tags": ["generosity", "need_sensitivity", "counterparty:community", "stake:medium-time", "value:generosity", "value:hospitality"] },
+        { "id": "b", "text": "Respect their non-reaching-out. People in vulnerable stretches often want to be left alone; you can be available without imposing.", "tags": ["boundaries", "trust", "counterparty:community", "stake:low-time", "value:boundaries", "value:trust"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-009-i05",
+      "prompt": "Someone helped you across a cultural / institutional gap when you arrived somewhere new (a host country, a host workplace). You're now well-established. Someone new is arriving and needs the same kind of help.",
+      "options": [
+        { "id": "a", "text": "Make the time, even if the newcomer isn't in your direct social or professional circle.", "tags": ["hospitality", "universalism", "counterparty:stranger", "stake:medium-time", "value:hospitality", "value:universalism"] },
+        { "id": "b", "text": "Help if asked. You don't need to seek out newcomers to help; the original helper is admirable but not a template.", "tags": ["trust", "boundaries", "counterparty:stranger", "stake:low-time", "value:boundaries", "value:trust"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-009-i06",
+      "prompt": "An older relative who's now in declining health was generous with their time when you were young. Visiting them takes effort but they remember less of each visit. Your time is otherwise constrained.",
+      "options": [
+        { "id": "a", "text": "Visit regularly anyway. The reciprocity is for who they were, not who they are now.", "tags": ["loyalty", "particularism", "counterparty:family-of-origin", "stake:medium-time", "value:loyalty", "value:particularism"] },
+        { "id": "b", "text": "Visit when you can but don't over-commit. The original generosity didn't create an obligation that has to be fully repaid in kind.", "tags": ["boundaries", "self_reliance", "counterparty:family-of-origin", "stake:low-time", "value:boundaries", "value:authenticity"] }
+      ]
+    }
+  ]
+}

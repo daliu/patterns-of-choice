@@ -152,6 +152,7 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,counterparty:peer-out-team,,counterparty stratifier (workplace peer in different team)
 *,metadata,counterparty:stranger-foreign,,counterparty stratifier (stranger in different cultural context)
 *,metadata,counterparty:stranger-known,,counterparty stratifier (recurring stranger encounter)
+*,metadata,counterparty:close-distant,,counterparty stratifier (close-to-someone-close-to-you; one-off relational distance via intermediary)
 *,metadata,stake:medium-financial,,stake stratifier (medium financial cost)
 *,metadata,stake:high-financial,,stake stratifier (large financial cost)
 *,metadata,stake:low-financial,,stake stratifier (small financial cost)
