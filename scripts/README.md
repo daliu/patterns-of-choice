@@ -66,7 +66,7 @@ The workflow can be deleted without affecting the validator itself — `scripts/
 
 ## `analyze.py` — minimal scoring-spec analyzer
 
-Implements scoring.md §2-3 (revealed scores), §4 (cost-of-virtue probe scoring), §5.1 (card-sort inventory scoring). Reserved for the future validation-cohort analyzer: Bradley-Terry pairwise inventory scoring (§5.2), gap computation (§6), bootstrap CIs (§8), CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
+Implements scoring.md §2-3 (revealed scores), §4 (cost-of-virtue probe scoring), §5.1 (card-sort inventory scoring), §6 (primary gap = z(stated_aspirational) − z(revealed), per-domain standardized). Reserved for the future validation-cohort analyzer: Bradley-Terry pairwise inventory scoring (§5.2), bootstrap CIs (§8), CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
 
 ```sh
 # Revealed scores only

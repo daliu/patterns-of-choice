@@ -10,10 +10,11 @@ Implemented here:
 - Cost-of-virtue probe break-point scoring (§4) when --probes is supplied
 - Card-sort inventory scoring per domain × layer (§5.1) when --card-sort
   is supplied
+- Primary gap computation (§6) when both --log and --card-sort are present:
+  z(stated_aspirational) - z(revealed), standardized per-domain across users
 
 Reserved for the future validation-cohort analyzer:
 - Bradley-Terry inventory scoring on pairwise data (§5.2)
-- Gap computation (§6)
 - Bootstrap CIs (§8)
 - CFA on item-level loadings (§7)
 - Per-domain probe aggregation as a CFA indicator (§7)
@@ -319,6 +320,97 @@ def render_card_sort_table(scores: dict[tuple[str, str, str], float]) -> str:
     return "\n".join(out)
 
 
+def _standardize_per_domain(
+    domain_user_values: dict[str, list[tuple[str, float]]],
+) -> dict[tuple[str, str], float]:
+    """
+    Per-domain sample z-score: for each domain, compute mean and SD across
+    users, then z-score each user's value. Returns {(user, domain): z}.
+    Degenerate samples (< 2 users) are skipped (no z-score computable).
+    """
+    out: dict[tuple[str, str], float] = {}
+    for domain, user_values in domain_user_values.items():
+        if len(user_values) < 2:
+            continue
+        vals = [v for _, v in user_values]
+        n = len(vals)
+        mean = sum(vals) / n
+        var = sum((v - mean) ** 2 for v in vals) / (n - 1)
+        sd = var ** 0.5
+        if sd == 0:
+            continue
+        for user, v in user_values:
+            out[(user, domain)] = (v - mean) / sd
+    return out
+
+
+def compute_gaps(
+    revealed_means: dict[tuple[str, str], dict[str, Any]],
+    card_sort_scores: dict[tuple[str, str, str], float],
+    layer: str = "aspirational_self",
+) -> dict[tuple[str, str], dict[str, float]]:
+    """
+    Primary gap per scoring.md §6:
+      gap(user, d) = z(stated_aspirational(user, d)) - z(revealed(user, d))
+
+    Both terms standardized per-domain across users in the sample. Positive
+    gap = user aspires higher than their revealed behavior; negative = user
+    reveals more virtue than they claim.
+
+    Requires ≥ 2 users per domain to compute a within-domain z-score. The
+    full validation-cohort analyzer would use bootstrap CIs (§8); here we
+    return only the point estimate.
+    """
+    # Filter card-sort to just the target layer
+    aspirational = {
+        (u, d): score
+        for (u, d, l), score in card_sort_scores.items()
+        if l == layer
+    }
+
+    # Find (user, domain) pairs that have BOTH revealed and stated
+    revealed_keys = set(revealed_means.keys())
+    stated_keys = set(aspirational.keys())
+    common = sorted(revealed_keys & stated_keys)
+    if not common:
+        return {}
+
+    # Group by domain for standardization
+    revealed_by_domain: dict[str, list[tuple[str, float]]] = defaultdict(list)
+    stated_by_domain: dict[str, list[tuple[str, float]]] = defaultdict(list)
+    for user, domain in common:
+        revealed_by_domain[domain].append((user, revealed_means[(user, domain)]["mean"]))
+        stated_by_domain[domain].append((user, aspirational[(user, domain)]))
+
+    z_revealed = _standardize_per_domain(revealed_by_domain)
+    z_stated = _standardize_per_domain(stated_by_domain)
+
+    out: dict[tuple[str, str], dict[str, float]] = {}
+    for key in common:
+        if key not in z_revealed or key not in z_stated:
+            continue
+        out[key] = {
+            "z_revealed": z_revealed[key],
+            "z_stated_aspirational": z_stated[key],
+            "gap": z_stated[key] - z_revealed[key],
+        }
+    return out
+
+
+def render_gap_table(gaps: dict[tuple[str, str], dict[str, float]]) -> str:
+    rows = sorted(gaps.items())
+    if not rows:
+        return "(no gaps computed — need ≥2 users per domain with both revealed and stated)"
+    header = f"{'user_id':<24} {'domain':<26} {'z_revealed':>10} {'z_stated':>9} {'gap':>7}"
+    out = [header, "-" * len(header)]
+    for (user, domain), g in rows:
+        out.append(
+            f"{user:<24} {domain:<26} {g['z_revealed']:>+10.3f} "
+            f"{g['z_stated_aspirational']:>+9.3f} {g['gap']:>+7.3f}"
+        )
+    return "\n".join(out)
+
+
 def render_probe_table(grouped: dict[tuple[str, str], list[dict[str, Any]]]) -> str:
     """Per-probe break-points per user. Higher log_score = stronger virtue
     (sign-flipped at scoring time for inverted probes)."""
@@ -422,6 +514,10 @@ def main() -> int:
         value_domain = load_values_deck_domains()
         cs_scores = card_sort_scores(cs_responses, value_domain)
 
+    gaps: dict[tuple[str, str], dict[str, float]] = {}
+    if user_scores and cs_scores:
+        gaps = compute_gaps(user_scores, cs_scores)
+
     if args.json:
         out: dict[str, Any] = {
             "revealed_scores": [
@@ -460,6 +556,17 @@ def main() -> int:
                 }
                 for (user, domain, layer), score in sorted(cs_scores.items())
             ]
+        if gaps:
+            out["gaps"] = [
+                {
+                    "user_id": user,
+                    "domain": domain,
+                    "z_revealed": g["z_revealed"],
+                    "z_stated_aspirational": g["z_stated_aspirational"],
+                    "gap": g["gap"],
+                }
+                for (user, domain), g in sorted(gaps.items())
+            ]
         print(json.dumps(out, indent=2))
     else:
         print(render_table(user_scores))
@@ -471,6 +578,10 @@ def main() -> int:
             print()
             print("Card-sort stated scores per domain × layer (fraction of in-domain values in top-5):")
             print(render_card_sort_table(cs_scores))
+        if gaps:
+            print()
+            print("Per-domain gaps (z_stated_aspirational − z_revealed, standardized per-domain):")
+            print(render_gap_table(gaps))
 
     return 0
 
