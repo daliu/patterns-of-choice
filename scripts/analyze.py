@@ -22,6 +22,9 @@ Implemented here:
 - H2 convergent validity (pre-registration.md): Pearson r between revealed
   truth-telling and HEXACO-60 honesty-humility, when --hexaco is supplied,
   with bootstrap 95% CI
+- H4 informant convergent validity (pre-registration.md): same correlation
+  but with averaged informant ratings instead of self-report; when
+  --informant-hexaco is supplied
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7)
@@ -710,39 +713,27 @@ def _bootstrap_ci_r(
     return (rs[lower_idx], rs[min(upper_idx, len(rs) - 1)])
 
 
-def compute_h2_convergent_validity(
+def _correlate_revealed_with_external(
     revealed_means: dict[tuple[str, str], dict[str, Any]],
-    hexaco_data: list[dict],
-    domain: str = "truth-telling",
+    external_by_user: dict[str, float],
+    domain: str,
+    seed_offset: int,
+    threshold_low: float,
 ) -> dict[str, Any] | None:
     """
-    Per pre-registration.md H2: Pearson r between revealed truth-telling
-    and HEXACO honesty-humility (total score). Pre-registered threshold:
-    lower 95% bootstrap CI ≥ 0.15.
+    Generic convergent-validity computation: Pearson r between revealed
+    score in a domain and an external per-user value, plus bootstrap CI
+    against a pre-registered threshold.
 
-    Returns dict with r, ci_low, ci_high, n, pre_registered_threshold_met
-    (boolean), or None if insufficient data.
-
-    Note: with synthetic n=3 fixture data, the result is purely
-    demonstrative — the bootstrap CI will be very wide. The validation-
-    cohort analyzer running on n≈200 would produce a tight enough CI
-    for the pre-registered threshold to be meaningful.
+    Used for both H2 (self-report HEXACO H) and H4 (informant HEXACO H);
+    extensible to H7 (Big-5 neuroticism, discriminant test inverted).
     """
-    # Build HEXACO lookup by user_id
-    hex_by_user: dict[str, float] = {}
-    for entry in hexaco_data:
-        uid = entry.get("user_id")
-        h = entry.get("honesty_humility", {})
-        if uid and isinstance(h, dict) and "total" in h:
-            hex_by_user[uid] = float(h["total"])
-
-    # Pair (revealed truth-telling, HEXACO H)
     xs: list[float] = []
     ys: list[float] = []
     for (user, d), s in revealed_means.items():
-        if d == domain and user in hex_by_user:
+        if d == domain and user in external_by_user:
             xs.append(s["mean"])
-            ys.append(hex_by_user[user])
+            ys.append(external_by_user[user])
 
     if len(xs) < 3:
         return None
@@ -751,7 +742,7 @@ def compute_h2_convergent_validity(
     if r is None:
         return None
 
-    rng = random.Random(BOOTSTRAP_SEED + 1)  # different seed so CI is independent of revealed-CI seed
+    rng = random.Random(BOOTSTRAP_SEED + seed_offset)
     ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
 
     return {
@@ -760,26 +751,77 @@ def compute_h2_convergent_validity(
         "ci_high": ci_high,
         "n": len(xs),
         "pre_registered_threshold_met": (
-            False if ci_low != ci_low else ci_low >= 0.15
+            False if ci_low != ci_low else ci_low >= threshold_low
         ),
-        "pre_registered_target": "lower 95% CI ≥ 0.15 per pre-registration.md H2",
+        "threshold_low": threshold_low,
     }
 
 
-def render_h2_result(result: dict[str, Any] | None) -> str:
+def compute_h2_convergent_validity(
+    revealed_means: dict[tuple[str, str], dict[str, Any]],
+    hexaco_data: list[dict],
+    domain: str = "truth-telling",
+) -> dict[str, Any] | None:
+    """
+    Per pre-registration.md H2: Pearson r between revealed truth-telling
+    and HEXACO honesty-humility self-report (total score). Pre-registered
+    threshold: lower 95% bootstrap CI ≥ 0.15.
+
+    Note: with synthetic n=3 fixture data, the result is purely
+    demonstrative. The validation-cohort analyzer on n≈200 is where the
+    pre-registered threshold becomes a meaningful test.
+    """
+    hex_by_user: dict[str, float] = {}
+    for entry in hexaco_data:
+        uid = entry.get("user_id")
+        h = entry.get("honesty_humility", {})
+        if uid and isinstance(h, dict) and "total" in h:
+            hex_by_user[uid] = float(h["total"])
+    return _correlate_revealed_with_external(
+        revealed_means, hex_by_user, domain, seed_offset=1, threshold_low=0.15
+    )
+
+
+def compute_h4_informant_validity(
+    revealed_means: dict[tuple[str, str], dict[str, Any]],
+    informant_data: list[dict],
+    domain: str = "truth-telling",
+) -> dict[str, Any] | None:
+    """
+    Per pre-registration.md H4: Pearson r between revealed truth-telling
+    and averaged informant HEXACO honesty-humility ratings. Secondary
+    hypothesis; pre-registered threshold (effect-size point estimate)
+    r ≥ 0.20. Reported with effect size + 95% CI rather than NHST.
+
+    Informant ratings are averaged across informants per subject before
+    correlation. Subjects with < 2 informants are still included (per
+    pilot-protocol.md "at least one informant" partial-data tolerance).
+    """
+    # Group informant H by subject_user_id; average across multiple informants
+    informant_h: dict[str, list[float]] = defaultdict(list)
+    for entry in informant_data:
+        uid = entry.get("subject_user_id")
+        h = entry.get("honesty_humility", {})
+        if uid and isinstance(h, dict) and "total" in h:
+            informant_h[uid].append(float(h["total"]))
+    averaged = {uid: sum(vs) / len(vs) for uid, vs in informant_h.items()}
+    return _correlate_revealed_with_external(
+        revealed_means, averaged, domain, seed_offset=2, threshold_low=0.20
+    )
+
+
+def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
-        return "(insufficient data — need ≥3 users with both revealed truth-telling and HEXACO-H)"
+        return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
     ci_str = (
         "nan" if result["ci_low"] != result["ci_low"]
         else f"[{result['ci_low']:+.3f}, {result['ci_high']:+.3f}]"
     )
     threshold_str = "✓" if result["pre_registered_threshold_met"] else "✗"
     return (
-        f"H2 (revealed truth-telling × HEXACO honesty-humility):\n"
+        f"{name}:\n"
         f"  Pearson r = {result['r']:+.3f}, 95% CI {ci_str}, n = {result['n']}\n"
-        f"  Pre-registered threshold (lower 95% CI ≥ 0.15): {threshold_str}\n"
-        f"  Note: with small samples the CI is wide and threshold rarely met;\n"
-        f"  the validation-cohort analyzer on n≈200 is where the test is real."
+        f"  Pre-registered threshold ({threshold_text}): {threshold_str}"
     )
 
 
@@ -862,6 +904,12 @@ def main() -> int:
         help="Optional path to HEXACO-60 H scores per user (for H2 convergent validity).",
     )
     parser.add_argument(
+        "--informant-hexaco",
+        type=Path,
+        default=None,
+        help="Optional path to informant HEXACO-60 H ratings (for H4 informant convergent validity).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -921,6 +969,15 @@ def main() -> int:
             print(f"ERROR loading HEXACO file: {e}", file=sys.stderr)
             return 2
 
+    informant_data: list[dict] = []
+    if args.informant_hexaco:
+        try:
+            with args.informant_hexaco.open() as f:
+                informant_data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading informant-HEXACO file: {e}", file=sys.stderr)
+            return 2
+
     pw_scores: dict[tuple[str, str, str], float] = {}
     if args.pairwise:
         try:
@@ -942,6 +999,11 @@ def main() -> int:
     h2_result: dict[str, Any] | None = None
     if hexaco_data and user_scores:
         h2_result = compute_h2_convergent_validity(user_scores, hexaco_data)
+
+    # H4 informant convergent validity if informant data supplied
+    h4_result: dict[str, Any] | None = None
+    if informant_data and user_scores:
+        h4_result = compute_h4_informant_validity(user_scores, informant_data)
 
     # Pick the best-available stated layer for gap computation
     gaps: dict[tuple[str, str], dict[str, float]] = {}
@@ -1047,7 +1109,22 @@ def main() -> int:
             print(render_gap_table(gaps))
         if h2_result is not None:
             print()
-            print(render_h2_result(h2_result))
+            print(render_correlation_result(
+                "H2 (revealed truth-telling × HEXACO self-report H)",
+                "lower 95% CI ≥ 0.15",
+                h2_result,
+            ))
+            print(
+                "  Note: with synthetic small samples the CI is narrow because\n"
+                "  the fixture data was designed to track. n≈200 is where this is real."
+            )
+        if h4_result is not None:
+            print()
+            print(render_correlation_result(
+                "H4 (revealed truth-telling × averaged informant HEXACO H)",
+                "point estimate r ≥ 0.20",
+                h4_result,
+            ))
 
     return 0
 

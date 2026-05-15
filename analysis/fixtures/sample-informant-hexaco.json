@@ -1,0 +1,72 @@
+[
+  {
+    "informant_id": "alice-informant-partner",
+    "subject_user_id": "user-alice",
+    "informant_role": "romantic_partner",
+    "instrument": "HEXACO-60-informant",
+    "administration_iso": "2026-05-31T18:00:00Z",
+    "honesty_humility": {
+      "total": 4.0,
+      "sincerity": 4.3,
+      "fairness": 4.5,
+      "greed_avoidance": 3.5,
+      "modesty": 3.8
+    }
+  },
+  {
+    "informant_id": "alice-informant-coworker",
+    "subject_user_id": "user-alice",
+    "informant_role": "coworker",
+    "instrument": "HEXACO-60-informant",
+    "administration_iso": "2026-06-02T10:00:00Z",
+    "honesty_humility": {
+      "total": 4.3,
+      "sincerity": 4.5,
+      "fairness": 4.5,
+      "greed_avoidance": 4.0,
+      "modesty": 4.0
+    }
+  },
+  {
+    "informant_id": "bob-informant-partner",
+    "subject_user_id": "user-bob",
+    "informant_role": "romantic_partner",
+    "instrument": "HEXACO-60-informant",
+    "administration_iso": "2026-05-31T19:30:00Z",
+    "honesty_humility": {
+      "total": 2.8,
+      "sincerity": 2.5,
+      "fairness": 2.8,
+      "greed_avoidance": 3.0,
+      "modesty": 2.8
+    }
+  },
+  {
+    "informant_id": "bob-informant-coworker",
+    "subject_user_id": "user-bob",
+    "informant_role": "coworker",
+    "instrument": "HEXACO-60-informant",
+    "administration_iso": "2026-06-02T11:00:00Z",
+    "honesty_humility": {
+      "total": 2.3,
+      "sincerity": 2.0,
+      "fairness": 2.5,
+      "greed_avoidance": 2.5,
+      "modesty": 2.3
+    }
+  },
+  {
+    "informant_id": "carla-informant-partner",
+    "subject_user_id": "user-carla",
+    "informant_role": "romantic_partner",
+    "instrument": "HEXACO-60-informant",
+    "administration_iso": "2026-05-31T18:30:00Z",
+    "honesty_humility": {
+      "total": 3.7,
+      "sincerity": 3.8,
+      "fairness": 3.5,
+      "greed_avoidance": 3.8,
+      "modesty": 3.5
+    }
+  }
+]
