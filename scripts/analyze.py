@@ -25,6 +25,14 @@ Implemented here:
 - H4 informant convergent validity (pre-registration.md): same correlation
   but with averaged informant ratings instead of self-report; when
   --informant-hexaco is supplied
+- H6 stated-revealed correlation range check (pre-registration.md):
+  per-user (stated_aspirational, revealed) Pearson r should fall in
+  [0.20, 0.60]; computed from the existing gap pipeline when both
+  --log and inventory inputs are present
+- H7 Big-5 neuroticism discriminant (pre-registration.md): Pearson r
+  between revealed truth-telling and Big-5 neuroticism should be ≤ 0.40
+  (an inverted threshold — measuring discriminant validity not
+  convergent); when --big5 is supplied
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7)
@@ -718,15 +726,18 @@ def _correlate_revealed_with_external(
     external_by_user: dict[str, float],
     domain: str,
     seed_offset: int,
-    threshold_low: float,
+    threshold_low: float | None = None,
+    threshold_high: float | None = None,
 ) -> dict[str, Any] | None:
     """
-    Generic convergent-validity computation: Pearson r between revealed
-    score in a domain and an external per-user value, plus bootstrap CI
-    against a pre-registered threshold.
+    Generic Pearson r computation between revealed score in a domain
+    and an external per-user value, with bootstrap CI.
 
-    Used for both H2 (self-report HEXACO H) and H4 (informant HEXACO H);
-    extensible to H7 (Big-5 neuroticism, discriminant test inverted).
+    threshold_low: H is "met" if r CI is ABOVE this (convergent validity)
+    threshold_high: H is "met" if r CI is BELOW this (discriminant validity)
+
+    Used for H2/H4 (convergent, threshold_low) and H7 (discriminant,
+    threshold_high).
     """
     xs: list[float] = []
     ys: list[float] = []
@@ -745,15 +756,21 @@ def _correlate_revealed_with_external(
     rng = random.Random(BOOTSTRAP_SEED + seed_offset)
     ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
 
+    threshold_met = None
+    if ci_low == ci_low:  # NaN check
+        if threshold_low is not None:
+            threshold_met = ci_low >= threshold_low
+        elif threshold_high is not None and ci_high == ci_high:
+            threshold_met = ci_high <= threshold_high
+
     return {
         "r": r,
         "ci_low": ci_low,
         "ci_high": ci_high,
         "n": len(xs),
-        "pre_registered_threshold_met": (
-            False if ci_low != ci_low else ci_low >= threshold_low
-        ),
+        "pre_registered_threshold_met": threshold_met,
         "threshold_low": threshold_low,
+        "threshold_high": threshold_high,
     }
 
 
@@ -779,6 +796,74 @@ def compute_h2_convergent_validity(
             hex_by_user[uid] = float(h["total"])
     return _correlate_revealed_with_external(
         revealed_means, hex_by_user, domain, seed_offset=1, threshold_low=0.15
+    )
+
+
+def compute_h6_stated_revealed_correlation(
+    revealed_means: dict[tuple[str, str], dict[str, Any]],
+    stated_aspirational: dict[tuple[str, str], float],
+    domain: str = "truth-telling",
+) -> dict[str, Any] | None:
+    """
+    Per pre-registration.md H6: stated-revealed correlation should fall
+    in [0.20, 0.60]. Too high collapses the gap signal; too low suggests
+    measurement noise. Range check, not a single-threshold test.
+
+    Uses Pearson r between revealed score and aspirational stated score
+    across users in the specified domain.
+    """
+    xs: list[float] = []
+    ys: list[float] = []
+    for (user, d), s in revealed_means.items():
+        if d != domain:
+            continue
+        if (user, d) in stated_aspirational:
+            xs.append(s["mean"])
+            ys.append(stated_aspirational[(user, d)])
+
+    if len(xs) < 3:
+        return None
+
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+
+    rng = random.Random(BOOTSTRAP_SEED + 3)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+
+    in_range = None
+    if r is not None:
+        in_range = 0.20 <= r <= 0.60
+
+    return {
+        "r": r,
+        "ci_low": ci_low,
+        "ci_high": ci_high,
+        "n": len(xs),
+        "in_pre_registered_range": in_range,
+        "range_low": 0.20,
+        "range_high": 0.60,
+    }
+
+
+def compute_h7_discriminant_validity(
+    revealed_means: dict[tuple[str, str], dict[str, Any]],
+    big5_data: list[dict],
+    domain: str = "truth-telling",
+) -> dict[str, Any] | None:
+    """
+    Per pre-registration.md H7: Pearson r between revealed truth-telling
+    and Big-5 neuroticism should be ≤ 0.40 (discriminant). If too high,
+    the revealed measure is partly measuring neuroticism rather than
+    honesty-as-construct.
+    """
+    n_by_user: dict[str, float] = {}
+    for entry in big5_data:
+        uid = entry.get("user_id")
+        if uid and "neuroticism" in entry:
+            n_by_user[uid] = float(entry["neuroticism"])
+    return _correlate_revealed_with_external(
+        revealed_means, n_by_user, domain, seed_offset=4, threshold_high=0.40
     )
 
 
@@ -817,11 +902,29 @@ def render_correlation_result(name: str, threshold_text: str, result: dict[str, 
         "nan" if result["ci_low"] != result["ci_low"]
         else f"[{result['ci_low']:+.3f}, {result['ci_high']:+.3f}]"
     )
-    threshold_str = "✓" if result["pre_registered_threshold_met"] else "✗"
+    met = result.get("pre_registered_threshold_met")
+    threshold_str = "✓" if met is True else ("✗" if met is False else "—")
     return (
         f"{name}:\n"
         f"  Pearson r = {result['r']:+.3f}, 95% CI {ci_str}, n = {result['n']}\n"
         f"  Pre-registered threshold ({threshold_text}): {threshold_str}"
+    )
+
+
+def render_h6_result(result: dict[str, Any] | None) -> str:
+    if result is None:
+        return "(H6: insufficient data — need ≥3 users with both revealed and stated_aspirational truth-telling)"
+    ci_str = (
+        "nan" if result["ci_low"] != result["ci_low"]
+        else f"[{result['ci_low']:+.3f}, {result['ci_high']:+.3f}]"
+    )
+    in_range = result.get("in_pre_registered_range")
+    range_str = "✓" if in_range else "✗"
+    return (
+        f"H6 (stated-revealed correlation, range check):\n"
+        f"  Pearson r = {result['r']:+.3f}, 95% CI {ci_str}, n = {result['n']}\n"
+        f"  Pre-registered range [{result['range_low']:.2f}, {result['range_high']:.2f}]: {range_str}\n"
+        f"  Reading: too-high r collapses the gap signal; too-low suggests measurement noise."
     )
 
 
@@ -910,6 +1013,12 @@ def main() -> int:
         help="Optional path to informant HEXACO-60 H ratings (for H4 informant convergent validity).",
     )
     parser.add_argument(
+        "--big5",
+        type=Path,
+        default=None,
+        help="Optional path to Big-5 N scores per user (for H7 discriminant validity).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -969,6 +1078,15 @@ def main() -> int:
             print(f"ERROR loading HEXACO file: {e}", file=sys.stderr)
             return 2
 
+    big5_data: list[dict] = []
+    if args.big5:
+        try:
+            with args.big5.open() as f:
+                big5_data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading Big-5 file: {e}", file=sys.stderr)
+            return 2
+
     informant_data: list[dict] = []
     if args.informant_hexaco:
         try:
@@ -1004,6 +1122,11 @@ def main() -> int:
     h4_result: dict[str, Any] | None = None
     if informant_data and user_scores:
         h4_result = compute_h4_informant_validity(user_scores, informant_data)
+
+    # H7 discriminant validity if Big-5 N data supplied
+    h7_result: dict[str, Any] | None = None
+    if big5_data and user_scores:
+        h7_result = compute_h7_discriminant_validity(user_scores, big5_data)
 
     # Pick the best-available stated layer for gap computation
     gaps: dict[tuple[str, str], dict[str, float]] = {}
@@ -1125,6 +1248,24 @@ def main() -> int:
                 "point estimate r ≥ 0.20",
                 h4_result,
             ))
+        if h7_result is not None:
+            print()
+            print(render_correlation_result(
+                "H7 (revealed truth-telling × Big-5 neuroticism, DISCRIMINANT)",
+                "upper 95% CI ≤ 0.40",
+                h7_result,
+            ))
+
+        # H6 reuses the existing aspirational-stated layer used for gap
+        if gaps and asp_filtered:
+            asp_for_h6 = {(u, d): v for (u, d), v in asp_filtered.items()}
+            revealed_for_h6 = {k: v for k, v in user_scores.items() if k in asp_for_h6}
+            h6_result = compute_h6_stated_revealed_correlation(
+                revealed_for_h6, asp_for_h6
+            )
+            if h6_result is not None:
+                print()
+                print(render_h6_result(h6_result))
 
     return 0
 
