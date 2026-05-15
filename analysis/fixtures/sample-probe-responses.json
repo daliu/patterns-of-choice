@@ -1,0 +1,84 @@
+[
+  {
+    "user_id": "user-alice",
+    "session_id": "S-001",
+    "probe_id": "cov-truth-001",
+    "domain": "truth-telling",
+    "value_slot": "honesty",
+    "first_accept_rung": "never",
+    "first_accept_stake": null,
+    "is_inverted": false
+  },
+  {
+    "user_id": "user-alice",
+    "session_id": "S-002",
+    "probe_id": "cov-truth-002",
+    "domain": "truth-telling",
+    "value_slot": "honesty",
+    "first_accept_rung": 4,
+    "first_accept_stake": 10000,
+    "is_inverted": false
+  },
+  {
+    "user_id": "user-alice",
+    "session_id": "S-002",
+    "probe_id": "cov-allocation-001",
+    "domain": "resource-allocation",
+    "value_slot": "fairness",
+    "first_accept_rung": 1,
+    "first_accept_stake": 10,
+    "is_inverted": true
+  },
+
+  {
+    "user_id": "user-bob",
+    "session_id": "S-003",
+    "probe_id": "cov-truth-001",
+    "domain": "truth-telling",
+    "value_slot": "honesty",
+    "first_accept_rung": 1,
+    "first_accept_stake": 10,
+    "is_inverted": false
+  },
+  {
+    "user_id": "user-bob",
+    "session_id": "S-004",
+    "probe_id": "cov-truth-002",
+    "domain": "truth-telling",
+    "value_slot": "honesty",
+    "first_accept_rung": 1,
+    "first_accept_stake": 10,
+    "is_inverted": false
+  },
+  {
+    "user_id": "user-bob",
+    "session_id": "S-004",
+    "probe_id": "cov-allocation-001",
+    "domain": "resource-allocation",
+    "value_slot": "fairness",
+    "first_accept_rung": "never",
+    "first_accept_stake": null,
+    "is_inverted": true
+  },
+
+  {
+    "user_id": "user-carla",
+    "session_id": "S-005",
+    "probe_id": "cov-truth-001",
+    "domain": "truth-telling",
+    "value_slot": "honesty",
+    "first_accept_rung": 3,
+    "first_accept_stake": 1000,
+    "is_inverted": false
+  },
+  {
+    "user_id": "user-carla",
+    "session_id": "S-006",
+    "probe_id": "cov-allocation-001",
+    "domain": "resource-allocation",
+    "value_slot": "fairness",
+    "first_accept_rung": 2,
+    "first_accept_stake": 100,
+    "is_inverted": true
+  }
+]

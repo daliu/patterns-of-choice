@@ -1,32 +1,37 @@
 #!/usr/bin/env python3
 """
-Minimal analyzer implementing the per-item / per-session / per-user-per-domain
-revealed-score aggregation from `scoring.md` §2-3.
+Minimal analyzer implementing the scoring-spec subset that doesn't require
+external statistical libraries.
 
-This is *not* the full validation-cohort analyzer. Implemented here:
+Implemented here:
 - Per-item revealed score from tags via the tag-axis map (§2.1, §2.2)
 - Per-session aggregation (§3.1)
 - Per-user-per-domain aggregation (§3.2)
+- Cost-of-virtue probe break-point scoring (§4) when --probes is supplied
 
 Reserved for the future validation-cohort analyzer:
 - Inventory scoring via Bradley-Terry on pairwise data (§5.2)
 - Gap computation (§6)
 - Bootstrap CIs (§8)
 - CFA on item-level loadings (§7)
-- Cost-of-virtue break-point aggregation across sessions (§4)
+- Per-domain probe aggregation as a CFA indicator (§7)
 
 Usage:
     python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
-    python scripts/analyze.py --log <path> --tag-map analysis/tag_axis_map_v0.1.csv
-    python scripts/analyze.py --log <path> --json   # emit JSON instead of table
+    python scripts/analyze.py --log <path> --probes <path>     # add probes
+    python scripts/analyze.py --log <path> --tag-map <path>
+    python scripts/analyze.py --log <path> --json              # JSON output
 
-The session log is a JSON file: array of SessionLogEntry per types.ts.
-The tag-axis map is `analysis/tag_axis_map_v*.csv` (defaults to v0.1).
+Inputs:
+- The session log is a JSON file: array of SessionLogEntry per types.ts.
+- The probes file is a JSON file: array of ProbeResponse per types.ts.
+- The tag-axis map is `analysis/tag_axis_map_v*.csv` (defaults to v0.1).
 """
 
 import argparse
 import csv
 import json
+import math
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -34,6 +39,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TAG_MAP = REPO_ROOT / "analysis" / "tag_axis_map_v0.1.csv"
+SCENARIOS_DIR = REPO_ROOT / "scenarios" / "sample"
 
 
 def load_tag_axis_map(path: Path) -> dict[tuple[str, str], tuple[str, float]]:
@@ -154,6 +160,116 @@ def render_table(scores: dict[tuple[str, str], dict[str, Any]]) -> str:
     return "\n".join(out)
 
 
+def load_probe_inversion_map() -> dict[str, bool]:
+    """
+    Read each cov-*.json scenario; return {probe_id: is_inverted} where
+    is_inverted is True iff break_point_field == 'first_return_stake'.
+    """
+    out: dict[str, bool] = {}
+    for path in sorted(SCENARIOS_DIR.glob("cov-*.json")):
+        try:
+            with path.open() as f:
+                data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            continue
+        analysis = data.get("analysis") or {}
+        out[data["id"]] = analysis.get("break_point_field") == "first_return_stake"
+    return out
+
+
+def probe_break_point_score(response: dict, inversion_map: dict[str, bool]) -> tuple[float, bool] | None:
+    """
+    Compute log10 of the break-point per scoring.md §4. Returns (score, inverted)
+    or None if the response can't be scored.
+
+    For forward probes (e.g. cov-truth-001):
+      - first_accept_stake numeric → log10(stake)
+      - "never" → log10(max ladder rung) + 1 (per spec §4.1)
+    For inverted probes (e.g. cov-allocation-001 — ladder asks at what stake
+    the user does the ETHICAL action, so smaller break-point = stronger virtue):
+      - first_return_stake numeric → -log10(stake) (sign-flipped at aggregation)
+      - "always_return" (rung 0 conceptually) → 0 ethical-pole anchor
+      - "always_keep" / never returns → -log10(max ladder rung) - 1
+    """
+    probe_id = response.get("probe_id")
+    if not probe_id:
+        return None
+    inverted = inversion_map.get(probe_id, response.get("is_inverted", False))
+    stake = response.get("first_accept_stake")
+    rung = response.get("first_accept_rung")
+
+    # Conservative default ladder ceiling = $10,000 for normalization (cov-ingroup-002
+    # uses $100K but most probes use $10K; analyzer can re-normalize at validation time).
+    LADDER_CEIL_LOG10 = 4.0  # log10(10_000)
+
+    if rung == "never":
+        # User refused at all rungs
+        if inverted:
+            return (-LADDER_CEIL_LOG10 - 1.0, True)  # would never do the ethical thing
+        return (LADDER_CEIL_LOG10 + 1.0, False)  # would never do the unethical thing
+
+    if isinstance(stake, (int, float)) and stake > 0:
+        log_score = math.log10(stake)
+        if inverted:
+            # Smaller stake = stronger virtue; sign-flip so higher = more virtuous
+            return (-log_score, True)
+        return (log_score, False)
+
+    if isinstance(stake, (int, float)) and stake == 0:
+        # Forgiveness-style probe rung 1 ($0 additional restitution = strongest forgiveness)
+        if inverted:
+            return (0.0, True)  # strongest ethical pole
+        return (0.0, False)
+
+    return None
+
+
+def probe_scores_by_user_domain(
+    responses: list[dict],
+    inversion_map: dict[str, bool],
+) -> dict[tuple[str, str], list[dict[str, Any]]]:
+    """
+    Per-user per-domain bucketing. Each item in the list is one probe response
+    with its computed score and metadata for downstream aggregation or display.
+    """
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for r in responses:
+        score = probe_break_point_score(r, inversion_map)
+        if score is None:
+            continue
+        log_score, inverted = score
+        grouped[(r["user_id"], r["domain"])].append({
+            "probe_id": r.get("probe_id"),
+            "value_slot": r.get("value_slot"),
+            "log_score": log_score,
+            "inverted": inverted,
+            "first_accept_stake": r.get("first_accept_stake"),
+            "first_accept_rung": r.get("first_accept_rung"),
+        })
+    return grouped
+
+
+def render_probe_table(grouped: dict[tuple[str, str], list[dict[str, Any]]]) -> str:
+    """Per-probe break-points per user. Higher log_score = stronger virtue
+    (sign-flipped at scoring time for inverted probes)."""
+    rows: list[tuple[str, str, dict[str, Any]]] = []
+    for (user, domain), probes in sorted(grouped.items()):
+        for p in probes:
+            rows.append((user, domain, p))
+    if not rows:
+        return "(no probe responses)"
+
+    header = f"{'user_id':<24} {'domain':<26} {'probe_id':<22} {'log_score':>10} {'inv':>4}"
+    out = [header, "-" * len(header)]
+    for user, domain, p in rows:
+        log_score_fmt = f"{p['log_score']:+.3f}"
+        inv = " Y" if p["inverted"] else " N"
+        out.append(
+            f"{user:<24} {domain:<26} {str(p['probe_id']):<22} {log_score_fmt:>10} {inv:>4}"
+        )
+    return "\n".join(out)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -172,6 +288,12 @@ def main() -> int:
         "--json",
         action="store_true",
         help="Emit JSON output instead of table.",
+    )
+    parser.add_argument(
+        "--probes",
+        type=Path,
+        default=None,
+        help="Optional path to a probe-responses JSON file (array of ProbeResponse).",
     )
     parser.add_argument(
         "--min-items",
@@ -202,21 +324,52 @@ def main() -> int:
     session_scores = session_means(grouped, min_items_per_session=args.min_items)
     user_scores = user_domain_means(session_scores)
 
+    probe_grouped: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    if args.probes:
+        try:
+            with args.probes.open() as f:
+                probe_responses = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading probe file: {e}", file=sys.stderr)
+            return 2
+        inversion_map = load_probe_inversion_map()
+        probe_grouped = probe_scores_by_user_domain(probe_responses, inversion_map)
+
     if args.json:
-        # Convert tuple keys to dotted strings for JSON
-        out = [
-            {
-                "user_id": user,
-                "domain": domain,
-                "revealed_score_mean": s["mean"],
-                "n_sessions_contributing": s["n_sessions"],
-                "se": None if s["se"] != s["se"] else s["se"],
-            }
-            for (user, domain), s in sorted(user_scores.items())
-        ]
+        out: dict[str, Any] = {
+            "revealed_scores": [
+                {
+                    "user_id": user,
+                    "domain": domain,
+                    "revealed_score_mean": s["mean"],
+                    "n_sessions_contributing": s["n_sessions"],
+                    "se": None if s["se"] != s["se"] else s["se"],
+                }
+                for (user, domain), s in sorted(user_scores.items())
+            ]
+        }
+        if probe_grouped:
+            out["probe_scores"] = [
+                {
+                    "user_id": user,
+                    "domain": domain,
+                    "probe_id": p["probe_id"],
+                    "value_slot": p["value_slot"],
+                    "log_score": p["log_score"],
+                    "inverted": p["inverted"],
+                    "first_accept_stake": p["first_accept_stake"],
+                    "first_accept_rung": p["first_accept_rung"],
+                }
+                for (user, domain), probes in sorted(probe_grouped.items())
+                for p in probes
+            ]
         print(json.dumps(out, indent=2))
     else:
         print(render_table(user_scores))
+        if probe_grouped:
+            print()
+            print("Cost-of-virtue probe break-points (higher = stronger virtue, inv-flipped):")
+            print(render_probe_table(probe_grouped))
 
     return 0
 

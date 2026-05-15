@@ -66,11 +66,18 @@ The workflow can be deleted without affecting the validator itself — `scripts/
 
 ## `analyze.py` — minimal scoring-spec analyzer
 
-Implements scoring.md §2-3 only. Reserved for the future validation-cohort analyzer: inventory scoring via Bradley-Terry (§5.2), gap computation (§6), bootstrap CIs (§8), CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
+Implements scoring.md §2-3 (revealed scores) and §4 (cost-of-virtue probe scoring). Reserved for the future validation-cohort analyzer: inventory scoring via Bradley-Terry (§5.2), gap computation (§6), bootstrap CIs (§8), CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
 
 ```sh
+# Revealed scores only
 python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
-python scripts/analyze.py --log <path> --json    # JSON output
+
+# Revealed + probe break-points
+python scripts/analyze.py \
+  --log analysis/fixtures/sample-session-log.json \
+  --probes analysis/fixtures/sample-probe-responses.json
+
+python scripts/analyze.py --log <path> --probes <path> --json
 python scripts/analyze.py --log <path> --min-items 3
 ```
 
@@ -83,9 +90,21 @@ user-alice               resource-allocation         +0.667     1     nan
 user-alice               truth-telling               +0.875     1     nan
 user-bob                 truth-telling               -0.396     2   0.329
 user-carla               truth-telling               +0.200     1     nan
+
+Cost-of-virtue probe break-points (higher = stronger virtue, inv-flipped):
+user_id                  domain                     probe_id                log_score  inv
+------------------------------------------------------------------------------------------
+user-alice               resource-allocation        cov-allocation-001         -1.000    Y
+user-alice               truth-telling              cov-truth-001              +5.000    N
+user-alice               truth-telling              cov-truth-002              +4.000    N
+user-bob                 resource-allocation        cov-allocation-001         -5.000    Y
+user-bob                 truth-telling              cov-truth-001              +1.000    N
+user-bob                 truth-telling              cov-truth-002              +1.000    N
 ```
 
-Range: `[-1, +1]` per the clamp in scoring.md §2.2. Positive = ethical pole of the domain's primary axis. `se` is a placeholder ±1 standard error; production analyzer would do bootstrap CI per scoring.md §8.
+Revealed scores: range `[-1, +1]` per the clamp in scoring.md §2.2. Positive = ethical pole.
+
+Probe scores: `log10` of break-point per scoring.md §4. Forward probes: positive (1 = breaks at $10 = weakest virtue, 5 = never accepts = strongest). Inverted probes: sign-flipped (so within the inverted range, higher = stronger virtue, but the magnitudes don't align with the forward range — per spec §4.2 cross-probe normalization happens at the per-domain CFA aggregation, not here).
 
 ## Fixtures
 
