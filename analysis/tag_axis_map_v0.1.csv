@@ -135,6 +135,7 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,resolution:credit-realigned,,narrative-resolution stratifier
 *,metadata,resolution:quiet-burn,,narrative-resolution stratifier
 *,metadata,stated-revealed-aligned-late,,outcome descriptor (late alignment)
+*,metadata,stated-revealed-aligned-but-temporary,,outcome descriptor (alignment achieved at cost that doesn't compound; future cycles may require re-doing the work)
 *,metadata,counterparty:chosen-family,,counterparty stratifier (non-blood family-of-choice)
 *,metadata,counterparty:close-irl,,counterparty stratifier (close in-person relationships)
 *,metadata,counterparty:child,,counterparty stratifier (a child as counterparty — moral asymmetry from age)

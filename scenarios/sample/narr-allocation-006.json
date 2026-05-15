@@ -1,0 +1,114 @@
+{
+  "id": "narr-allocation-006",
+  "type": "core-narrative",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "The trip",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Third resource-allocation narrative. narr-allocation-002 was workplace credit (subordinate, intangible). narr-allocation-004 was family-of-origin financial dynamics. This is friend-group context — peers, no formal hierarchy, voluntary affiliation. The strain is between an established equal-split norm and emerging income asymmetry among friends. Three decisions across months as the next-trip planning unfolds.",
+    "domain_anchor": "Schwartz's value-conflict framework (fairness as equality vs fairness as need); behavioral-economics work on social norms around cost-splitting (Sunstein on norm cascades). Engel 2011 dictator-game meta provides base rates for cost-allocation generosity.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["income disparity among friends"]
+  },
+  "setup": "Your friend group — six people, including you — has done an annual trip together for five years. It's become a tradition. The default has been equal-split: divide the costs six ways regardless of room choice, food preference, or whose flight is cheaper.\n\nOver the past year two of the friends have had significant income shifts. A. got promoted to a senior role; their income is roughly 2x what it was. B. left their corporate job to freelance; their income is roughly half what it was, and they've been quietly stretching.\n\nThe equal-split norm is starting to strain. Last year B. paid for the trip but it was clearly tight. A. has hinted they'd be happy to subsidize more if it helped, but no one has formally raised changing the structure. The group chat for this year's trip just got started.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "Someone has to raise the split question or it'll default to equal again. What do you do?",
+      "choices": [
+        { "id": "c1", "text": "Propose proportional-to-income in the chat: 'I think we should try a different split this year — costs scale with what we each can afford.'", "next": "scene-2-proportional", "tags": ["fairness", "truth:confront-mild", "counterparty:peer-group", "stake:medium-emotional", "value:fairness", "value:need_sensitivity"] },
+        { "id": "c2", "text": "Propose tiered with opt-outs: people can opt into a more expensive lodging or a more modest one; equal-split applies within tier.", "next": "scene-2-tiered", "tags": ["cooperation", "truth:partial", "counterparty:peer-group", "stake:medium-social", "value:cooperation", "value:tact"] },
+        { "id": "c3", "text": "Don't raise it publicly. Talk to B. privately first — find out what they actually want before naming structural changes.", "next": "scene-2-private", "tags": ["tact", "discretion", "counterparty:close", "stake:low-social", "value:tact", "value:loyalty"] },
+        { "id": "c4", "text": "Hold to equal-split. The tradition's value is partly the equal participation; if it stops working we can re-decide, but not pre-emptively.", "next": "scene-2-status-quo", "tags": ["loyalty", "trust", "counterparty:peer-group", "stake:low-social", "value:loyalty", "value:trust"] }
+      ]
+    },
+    {
+      "id": "scene-2-proportional",
+      "text": "Reactions are mixed. A. supports it warmly. Two friends are uncomfortable — they read it as making the income gap explicit. B. is briefly grateful but visibly uncomfortable being the subject of restructuring. The chat goes quiet for a day. Then someone messages: 'Should we just scale down the whole trip instead?'",
+      "choices": [
+        { "id": "c1", "text": "Support the scale-down. Reframe the conversation around what we want from the trip rather than who pays what.", "next": "scene-end-prop-scaledown", "tags": ["cooperation", "fairness", "counterparty:peer-group", "stake:medium-social", "value:cooperation", "value:fairness"] },
+        { "id": "c2", "text": "Hold the proportional proposal. The income gap is real; the trip's quality shouldn't have to scale down just because we won't name what's actually true.", "next": "scene-end-prop-hold", "tags": ["truth:commission", "fairness", "counterparty:peer-group", "stake:high-social", "value:honesty", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "scene-2-tiered",
+      "text": "The tiered structure lands well. People sort themselves: A. picks the higher tier and covers proportionally more of shared costs; B. and two others pick the lower tier; you and one other pick mid. The arithmetic works out closer to proportional than equal but nobody had to say it out loud. A few weeks in, planning is going smoothly.\n\nThen B. messages the group: 'I think I need to drop out this year — work schedule.'",
+      "choices": [
+        { "id": "c1", "text": "Reach out to B. privately. The work-schedule reason might be cover for cost; offer to subsidize their share if it helps.", "next": "scene-end-tier-reach-out", "tags": ["need_sensitivity", "generosity", "counterparty:close", "stake:medium-emotional", "value:need_sensitivity", "value:generosity"] },
+        { "id": "c2", "text": "Accept the stated reason. If B. wants to share more they will; pushing the issue could be patronizing.", "next": "scene-end-tier-accept", "tags": ["trust", "boundaries", "counterparty:close", "stake:low-emotional", "value:trust", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "scene-2-private",
+      "text": "Coffee with B. The conversation is honest. B. confirms they've been stretching; they don't want the structure changed because being the reason for the change would feel worse than the cost. They ask you not to bring it up in the group. The group chat resumes with default equal-split assumption. The booking deadlines are approaching.",
+      "choices": [
+        { "id": "c1", "text": "Respect B.'s ask. Stay with equal-split publicly; quietly cover some of B.'s costs in ways B. won't see (subsidize the meal, pay extra for the rental).", "next": "scene-end-private-cover", "tags": ["generosity", "discretion", "counterparty:close", "stake:medium-emotional", "value:generosity", "value:tact"] },
+        { "id": "c2", "text": "Raise it in the group anyway, framed around your own preference rather than naming B.: 'I think we should consider a different split this year for various reasons.'", "next": "scene-end-private-reframe", "tags": ["truth:partial", "fairness", "counterparty:peer-group", "stake:medium-social", "value:fairness", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "scene-2-status-quo",
+      "text": "The planning proceeds at equal-split. B. is in. Six weeks before the trip, B. messages the group privately: 'I'm out — work schedule.' The message is short and the timing is suspicious. A few of you exchange private messages comparing notes.",
+      "choices": [
+        { "id": "c1", "text": "Acknowledge that the holding-pattern was probably the wrong call. Reach out to B. and offer to subsidize so they can come.", "next": "scene-end-status-quo-then-reach", "tags": ["truth:partial", "generosity", "counterparty:close", "stake:medium-emotional", "self-cost:reputation", "value:honesty", "value:generosity"] },
+        { "id": "c2", "text": "Let B. have the dignity of the work-schedule reason. The trip happens without them; next year you'll know better.", "next": "scene-end-status-quo-accept", "tags": ["discretion", "boundaries", "counterparty:close", "stake:low-emotional", "value:discretion", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "scene-end-prop-scaledown",
+      "text": "The trip happens at a modest scale. Everyone comes. The conversations are warm; the cheaper venues are fine. A. is slightly disappointed but doesn't say so. B. is visibly relieved. The structural question never gets explicitly resolved but the trip happens, which is the test of the tradition. Next year you'll have to revisit.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-prop-hold",
+      "text": "A few friends quietly support the proportional split; the trip happens with that structure. A. pays substantially more, B. pays less, the rest pay roughly what they would have. The trip is warm. The conversation about income that you forced into the open turned out to be less awkward than holding it under the surface. Next year the proportional structure is the new default.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-tier-reach-out",
+      "text": "B. is initially defensive on the call. Then they admit — quietly — that they didn't want the work-schedule reason to be questioned. You offer to cover their share; they accept after some back-and-forth. They come. The trip is warm. Afterward B. thanks you specifically. The friendship deepens through having had the awkward conversation.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-tier-accept",
+      "text": "The trip happens without B. Everyone has a good time; everyone notices their absence. A. mentions, on the second night, that they wish someone had pushed back on the work-schedule story. The friend group's tradition is intact but you can feel the seam where B. is missing.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "moral-residue"]
+    },
+    {
+      "id": "scene-end-private-cover",
+      "text": "The trip happens. B. doesn't know you covered the extra; B. enjoys themselves. You've kept B.'s dignity intact at some financial cost to yourself, which is a fine trade you can make. The structural question is unresolved; next year the same question comes up, the same dynamic plays out. Eventually someone will have to name it.",
+      "terminal": true,
+      "tags": ["resolution:loyalty-over-honesty", "stated-revealed-aligned-but-temporary"]
+    },
+    {
+      "id": "scene-end-private-reframe",
+      "text": "The reframed proposal lands cleanly — no one points at B. The structure shifts to something proportional-ish. B. realizes you respected their request and also moved the conversation. The friendship comes out stronger. Months later B. specifically thanks you for the framing.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-status-quo-then-reach",
+      "text": "B. takes the call hard but accepts the offer. They come. The trip is good. Afterward you and B. have a longer conversation about the income shift and the friendship's holding-pattern. B. tells you the late offer meant more than an early-and-easy structural change would have. The lesson is real but you also know that next year you'll have to act earlier.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-status-quo-accept",
+      "text": "B. stays out. The trip is fine; everyone notices their absence; no one talks about why. By year's end the friend group has subtly reshaped — B. is still in but less central. You're not sure whether respecting the work-schedule reason was tact or complicity. Next year's planning is going to be different whether you raise it or not.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "moral-residue", "tracked-discomfort"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "in_group_out_group",
+    "speed_vs_deliberation"
+  ]
+}
