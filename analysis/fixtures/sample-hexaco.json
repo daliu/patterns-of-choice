@@ -1,0 +1,38 @@
+[
+  {
+    "user_id": "user-alice",
+    "instrument": "HEXACO-60",
+    "administration_iso": "2026-05-10T08:00:00Z",
+    "honesty_humility": {
+      "total": 4.2,
+      "sincerity": 4.5,
+      "fairness": 4.5,
+      "greed_avoidance": 4.0,
+      "modesty": 3.8
+    }
+  },
+  {
+    "user_id": "user-bob",
+    "instrument": "HEXACO-60",
+    "administration_iso": "2026-05-10T19:00:00Z",
+    "honesty_humility": {
+      "total": 2.4,
+      "sincerity": 2.0,
+      "fairness": 2.5,
+      "greed_avoidance": 2.8,
+      "modesty": 2.3
+    }
+  },
+  {
+    "user_id": "user-carla",
+    "instrument": "HEXACO-60",
+    "administration_iso": "2026-05-10T12:30:00Z",
+    "honesty_humility": {
+      "total": 3.5,
+      "sincerity": 3.8,
+      "fairness": 3.5,
+      "greed_avoidance": 3.3,
+      "modesty": 3.4
+    }
+  }
+]

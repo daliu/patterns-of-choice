@@ -17,8 +17,11 @@ Implemented here:
   per-domain standardized within sample
 - Primary gap computation (§6) when both --log and inventory data are
   present: z(stated_aspirational) - z(revealed), standardized per-domain
-- Bootstrap 95% CIs (§8) on revealed scores and gaps, with the pre-committed
-  random seed (20260510) per the scoring spec
+- Bootstrap 95% CIs (§8) on revealed scores, gaps, and the H2 convergent-
+  validity correlation, with the pre-committed random seed (20260510)
+- H2 convergent validity (pre-registration.md): Pearson r between revealed
+  truth-telling and HEXACO-60 honesty-humility, when --hexaco is supplied,
+  with bootstrap 95% CI
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7)
@@ -660,6 +663,126 @@ def compute_gaps(
     return out
 
 
+def _pearson_r(xs: list[float], ys: list[float]) -> float | None:
+    """Sample Pearson correlation. Returns None on degenerate inputs."""
+    n = len(xs)
+    if n != len(ys) or n < 2:
+        return None
+    mx = sum(xs) / n
+    my = sum(ys) / n
+    cov = sum((xs[i] - mx) * (ys[i] - my) for i in range(n))
+    var_x = sum((xs[i] - mx) ** 2 for i in range(n))
+    var_y = sum((ys[i] - my) ** 2 for i in range(n))
+    if var_x == 0 or var_y == 0:
+        return None
+    return cov / (var_x * var_y) ** 0.5
+
+
+def _bootstrap_ci_r(
+    xs: list[float],
+    ys: list[float],
+    rng: random.Random,
+    n_iter: int = BOOTSTRAP_N,
+    ci: float = BOOTSTRAP_CI,
+) -> tuple[float, float]:
+    """
+    Bootstrap CI for Pearson r per scoring.md §8: resample (x, y) pairs
+    with replacement, recompute r, percentile method. Pre-registered
+    seed in the caller.
+    """
+    n = len(xs)
+    if n < 3:
+        return (float("nan"), float("nan"))
+    rs: list[float] = []
+    for _ in range(n_iter):
+        indices = [rng.randrange(n) for _ in range(n)]
+        sx = [xs[i] for i in indices]
+        sy = [ys[i] for i in indices]
+        r = _pearson_r(sx, sy)
+        if r is not None:
+            rs.append(r)
+    if len(rs) < 10:
+        return (float("nan"), float("nan"))
+    rs.sort()
+    alpha = (1 - ci) / 2
+    lower_idx = int(len(rs) * alpha)
+    upper_idx = int(len(rs) * (1 - alpha))
+    return (rs[lower_idx], rs[min(upper_idx, len(rs) - 1)])
+
+
+def compute_h2_convergent_validity(
+    revealed_means: dict[tuple[str, str], dict[str, Any]],
+    hexaco_data: list[dict],
+    domain: str = "truth-telling",
+) -> dict[str, Any] | None:
+    """
+    Per pre-registration.md H2: Pearson r between revealed truth-telling
+    and HEXACO honesty-humility (total score). Pre-registered threshold:
+    lower 95% bootstrap CI ≥ 0.15.
+
+    Returns dict with r, ci_low, ci_high, n, pre_registered_threshold_met
+    (boolean), or None if insufficient data.
+
+    Note: with synthetic n=3 fixture data, the result is purely
+    demonstrative — the bootstrap CI will be very wide. The validation-
+    cohort analyzer running on n≈200 would produce a tight enough CI
+    for the pre-registered threshold to be meaningful.
+    """
+    # Build HEXACO lookup by user_id
+    hex_by_user: dict[str, float] = {}
+    for entry in hexaco_data:
+        uid = entry.get("user_id")
+        h = entry.get("honesty_humility", {})
+        if uid and isinstance(h, dict) and "total" in h:
+            hex_by_user[uid] = float(h["total"])
+
+    # Pair (revealed truth-telling, HEXACO H)
+    xs: list[float] = []
+    ys: list[float] = []
+    for (user, d), s in revealed_means.items():
+        if d == domain and user in hex_by_user:
+            xs.append(s["mean"])
+            ys.append(hex_by_user[user])
+
+    if len(xs) < 3:
+        return None
+
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+
+    rng = random.Random(BOOTSTRAP_SEED + 1)  # different seed so CI is independent of revealed-CI seed
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+
+    return {
+        "r": r,
+        "ci_low": ci_low,
+        "ci_high": ci_high,
+        "n": len(xs),
+        "pre_registered_threshold_met": (
+            False if ci_low != ci_low else ci_low >= 0.15
+        ),
+        "pre_registered_target": "lower 95% CI ≥ 0.15 per pre-registration.md H2",
+    }
+
+
+def render_h2_result(result: dict[str, Any] | None) -> str:
+    if result is None:
+        return "(insufficient data — need ≥3 users with both revealed truth-telling and HEXACO-H)"
+    ci_str = (
+        "nan" if result["ci_low"] != result["ci_low"]
+        else f"[{result['ci_low']:+.3f}, {result['ci_high']:+.3f}]"
+    )
+    threshold_str = "✓" if result["pre_registered_threshold_met"] else "✗"
+    return (
+        f"H2 (revealed truth-telling × HEXACO honesty-humility):\n"
+        f"  Pearson r = {result['r']:+.3f}, 95% CI {ci_str}, n = {result['n']}\n"
+        f"  Pre-registered threshold (lower 95% CI ≥ 0.15): {threshold_str}\n"
+        f"  Note: with small samples the CI is wide and threshold rarely met;\n"
+        f"  the validation-cohort analyzer on n≈200 is where the test is real."
+    )
+
+
 def render_gap_table(gaps: dict[tuple[str, str], dict[str, float]]) -> str:
     rows = sorted(gaps.items())
     if not rows:
@@ -733,6 +856,12 @@ def main() -> int:
         help="Optional path to a pairwise-comparisons JSON file (compact format).",
     )
     parser.add_argument(
+        "--hexaco",
+        type=Path,
+        default=None,
+        help="Optional path to HEXACO-60 H scores per user (for H2 convergent validity).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -783,6 +912,15 @@ def main() -> int:
         value_domain = load_values_deck_domains()
         cs_scores = card_sort_scores(cs_responses, value_domain)
 
+    hexaco_data: list[dict] = []
+    if args.hexaco:
+        try:
+            with args.hexaco.open() as f:
+                hexaco_data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading HEXACO file: {e}", file=sys.stderr)
+            return 2
+
     pw_scores: dict[tuple[str, str, str], float] = {}
     if args.pairwise:
         try:
@@ -799,6 +937,11 @@ def main() -> int:
     combined_stated: dict[tuple[str, str, str], dict[str, Any]] = {}
     if cs_scores and pw_scores:
         combined_stated = combined_stated_score(cs_scores, pw_scores)
+
+    # H2 convergent validity if hexaco supplied
+    h2_result: dict[str, Any] | None = None
+    if hexaco_data and user_scores:
+        h2_result = compute_h2_convergent_validity(user_scores, hexaco_data)
 
     # Pick the best-available stated layer for gap computation
     gaps: dict[tuple[str, str], dict[str, float]] = {}
@@ -902,6 +1045,9 @@ def main() -> int:
             print()
             print("Per-domain gaps (z_stated_aspirational − z_revealed, standardized per-domain):")
             print(render_gap_table(gaps))
+        if h2_result is not None:
+            print()
+            print(render_h2_result(h2_result))
 
     return 0
 
