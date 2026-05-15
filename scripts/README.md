@@ -66,19 +66,19 @@ The workflow can be deleted without affecting the validator itself — `scripts/
 
 ## `analyze.py` — minimal scoring-spec analyzer
 
-Implements scoring.md §2-3 (revealed scores) and §4 (cost-of-virtue probe scoring). Reserved for the future validation-cohort analyzer: inventory scoring via Bradley-Terry (§5.2), gap computation (§6), bootstrap CIs (§8), CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
+Implements scoring.md §2-3 (revealed scores), §4 (cost-of-virtue probe scoring), §5.1 (card-sort inventory scoring). Reserved for the future validation-cohort analyzer: Bradley-Terry pairwise inventory scoring (§5.2), gap computation (§6), bootstrap CIs (§8), CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
 
 ```sh
 # Revealed scores only
 python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
 
-# Revealed + probe break-points
+# Revealed + probes + card-sort
 python scripts/analyze.py \
   --log analysis/fixtures/sample-session-log.json \
-  --probes analysis/fixtures/sample-probe-responses.json
+  --probes analysis/fixtures/sample-probe-responses.json \
+  --card-sort analysis/fixtures/sample-card-sort.json
 
 python scripts/analyze.py --log <path> --probes <path> --json
-python scripts/analyze.py --log <path> --min-items 3
 ```
 
 Output (table by default):

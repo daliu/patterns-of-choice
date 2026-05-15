@@ -1,0 +1,49 @@
+[
+  {
+    "user_id": "user-alice",
+    "layer": "current_self",
+    "selected_value_ids": ["honesty", "authenticity", "transparency", "fairness", "generosity"]
+  },
+  {
+    "user_id": "user-alice",
+    "layer": "aspirational_self",
+    "selected_value_ids": ["honesty", "authenticity", "transparency", "generosity", "universalism"]
+  },
+  {
+    "user_id": "user-alice",
+    "layer": "admired_other",
+    "selected_value_ids": ["honesty", "authenticity", "fairness", "generosity", "trust"]
+  },
+
+  {
+    "user_id": "user-bob",
+    "layer": "current_self",
+    "selected_value_ids": ["self_reliance", "independence", "vigilance", "boundaries", "discretion"]
+  },
+  {
+    "user_id": "user-bob",
+    "layer": "aspirational_self",
+    "selected_value_ids": ["honesty", "self_reliance", "independence", "vigilance", "loyalty"]
+  },
+  {
+    "user_id": "user-bob",
+    "layer": "admired_other",
+    "selected_value_ids": ["self_reliance", "independence", "discretion", "boundaries", "vigilance"]
+  },
+
+  {
+    "user_id": "user-carla",
+    "layer": "current_self",
+    "selected_value_ids": ["tact", "loyalty", "particularism", "cooperation", "forgiveness"]
+  },
+  {
+    "user_id": "user-carla",
+    "layer": "aspirational_self",
+    "selected_value_ids": ["honesty", "authenticity", "fairness", "cooperation", "forgiveness"]
+  },
+  {
+    "user_id": "user-carla",
+    "layer": "admired_other",
+    "selected_value_ids": ["honesty", "tact", "fairness", "generosity", "cooperation"]
+  }
+]
