@@ -32,7 +32,7 @@ The MVP scopes 4 domains; sample scenarios so far:
 |---|---|---|---|---|
 | Truth-telling under cost | `qf-truth-001`, `qf-truth-003`, `qf-truth-005`, `qf-truth-007`, `qf-truth-009` ✓ | `narr-truth-002`, `narr-truth-004`, `narr-truth-006` ✓ | `cov-truth-001`, `cov-truth-002` ✓ | ~12 total |
 | Resource allocation | `qf-allocation-001`, `qf-allocation-003`, `qf-allocation-005`, `qf-allocation-007`, `qf-allocation-009` ✓ | `narr-allocation-002`, `narr-allocation-004`, `narr-allocation-006` ✓ | `cov-allocation-001`, `cov-allocation-002` ✓ (both inverted) | ~12 total |
-| In-group / out-group | `qf-ingroup-001`, `qf-ingroup-003`, `qf-ingroup-005`, `qf-ingroup-007` ✓ | `narr-ingroup-002`, `narr-ingroup-004`, `narr-ingroup-006` ✓ | `cov-ingroup-001`, `cov-ingroup-002` ✓ | ~12 total |
+| In-group / out-group | `qf-ingroup-001`, `qf-ingroup-003`, `qf-ingroup-005`, `qf-ingroup-007`, `qf-ingroup-009` ✓ | `narr-ingroup-002`, `narr-ingroup-004`, `narr-ingroup-006` ✓ | `cov-ingroup-001`, `cov-ingroup-002` ✓ | ~12 total |
 | Reciprocity / cooperation | `qf-reciprocity-001`, `qf-reciprocity-003`, `qf-reciprocity-005`, `qf-reciprocity-007` ✓ | `narr-reciprocity-002`, `narr-reciprocity-004`, `narr-reciprocity-006` ✓ | `cov-reciprocity-001`, `cov-reciprocity-002` ✓ (inverted) | ~12 total |
 
 All 4 domains have 4 quick-fires + 2 narratives + 2 cost-of-virtue probes = **32 scenarios of ~48 target, symmetric at 8-per-domain**. Two-thirds of MVP-1's corpus. Remaining: ~16 more scenarios to fill toward 12-per-domain (most likely composition: ~2 more quick-fires per domain plus 1 more narrative in some domains).

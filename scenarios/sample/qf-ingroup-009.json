@@ -1,0 +1,65 @@
+{
+  "id": "qf-ingroup-009",
+  "type": "quick-fire-round",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When membership gets tested",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Fifth in-group/out-group quick-fire. Where the prior four covered social-distance gradients (qf-001), kinds of community (qf-003), overlapping circles (qf-005), and membership transitions (qf-007), this round probes situations where the user's in-group membership itself is being pressure-tested — by external conflict, by internal change, by competing affiliations, by being asked to perform loyalty in public.",
+    "domain_anchor": "Tajfel social identity theory on intergroup conflict; Brewer optimal-distinctiveness when one's group is publicly contested; Cohen's culture-of-honor literature for the public-loyalty-asks framing.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": ["intergroup conflict, political tension"]
+  },
+  "items": [
+    {
+      "id": "qf-ingroup-009-i01",
+      "prompt": "A political or cultural conflict has spilled into your social circles. At a small gathering, someone you barely know turns to you and asks: 'whose side are you on?'",
+      "options": [
+        { "id": "a", "text": "Answer directly with what you actually think, even though the room will react.", "tags": ["truth:commission", "authenticity", "counterparty:stranger", "stake:medium-social", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Deflect: 'I think the way the question's being framed isn't useful. Can I tell you what I'm actually noticing?'", "tags": ["truth:partial", "tact", "counterparty:stranger", "stake:low-social", "value:tact", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-009-i02",
+      "prompt": "A family member publicly criticizes a position your in-group (cultural, political, professional) widely holds — a position you yourself hold. Their critique is partly right.",
+      "options": [
+        { "id": "a", "text": "Defend the in-group's position. Family disagreement is fine in private; in public, the group needs the loyalty.", "tags": ["loyalty", "counterparty:family-of-origin", "stake:medium-social", "value:loyalty", "value:particularism"] },
+        { "id": "b", "text": "Acknowledge the partly-right parts publicly, even at cost to your in-group's coherence.", "tags": ["truth:partial", "universalism", "counterparty:family-of-origin", "stake:medium-social", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-009-i03",
+      "prompt": "A long-time member of a community you belong to (church / professional society / alumni group) is privately considering leaving. They've asked your honest read on whether they should.",
+      "options": [
+        { "id": "a", "text": "Tell them honestly what you think — including if you think leaving is the right call for them.", "tags": ["truth:commission", "universalism", "counterparty:close", "stake:medium-social", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Make the case for staying. The community has value they may be underweighting; you can name that without dismissing their concerns.", "tags": ["loyalty", "truth:partial", "counterparty:close", "stake:medium-social", "value:loyalty", "value:hospitality"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-009-i04",
+      "prompt": "The in-group you belong to is changing in ways you don't endorse. Newer members are asking you specifically — as a long-time member — what you think.",
+      "options": [
+        { "id": "a", "text": "Voice your concerns publicly. The newer members deserve to hear the perspective of someone who remembers what's changed.", "tags": ["truth:commission", "authenticity", "counterparty:in-group-community", "stake:medium-social", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Frame your concerns as questions or observations, not positions. The community is genuinely changing; your role isn't to anchor it to the past.", "tags": ["truth:partial", "tact", "counterparty:in-group-community", "stake:low-social", "value:tact", "value:hospitality"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-009-i05",
+      "prompt": "You're abroad. Someone (kindly) asks you about your country / your in-group's home culture. There are real things to criticize. They're listening genuinely.",
+      "options": [
+        { "id": "a", "text": "Be candid about the real things to criticize, while making clear it's a place you love and are part of.", "tags": ["truth:commission", "authenticity", "counterparty:stranger-foreign", "stake:medium-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Stay loyal — represent the place at its best. Insider critique belongs inside the in-group.", "tags": ["loyalty", "particularism", "counterparty:stranger-foreign", "stake:low-social", "value:loyalty", "value:particularism"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-009-i06",
+      "prompt": "You're being recruited by another group (professional society, online community, social circle) that's somewhat in tension with your current in-group. The new group's framing of your current in-group is dismissive in ways that aren't entirely fair.",
+      "options": [
+        { "id": "a", "text": "Push back on the dismissive framing during the recruitment conversation. Don't join under false framing.", "tags": ["truth:confront-mild", "loyalty", "counterparty:peer-distant", "stake:medium-social", "value:honesty", "value:loyalty"] },
+        { "id": "b", "text": "Let the framing pass; you can correct it from the inside if you join. Picking fights during a courting phase is bad strategy.", "tags": ["truth:abandon", "vigilance", "counterparty:peer-distant", "stake:low-social", "value:vigilance", "value:tact"] }
+      ]
+    }
+  ]
+}
