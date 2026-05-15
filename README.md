@@ -22,6 +22,7 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`onboarding.md`](onboarding.md) — user-facing copy and sequence for the first 3 sessions and the profile reveal
 - [`pre-registration.md`](pre-registration.md) — OSF-filing-ready template for MVP-1's measurement-validation study, with pre-specified hypotheses, analysis plan, and falsification thresholds
 - [`pilot-protocol.md`](pilot-protocol.md) — n=10 usability/calibration pilot that precedes the OSF lock; defines go/no-go criteria for the main study
+- [`pilot-materials/`](pilot-materials/) — operational documents the pilot needs before launching (consent form template, recruitment script template). Drafts, not IRB-final
 - [`scoring.md`](scoring.md) — analytical specification: how raw session-log and inventory data become the revealed / stated / gap / cost-of-virtue scores referenced by the pre-registration
 - [`interpretation.md`](interpretation.md) — what the analyzer's output numbers actually mean for a user, a researcher, or a future engineer reading them. Companion to `scoring.md` (which says *how*) explaining *what they mean*
 - [`analysis/`](analysis/) — versioned data files the analyzer consumes (currently: the tag-to-axis mapping). Part of the pre-registration; locked at OSF filing
