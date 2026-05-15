@@ -84,12 +84,12 @@ python scripts/analyze.py --log <path> --probes <path> --json
 Output (table by default):
 
 ```
-user_id                  domain                        mean  sess      se
--------------------------------------------------------------------------
-user-alice               resource-allocation         +0.667     1     nan
-user-alice               truth-telling               +0.875     1     nan
-user-bob                 truth-telling               -0.396     2   0.329
-user-carla               truth-telling               +0.200     1     nan
+user_id                  domain                        mean  sess           95% CI
+----------------------------------------------------------------------------------
+user-alice               resource-allocation         +0.667     1              nan
+user-alice               truth-telling               +0.875     1              nan
+user-bob                 truth-telling               -0.396     2   [-0.72, -0.07]
+user-carla               truth-telling               +0.200     1              nan
 
 Cost-of-virtue probe break-points (higher = stronger virtue, inv-flipped):
 user_id                  domain                     probe_id                log_score  inv
