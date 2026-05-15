@@ -1,0 +1,113 @@
+{
+  "id": "narr-reciprocity-006",
+  "type": "core-narrative",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "The reversal",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Third reciprocity narrative. narr-reciprocity-002 was creative-friendship collaboration (sympathetic-backstory framing); narr-reciprocity-004 was long-term family-sibling arc. This narrative captures professional reciprocity across a much longer time scale (10 years) with an explicit role-reversal: the user was mentor; the former mentee is now in a position to help; the user is now the one who needs it. Tests how reciprocity instincts hold up when the asymmetry reverses, status reverses, and the original-help framing was generous-no-strings.",
+    "domain_anchor": "Cropanzano & Mitchell social-exchange theory in professional contexts; Eby et al. on mentor-protégé relationships over time; Hirsch on mentorship and obligation; the 'pay it forward' literature (Pleasant & Barclay).",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["career-stress / professional setback context"]
+  },
+  "setup": "About ten years ago you mentored M, a junior person in your field. They were new, talented, and willing. You gave generously — time, introductions, frank feedback, advocacy in rooms they weren't in. The mentorship was framed (by you, sincerely) as no-strings, pay-it-forward style. M was grateful and said so explicitly. The relationship stayed warm but became less active as M took off.\n\nM's trajectory has been steeper than yours. They're now at the top of the field. You're proud of them. Quietly, you've also noticed that the asymmetry in your careers has grown sharper than you would have predicted.\n\nIn the past year your own situation has gotten harder. A combination of factors — industry shift, an organization you were tied to closing, age in the field — has put you in a real career crunch. You're not desperate, but you're not in shape to be picky either. M is in a position to make a real difference if they wanted to: introductions, a job in their company, a public endorsement.\n\nThey haven't volunteered.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "What do you do?",
+      "choices": [
+        { "id": "c1", "text": "Reach out directly: 'I've hit a rough patch. Can we get coffee? I could use your advice and maybe more than that.'", "next": "scene-2-direct-ask", "tags": ["truth:commission", "trust", "counterparty:peer-known-past", "stake:high-reputation", "self-cost:reputation", "value:honesty", "value:trust"] },
+        { "id": "c2", "text": "Reach out warmly but without the ask. 'Been thinking of you — how are you?' Let them ask what's going on.", "next": "scene-2-soft-reach", "tags": ["truth:partial", "tact", "counterparty:peer-known-past", "stake:medium-emotional", "value:tact", "value:authenticity"] },
+        { "id": "c3", "text": "Don't reach out. The original mentorship was framed as no-strings; activating it now would change what it was. Find other paths.", "next": "scene-2-not-reach", "tags": ["boundaries", "self_reliance", "counterparty:peer-known-past", "stake:medium-emotional", "value:boundaries", "value:authenticity"] },
+        { "id": "c4", "text": "Reach out and explicitly name the asymmetry: 'I know I told you years ago that the mentorship was pay-it-forward. I'm asking now anyway — and I want you to know I see the tension.'", "next": "scene-2-name-tension", "tags": ["truth:confront-direct", "fairness", "counterparty:peer-known-past", "stake:high-reputation", "self-cost:reputation", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "scene-2-direct-ask",
+      "text": "M responds within a day. The coffee happens within a week. M listens carefully and offers concrete help — a couple of warm introductions, a public endorsement, an offer to forward your name internally at their company. They're matter-of-fact about it; they thank you for asking directly rather than dancing around it.\n\nA month in, one introduction has led to a real conversation; another hasn't gone anywhere. M's company turns out not to have the right opening but they keep an eye out.",
+      "choices": [
+        { "id": "c1", "text": "Stay in regular touch with M about the process — updates, asks for follow-on intros, treating them as an active ally.", "next": "scene-end-direct-active", "tags": ["cooperation", "trust", "counterparty:peer-known-past", "stake:medium-time", "value:cooperation", "value:trust"] },
+        { "id": "c2", "text": "Step back to a lighter touch. M has done substantial work already; don't ride the connection too hard.", "next": "scene-end-direct-light", "tags": ["boundaries", "fairness", "counterparty:peer-known-past", "stake:low-time", "value:boundaries", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "scene-2-soft-reach",
+      "text": "M replies warmly but doesn't ask what's going on. The conversation is friendly and short. Two weeks later you haven't heard anything more. You're aware that the indirect approach put the burden on M to read between the lines, and they either didn't or chose not to.",
+      "choices": [
+        { "id": "c1", "text": "Follow up directly: 'I wasn't fully honest in the last message. Things are actually hard. Can we talk?'", "next": "scene-end-soft-then-direct", "tags": ["truth:deferred-confront", "counterparty:peer-known-past", "stake:high-emotional", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "c2", "text": "Let it sit. The signal was sent; M had a chance to engage; not their job to follow up on what you didn't name.", "next": "scene-end-soft-let-sit", "tags": ["boundaries", "discretion", "counterparty:peer-known-past", "stake:low-social", "value:boundaries", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "scene-2-not-reach",
+      "text": "You work through other paths. Some are productive — old colleagues you'd lost touch with, a few open applications, a referral chain that finds its way. Some aren't. Six months in, you've landed somewhere — not at the level you wanted but functional. You then run into M at a professional event. They're surprised to see you; they don't know what you'd been through.",
+      "choices": [
+        { "id": "c1", "text": "Be candid in the moment: 'I had a rough year. I almost reached out to you a few times. I decided not to. I'm okay now.' Let them decide what to do with that.", "next": "scene-end-not-reach-candid", "tags": ["truth:commission", "counterparty:peer-known-past", "stake:medium-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "c2", "text": "Keep the conversation light. The past year was yours; M doesn't owe knowing about it now.", "next": "scene-end-not-reach-light", "tags": ["discretion", "boundaries", "counterparty:peer-known-past", "stake:low-social", "value:discretion", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "scene-2-name-tension",
+      "text": "M is briefly quiet, then warm. 'You're allowed to ask. I'd be a worse person if you couldn't.' The coffee happens. M offers help with the explicit framing that the old no-strings framing of the original mentorship doesn't override your current need; they say the framing itself was generous in a way that the relationship can outlive. The help is substantial: an internal forward, a public endorsement, two introductions.\n\nA month in, one introduction is productive; one isn't. M's company doesn't have the right opening immediately but they create a chance to be considered for an emerging role.",
+      "choices": [
+        { "id": "c1", "text": "Take the emerging-role chance even though it isn't an ideal fit. The path was created for you; the gratitude is part of accepting.", "next": "scene-end-named-take", "tags": ["cooperation", "trust", "counterparty:senior", "stake:high-financial", "value:cooperation", "value:trust"] },
+        { "id": "c2", "text": "Decline the not-quite-right role; tell M directly that you appreciate it but don't want to take a created path that isn't actually right.", "next": "scene-end-named-decline", "tags": ["truth:commission", "authenticity", "counterparty:peer-known-past", "stake:medium-social", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "scene-end-direct-active",
+      "text": "The active approach pays off. M's social capital becomes a small persistent advantage; you land a job within four months. You and M settle into a longer-lasting peer relationship that the mentorship had implied but never quite materialized. You're aware that this trajectory wouldn't have happened without the ask — and that M's response made the friendship real in a way the original mentorship hadn't quite been.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-direct-light",
+      "text": "The lighter touch turns out to be the right call. The introductions M made carry their own weight; you land somewhere good within six months. M is glad you didn't over-rely on them. The relationship is reset into a healthy peer dynamic — neither mentor-mentee nor benefactor-beneficiary, just a peer connection you both maintain lightly.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-soft-then-direct",
+      "text": "M responds warmly to the second message. The conversation that follows is honest. M is gracious about the indirect first attempt; they thank you for pushing past it. The help that comes is real but the relationship is slightly more careful than it might have been if you'd led with directness. You make it through the rough patch; you and M stay in touch.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-soft-let-sit",
+      "text": "You don't follow up. You work through other paths. Six months later you're stable; the rough patch is behind you. You and M continue to be on warm terms but the gap between you has widened — neither of you ever knew quite what the other was holding. Some part of you wonders whether you should have asked more clearly. Some part of you doesn't regret keeping it private.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "moral-residue"]
+    },
+    {
+      "id": "scene-end-not-reach-candid",
+      "text": "M is genuinely caught off-guard. They wish they'd known; they say so. They offer help retroactively that you politely don't need now. The encounter establishes something between you — a knowledge of what the year was, a tacit agreement that future asks (in either direction) would be more direct. The friendship deepens through having named what was held back.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-not-reach-light",
+      "text": "The conversation stays at surface depth. M doesn't know what year you'd just had; you don't tell them. You leave the event on warm terms; the friendship continues unchanged from what it had been before. Some part of you keeps the private knowledge that you got through without asking — that's a real thing to hold. Some part of you wonders if the boundary you kept was wisdom or pride.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-named-take",
+      "text": "The not-quite-right role becomes a real one. You stabilize within months. The named-tension conversation at scene 1 turned out to be the key — it freed both you and M to engage honestly. Years later you'll tell other people that the moment you knew the friendship was real was when you told M you saw the tension and they treated that as the start of a deeper relationship rather than a problem.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-named-decline",
+      "text": "M takes the decline well — they appreciate that you said no to a path that wasn't right rather than taking it out of obligation. The friendship deepens through both of you being able to be direct in both directions. You land somewhere via other paths a few months later. M and you have a friendship from here forward that's straightforward in a way the mentorship never quite was — peer-to-peer with full memory of the asymmetric origin.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "speed_vs_deliberation"
+  ]
+}
