@@ -12,6 +12,9 @@ Implemented here:
   is supplied
 - Bradley-Terry pairwise inventory scoring (§5.2) via Hunter 2004 MM
   algorithm when --pairwise is supplied
+- Combined card-sort + pairwise per §5.3 when both inventory inputs are
+  present: stated_score(user, d, layer) = mean(z(card_sort), z(pairwise))
+  per-domain standardized within sample
 - Primary gap computation (§6) when both --log and inventory data are
   present: z(stated_aspirational) - z(revealed), standardized per-domain
 - Bootstrap 95% CIs (§8) on revealed scores and gaps, with the pre-committed
@@ -20,8 +23,7 @@ Implemented here:
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7)
 - Per-domain probe aggregation as a CFA indicator (§7)
-- Combined card-sort + pairwise per §5.3 (currently both reported separately;
-  CFA-time combination is the validation-analyzer concern)
+- Longitudinal cost-of-virtue probe trajectories (§4.3)
 
 Usage:
     python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
@@ -532,10 +534,87 @@ def _standardize_per_domain(
     return out
 
 
+def combined_stated_score(
+    card_sort: dict[tuple[str, str, str], float],
+    pairwise: dict[tuple[str, str, str], float],
+) -> dict[tuple[str, str, str], dict[str, Any]]:
+    """
+    Per scoring.md §5.3: combined stated score is the mean of the within-
+    sample standardized card-sort and pairwise scores, per-domain per-layer.
+
+    Standardization is per-(domain, layer) — z-scores computed across users
+    who have both scores in that (domain, layer) slice.
+
+    Returns dict[(user, domain, layer)] → {z_card, z_pair, combined, source}.
+    source is "combined" when both are present, "card_sort_only" or
+    "pairwise_only" when only one is.
+    """
+    out: dict[tuple[str, str, str], dict[str, Any]] = {}
+
+    # Find (domain, layer) slices with both inputs
+    cs_keys = set(card_sort.keys())
+    pw_keys = set(pairwise.keys())
+
+    # For each (domain, layer), pull users with both
+    by_dom_layer: dict[tuple[str, str], list[tuple[str, float, float]]] = defaultdict(list)
+    for (user, domain, layer) in cs_keys & pw_keys:
+        by_dom_layer[(domain, layer)].append(
+            (user, card_sort[(user, domain, layer)], pairwise[(user, domain, layer)])
+        )
+
+    # Standardize per (domain, layer)
+    for (domain, layer), rows in by_dom_layer.items():
+        if len(rows) < 2:
+            continue
+        cs_vals = [cs for _, cs, _ in rows]
+        pw_vals = [pw for _, _, pw in rows]
+        cs_z = _z(cs_vals)
+        pw_z = _z(pw_vals)
+        if cs_z is None or pw_z is None:
+            continue
+        for (user, _, _), cz, pz in zip(rows, cs_z, pw_z):
+            out[(user, domain, layer)] = {
+                "z_card_sort": cz,
+                "z_pairwise": pz,
+                "combined": (cz + pz) / 2,
+                "source": "combined",
+            }
+
+    # Users with only one source per (domain, layer): include without combining
+    for key in cs_keys - pw_keys:
+        out.setdefault(key, {
+            "z_card_sort": float("nan"),
+            "z_pairwise": float("nan"),
+            "combined": card_sort[key],
+            "source": "card_sort_only",
+        })
+    for key in pw_keys - cs_keys:
+        out.setdefault(key, {
+            "z_card_sort": float("nan"),
+            "z_pairwise": float("nan"),
+            "combined": pairwise[key],
+            "source": "pairwise_only",
+        })
+
+    return out
+
+
+def _z(values: list[float]) -> list[float] | None:
+    """Sample z-score helper. Returns None on degenerate samples."""
+    if len(values) < 2:
+        return None
+    mean = sum(values) / len(values)
+    var = sum((v - mean) ** 2 for v in values) / (len(values) - 1)
+    sd = var ** 0.5
+    if sd == 0:
+        return None
+    return [(v - mean) / sd for v in values]
+
+
 def compute_gaps(
     revealed_means: dict[tuple[str, str], dict[str, Any]],
-    card_sort_scores: dict[tuple[str, str, str], float],
-    layer: str = "aspirational_self",
+    stated_layer: dict[tuple[str, str], float],
+    stated_source: str = "card_sort",
 ) -> dict[tuple[str, str], dict[str, float]]:
     """
     Primary gap per scoring.md §6:
@@ -545,20 +624,15 @@ def compute_gaps(
     gap = user aspires higher than their revealed behavior; negative = user
     reveals more virtue than they claim.
 
-    Requires ≥ 2 users per domain to compute a within-domain z-score. The
-    full validation-cohort analyzer would use bootstrap CIs (§8); here we
-    return only the point estimate.
-    """
-    # Filter card-sort to just the target layer
-    aspirational = {
-        (u, d): score
-        for (u, d, l), score in card_sort_scores.items()
-        if l == layer
-    }
+    `stated_layer` is the aspirational-layer stated score per (user, domain),
+    pre-filtered. `stated_source` is metadata describing which feeder produced
+    the stated value ('card_sort', 'pairwise', or 'combined').
 
+    Requires ≥ 2 users per domain to compute a within-domain z-score.
+    """
     # Find (user, domain) pairs that have BOTH revealed and stated
     revealed_keys = set(revealed_means.keys())
-    stated_keys = set(aspirational.keys())
+    stated_keys = set(stated_layer.keys())
     common = sorted(revealed_keys & stated_keys)
     if not common:
         return {}
@@ -568,7 +642,7 @@ def compute_gaps(
     stated_by_domain: dict[str, list[tuple[str, float]]] = defaultdict(list)
     for user, domain in common:
         revealed_by_domain[domain].append((user, revealed_means[(user, domain)]["mean"]))
-        stated_by_domain[domain].append((user, aspirational[(user, domain)]))
+        stated_by_domain[domain].append((user, stated_layer[(user, domain)]))
 
     z_revealed = _standardize_per_domain(revealed_by_domain)
     z_stated = _standardize_per_domain(stated_by_domain)
@@ -581,6 +655,7 @@ def compute_gaps(
             "z_revealed": z_revealed[key],
             "z_stated_aspirational": z_stated[key],
             "gap": z_stated[key] - z_revealed[key],
+            "stated_source": stated_source,
         }
     return out
 
@@ -720,9 +795,42 @@ def main() -> int:
             value_domain = load_values_deck_domains()
         pw_scores = pairwise_scores(pw_responses, value_domain)
 
+    # If both card-sort and pairwise are supplied, compute the combined per §5.3
+    combined_stated: dict[tuple[str, str, str], dict[str, Any]] = {}
+    if cs_scores and pw_scores:
+        combined_stated = combined_stated_score(cs_scores, pw_scores)
+
+    # Pick the best-available stated layer for gap computation
     gaps: dict[tuple[str, str], dict[str, float]] = {}
-    if user_scores and cs_scores:
-        gaps = compute_gaps(user_scores, cs_scores)
+    if user_scores:
+        # Prefer combined; fall back to card-sort alone
+        if combined_stated:
+            asp_filtered = {
+                (u, d): r["combined"]
+                for (u, d, l), r in combined_stated.items()
+                if l == "aspirational_self"
+            }
+            source = "combined"
+        elif cs_scores:
+            asp_filtered = {
+                (u, d): s
+                for (u, d, l), s in cs_scores.items()
+                if l == "aspirational_self"
+            }
+            source = "card_sort"
+        elif pw_scores:
+            asp_filtered = {
+                (u, d): s
+                for (u, d, l), s in pw_scores.items()
+                if l == "aspirational_self"
+            }
+            source = "pairwise"
+        else:
+            asp_filtered = {}
+            source = "none"
+
+        if asp_filtered:
+            gaps = compute_gaps(user_scores, asp_filtered, stated_source=source)
 
     if args.json:
         out: dict[str, Any] = {
