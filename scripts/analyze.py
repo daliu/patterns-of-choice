@@ -12,10 +12,11 @@ Implemented here:
   is supplied
 - Primary gap computation (§6) when both --log and --card-sort are present:
   z(stated_aspirational) - z(revealed), standardized per-domain across users
+- Bootstrap 95% CIs (§8) on revealed scores and gaps, with the pre-committed
+  random seed (20260510) per the scoring spec
 
 Reserved for the future validation-cohort analyzer:
 - Bradley-Terry inventory scoring on pairwise data (§5.2)
-- Bootstrap CIs (§8)
 - CFA on item-level loadings (§7)
 - Per-domain probe aggregation as a CFA indicator (§7)
 
@@ -39,10 +40,16 @@ import argparse
 import csv
 import json
 import math
+import random
 import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
+
+# Pre-committed random seed per scoring.md §8. Lock this before OSF filing.
+BOOTSTRAP_SEED = 20260510
+BOOTSTRAP_N = 10000
+BOOTSTRAP_CI = 0.95
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TAG_MAP = REPO_ROOT / "analysis" / "tag_axis_map_v0.1.csv"
@@ -127,29 +134,71 @@ def session_means(
     }
 
 
+def _bootstrap_ci_mean(
+    values: list[float],
+    rng: random.Random,
+    n_iter: int = BOOTSTRAP_N,
+    ci: float = BOOTSTRAP_CI,
+) -> tuple[float, float]:
+    """
+    Non-parametric bootstrap CI for the mean. Returns (lower, upper) per
+    the percentile method per scoring.md §8. Random sample with replacement;
+    deterministic per the pre-committed seed in the caller.
+
+    Degenerate cases:
+    - n=1: CI undefined; return (nan, nan)
+    - n<1: same
+    """
+    n = len(values)
+    if n < 2:
+        return (float("nan"), float("nan"))
+
+    means = []
+    for _ in range(n_iter):
+        sample = [rng.choice(values) for _ in range(n)]
+        means.append(sum(sample) / n)
+    means.sort()
+    alpha = (1 - ci) / 2
+    lower_idx = int(n_iter * alpha)
+    upper_idx = int(n_iter * (1 - alpha))
+    return (means[lower_idx], means[min(upper_idx, n_iter - 1)])
+
+
 def user_domain_means(
     session_score_map: dict[tuple[str, str, str], float],
 ) -> dict[tuple[str, str], dict[str, Any]]:
     """
     Per scoring.md §3.2: revealed_score(user, d) = mean of session scores.
-    Returns dict keyed by (user, domain) → {mean, n_sessions, ci_loose}.
-    The 'ci_loose' is a placeholder ±1 SE; production analyzer would do
-    bootstrap CI per §8.
+    Returns dict keyed by (user, domain) → {mean, n_sessions, se, ci_low,
+    ci_high}. Bootstrap CI per §8 with pre-committed seed.
     """
     grouped: dict[tuple[str, str], list[float]] = defaultdict(list)
     for (user, _session, domain), score in session_score_map.items():
         grouped[(user, domain)].append(score)
 
+    # Deterministic RNG keyed by the pre-committed seed
+    rng = random.Random(BOOTSTRAP_SEED)
+
     out: dict[tuple[str, str], dict[str, Any]] = {}
-    for key, scores in grouped.items():
+    for key in sorted(grouped.keys()):
+        scores = grouped[key]
         n = len(scores)
         mean = sum(scores) / n
         if n > 1:
             var = sum((s - mean) ** 2 for s in scores) / (n - 1)
             se = (var / n) ** 0.5
+            ci_low, ci_high = _bootstrap_ci_mean(scores, rng)
         else:
             se = float("nan")
-        out[key] = {"mean": mean, "n_sessions": n, "se": se}
+            ci_low = float("nan")
+            ci_high = float("nan")
+        out[key] = {
+            "mean": mean,
+            "n_sessions": n,
+            "se": se,
+            "ci_low": ci_low,
+            "ci_high": ci_high,
+        }
     return out
 
 
@@ -159,12 +208,20 @@ def render_table(scores: dict[tuple[str, str], dict[str, Any]]) -> str:
     if not rows:
         return "(no scores computed)"
 
-    header = f"{'user_id':<24} {'domain':<26} {'mean':>7} {'sess':>5} {'se':>7}"
+    header = (
+        f"{'user_id':<24} {'domain':<26} {'mean':>7} {'sess':>5} "
+        f"{'95% CI':>16}"
+    )
     out = [header, "-" * len(header)]
     for (user, domain), s in rows:
         mean = f"{s['mean']:+.3f}"
-        se = "    nan" if s["se"] != s["se"] else f"{s['se']:.3f}"
-        out.append(f"{user:<24} {domain:<26} {mean:>7} {s['n_sessions']:>5} {se:>7}")
+        if s["ci_low"] != s["ci_low"]:
+            ci_str = "         nan"
+        else:
+            ci_str = f"[{s['ci_low']:+.2f}, {s['ci_high']:+.2f}]"
+        out.append(
+            f"{user:<24} {domain:<26} {mean:>7} {s['n_sessions']:>5} {ci_str:>16}"
+        )
     return "\n".join(out)
 
 
@@ -527,6 +584,8 @@ def main() -> int:
                     "revealed_score_mean": s["mean"],
                     "n_sessions_contributing": s["n_sessions"],
                     "se": None if s["se"] != s["se"] else s["se"],
+                    "ci_95_low": None if s["ci_low"] != s["ci_low"] else s["ci_low"],
+                    "ci_95_high": None if s["ci_high"] != s["ci_high"] else s["ci_high"],
                 }
                 for (user, domain), s in sorted(user_scores.items())
             ]
