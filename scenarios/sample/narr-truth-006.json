@@ -1,0 +1,114 @@
+{
+  "id": "narr-truth-006",
+  "type": "core-narrative",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "The reference",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Third truth-telling narrative. narr-truth-002 was workplace happy hour (single evening); narr-truth-004 was family aging-parent decision (multi-stage emotional). This narrative is workplace professional-integrity at multi-month scale — do you act on partial information about a colleague's past behavior to affect a current decision they care about? Three decision points before, just after, and months after a colleague's promotion. The user's information is real but not fully provable; the colleague is otherwise respected and a friend.",
+    "domain_anchor": "Whistleblower psychology literature (Miceli & Near); on conflicted loyalty in professional ethics (Bok 1989). Edmondson on psychological safety in upward disclosure. The 'partial information you can't prove but are confident about' framing is the practical edge case the academic literature on whistleblowing doesn't fully cover.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["workplace ethics / professional integrity"]
+  },
+  "setup": "L is a colleague you respect — competent, generous, well-liked. You've known each other for several years and you'd call them a friend, though not a close one.\n\nL is being considered for a senior role at your company. The decision is in a few weeks.\n\nA year and a half ago you were tangentially involved in a project where L worked closely with another colleague (M). You noticed at the time — and never raised — that L took disproportionate credit and pushed M's contribution into the background. M left the company about six months later, partly (you suspect) because of how that project unfolded.\n\nYou don't have proof that would hold up under scrutiny. You have your own observation, some saved messages that suggest the pattern, and a strong but not airtight read of what happened. The new role L is being considered for would have substantial influence over junior people who'd be in roughly the position M was in.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "The promotion decision is being discussed in the next leadership review. What do you do?",
+      "choices": [
+        { "id": "c1", "text": "Raise the concern with leadership — clearly framed, with what you observed, named as your perspective rather than a charge. They can weigh it.", "next": "scene-2-raise-up", "tags": ["truth:confront-direct", "fairness", "counterparty:senior", "stake:high-reputation", "self-cost:reputation", "value:honesty", "value:fairness"] },
+        { "id": "c2", "text": "Talk to L privately first: 'I want you to know I've been thinking about the M situation. I haven't raised it; before the promotion I want to ask you about it.'", "next": "scene-2-talk-to-l", "tags": ["truth:confront-mild", "loyalty", "counterparty:peer", "stake:medium-social", "value:honesty", "value:loyalty"] },
+        { "id": "c3", "text": "Try to gather more — reach out to M (who you have a peripheral contact with) to understand their side better before doing anything.", "next": "scene-2-gather-info", "tags": ["vigilance", "fairness", "counterparty:peer-known-past", "stake:medium-time", "value:fairness", "value:vigilance"] },
+        { "id": "c4", "text": "Stay silent. Your read of what happened is yours; you weren't directly involved enough to act on partial information.", "next": "scene-2-stay-silent", "tags": ["lie:omission", "boundaries", "counterparty:peer", "stake:low-social", "value:boundaries", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "scene-2-raise-up",
+      "text": "Leadership listens. They thank you for the input; they don't tell you what they'll do with it. L is promoted anyway. A few days later L stops you in a hallway, visibly tense: 'I heard someone raised concerns about me. Was that you?'",
+      "choices": [
+        { "id": "c1", "text": "Confirm directly: 'Yes. I want to talk about it with you. I'm sorry it surfaced that way.'", "next": "scene-end-raise-confirmed", "tags": ["truth:commission", "counterparty:peer", "stake:high-social", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "c2", "text": "Acknowledge without specifics: 'I shared some thoughts with leadership in the review. It wasn't aimed at you personally.'", "next": "scene-end-raise-soft", "tags": ["truth:partial", "counterparty:peer", "stake:medium-social", "value:tact", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "scene-2-talk-to-l",
+      "text": "L is defensive at first, then thoughtful. They acknowledge that they 'could have handled the M thing better' but don't quite take responsibility for the framing you'd describe. They ask you not to raise it. The promotion goes through a few weeks later. Three months in, you see L in a 1:1 with a junior colleague (J) and the same pattern starts emerging — J's work is being subtly attributed to L in leadership updates.",
+      "choices": [
+        { "id": "c1", "text": "Raise it now, with leadership, with specifics this time including the pattern with J.", "next": "scene-end-talk-then-raise", "tags": ["truth:deferred-confront", "fairness", "counterparty:senior", "stake:high-reputation", "value:honesty", "value:fairness"] },
+        { "id": "c2", "text": "Talk to L again first. Give them a chance to address it before involving leadership.", "next": "scene-end-talk-then-talk", "tags": ["loyalty", "truth:confront-mild", "counterparty:peer", "stake:medium-social", "value:loyalty", "value:cooperation"] }
+      ]
+    },
+    {
+      "id": "scene-2-gather-info",
+      "text": "You reach out to M. They're reluctant at first; the conversation is awkward. Over coffee a week later, M shares more of what happened. Your read was substantively right but there were nuances you didn't see — including some legitimate grievances M had with the company beyond L. The picture is more complicated than your initial read.\n\nThe promotion decision is now a week away.",
+      "choices": [
+        { "id": "c1", "text": "Raise the concern with leadership now — with M's permission and the more nuanced framing.", "next": "scene-end-gather-then-raise", "tags": ["truth:commission", "fairness", "counterparty:senior", "stake:medium-reputation", "value:honesty", "value:fairness"] },
+        { "id": "c2", "text": "Don't raise it. The picture is muddier than you thought; partial information isn't enough to justify acting.", "next": "scene-end-gather-then-silent", "tags": ["lie:omission", "vigilance", "counterparty:senior", "stake:low-social", "value:vigilance", "value:tact"] }
+      ]
+    },
+    {
+      "id": "scene-2-stay-silent",
+      "text": "L is promoted. Six months in, the pattern from the M situation is unmistakably repeating with J — credit drift, contribution-erasure in updates. J starts looking visibly worn. You can see what's coming.",
+      "choices": [
+        { "id": "c1", "text": "Raise it now, even later: 'I should have said something a year ago about M. I'm saying it now about J.'", "next": "scene-end-silent-then-late-truth", "tags": ["truth:deferred-confront", "fairness", "counterparty:senior", "stake:high-reputation", "self-cost:reputation", "value:honesty", "value:fairness"] },
+        { "id": "c2", "text": "Stay out. You missed the moment to speak up; raising it now will look like sour grapes.", "next": "scene-end-silent-then-residue", "tags": ["lie:omission", "vigilance", "counterparty:senior", "stake:low-social", "moral-residue"] }
+      ]
+    },
+    {
+      "id": "scene-end-raise-confirmed",
+      "text": "The conversation with L is hard but honest. They're hurt and a little angry; they also know you're not lying about what you saw. Six months later L has been notably more careful about credit-attribution with their team — partly because of this conversation, partly because they were also told something by leadership. The friendship cools but stays intact. M, you later learn, was contacted by leadership as part of the review.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-raise-soft",
+      "text": "L accepts the framing and doesn't push for specifics. The promotion stands. Six months later you notice the same pattern emerging with J — credit drift, contribution erasure. You raised the concern but in a way that didn't carry; the system absorbed your input without acting on it. Some part of you wonders whether the soft framing was tact or cowardice.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-talk-then-raise",
+      "text": "Leadership takes the second escalation seriously — the specifics about J make the M pattern legible. L is given clear feedback and a partial structural intervention (additional oversight on credit-attribution). The friendship with L is significantly strained for a year; recovers partially after that. J's experience improves noticeably. You're not sure you handled this well at every step, but the late escalation worked.",
+      "terminal": true,
+      "tags": ["resolution:honest-discomfort", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-talk-then-talk",
+      "text": "L receives the second conversation with more defensiveness this time. They take some steps but the pattern continues in subtler forms. A year later J leaves the company. You learn afterward that other team members had also noticed the pattern but no one raised it formally. The reach of the private-conversation approach turned out to be smaller than you'd hoped.",
+      "terminal": true,
+      "tags": ["resolution:loyalty-over-honesty", "moral-residue"]
+    },
+    {
+      "id": "scene-end-gather-then-raise",
+      "text": "The more-nuanced framing lands well with leadership. The promotion goes through with explicit conditions attached around credit-attribution and mentorship. L is mildly cool with you for a while but no one knows it was specifically you. The system absorbed information; the outcome was modestly improved.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-gather-then-silent",
+      "text": "You decide the picture is too muddy to act on. The promotion happens. Six months later, the pattern repeats with J. You think about the conversation with M and the framework you built then; you also think about how partial your initial information was. Some private part of your read has shifted — not 'partial information is enough' but 'waiting for full information sometimes IS staying silent.'",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-silent-then-late-truth",
+      "text": "Raising it late is harder than raising it early would have been. Leadership listens but reads it as opportunistic — why now, not before? Some action is taken with respect to J; less than would have been possible a year ago. Your relationship with leadership is slightly more distanced afterward. You learn that raising late was still better than not raising at all, but the cost was steeper.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "social-cost:high", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-silent-then-residue",
+      "text": "J leaves the company eight months later, citing 'looking for a better fit.' L is now even more senior. You see the same pattern with another junior person and recognize you've watched two cycles of this without acting. The choice to stay silent at scene 1 has now compounded; there's a small private place where you have to decide what you do with the next instance, which will come.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "moral-residue", "tracked-discomfort"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "in_group_out_group",
+    "speed_vs_deliberation"
+  ]
+}
