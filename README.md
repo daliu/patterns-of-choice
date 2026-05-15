@@ -31,6 +31,8 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`types.ts`](types.ts) — TypeScript type definitions for all the JSON content schemas. Declarative only; no runtime or framework commitment. Schema-in-code complement to `scenarios/SCHEMA.md` and `inventory/SCHEMA.md`. Any future implementation can typecheck against this contract.
 - [`DECISIONS.md`](DECISIONS.md) — running log of load-bearing design choices with rationale; lightweight ADR format. Append-only.
 - [`PROJECT-STATUS.md`](PROJECT-STATUS.md) — current state snapshot across every track. Solid vs provisional, open decisions waiting on the owner, dependency checklists to launch each phase, realistic timeline.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — five-minute orientation for any new contributor. What to read first, by-goal entry points, conventions, what kinds of contributions are in/out of scope.
+- [`Makefile`](Makefile) — `make setup` / `make validate` / `make analyze` / `make demo` — the common-task entry points.
 - [`scripts/`](scripts/) — utility scripts. Currently: `validate.py` (content-validation, Python, single dependency `jsonschema`). The first executable code in the repo. See [`scripts/README.md`](scripts/README.md) for the engineering-line-crossing rationale.
 - [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schema (4 quick-fires, 4 cost-of-virtue probes, 1 branching narrative)
 - [`inventory/`](inventory/) — stated-values inventory module: values deck, forced-choice pairs, three-layer prompts, story prompts
