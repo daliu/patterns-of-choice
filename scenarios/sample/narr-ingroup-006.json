@@ -1,0 +1,114 @@
+{
+  "id": "narr-ingroup-006",
+  "type": "core-narrative",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "The drift",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Third in-group/out-group narrative. narr-ingroup-002 was residential community (single-arc moment); narr-ingroup-004 was workplace factionalism (short-arc within an existing team). This narrative captures slow-arc community drift over a year — a recognizable pattern for online communities, professional societies, hobby groups, and any voluntary affiliation that grows and changes over time. Three decisions across roughly a year as the community shifts from its original culture to something newer.",
+    "domain_anchor": "Hirschman 1970 Exit, Voice, and Loyalty — the canonical framework for response to declining quality in voluntary organizations. Putnam Bowling Alone on community drift over time. Online community research (Kraut, Resnick) on community maturation and norm shift.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": ["voluntary community / belonging dynamics"]
+  },
+  "setup": "You've been active in an online community for about five years — pick what fits: a niche professional forum, a Discord server around an interest, a long-running Slack workspace, a community subreddit. The original culture had a specific texture you appreciated: knowledgeable, generous with time, willing to push back on weak takes.\n\nOver the past year the community has grown. Newer members are friendly but don't share the same baseline norms — quick takes get more upvotes than careful ones; thread depth has dropped; some of the long-time members have been quieter, a few have left without saying goodbye.\n\nThe community isn't bad. It's just different. You feel caught between loyalty to who the community was, openness to who it's becoming, and your own time investment.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "What's your move right now?",
+      "choices": [
+        { "id": "c1", "text": "Post publicly — naming what's shifted and what you'd like to see preserved. Try to influence direction.", "next": "scene-2-voice", "tags": ["truth:commission", "loyalty", "counterparty:in-group-community", "stake:medium-social", "value:authenticity", "value:loyalty"] },
+        { "id": "c2", "text": "Reach out to a few long-time members privately. Make sure the people who shaped the original culture aren't drifting in isolation.", "next": "scene-2-private", "tags": ["loyalty", "cooperation", "counterparty:in-group-peer", "stake:low-social", "value:loyalty", "value:cooperation"] },
+        { "id": "c3", "text": "Adapt — engage with the new norms. Maybe the change is just growth and you're being precious about the old culture.", "next": "scene-2-adapt", "tags": ["universalism", "hospitality", "counterparty:in-group-community", "stake:low-social", "value:hospitality", "value:authenticity"] },
+        { "id": "c4", "text": "Start drifting yourself. The community is what it is now; spend your time where it pays back what you put in.", "next": "scene-2-drift", "tags": ["independence", "vigilance", "counterparty:in-group-community", "stake:low-time", "value:independence", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "scene-2-voice",
+      "text": "Your post gets mixed reactions. Several long-time members say variations of 'finally, someone said it.' Newer members are friendly but read your concerns as gatekeeping. The mods don't intervene either way. Six months later, the central voice in the community (a long-time admin who'd been quiet) announces they're stepping back. Whatever lever they'd been holding is going to go to someone newer.",
+      "choices": [
+        { "id": "c1", "text": "Volunteer to take over the admin role yourself. The voice-but-no-action pattern doesn't preserve the culture; doing the work might.", "next": "scene-end-voice-step-up", "tags": ["cooperation", "value:authenticity", "counterparty:in-group-community", "stake:high-time", "value:cooperation", "value:loyalty"] },
+        { "id": "c2", "text": "Let the new admin emerge. Your role was to surface the question; what happens next is the community's call.", "next": "scene-end-voice-step-back", "tags": ["boundaries", "trust:institutional", "counterparty:in-group-community", "stake:low-social", "value:boundaries", "value:trust"] }
+      ]
+    },
+    {
+      "id": "scene-2-private",
+      "text": "The private conversations turn out to be more vivid than you'd expected. The long-time members share variations on the same observation — some of them have been thinking about leaving. A small informal group forms; you start coordinating who reaches out to whom. Six months in, the question becomes: do you make this visible? Some members of the small group want to coordinate a more public action; others want to keep it private.",
+      "choices": [
+        { "id": "c1", "text": "Push the group to act publicly: a coordinated post, an attempt to set norms openly. Private coordination is hard to scale.", "next": "scene-end-private-then-public", "tags": ["truth:commission", "universalism", "counterparty:in-group-peer", "stake:high-social", "value:honesty", "value:universalism"] },
+        { "id": "c2", "text": "Keep the coordination informal. Sometimes private networks of influence are how communities stay healthy without theatrical confrontation.", "next": "scene-end-private-stay-private", "tags": ["loyalty", "discretion", "counterparty:in-group-peer", "stake:medium-social", "value:loyalty", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "scene-2-adapt",
+      "text": "You make a conscious effort: engage with the new norms, give the newer members generous benefit of the doubt, participate in the lighter-weight threads. Some of it works — you find unexpected value in voices you'd written off. Some of it doesn't — you feel quietly disengaged, scrolling without contributing. Six months in, you notice that the long-time members you were closest to have gone almost completely silent.",
+      "choices": [
+        { "id": "c1", "text": "Reach back to the long-timers — name what you've noticed and ask if any of you can do something together.", "next": "scene-end-adapt-then-reach", "tags": ["truth:deferred-confront", "loyalty", "counterparty:in-group-peer", "stake:medium-social", "value:honesty", "value:loyalty"] },
+        { "id": "c2", "text": "Keep adapting. The shift you're describing might just be your own preferences becoming dated.", "next": "scene-end-adapt-then-resign", "tags": ["trust:institutional", "universalism", "counterparty:in-group-community", "stake:low-social", "value:trust", "value:universalism"] }
+      ]
+    },
+    {
+      "id": "scene-2-drift",
+      "text": "You log in less. You miss things. Six months in, you realize someone (a long-time member you knew well) has fully left and you didn't know until you finally checked their profile. Around the same time, an old friend from the community messages you privately: 'Where have you been?'",
+      "choices": [
+        { "id": "c1", "text": "Re-engage, honestly. The drift wasn't really what you wanted; the community is what you choose to invest in.", "next": "scene-end-drift-then-return", "tags": ["truth:state", "cooperation", "counterparty:in-group-peer", "stake:medium-emotional", "value:authenticity", "value:loyalty"] },
+        { "id": "c2", "text": "Let it complete. Maintain the friendships individually rather than through the community.", "next": "scene-end-drift-complete", "tags": ["independence", "boundaries", "counterparty:in-group-peer", "stake:low-social", "value:independence", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "scene-end-voice-step-up",
+      "text": "Being the new admin is real work. Some of it is rewarding — you shape early-thread norms with a light touch and see them taking. Some of it is tiring — moderating disputes, declining requests, being the person people point at when they're unhappy. A year in, the community hasn't recovered the original culture but it's stabilized into a recognizable version of itself. You're tired. You don't regret the year. The community knows what it owes you, in a quiet way.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned", "self-cost:time"]
+    },
+    {
+      "id": "scene-end-voice-step-back",
+      "text": "The new admin emerges from the newer-member side. They're nice; their priorities differ. A year in, the community has settled into something further from where it started. Some long-time members you posted to support have stayed; some have left. You're still around but you've reduced your time. The post mattered; you're not sure if it mattered enough.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-private-then-public",
+      "text": "The coordinated public action lands. Some of the newer members are receptive; some read it as a clique asserting itself. The community goes through a public period of disagreement that's painful but generative. A year in, the norms have stabilized closer to the original — partly because of the action, partly because some of the most-conflicted newer members left. You're aware that some of what happened was less elegant than you'd have liked.",
+      "terminal": true,
+      "tags": ["resolution:honest-costly", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-private-stay-private",
+      "text": "The informal network holds. The community drift continues at a slower pace than it might have, because the private members are quietly steering threads, mentoring newer members, and modeling the original norms. A year in, the community is recognizable. You're not sure how much of what worked was the network and how much was time — the community might have stabilized anyway. The network is now itself a kind of in-group within the in-group.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned"]
+    },
+    {
+      "id": "scene-end-adapt-then-reach",
+      "text": "The conversation with the long-timers is honest. Some of them are glad you reached out; some of them have already half-checked-out and don't want to be pulled back. A small subset of you starts something — a regular video call, a private thread, a side-project — that keeps the original-culture norms alive even as the main community continues changing. A year in, you're more engaged than you'd been six months ago, but in a smaller and more deliberate space.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-adapt-then-resign",
+      "text": "You keep adapting. By year's end you participate but you don't feel ownership the way you used to. The community is fine; you're a participant in something that no longer feels yours. You're not sure whether you've become more open or have just given up on a culture worth defending.",
+      "terminal": true,
+      "tags": ["resolution:ambivalent", "moral-residue", "tracked-discomfort"]
+    },
+    {
+      "id": "scene-end-drift-then-return",
+      "text": "Coming back is harder than leaving was. You re-engage carefully, mostly with the friend who messaged you. Over a few months you find your way back into a more limited but real participation. The drift you were doing wasn't actually what you wanted; the friend's message turned out to be the prompt you needed to notice.",
+      "terminal": true,
+      "tags": ["resolution:positive", "stated-revealed-aligned-late"]
+    },
+    {
+      "id": "scene-end-drift-complete",
+      "text": "You and the friend continue individually. The community settles into its newer form without you. A year on, you don't actively miss it most days — but there are moments when you go looking for a question that the community would have answered well, and you realize you no longer have that resource. The friendship is intact; the community membership has quietly ended.",
+      "terminal": true,
+      "tags": ["resolution:avoidance", "moral-residue"]
+    }
+  ],
+  "reflection_prompt": "Earlier you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "in_group_out_group",
+    "speed_vs_deliberation"
+  ]
+}
