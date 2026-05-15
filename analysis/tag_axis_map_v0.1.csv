@@ -156,6 +156,7 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,stake:high-financial,,stake stratifier (large financial cost)
 *,metadata,stake:low-financial,,stake stratifier (small financial cost)
 *,metadata,stake:high-reputation,,stake stratifier (substantial reputation/career stake)
+*,metadata,stake:low-reputation,,stake stratifier (mild reputation/credibility stake)
 *,metadata,stake:medium-time,,stake stratifier (a few hours of discretionary time)
 *,metadata,stake:high-time,,stake stratifier (a substantial ongoing time commitment)
 *,metadata,stake:low-time,,stake stratifier (under an hour of discretionary time)

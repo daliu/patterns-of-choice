@@ -82,20 +82,22 @@ Plus [`types.ts`](types.ts) (declarative TypeScript schemas), JSON Schema files 
 
 [`literature/`](literature/) — first pass produced 9 area notes + index. Second pass focused on ecological-validity-positive added a deeper note. Plus the `ecological-validity-positive.md` note that landed the second pass. The literature work has saturated for current purposes; further passes would be focused additions on specific questions as they arise.
 
-### Engineering: **tooling line crossed, runtime line open**
+### Engineering: **tooling line crossed; runtime line touched at minimum-step**
 
 Crossed (tooling track):
 - Validator (validate.py, single dependency)
 - CI workflow (.github/workflows/validate.yml)
-- Analyzer (analyze.py, standard library)
+- Analyzer (analyze.py, standard library, seven scoring-spec sections)
 
-Not crossed (runtime track):
-- The product app itself — what the user actually interacts with
+Smallest possible runtime step taken:
+- `demo/first-session.html` — single-file vanilla JS demo of one quick-fire scenario. Demonstrates the format renders interactively, includes the candor moment + step-away branch + timer + session-end observation. Does not commit to React / Svelte / any specific stack; the production runtime decision genuinely remains open.
+
+Not crossed (production runtime):
+- The product app itself with full session orchestration (multiple scenarios, three-layer card sort, story prompt, profile reveal)
 - The sync infrastructure
 - The auth layer
-- The session orchestration / scenario rendering engine
-- The inventory engine
-- The notification layer
+- The notification / scheduling layer
+- The persistence layer (IndexedDB locally, encrypted sync)
 
 `mvp.md §"Tech stack proposal"` names React + TypeScript + Vite as the working hypothesis but this is not locked. The runtime is genuinely the next big crossing and deserves Dave's explicit input — particularly on:
 

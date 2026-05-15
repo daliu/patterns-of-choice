@@ -1,0 +1,65 @@
+{
+  "id": "qf-truth-009",
+  "type": "quick-fire-round",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Honesty about uncertainty",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Fifth truth-telling quick-fire. Where prior rounds covered in-the-moment lies (qf-001), modality variation (qf-003), past-misrepresentation correction (qf-005), and evaluative-feedback honesty (qf-007), this round probes a specific facet that the others touch only obliquely: honesty about *not knowing*. Each item presents a situation where the easy move is to project confidence; the honest alternative is admitting epistemic uncertainty. Maps less cleanly onto the truth/lie binary because saying you 'don't know' isn't a lie, but pretending to know is — the asymmetry is the construct of interest.",
+    "domain_anchor": "Tetlock & Gardner 2015 on calibrated confidence (the closest empirical anchor for epistemic-uncertainty honesty as a distinct construct). Schwitzgebel & Cushman 2012 on the practice of admitting moral uncertainty. Eyal et al. on intellectual humility as a separable trait.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-truth-009-i01",
+      "prompt": "A friend asks for your read on a domain where you have moderate familiarity but not deep expertise. They're waiting for an answer.",
+      "options": [
+        { "id": "a", "text": "Give your honest take and flag the limits of what you know.", "tags": ["truth:partial", "counterparty:close", "stake:low-reputation", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Give a confident answer; you know enough to be useful.", "tags": ["lie:white", "counterparty:close", "stake:low-reputation", "self-cost:none", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-truth-009-i02",
+      "prompt": "A direct report asks you a technical question. You don't actually know the answer.",
+      "options": [
+        { "id": "a", "text": "Admit you don't know; offer to figure it out or point them to someone who would.", "tags": ["truth:commission", "counterparty:subordinate", "stake:medium-reputation", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Give your best guess as if you knew, and verify privately afterward.", "tags": ["lie:white", "counterparty:subordinate", "stake:medium-reputation", "self-cost:none", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-truth-009-i03",
+      "prompt": "In a meeting with leadership, someone asks 'what's the answer to X' — where you and the team have been candid in private that the answer is 'we don't know yet.'",
+      "options": [
+        { "id": "a", "text": "Say 'we don't know yet — here's what we know and what we're trying to figure out.'", "tags": ["truth:commission", "counterparty:senior", "stake:high-reputation", "self-cost:reputation", "value:honesty", "value:transparency"] },
+        { "id": "b", "text": "Provide a definite-sounding answer based on best available data, with hedging that reads as confident.", "tags": ["lie:omission", "counterparty:senior", "stake:high-reputation", "self-cost:none", "vigilance:self-protection"] }
+      ]
+    },
+    {
+      "id": "qf-truth-009-i04",
+      "prompt": "A professional (doctor, financial advisor, etc.) you've consulted is genuinely uncertain about their recommendation. They've said as much. You're uncomfortable with the uncertainty.",
+      "options": [
+        { "id": "a", "text": "Accept the uncertainty; ask how to think about decisions under it.", "tags": ["truth:commission", "trust", "counterparty:senior", "stake:low-emotional", "value:authenticity", "value:trust"] },
+        { "id": "b", "text": "Press them for a firmer answer; you need something to act on.", "tags": ["truth:abandon", "vigilance", "counterparty:senior", "stake:medium-emotional", "value:self_reliance", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-truth-009-i05",
+      "prompt": "Someone asks if you remember an event accurately. You're not actually sure — your memory feels confident but you know memory is unreliable in general.",
+      "options": [
+        { "id": "a", "text": "Share what you remember, with the caveat that your memory might be wrong on the specifics.", "tags": ["truth:partial", "counterparty:peer", "stake:low-reputation", "value:authenticity", "value:honesty"] },
+        { "id": "b", "text": "Confirm your memory as accurate; the hedging would just muddy the conversation.", "tags": ["lie:omission", "counterparty:peer", "stake:low-reputation", "self-cost:none", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-truth-009-i06",
+      "prompt": "A child (yours or one you're close to) asks why someone behaves a certain way. You don't really know.",
+      "options": [
+        { "id": "a", "text": "Say 'I don't really know — sometimes people do things for reasons we can't see.' Model the not-knowing.", "tags": ["truth:commission", "counterparty:child", "stake:low-emotional", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Offer a plausible-sounding explanation; kids appreciate having a story.", "tags": ["lie:white", "counterparty:child", "stake:low-emotional", "self-cost:none", "value:tact"] }
+      ]
+    }
+  ]
+}
