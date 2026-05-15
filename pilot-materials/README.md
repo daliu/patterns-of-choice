@@ -8,6 +8,7 @@ Operational documents needed to actually run the n=10 usability/calibration pilo
 - [`recruitment-script.md`](recruitment-script.md) — Prolific (or equivalent panel) listing template. Includes the screening criteria, time commitment, compensation structure, and the pre-pilot expectations.
 - [`weekly-interview-script.md`](weekly-interview-script.md) — 30-minute semi-structured weekly check-in template, with 4 week-specific question variants per pilot-protocol.md §4 (Week 1: candor reaction; Week 2: noticing daily decisions; Week 3: pre-reveal expectations; Week 4: post-reveal findings).
 - [`exit-interview-script.md`](exit-interview-script.md) — 45-minute structured exit interview across 5 sections (usability / scenario interpretability / honesty-of-self-reporting / wellbeing / open). Most-leveraged single conversation per participant.
+- [`informant-recruitment.md`](informant-recruitment.md) — week-4 opt-in informant wave operationalized: participant opt-in copy, informant invitation email, separate informant consent screen, HEXACO-60 instrument anchor, follow-up cadence, data-handling specifics, target metrics.
 
 ## Open
 
@@ -25,6 +26,5 @@ Approximate timeline from "co-PI identified" to "recruitment open": 8-12 weeks, 
 
 To be added when authored:
 
-- `informant-recruitment.md` — protocol for recruiting partner/coworker/friend informants for the optional week-4 wave
-- `data-handling-policy.md` — what happens to pilot data after the pilot ends (current default per consent form: discarded after analysis)
+- `data-handling-policy.md` — what happens to pilot data after the pilot ends, in more operational detail than the consent form (encryption-at-rest specifics, key custody, backup retention, deletion-verification protocol)
 - `scenario-editorial-review-queue.md` — running list of scenarios flagged for editorial review based on weekly + exit interview feedback (populated during pilot)
