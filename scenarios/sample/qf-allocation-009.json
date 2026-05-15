@@ -1,0 +1,65 @@
+{
+  "id": "qf-allocation-009",
+  "type": "quick-fire-round",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When you're allocating something that isn't yours",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Fifth resource-allocation quick-fire. Where the prior four varied counterparty (qf-001), resource-shape (qf-003), resource-type (qf-005), and help-structure (qf-007) — all in contexts where the user allocates their own resources — this round shifts to institutional allocation: voting on funds, board-level distributional choices, finite-budget cuts, public credit, lottery participation. The construct of interest is what happens when the user has fiduciary or structural responsibility for distributing resources that aren't strictly theirs.",
+    "domain_anchor": "Procedural-justice literature (Leventhal, Thibaut & Walker) for the institutional-fairness contexts. Konow 1996 'A Positive Theory of Economic Fairness' on fiduciary allocation. Engel 2011 dictator-meta still informs the base rates but the construct asymmetry is real.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-allocation-009-i01",
+      "prompt": "You're on a small committee voting on which of two local programs gets renewed funding. You have private information (a friend works in one) suggesting Program A is more effective; the committee mostly believes Program B is.",
+      "options": [
+        { "id": "a", "text": "Argue for A using the private information explicitly: 'I should disclose, but...'", "tags": ["truth:commission", "fairness", "counterparty:peer-group", "stake:medium-financial", "value:honesty", "value:fairness"] },
+        { "id": "b", "text": "Vote with the committee's reading. Your private information is too entangled to disclose cleanly.", "tags": ["cooperation", "discretion", "counterparty:peer-group", "stake:low-financial", "value:cooperation", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-009-i02",
+      "prompt": "You're on a small nonprofit board choosing between two grants you can fund. One helps a smaller number of people significantly; the other helps a larger number moderately. Both meet the org's mission.",
+      "options": [
+        { "id": "a", "text": "Argue for the smaller-deeper option. Significant change in fewer lives is preferable to thin help.", "tags": ["need_sensitivity", "particularism", "counterparty:peer-group", "stake:medium-financial", "value:need_sensitivity", "value:particularism"] },
+        { "id": "b", "text": "Argue for the larger-thinner option. Reach matters; broader impact is what scale is for.", "tags": ["universalism", "fairness", "counterparty:peer-group", "stake:medium-financial", "value:universalism", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-009-i03",
+      "prompt": "Your team budget has been cut. Two ongoing projects need to share what was previously one project's funding. Your closer collaborators run Project A; you respect Project B's lead but don't know them well.",
+      "options": [
+        { "id": "a", "text": "Propose 50/50 cuts to both projects. The strict-fairness move neutralizes the relationship asymmetry.", "tags": ["fairness:equal", "counterparty:peer-group", "stake:medium-financial", "value:fairness", "value:universalism"] },
+        { "id": "b", "text": "Propose proportional cuts based on each project's measured impact. Acknowledge the relationship-bias risk and try to control for it.", "tags": ["fairness", "truth:commission", "counterparty:peer-group", "stake:medium-financial", "value:fairness", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-009-i04",
+      "prompt": "You helped draft a relative's will. The will leaves you a share substantially larger than seems proportional to your role in their life. They're not gone yet but the discrepancy is on your mind.",
+      "options": [
+        { "id": "a", "text": "Raise it with them directly: 'I notice the share you've given me feels larger than I'd have expected. Can we talk about it?'", "tags": ["truth:confront-mild", "fairness", "counterparty:family-of-origin", "stake:high-financial", "self-cost:reputation", "value:honesty", "value:fairness"] },
+        { "id": "b", "text": "Accept it as their decision. They had the right to allocate as they chose; questioning it could feel like rejection.", "tags": ["trust", "particularism", "counterparty:family-of-origin", "stake:medium-emotional", "value:trust", "value:loyalty"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-009-i05",
+      "prompt": "A lottery for limited-availability tickets to a popular event is being held among a friend group. Five tickets, twelve interested people. You don't particularly want to go but don't dislike the idea either.",
+      "options": [
+        { "id": "a", "text": "Participate; tickets are zero-sum and you might be the right person for one.", "tags": ["reciprocity_pure", "counterparty:peer-group", "stake:low-social", "value:reciprocity_pure", "value:fairness:equal"] },
+        { "id": "b", "text": "Withdraw to improve someone else's odds; you don't need it as much as some friends will.", "tags": ["generosity", "need_sensitivity", "counterparty:peer-group", "stake:low-social", "value:generosity", "value:need_sensitivity"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-009-i06",
+      "prompt": "Your team won a public-facing award; the writeup names you as the lead. The truth is one of your direct reports did most of the meaningful work. The org wants the writeup published as is.",
+      "options": [
+        { "id": "a", "text": "Push back on the org: 'The writeup should name [report] as a co-lead. Here's why specifically.'", "tags": ["truth:confront-mild", "fairness", "counterparty:senior", "stake:medium-reputation", "self-cost:reputation", "value:honesty", "value:fairness", "credit:redirect"] },
+        { "id": "b", "text": "Accept the framing. The org's narrative has its own logic; the report can be acknowledged in other ways.", "tags": ["loyalty", "cooperation", "counterparty:senior", "stake:medium-reputation", "value:loyalty", "value:cooperation", "credit:keep"] }
+      ]
+    }
+  ]
+}

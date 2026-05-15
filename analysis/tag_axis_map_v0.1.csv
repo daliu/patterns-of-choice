@@ -176,5 +176,6 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,stake:medium-reputation,,stake stratifier (reputation/professional-standing stake)
 *,metadata,vigilance:self-protection,,vigilance subtype (workplace self-protective omission; not separately scored — lie:omission on the same choice captures the honesty-axis contribution)
 *,metadata,value:loyalty,,cross-domain value-reference (home: in-group-out-group; appears in other domains as descriptive metadata per per-scenario-domain scoring model)
+*,metadata,value:fairness:equal,,multi-segment tag — value:fairness with equal-split modifier; treat as metadata since value:fairness already scores
 
 
