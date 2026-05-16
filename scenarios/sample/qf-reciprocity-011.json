@@ -1,0 +1,65 @@
+{
+  "id": "qf-reciprocity-011",
+  "type": "quick-fire-round",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: After the breach",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Sixth reciprocity-cooperation quick-fire. Prior rounds covered when-to-engage (qf-001), pattern-vs-moment tension (qf-003), asymmetric-reciprocity (qf-005), commitment-keeping (qf-007), pay-it-forward (qf-009). This round centers the breach-response question: when cooperation is broken (by mistake, neglect, or low-grade dishonesty), what does the user do next? Axelrod 1984 showed tit-for-tat-with-forgiveness is the dominant strategy in iterated games, but real human reciprocity has gradations. Specifically tests whether revealed forgiveness is uniform across breach types or fragments by counterparty / breach-severity / repetition.",
+    "domain_anchor": "Axelrod 1984 The Evolution of Cooperation; McCullough et al. 2013 'Cognitive systems for revenge and forgiveness' on forgiveness as adaptive and context-dependent; Rusbult's investment-model literature on relationship-specific forgiveness thresholds.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-reciprocity-011-i01",
+      "prompt": "A friend backs out of a plan you both committed to, last minute, with a vague excuse you don't fully buy. It's the first time they've done this; the cost to you is moderate but real.",
+      "options": [
+        { "id": "a", "text": "Accept it warmly: 'Things come up. Let's reschedule.' First-time, low-evidence-of-pattern — extend trust.", "tags": ["forgiveness", "trust:default", "counterparty:close", "stake:low-social", "value:forgiveness", "value:trust"] },
+        { "id": "b", "text": "Name the gap honestly: 'No worries on the reschedule, but the excuse felt off — anything actually going on?'", "tags": ["truth:soft-confront", "vigilance:mild", "counterparty:close", "stake:medium-trust", "self-cost:reputation", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-011-i02",
+      "prompt": "A colleague was misleading in a small way that affected you (mis-attributed credit, claimed a deliverable wasn't ready when it was, etc.). The pattern is new. They haven't apologized.",
+      "options": [
+        { "id": "a", "text": "Move on. One instance isn't a pattern; raising it could escalate something that wasn't intentional.", "tags": ["forgiveness", "cooperation", "counterparty:peer", "stake:low-social", "value:forgiveness", "value:cooperation"] },
+        { "id": "b", "text": "Quietly adjust your trust calibration: stay cooperative on the surface, double-check shared work, raise it if it happens again.", "tags": ["vigilance:mild", "trust:withhold", "counterparty:peer", "stake:medium-trust", "value:vigilance"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-011-i03",
+      "prompt": "A family member apologizes for a hurt that's still recent — within the past few months. The apology is genuine but the apology alone doesn't undo the hurt; you can feel that you haven't fully landed back yet.",
+      "options": [
+        { "id": "a", "text": "Accept the apology fully and name that you accept it. The completed apology has its own work to do; protecting yourself from it slows the repair.", "tags": ["forgiveness", "trust", "counterparty:family-of-origin", "stake:medium-emotional", "self-cost:none", "value:forgiveness", "value:trust"] },
+        { "id": "b", "text": "Accept the apology partially and honestly: 'I appreciate this and want to be able to fully accept it; I'm not there yet. I'll let you know when I am.'", "tags": ["truth:state", "authenticity", "counterparty:family-of-origin", "stake:medium-emotional", "value:authenticity", "value:honesty"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-011-i04",
+      "prompt": "Someone you'd helped substantively in the past now does not reciprocate when you make a similar ask. They have a passable reason. The asymmetry stings.",
+      "options": [
+        { "id": "a", "text": "Let it go. Reciprocity isn't a ledger; the help you gave was for its own reasons, and one non-reciprocation isn't a pattern.", "tags": ["forgiveness", "cooperation", "counterparty:peer", "stake:medium-trust", "value:forgiveness", "value:cooperation"] },
+        { "id": "b", "text": "Name it once, plainly: 'I notice the asymmetry; I'm not keeping a ledger but I wanted you to know I noticed.'", "tags": ["truth:soft-confront", "authenticity", "counterparty:peer", "stake:medium-trust", "self-cost:reputation", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-011-i05",
+      "prompt": "A repeat-pattern. Same friend who broke commitment first time (light forgiveness in i01-style) has now done it again, third time in six months. The excuses have stayed vague.",
+      "options": [
+        { "id": "a", "text": "Stay generous. Some friends just have less reliable lives; the friendship is bigger than the cancellations.", "tags": ["forgiveness", "trust", "counterparty:close", "stake:low-emotional", "value:forgiveness", "value:loyalty"] },
+        { "id": "b", "text": "Renegotiate the relationship's reliability explicitly. 'I've noticed a pattern — let's talk about what's actually realistic for both of us.'", "tags": ["truth:confront-mild", "vigilance:mild", "counterparty:close", "stake:high-emotional", "self-cost:reputation", "value:honesty", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-011-i06",
+      "prompt": "A colleague who had agreed with you privately on a position publicly contradicted you in a meeting. After the meeting, they haven't reached out about it. Two days have passed.",
+      "options": [
+        { "id": "a", "text": "Let it go and don't reach out. The public dynamic is its own logic; raising it after the fact will be read as keeping score.", "tags": ["forgiveness", "discretion", "counterparty:peer", "stake:medium-reputation", "value:forgiveness", "value:tact"] },
+        { "id": "b", "text": "Reach out. 'I'd value understanding what shifted between our private conversation and the meeting — not as a complaint, just so I know where we stand.'", "tags": ["truth:soft-confront", "authenticity", "counterparty:peer", "stake:medium-reputation", "self-cost:reputation", "value:honesty", "value:transparency"] }
+      ]
+    }
+  ]
+}
