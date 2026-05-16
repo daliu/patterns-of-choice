@@ -1,0 +1,65 @@
+{
+  "id": "qf-allocation-011",
+  "type": "quick-fire-round",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: Generosity has a clock on it",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Sixth resource-allocation quick-fire. Prior rounds varied counterparty (qf-001), resource-shape (qf-003), resource-type (qf-005), help-structure (qf-007), and institutional fiduciary contexts (qf-009). This round varies the *temporal* dimension: acute one-time vs. ongoing, anticipatory vs. reactive, bounded vs. open-ended, surprise vs. predictable. The construct of interest is whether a user's generosity instinct holds up across different time horizons or fragments in characteristic ways (e.g., generous in the acute moment but reluctant about the recurring ask; quick to react but slow to anticipate). Useful for stratifying the per-domain revealed score by time-pattern in MVP-1 analysis.",
+    "domain_anchor": "Sustained vs episodic prosociality (Bekkers & Wiepking 2011 on giving regularity); behavioral-economic literature on episodic vs. recurring commitments (Newman & Shen 2012 on the donor commitment effect); informal-caregiving literature on the under-recognition of sustained giving (NAC/AARP 2020 Caregiving in the US).",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-allocation-011-i01",
+      "prompt": "A close friend texts late at night. A pipe burst at their place and they need help fast — a few hours of your time, tonight, on short notice. You have nothing urgent tomorrow but you'd planned to sleep.",
+      "options": [
+        { "id": "a", "text": "Go over. The acute-help moment is real and one-time; sleep can be tomorrow.", "tags": ["generosity", "counterparty:close", "stake:low-time", "self-cost:none", "value:generosity"] },
+        { "id": "b", "text": "Offer remote help (calls, finding plumbers) but don't physically go. The acute-favor framing tends to compound into the next one.", "tags": ["self_reliance:projected", "counterparty:close", "stake:low-time", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-011-i02",
+      "prompt": "A friend has been asking small favors regularly for the past three months — picking up things, short rides, drop-offs. Each one is small; together they are not. You'd previously been happy to help.",
+      "options": [
+        { "id": "a", "text": "Keep saying yes. The pattern matters less than the friendship; you can reset if it gets unsustainable.", "tags": ["generosity", "counterparty:close", "stake:low-time", "value:generosity"] },
+        { "id": "b", "text": "Raise it with them — not as a complaint, as a check-in. The recurring shape has changed what they're actually asking for.", "tags": ["self_reliance:projected", "counterparty:close", "stake:medium-trust", "self-cost:reputation", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-011-i03",
+      "prompt": "You know a family member will need substantial help in about six months — a planned medical situation, a move, a transition. They haven't asked. You have the chance to start pre-positioning support quietly now (savings, time, logistics).",
+      "options": [
+        { "id": "a", "text": "Start now. Pre-positioning is the most cost-effective kind of help; you have the runway.", "tags": ["generosity", "need_sensitivity", "counterparty:close", "stake:medium-time", "value:generosity"] },
+        { "id": "b", "text": "Wait until they ask or signal a need. Pre-positioning can be paternalistic; let them retain agency.", "tags": ["self_reliance:projected", "counterparty:close", "stake:low-time", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-011-i04",
+      "prompt": "A peer you know moderately well — not close — is in a sudden crisis (job loss, breakup, family emergency). You hear about it through the grapevine; they haven't reached out to you.",
+      "options": [
+        { "id": "a", "text": "Reach out unprompted with a specific concrete offer. The acute-moment outreach is the offer; vague 'let me know if you need anything' isn't help.", "tags": ["generosity", "need_sensitivity", "counterparty:peer", "stake:low-time", "value:generosity", "value:need_sensitivity"] },
+        { "id": "b", "text": "Wait for them to reach out. Unprompted attention can feel like surveillance; respect their privacy until they choose to share.", "tags": ["self_reliance:projected", "counterparty:peer", "stake:low-social", "value:self_reliance"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-011-i05",
+      "prompt": "A close friend asks for help with something where they want the help itself to be open-ended: 'just be around for the next couple weeks.' You want to help; the open-endedness gives you pause.",
+      "options": [
+        { "id": "a", "text": "Say yes to the open-ended version. The structure they're asking for IS the help; bounding it would change what they get.", "tags": ["generosity", "counterparty:close", "stake:medium-time", "self-cost:none", "value:generosity"] },
+        { "id": "b", "text": "Help, but bound it explicitly — name a defined scope (specific days, hours, kinds of support). Sustainable help is bounded help.", "tags": ["fairness:explicit", "counterparty:close", "stake:medium-time", "value:fairness"] }
+      ]
+    },
+    {
+      "id": "qf-allocation-011-i06",
+      "prompt": "You've been giving recurring small monthly support (financial, time-based, or both) to a cause / person for years. Your circumstances have tightened mildly; the recurring commitment isn't pinching but isn't as easy as it was.",
+      "options": [
+        { "id": "a", "text": "Maintain at the current level. Recurring giving's whole point is that it survives the small wobbles in your own circumstances.", "tags": ["generosity", "counterparty:peer-distant", "stake:medium-money", "value:generosity"] },
+        { "id": "b", "text": "Reduce the level honestly and tell them. Reducing without saying is dishonest; reducing while saying is sustainable.", "tags": ["fairness:explicit", "self_reliance", "counterparty:peer-distant", "stake:medium-money", "value:self_reliance", "value:fairness"] }
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ These predate the pre-launch sequence; included here for the dependency map.
 - [x] Pre-registration template ([`pre-registration.md`](pre-registration.md))
 - [x] Pilot protocol ([`pilot-protocol.md`](pilot-protocol.md))
 - [x] Pilot materials kit ([`pilot-materials/`](pilot-materials/))
-- [x] Scenario corpus, schema-validated (currently 40/48; sufficient for n=10 pilot)
+- [x] Scenario corpus, schema-validated (currently 41/48; sufficient for n=10 pilot)
 - [x] Stated-values inventory module
 - [x] Validator + analyzer (6 of 7 pre-reg hypotheses runnable on synthetic data)
 - [x] Decision log + status snapshot + walkthroughs
@@ -69,7 +69,7 @@ These predate the pre-launch sequence; included here for the dependency map.
 
 **Blocks:** Phase 5 (OSF lock requires content frozen). Can run in parallel with Phases 2-3.
 
-- [ ] **Author final 8 scenarios** to reach 48 corpus total (currently 40). Symmetric 12/domain (or another sensible allocation). Output: 48 scenarios all passing validator.
+- [ ] **Author final 7 scenarios** to reach 48 corpus total (currently 41). Symmetric 12/domain (or another sensible allocation). Output: 48 scenarios all passing validator.
 - [ ] **Final editorial review of all scenarios.** Bias check, semantic-tag check, cross-domain consistency. Output: review-complete sign-off.
 - [ ] **Lock the tag-axis map.** Per [`analysis/tag_axis_map_v0.1.csv`](analysis/tag_axis_map_v0.1.csv) versioning policy: bump to v1.0 at OSF filing. Output: v1.0 CSV.
 - [ ] **Lock all JSON schemas.** No schema changes after this point without an ADR. Output: schemas tagged as v1.0 in git.
