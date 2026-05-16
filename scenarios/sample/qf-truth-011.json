@@ -1,0 +1,65 @@
+{
+  "id": "qf-truth-011",
+  "type": "quick-fire-round",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When silence is the lie",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Sixth truth-telling quick-fire. Prior rounds covered active small lies (qf-001), audience-variation (qf-003), past misrepresentations resurfacing (qf-005), honest-feedback gradient (qf-007), and honesty about uncertainty (qf-009). This round centers the omission side: situations where the user is NOT being directly asked but the absence of speech is itself a stance. Tests whether users who reliably avoid commission lies also avoid omission lies, or whether there's a characteristic gap (omission tolerated where commission isn't) that the instrument should be able to detect.",
+    "domain_anchor": "Gentilin 2016 The Origins of Ethical Failures on the silence-of-bystanders pattern; behavioral-ethics literature on bounded ethicality (Bazerman & Tenbrunsel 2011) where omissions are characteristically rated as less wrong than commissions even when consequences are equivalent; Spranca/Minsk/Baron 1991 'Omission and commission in judgment and choice' as the foundational asymmetry result.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-truth-011-i01",
+      "prompt": "In a group conversation, someone confidently misstates a fact you happen to know clearly. The misstatement is not high-stakes but is wrong. No one else corrects it.",
+      "options": [
+        { "id": "a", "text": "Correct it briefly and plainly. 'Actually I think it's X — happy to be wrong if you have a source.'", "tags": ["truth:soft-confront", "counterparty:peer-group", "stake:low-social", "self-cost:reputation", "value:honesty", "value:transparency"] },
+        { "id": "b", "text": "Let it go. It's not material, and correcting unprompted shifts the room's tone in a way that costs more than the inaccuracy.", "tags": ["lie:omission", "discretion", "counterparty:peer-group", "stake:low-social", "social-cost:low", "value:discretion", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-truth-011-i02",
+      "prompt": "A new colleague repeats an inaccurate story about an absent person you know well. The story would shape how the colleague treats this person going forward.",
+      "options": [
+        { "id": "a", "text": "Correct it directly: 'I know that situation differently — here's what actually happened.'", "tags": ["truth:confront-mild", "counterparty:new-peer", "stake:medium-social", "self-cost:reputation", "value:honesty", "value:transparency"] },
+        { "id": "b", "text": "Stay out of it. Defending the absent person uninvited can read as taking sides; let it play out and address it if it becomes consequential.", "tags": ["lie:omission", "discretion", "counterparty:new-peer", "stake:low-social", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-truth-011-i03",
+      "prompt": "You overhear two colleagues making a plan based on a premise you know to be wrong. They didn't include you in the conversation; the wrong premise would lead them in a costly direction.",
+      "options": [
+        { "id": "a", "text": "Step in: 'Sorry to interrupt — I overheard, and I think the premise is off. Worth checking before you commit.'", "tags": ["truth:state", "transparency", "counterparty:peer-group", "stake:medium-social", "self-cost:reputation", "value:honesty", "value:transparency"] },
+        { "id": "b", "text": "Let them proceed. They didn't ask you in; intervening on overheard material crosses a small but real boundary.", "tags": ["lie:omission", "counterparty:peer-group", "stake:low-social", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-truth-011-i04",
+      "prompt": "A close friend asks 'is everything OK between us?' You've been holding a real concern about the friendship for weeks — nothing dramatic, but real. They are explicitly opening the door.",
+      "options": [
+        { "id": "a", "text": "Name it. 'Actually — yes, there's something I've been sitting with. Can we talk about it?'", "tags": ["truth:confront-direct", "authenticity", "counterparty:close", "stake:high-emotional", "self-cost:reputation", "value:honesty", "value:authenticity"] },
+        { "id": "b", "text": "Deflect mildly: 'Yeah, we're good — anything specific you were noticing?' Buys time to think about whether the concern survives the friendship.", "tags": ["lie:omission", "lie:white", "counterparty:close", "stake:medium-emotional", "value:tact"] }
+      ]
+    },
+    {
+      "id": "qf-truth-011-i05",
+      "prompt": "A meeting decision is being finalized based on information you know is incomplete. You're junior to the room; speaking up has some social cost. The decision isn't catastrophic if wrong but isn't trivial either.",
+      "options": [
+        { "id": "a", "text": "Speak up: 'Before we lock this — I want to flag a piece I think is missing.' Frame it as information, not objection.", "tags": ["truth:state", "transparency", "counterparty:senior", "stake:medium-social", "self-cost:reputation", "value:honesty", "value:transparency"] },
+        { "id": "b", "text": "Stay quiet. You can raise the gap afterward with whoever sponsored the call; not every flag has to land in real time.", "tags": ["lie:omission", "truth:deferred-confront", "counterparty:senior", "stake:low-social", "value:tact", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-truth-011-i06",
+      "prompt": "You're being praised in a meeting for something. The credit is overstated — you did some of the work, but a substantial portion was someone else's. They aren't in the room.",
+      "options": [
+        { "id": "a", "text": "Redirect the credit in the moment: 'Thanks — though [name] did the heavier piece on this and I want to make sure that's on the record.'", "tags": ["truth:confront-mild", "transparency", "counterparty:peer-group", "stake:medium-reputation", "self-cost:reputation", "value:honesty", "value:transparency"] },
+        { "id": "b", "text": "Accept the praise; mention the colleague later. Correcting in the moment can derail the room's energy; the truth is better placed in a follow-up.", "tags": ["lie:omission", "truth:deferred-confront", "counterparty:peer-group", "stake:medium-reputation", "value:tact", "value:discretion"] }
+      ]
+    }
+  ]
+}
