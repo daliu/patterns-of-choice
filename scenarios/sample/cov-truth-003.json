@@ -1,0 +1,37 @@
+{
+  "id": "cov-truth-003",
+  "type": "cost-of-virtue-probe",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Cost-of-virtue: paid self-misrepresentation",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Third truth-telling cost-of-virtue probe. Where cov-truth-001 probes paid endorsement of a third-party product (commission lie about something external) and cov-truth-002 probes paid omission (active withholding), this probe targets self-disclosure dishonesty — misrepresenting yourself. Per Levine et al. 2010 'Hierarchy of self-deception' and broader self-presentation literature, the bulk of everyday lies are self-presentational; a probe targeting this directly should produce a different break-point distribution than the third-party-product probes and may reveal a characteristic gap in users who avoid commission lies about products but tolerate them about themselves.",
+    "domain_anchor": "Levine et al. 2010 on self-presentation as the dominant lie type; DePaulo et al. 1996 'Lying in everyday life' on self-presentation lies as ~25-30% of everyday lies; Abeler et al. 2019 Econometrica meta still provides applicable stake-magnitude base rates.",
+    "estimated_duration_seconds": 90,
+    "content_warnings": []
+  },
+  "value_slot": "honesty",
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": "honesty",
+    "ladder_currency": "user-local"
+  },
+  "framing_prompt": "Earlier you said honesty matters to you. Suppose someone offered to pay you to misrepresent your professional background in a context where it would never be verified — a written bio for a small conference, a profile for an online forum, a context where the misrepresentation is plausibly material but unlikely to be checked. You can choose what specifically to claim falsely; the misrepresentation isn't asking you to claim something egregious (no fabricated credentials in regulated fields), just to round up — more years of experience, a more senior role, a relevant background you actually didn't have.",
+  "framing_question": "What's the smallest amount at which you'd say yes?",
+  "ladder": [
+    { "rung": 1, "stake": 10, "unit": "USD", "label": "$10" },
+    { "rung": 2, "stake": 100, "unit": "USD", "label": "$100" },
+    { "rung": 3, "stake": 1000, "unit": "USD", "label": "$1,000" },
+    { "rung": 4, "stake": 10000, "unit": "USD", "label": "$10,000" }
+  ],
+  "no_option": {
+    "id": "never",
+    "text": "I wouldn't do this at any of these amounts."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code as Inf for break-point analysis; report separately as 'integrity ceiling above probe range'",
+    "longitudinal_signal": "Within-user trajectory of break_point across sessions is the primary signal. Comparing this trajectory against cov-truth-001 (third-party endorsement) within the same user is a direct measurement of the self-presentation-vs-third-party asymmetry per Levine et al.; users for whom the two trajectories diverge meaningfully are the most interesting candidates for the qualitative cohort.",
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
+}
