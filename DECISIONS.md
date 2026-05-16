@@ -235,6 +235,35 @@ Append-only. Older decisions remain in place even when revisited; revisits get n
 
 ---
 
+## 16. Corpus structure at MVP-1: full symmetry over depth
+
+**Question.** When the scenario corpus reached the 40/48 point with `5 QF + 3 Narr + 2 CoV per domain × 4 domains` symmetric structure, the final 8 scenarios could have been allocated several ways: (a) 2 more QF per domain → `7+3+2`; (b) 1 more of each type per domain → `6+4+3`; (c) deepen one type (e.g., 2 more narratives per domain → `5+5+2`); (d) deepen one domain (skew toward truth-telling); (e) 1 more QF + 1 more CoV per domain → `6+3+3`. Which?
+
+**Decision.** Option (e): `6 QF + 3 Narr + 3 CoV per domain × 4 = 48 total`. Locked 2026-05-16 with `cov-reciprocity-003`. Full structural symmetry across domains × scenario types preserved at every cell of the matrix.
+
+**Rationale.** Three motivations:
+
+1. *Structural symmetry is load-bearing for the CFA*. The pre-registered H1 (`pre-registration.md` §6) assumes a 4-factor structure with comparable indicator counts per factor. Skewed authoring (option d) would create factor-imbalance that the validation cohort's n=200 may not have enough power to compensate for. Symmetric authoring keeps the construct burden constant across the four scoring domains.
+
+2. *CoV probes are the highest-leverage type per unit*. They directly power H5 (test-retest of cost-of-virtue break-points) and pair-analytically across probes (within-user vector across cov-001 / cov-002 / cov-003 separates types of inconsistency that the QF/Narr items can't isolate). 2-CoV-per-domain was a compromise driven by author-effort cost; the third CoV per domain pulls each domain's probe set up to where pair-analysis becomes a 4-way matrix of types (one-shot exploitation × forgiveness × iterated defection per domain in reciprocity; loyalty-monetization × loyalty-protection × loyalty-against-third-party-harm in in-group; etc.).
+
+3. *Adding QFs is the lowest-marginal-value direction once each domain has 5+*. QFs measure repeated-low-stake decisions; the construct space is well-covered by 5 per domain. The 6th QF in each domain authored during this iteration round (qf-allocation-011 temporal; qf-truth-011 omission-as-lie; qf-ingroup-011 circle-widening; qf-reciprocity-011 breach-response) each opened a distinct construct angle — but additional 7th/8th QFs would have begun to repeat construct ground.
+
+**Construct-distinction discipline for CoV authoring.** Each new CoV-3 was required to target a construct genuinely distinct from CoV-001 and CoV-002 within its domain — captured in the design_intent block of each scenario file and in the commit message rationale. Specifically:
+
+- **truth-telling**: cov-001 third-party endorsement (commission); cov-002 paid omission (active withholding); cov-003 self-misrepresentation (self-presentation lie type per Levine 2010). These are three distinct lie-type constructs, not three variations of one construct.
+- **resource-allocation**: cov-001 returning unfound money (fairness, inverted); cov-002 generosity from own resources (giving, inverted); cov-003 silent self-favoring as trusted allocator (taking, forward). Giving-direction × taking-direction × restitution-direction = three orthogonal sides of allocation morality.
+- **in-group/out-group**: cov-001 monetized loyalty (user as payee); cov-002 inflated reference (in-group member as beneficiary); cov-003 covering for wrongdoing (loyalty against third-party harm). User-payee × beneficiary-payee × third-party-harm = three structural positions for the loyalty/honesty tradeoff.
+- **reciprocity-cooperation**: cov-001 silent extra share (one-shot self-gain); cov-002 restitution to re-extend trust (forgiveness, inverted); cov-003 defection from sustained cooperation (iterated-coop defection). One-shot × past-betrayal × ongoing-relationship = three temporal positions for cooperation morality.
+
+**Trigger for future scenario additions.** Adding to the corpus beyond 48 should be motivated by a specific construct gap surfaced during the pilot, by co-PI review, or by validation-cohort data revealing low loadings for a particular item. Authoring for breadth alone — adding scenarios because more is more — should be resisted at this point; the marginal-value curve has flattened. This is the same discipline as the "lock the schemas at OSF filing" decision in pilot-pre-launch-checklist.md Phase 4.
+
+**Considered and rejected.** Option (a) — extra QFs — would have left the CoV probes at 2 each, which keeps the highest-leverage probe type undersaturated. Option (c) — deepen narratives — narratives are author-expensive and the existing 3 per domain already provide enough setting diversity (workplace × family × peer-group). Option (d) — domain depth — would have broken the H1 factor structure assumption.
+
+**Status.** Locked at 48 scenarios. Future additions require explicit construct-gap motivation per the trigger criteria above.
+
+---
+
 ## How to add to this file
 
 Each new decision: copy the section template (Question / Decision / Rationale / Considered and rejected / Status). Number sequentially. Don't renumber when inserting historically — just add to the end.
