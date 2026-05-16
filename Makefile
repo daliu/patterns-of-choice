@@ -24,7 +24,10 @@ analyze:
 	  --log analysis/fixtures/sample-session-log.json \
 	  --probes analysis/fixtures/sample-probe-responses.json \
 	  --card-sort analysis/fixtures/sample-card-sort.json \
-	  --pairwise analysis/fixtures/sample-pairwise.json
+	  --pairwise analysis/fixtures/sample-pairwise.json \
+	  --hexaco analysis/fixtures/sample-hexaco.json \
+	  --informant-hexaco analysis/fixtures/sample-informant-hexaco.json \
+	  --big5 analysis/fixtures/sample-big5.json
 
 demo:
 	@open demo/first-session.html 2>/dev/null || xdg-open demo/first-session.html 2>/dev/null || \

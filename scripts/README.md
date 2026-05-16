@@ -66,7 +66,7 @@ The workflow can be deleted without affecting the validator itself — `scripts/
 
 ## `analyze.py` — minimal scoring-spec analyzer
 
-Implements scoring.md §2-3 (revealed scores), §4 (cost-of-virtue probe scoring), §5.1 (card-sort inventory), §5.2 (Bradley-Terry pairwise inventory via Hunter 2004 MM algorithm), §5.3 (combined card-sort + pairwise stated score via averaged per-domain z-scores), §6 (primary gap — automatically uses combined stated when both inventory inputs are present), §8 (bootstrap 95% CIs), and **pre-registration H2** (Pearson r between revealed truth-telling and HEXACO honesty-humility, with bootstrap CI tested against the lower-95%-CI ≥ 0.15 threshold). Reserved for the future validation-cohort analyzer: CFA on item-level loadings (§7), longitudinal cost-of-virtue trajectories (§4.3).
+Implements scoring.md §2-3 (revealed scores), §4 (cost-of-virtue probe scoring), §5.1 (card-sort inventory), §5.2 (Bradley-Terry pairwise inventory via Hunter 2004 MM algorithm), §5.3 (combined card-sort + pairwise stated score via averaged per-domain z-scores), §6 (primary gap — automatically uses combined stated when both inventory inputs are present), §8 (bootstrap 95% CIs), and **five of the seven pre-registered hypotheses**: H2 (HEXACO self convergent), H4 (informant HEXACO convergent), H6 (stated-revealed correlation range check), H7 (Big-5 N discriminant). H2/H4/H7 share a generic correlation-with-bootstrap-CI core; thresholds vary (convergent uses `threshold_low`, discriminant uses `threshold_high`). Reserved for the future validation-cohort analyzer: CFA on item-level loadings (§7 of scoring.md / H1 of pre-reg), longitudinal cost-of-virtue trajectories (§4.3), test-retest reliability (H3 / H5, both need time-series cohort data).
 
 ```sh
 # Revealed scores only
@@ -78,7 +78,19 @@ python scripts/analyze.py \
   --probes analysis/fixtures/sample-probe-responses.json \
   --card-sort analysis/fixtures/sample-card-sort.json
 
-python scripts/analyze.py --log <path> --probes <path> --pairwise <path>
+# Everything (revealed + probes + card-sort + pairwise + hexaco + informant + big5)
+make analyze
+
+# Or run the full pipeline manually:
+python scripts/analyze.py \
+  --log analysis/fixtures/sample-session-log.json \
+  --probes analysis/fixtures/sample-probe-responses.json \
+  --card-sort analysis/fixtures/sample-card-sort.json \
+  --pairwise analysis/fixtures/sample-pairwise.json \
+  --hexaco analysis/fixtures/sample-hexaco.json \
+  --informant-hexaco analysis/fixtures/sample-informant-hexaco.json \
+  --big5 analysis/fixtures/sample-big5.json
+
 python scripts/analyze.py --log <path> --probes <path> --json
 ```
 

@@ -28,7 +28,7 @@ These two documents are likely to need only small revisions before any real-worl
 - [`mvp.md`](mvp.md) — MVP-1 build spec. Solid; revisions in place after lit-pass 2 (HEXACO r ≥ 0.25 not 0.30; informant reports as primary Phase-2; die-roll/sender-receiver as truth-telling paradigm).
 - [`pre-registration.md`](pre-registration.md) — OSF-filing template. Three primary hypotheses, four secondary. Falsification thresholds explicit. *Does not yet have a co-PI listed or IRB protocol number*; both are bound to the co-PI recruitment step.
 - [`pilot-protocol.md`](pilot-protocol.md) — n=10 pilot specification. Pre-registered go/no-go criteria. *Independent of the main-study pre-reg* — the pilot's own criteria could be separately pre-registered before pilot launch.
-- [`scoring.md`](scoring.md) — analytical spec. Seven sections implemented in the analyzer (§2-3, §4, §5.1, §5.2, §5.3, §6, §8); one reserved (§7 CFA) for the validation-cohort analyzer, plus §4.3 longitudinal probe trajectories.
+- [`scoring.md`](scoring.md) — analytical spec. Seven sections implemented in the analyzer (§2-3, §4, §5.1, §5.2, §5.3, §6, §8); one reserved (§7 CFA) for the validation-cohort analyzer, plus §4.3 longitudinal probe trajectories. Plus **five of the seven pre-registered hypotheses** end-to-end runnable: H2 HEXACO self-convergent, H4 informant convergent, H6 stated-revealed range check, H7 Big-5 N discriminant. Reserved: H1 (CFA), H3 / H5 (test-retest, both need time-series cohort data).
 
 These are pre-launch templates. Need final author-pass against the chosen co-PI's institutional IRB.
 
@@ -74,7 +74,7 @@ The corpus has reached editorial stability — validator now passes most new sce
 
 [`scripts/`](scripts/) holds two scripts, both pure-Python, single dependency for the validator:
 - `validate.py` — scenario + inventory schema validation with cross-file integrity checks; path reachability; tag-map lookup. Catches drift before merge. Currently 36 scenarios validate cleanly.
-- `analyze.py` — implements scoring.md §2-3 (revealed), §4 (probe), §5.1 (card-sort), §5.2 (Bradley-Terry pairwise via Hunter 2004 MM), §5.3 (combined stated), §6 (gap), §8 (bootstrap CIs). **Pure Python, no external statistical library.** Seven of the scoring spec's sections; the genuinely reserved ones (§7 CFA, §4.3 longitudinal probe trajectories) need either external statistical libraries or longer-running cohort data than synthetic fixtures can provide.
+- `analyze.py` — implements scoring.md §2-3 (revealed), §4 (probe), §5.1 (card-sort), §5.2 (Bradley-Terry pairwise via Hunter 2004 MM), §5.3 (combined stated), §6 (gap), §8 (bootstrap CIs), plus the four pre-registered hypothesis tests that require only correlation-with-bootstrap-CI infrastructure (H2 HEXACO self, H4 informant HEXACO, H6 stated-revealed range, H7 Big-5 N discriminant). **Pure Python, no external statistical library.** The genuinely reserved sections (§7 CFA, §4.3 longitudinal probe trajectories, H3/H5 test-retest) need either external statistical libraries or longer-running cohort data than synthetic fixtures can provide.
 
 Plus [`types.ts`](types.ts) (declarative TypeScript schemas), JSON Schema files in `scenarios/schemas/`, GitHub Actions CI workflow auto-running the validator on push/PR, and synthetic fixture data demonstrating end-to-end runs.
 
