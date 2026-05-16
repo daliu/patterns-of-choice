@@ -33,11 +33,21 @@ Implemented here:
   between revealed truth-telling and Big-5 neuroticism should be ≤ 0.40
   (an inverted threshold — measuring discriminant validity not
   convergent); when --big5 is supplied
+- H3 revealed test-retest (pre-registration.md, primary): per-domain
+  Pearson r between weeks 1-2 and weeks 3-4 revealed scores should be
+  ≥ 0.60 (lower 95% CI). When --log-window-b is supplied alongside
+  the primary --log.
+- H5 cost-of-virtue probe test-retest (pre-registration.md,
+  secondary): per-domain r ≥ 0.50 between the two windows of probe
+  break-points. When --probes-window-b is supplied.
 
 Reserved for the future validation-cohort analyzer:
-- CFA on item-level loadings (§7)
+- CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
+  legitimately needs lavaan or statsmodels.sem; not implementable
+  with stdlib-only constraint
 - Per-domain probe aggregation as a CFA indicator (§7)
-- Longitudinal cost-of-virtue probe trajectories (§4.3)
+- Longitudinal cost-of-virtue probe trajectories (§4.3) — needs
+  > 2 time windows of probe data
 
 Usage:
     python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
@@ -867,6 +877,98 @@ def compute_h7_discriminant_validity(
     )
 
 
+def _domain_test_retest_r(
+    window_a: dict[tuple[str, str], float],
+    window_b: dict[tuple[str, str], float],
+    seed_offset: int,
+    threshold: float,
+) -> dict[str, dict[str, Any]]:
+    """
+    Per-domain Pearson r between two windows of the same user score.
+    Returns dict {domain: {r, ci_low, ci_high, n, threshold_met}}.
+    Domains with < 3 users present in both windows are skipped.
+
+    Used by H3 (revealed scores) and H5 (probe break-points).
+    """
+    # Group per domain
+    domains: set[str] = set()
+    for (_, d) in window_a:
+        domains.add(d)
+    for (_, d) in window_b:
+        domains.add(d)
+
+    out: dict[str, dict[str, Any]] = {}
+    for i, domain in enumerate(sorted(domains)):
+        xs: list[float] = []
+        ys: list[float] = []
+        for (user, d), va in window_a.items():
+            if d != domain:
+                continue
+            vb = window_b.get((user, d))
+            if vb is None:
+                continue
+            xs.append(va)
+            ys.append(vb)
+
+        if len(xs) < 3:
+            continue
+        r = _pearson_r(xs, ys)
+        if r is None:
+            continue
+
+        rng = random.Random(BOOTSTRAP_SEED + seed_offset + i)
+        ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+        threshold_met = ci_low >= threshold if ci_low == ci_low else None
+        out[domain] = {
+            "r": r,
+            "ci_low": ci_low,
+            "ci_high": ci_high,
+            "n": len(xs),
+            "pre_registered_threshold_met": threshold_met,
+            "threshold": threshold,
+        }
+    return out
+
+
+def compute_h3_test_retest_revealed(
+    revealed_a: dict[tuple[str, str], dict[str, Any]],
+    revealed_b: dict[tuple[str, str], dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """
+    Per pre-registration.md H3 (primary): per-domain test-retest reliability
+    r ≥ 0.60 between weeks 1-2 and weeks 3-4 revealed scores.
+
+    Threshold check is CI-based (lower 95% bootstrap CI ≥ 0.60) to match
+    H2's conservative form for a primary hypothesis. With n=3 fixture users
+    the CI is volatile; n≈200 cohort is where the test is real.
+    """
+    a = {k: s["mean"] for k, s in revealed_a.items()}
+    b = {k: s["mean"] for k, s in revealed_b.items()}
+    return _domain_test_retest_r(a, b, seed_offset=5, threshold=0.60)
+
+
+def compute_h5_test_retest_probes(
+    probes_a: dict[tuple[str, str], list[dict[str, Any]]],
+    probes_b: dict[tuple[str, str], list[dict[str, Any]]],
+) -> dict[str, dict[str, Any]]:
+    """
+    Per pre-registration.md H5 (secondary): per-domain test-retest
+    reliability of cost-of-virtue probe break-points, r ≥ 0.50 between
+    weeks 1-2 and weeks 3-4. Per (user, domain), aggregate is the mean
+    log_score across that user's probes in that domain.
+    """
+    def mean_log(by_ud: dict[tuple[str, str], list[dict[str, Any]]]) -> dict[tuple[str, str], float]:
+        out: dict[tuple[str, str], float] = {}
+        for k, probes in by_ud.items():
+            ls = [p["log_score"] for p in probes if isinstance(p.get("log_score"), (int, float))]
+            if ls:
+                out[k] = sum(ls) / len(ls)
+        return out
+    return _domain_test_retest_r(
+        mean_log(probes_a), mean_log(probes_b), seed_offset=6, threshold=0.50
+    )
+
+
 def compute_h4_informant_validity(
     revealed_means: dict[tuple[str, str], dict[str, Any]],
     informant_data: list[dict],
@@ -926,6 +1028,28 @@ def render_h6_result(result: dict[str, Any] | None) -> str:
         f"  Pre-registered range [{result['range_low']:.2f}, {result['range_high']:.2f}]: {range_str}\n"
         f"  Reading: too-high r collapses the gap signal; too-low suggests measurement noise."
     )
+
+
+def render_test_retest_result(
+    name: str, threshold_text: str, results: dict[str, dict[str, Any]]
+) -> str:
+    if not results:
+        return f"({name}: insufficient data — need ≥3 users present in both windows for any single domain)"
+    lines = [f"{name}:", f"  Pre-registered threshold ({threshold_text})"]
+    header = f"  {'domain':<26} {'r':>7} {'95% CI':>20} {'n':>4} {'met':>4}"
+    lines.append(header)
+    lines.append("  " + "-" * (len(header) - 2))
+    for domain, res in sorted(results.items()):
+        ci_str = (
+            "nan" if res["ci_low"] != res["ci_low"]
+            else f"[{res['ci_low']:+.3f}, {res['ci_high']:+.3f}]"
+        )
+        met = res.get("pre_registered_threshold_met")
+        met_str = "✓" if met is True else ("✗" if met is False else "—")
+        lines.append(
+            f"  {domain:<26} {res['r']:+7.3f} {ci_str:>20} {res['n']:>4} {met_str:>4}"
+        )
+    return "\n".join(lines)
 
 
 def render_gap_table(gaps: dict[tuple[str, str], dict[str, float]]) -> str:
@@ -1017,6 +1141,18 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional path to Big-5 N scores per user (for H7 discriminant validity).",
+    )
+    parser.add_argument(
+        "--log-window-b",
+        type=Path,
+        default=None,
+        help="Optional second session-log JSON (weeks 3-4) for H3 test-retest.",
+    )
+    parser.add_argument(
+        "--probes-window-b",
+        type=Path,
+        default=None,
+        help="Optional second probe-responses JSON (weeks 3-4) for H5 test-retest.",
     )
     parser.add_argument(
         "--min-items",
@@ -1127,6 +1263,33 @@ def main() -> int:
     h7_result: dict[str, Any] | None = None
     if big5_data and user_scores:
         h7_result = compute_h7_discriminant_validity(user_scores, big5_data)
+
+    # H3 test-retest reliability of revealed scores if window-B log supplied
+    h3_result: dict[str, dict[str, Any]] = {}
+    if args.log_window_b and user_scores:
+        try:
+            with args.log_window_b.open() as f:
+                entries_b = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading window-B session log: {e}", file=sys.stderr)
+            return 2
+        grouped_b = session_aggregates(entries_b, tag_map)
+        session_scores_b = session_means(grouped_b, min_items_per_session=args.min_items)
+        user_scores_b = user_domain_means(session_scores_b)
+        h3_result = compute_h3_test_retest_revealed(user_scores, user_scores_b)
+
+    # H5 test-retest reliability of probes if window-B probes supplied
+    h5_result: dict[str, dict[str, Any]] = {}
+    if args.probes_window_b and probe_grouped:
+        try:
+            with args.probes_window_b.open() as f:
+                probe_responses_b = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading window-B probe responses: {e}", file=sys.stderr)
+            return 2
+        inversion_map_b = load_probe_inversion_map()
+        probe_grouped_b = probe_scores_by_user_domain(probe_responses_b, inversion_map_b)
+        h5_result = compute_h5_test_retest_probes(probe_grouped, probe_grouped_b)
 
     # Pick the best-available stated layer for gap computation
     gaps: dict[tuple[str, str], dict[str, float]] = {}
@@ -1254,6 +1417,20 @@ def main() -> int:
                 "H7 (revealed truth-telling × Big-5 neuroticism, DISCRIMINANT)",
                 "upper 95% CI ≤ 0.40",
                 h7_result,
+            ))
+        if h3_result:
+            print()
+            print(render_test_retest_result(
+                "H3 (revealed score test-retest, weeks 1-2 vs 3-4)",
+                "lower 95% CI ≥ 0.60",
+                h3_result,
+            ))
+        if h5_result:
+            print()
+            print(render_test_retest_result(
+                "H5 (cost-of-virtue probe test-retest, weeks 1-2 vs 3-4)",
+                "lower 95% CI ≥ 0.50",
+                h5_result,
             ))
 
         # H6 reuses the existing aspirational-stated layer used for gap

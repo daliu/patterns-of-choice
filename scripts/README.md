@@ -66,7 +66,7 @@ The workflow can be deleted without affecting the validator itself — `scripts/
 
 ## `analyze.py` — minimal scoring-spec analyzer
 
-Implements scoring.md §2-3 (revealed scores), §4 (cost-of-virtue probe scoring), §5.1 (card-sort inventory), §5.2 (Bradley-Terry pairwise inventory via Hunter 2004 MM algorithm), §5.3 (combined card-sort + pairwise stated score via averaged per-domain z-scores), §6 (primary gap — automatically uses combined stated when both inventory inputs are present), §8 (bootstrap 95% CIs), and **five of the seven pre-registered hypotheses**: H2 (HEXACO self convergent), H4 (informant HEXACO convergent), H6 (stated-revealed correlation range check), H7 (Big-5 N discriminant). H2/H4/H7 share a generic correlation-with-bootstrap-CI core; thresholds vary (convergent uses `threshold_low`, discriminant uses `threshold_high`). Reserved for the future validation-cohort analyzer: CFA on item-level loadings (§7 of scoring.md / H1 of pre-reg), longitudinal cost-of-virtue trajectories (§4.3), test-retest reliability (H3 / H5, both need time-series cohort data).
+Implements scoring.md §2-3 (revealed scores), §4 (cost-of-virtue probe scoring), §5.1 (card-sort inventory), §5.2 (Bradley-Terry pairwise inventory via Hunter 2004 MM algorithm), §5.3 (combined card-sort + pairwise stated score via averaged per-domain z-scores), §6 (primary gap — automatically uses combined stated when both inventory inputs are present), §8 (bootstrap 95% CIs), and **six of the seven pre-registered hypotheses**: H2 (HEXACO self convergent), H3 (revealed test-retest, per-domain), H4 (informant HEXACO convergent), H5 (cost-of-virtue probe test-retest, per-domain), H6 (stated-revealed correlation range check), H7 (Big-5 N discriminant). H2/H4/H7 share a generic correlation-with-bootstrap-CI core; thresholds vary (convergent uses `threshold_low`, discriminant uses `threshold_high`). H3/H5 share a separate per-domain test-retest core. Only H1 is reserved — it requires CFA, which legitimately needs lavaan / statsmodels.sem and cannot run under the stdlib-only constraint.
 
 ```sh
 # Revealed scores only
@@ -78,7 +78,7 @@ python scripts/analyze.py \
   --probes analysis/fixtures/sample-probe-responses.json \
   --card-sort analysis/fixtures/sample-card-sort.json
 
-# Everything (revealed + probes + card-sort + pairwise + hexaco + informant + big5)
+# Everything (revealed + probes + card-sort + pairwise + hexaco + informant + big5 + window-B)
 make analyze
 
 # Or run the full pipeline manually:
@@ -89,7 +89,9 @@ python scripts/analyze.py \
   --pairwise analysis/fixtures/sample-pairwise.json \
   --hexaco analysis/fixtures/sample-hexaco.json \
   --informant-hexaco analysis/fixtures/sample-informant-hexaco.json \
-  --big5 analysis/fixtures/sample-big5.json
+  --big5 analysis/fixtures/sample-big5.json \
+  --log-window-b analysis/fixtures/sample-session-log-window-b.json \
+  --probes-window-b analysis/fixtures/sample-probe-responses-window-b.json
 
 python scripts/analyze.py --log <path> --probes <path> --json
 ```

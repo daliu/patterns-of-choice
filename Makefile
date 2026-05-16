@@ -27,7 +27,9 @@ analyze:
 	  --pairwise analysis/fixtures/sample-pairwise.json \
 	  --hexaco analysis/fixtures/sample-hexaco.json \
 	  --informant-hexaco analysis/fixtures/sample-informant-hexaco.json \
-	  --big5 analysis/fixtures/sample-big5.json
+	  --big5 analysis/fixtures/sample-big5.json \
+	  --log-window-b analysis/fixtures/sample-session-log-window-b.json \
+	  --probes-window-b analysis/fixtures/sample-probe-responses-window-b.json
 
 demo:
 	@open demo/first-session.html 2>/dev/null || xdg-open demo/first-session.html 2>/dev/null || \
