@@ -1,0 +1,38 @@
+{
+  "id": "cov-allocation-003",
+  "type": "cost-of-virtue-probe",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Cost-of-virtue: trusted-allocator self-favoring",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Third resource-allocation cost-of-virtue probe. The pair (cov-allocation-001: fairness-with-found-money; cov-allocation-002: generosity-from-own-resources) covers two giving-direction constructs. This probe covers the *taking* direction under a trust-of-others structural condition: the user is the trusted allocator of a shared pool, and could quietly take more than their fair share. The pool members trust the user to do the math fairly; no audit will happen. This is structurally distinct from cov-truth-001 (third-party lie for money) because nothing is asserted that is false — only the math is silently bent. Tests whether users who decline to lie still tolerate quiet self-favoring in fiduciary-trust contexts. Pair-with cov-allocation-001 (fairness-with-found-money): both are fairness probes but cov-001 is about returning what isn't yours; this one is about not taking more than is yours when you could.",
+    "domain_anchor": "Greenberg 1990 'Employee theft as a reaction to underpayment inequity' on fairness-breach as context-dependent rather than character-stable; Murphy et al. 2009 on situational determinants of financial dishonesty; experimental dictator-game literature for stake-magnitude calibration (lab dictators typically split 70/30 in the keeper's favor at low stakes; the question is how that shifts when the counterparty trusts you to be the allocator).",
+    "estimated_duration_seconds": 90,
+    "content_warnings": []
+  },
+  "value_slot": "fairness",
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": ["fairness", "honesty"],
+    "ladder_currency": "user-local"
+  },
+  "framing_prompt": "You're settling up a shared expense with a small group (split-the-bill, group-trip costs, jointly-owned-item resale, lottery-pool winnings). The group trusts you to do the math and divide it fairly; no one will audit the calculation. You realize you could quietly give yourself a slightly larger share than fair — the others won't check, the math is just messy enough that an extra small amount would be invisible, the group trusts you. The 'surplus' amount is real money to you but small enough relative to the total that it wouldn't be detected.",
+  "framing_question": "At what surplus amount (extra you'd take beyond your fair share) would you actually do it?",
+  "ladder": [
+    { "rung": 1, "stake": 10, "unit": "USD", "label": "$10 extra" },
+    { "rung": 2, "stake": 100, "unit": "USD", "label": "$100 extra" },
+    { "rung": 3, "stake": 1000, "unit": "USD", "label": "$1,000 extra" },
+    { "rung": 4, "stake": 10000, "unit": "USD", "label": "$10,000 extra" }
+  ],
+  "no_option": {
+    "id": "never",
+    "text": "I wouldn't take a surplus at any of these amounts."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code as Inf for break-point analysis; report separately as 'integrity ceiling above probe range'.",
+    "interpretation_note": "Forward probe (NOT inverted): lower break-point = lower integrity ceiling; never = high integrity ceiling. Structural distinction from cov-truth-001 is that no false statement is made; the dishonesty is silent self-favoring under trust. Pairing with cov-truth-001 within-user reveals the truth-axis-vs-fairness-axis asymmetry directly: users who decline cov-truth-001 (won't lie) but accept cov-allocation-003 (will silently self-favor) operate with a 'no false assertions' integrity model rather than a 'no dishonest taking' model. Both are coherent stances; the asymmetry is the signal.",
+    "longitudinal_signal": "Within-user trajectory across sessions. The trust-of-others structural condition is designed to be stable — drift in this probe specifically (where the context is structurally identical across re-administrations) is high-confidence behavioral-drift signal rather than situational variance.",
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
+}
