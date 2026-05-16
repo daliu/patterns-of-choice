@@ -30,12 +30,12 @@ The MVP scopes 4 domains; sample scenarios so far:
 
 | Domain | Quick-fire | Narrative | Cost-of-virtue probe | MVP-1 target |
 |---|---|---|---|---|
-| Truth-telling under cost | `qf-truth-001`, `qf-truth-003`, `qf-truth-005`, `qf-truth-007`, `qf-truth-009` ✓ | `narr-truth-002`, `narr-truth-004`, `narr-truth-006` ✓ | `cov-truth-001`, `cov-truth-002` ✓ | ~12 total |
-| Resource allocation | `qf-allocation-001`, `qf-allocation-003`, `qf-allocation-005`, `qf-allocation-007`, `qf-allocation-009` ✓ | `narr-allocation-002`, `narr-allocation-004`, `narr-allocation-006` ✓ | `cov-allocation-001`, `cov-allocation-002` ✓ (both inverted) | ~12 total |
-| In-group / out-group | `qf-ingroup-001`, `qf-ingroup-003`, `qf-ingroup-005`, `qf-ingroup-007`, `qf-ingroup-009` ✓ | `narr-ingroup-002`, `narr-ingroup-004`, `narr-ingroup-006` ✓ | `cov-ingroup-001`, `cov-ingroup-002` ✓ | ~12 total |
-| Reciprocity / cooperation | `qf-reciprocity-001`, `qf-reciprocity-003`, `qf-reciprocity-005`, `qf-reciprocity-007`, `qf-reciprocity-009` ✓ | `narr-reciprocity-002`, `narr-reciprocity-004`, `narr-reciprocity-006` ✓ | `cov-reciprocity-001`, `cov-reciprocity-002` ✓ (inverted) | ~12 total |
+| Truth-telling under cost | `qf-truth-001/003/005/007/009/011` ✓ | `narr-truth-002/004/006` ✓ | `cov-truth-001/002/003` ✓ | 12 total ✓ |
+| Resource allocation | `qf-allocation-001/003/005/007/009/011` ✓ | `narr-allocation-002/004/006` ✓ | `cov-allocation-001/002/003` ✓ (001/002 inverted, 003 forward) | 12 total ✓ |
+| In-group / out-group | `qf-ingroup-001/003/005/007/009/011` ✓ | `narr-ingroup-002/004/006` ✓ | `cov-ingroup-001/002/003` ✓ | 12 total ✓ |
+| Reciprocity / cooperation | `qf-reciprocity-001/003/005/007/009/011` ✓ | `narr-reciprocity-002/004/006` ✓ | `cov-reciprocity-001/002/003` ✓ (002 inverted) | 12 total ✓ |
 
-All 4 domains have 5 quick-fires + 3 narratives + 2 cost-of-virtue probes = **40 scenarios of ~48 target, symmetric at 10-per-domain**. The corpus is now five-sixths of MVP-1, with full structural symmetry across all four domains × all three scenario types. Remaining: ~8 more scenarios — most likely composition is ~2 more quick-fires per domain.
+All 4 domains have **6 quick-fires + 3 narratives + 3 cost-of-virtue probes = 12 per domain × 4 = 48 scenarios total**. MVP-1 corpus target reached with full structural symmetry across all four domains × all three scenario types. Further additions would expand the corpus beyond the MVP-1 plan and should be motivated by a specific construct gap, not authored for breadth alone.
 
 Setting diversity across narratives:
 - `narr-truth-002` — workplace happy hour (peer-to-peer)

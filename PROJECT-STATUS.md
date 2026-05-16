@@ -73,7 +73,7 @@ The corpus has reached editorial stability — validator now passes most new sce
 ### Tooling: **complete for the pre-launch phase**
 
 [`scripts/`](scripts/) holds two scripts, both pure-Python, single dependency for the validator:
-- `validate.py` — scenario + inventory schema validation with cross-file integrity checks; path reachability; tag-map lookup. Catches drift before merge. Currently 36 scenarios validate cleanly.
+- `validate.py` — scenario + inventory schema validation with cross-file integrity checks; path reachability; tag-map lookup. Catches drift before merge. Currently 48 scenarios validate cleanly (MVP-1 corpus target reached).
 - `analyze.py` — implements scoring.md §2-3 (revealed), §4 (probe), §5.1 (card-sort), §5.2 (Bradley-Terry pairwise via Hunter 2004 MM), §5.3 (combined stated), §6 (gap), §8 (bootstrap CIs), plus **six of the seven pre-registered hypotheses** that fit within the stdlib-only constraint (H2 HEXACO self, H3 revealed test-retest per-domain, H4 informant HEXACO, H5 probe test-retest per-domain, H6 stated-revealed range, H7 Big-5 N discriminant). **Pure Python, no external statistical library.** The genuinely reserved sections (§7 CFA / H1, §4.3 longitudinal probe trajectories beyond two windows) need either external statistical libraries or richer cohort data than synthetic fixtures provide.
 
 Plus [`types.ts`](types.ts) (declarative TypeScript schemas), JSON Schema files in `scenarios/schemas/`, GitHub Actions CI workflow auto-running the validator on push/PR, and synthetic fixture data demonstrating end-to-end runs.

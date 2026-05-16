@@ -1,0 +1,38 @@
+{
+  "id": "cov-reciprocity-003",
+  "type": "cost-of-virtue-probe",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Cost-of-virtue: defection from sustained cooperation",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Third reciprocity-cooperation cost-of-virtue probe. Where cov-reciprocity-001 tests cooperation under self-gain pressure in a one-shot frame (silent extra share) and cov-reciprocity-002 tests forgiveness in re-extending trust after a single betrayal, this probe targets the iterated-cooperation defection question: at what outside-opportunity payoff would the user defect from an ongoing, mutually-beneficial cooperative relationship that they themselves have helped build? The construct is distinct from cov-reciprocity-001 because (a) the cooperation has history and reputation invested, not just a one-shot allocation; (b) defection means breaking a relationship-existing thing, not just keeping more from a windfall; and (c) the counterparty is identifiable and present, not anonymized into a group pool. Pairing across all three reciprocity CoVs gives a three-axis profile: one-shot exploitation, forgiveness-of-others'-defection, and own-defection-temptation.",
+    "domain_anchor": "Axelrod 1984 iterated prisoner's dilemma — defection's instantaneous payoff vs. long-run reputation cost. Williamson 1985 transaction-cost economics on relational-contract durability under outside-option shocks. Trivers 1971 reciprocal altruism as the evolutionary frame.",
+    "estimated_duration_seconds": 90,
+    "content_warnings": []
+  },
+  "value_slot": "cooperation",
+  "preconditions": {
+    "value_must_be_in_user_top_5_for_at_least_one_layer": ["cooperation", "trust", "reciprocity_pure"],
+    "ladder_currency": "user-local"
+  },
+  "framing_prompt": "You're in a long-running mutually-beneficial cooperative arrangement — pick whatever fits: a co-founder relationship, a recurring side-project partnership, a friend-group that pools effort on shared things, a workplace collaboration that you helped shape. The arrangement is real and has produced real benefits to both sides over time. An outside opportunity now presents itself: substantially better terms for you, but realizing it requires you to quietly walk away from (or substantially reduce your investment in) the existing arrangement. The other party would be left in a meaningfully worse position than if you'd stayed; they'd discover the shift only after it was effectively done. You wouldn't be lying — the arrangement has no formal exit obligation — but the silent exit would not match the cooperation norms you've shared.",
+  "framing_question": "What's the smallest outside-opportunity payoff at which you'd actually defect?",
+  "ladder": [
+    { "rung": 1, "stake": 10000, "unit": "USD", "label": "$10,000 outside payoff" },
+    { "rung": 2, "stake": 100000, "unit": "USD", "label": "$100,000 outside payoff" },
+    { "rung": 3, "stake": 1000000, "unit": "USD", "label": "$1,000,000 outside payoff (life-shifting)" },
+    { "rung": 4, "stake": 10000000, "unit": "USD", "label": "$10,000,000 outside payoff (truly transformative)" }
+  ],
+  "no_option": {
+    "id": "never",
+    "text": "I wouldn't defect at any of these amounts — I'd find a way to either include the cooperator or formally exit on terms they could plan around."
+  },
+  "analysis": {
+    "break_point_field": "first_accept_stake",
+    "no_break_point_handling": "Code 'never' as Inf for break-point analysis; report separately as 'cooperation-loyalty ceiling above probe range'.",
+    "interpretation_note": "Forward probe (NOT inverted): lower break-point = lower cooperation-loyalty ceiling. The ladder ceiling is deliberately set HIGHER than cov-reciprocity-001's ladder ($10K minimum vs. $10 minimum) because the construct here involves a real opportunity cost being foregone, not just leaving money on the table. Mapping this break-point against cov-reciprocity-001's break-point separates 'cooperative-when-stakes-are-symmetric' from 'cooperative-when-stakes-are-asymmetric' profiles. Pair with cov-reciprocity-002 (forgiveness): users with low break-point here (will defect for moderate outside payoff) but high break-point on cov-002 (require substantial restitution to re-extend trust) show double-standard reciprocity — defect easily, forgive others' defections slowly. The double-standard pattern is itself the signal, not a value judgment.",
+    "longitudinal_signal": "Within-user trajectory across sessions. Real-life career/relationship inflection events (job offers, partnership splits, etc.) are natural moderators. Trajectory direction is meaningful primarily in the context of those events.",
+    "domain_signature_captured": "cost_of_virtue_curve"
+  }
+}
