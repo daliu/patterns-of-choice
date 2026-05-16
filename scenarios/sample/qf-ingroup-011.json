@@ -1,0 +1,65 @@
+{
+  "id": "qf-ingroup-011",
+  "type": "quick-fire-round",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: When the circle could widen",
+    "author": "patterns-of-choice editorial draft",
+    "design_intent": "Sixth in-group/out-group quick-fire. Prior rounds explored resource competition between circles (qf-001), which circle gets prioritized (qf-003), overlapping memberships (qf-005), the circle's boundary edge (qf-007), and membership-under-test (qf-009). This round shifts the question outward: when does the user pull a stranger or near-stranger into the circle, and when does the circle remain closed? Specifically tests the circle-widening direction across varied counterparties (neighbor / new-arrival / online-newcomer / long-casual-acquaintance / refugee / adversary's-innocent-relative). Useful for stratifying revealed universalism vs. particularism by what specifically triggers inclusion.",
+    "domain_anchor": "Singer 1981 The Expanding Circle on the universalist-extension question; Brewer 1999 'The Psychology of Prejudice: Ingroup Love or Outgroup Hate?' on whether inclusion-expansion and exclusion-resistance are separable constructs (Brewer argues they ARE separable — this round's items probe inclusion-expansion specifically, complementing earlier rounds that probed exclusion-resistance).",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8,
+    "content_warnings": []
+  },
+  "items": [
+    {
+      "id": "qf-ingroup-011-i01",
+      "prompt": "A neighbor you barely know is struggling visibly with something in their yard or doorway — moving something heavy, an emotional moment, a small crisis. You'd never spoken before today.",
+      "options": [
+        { "id": "a", "text": "Walk over and offer help concretely. Neighborliness is built by these moments; the threshold is lower than it feels.", "tags": ["hospitality", "universalism", "counterparty:stranger", "stake:low-time", "value:hospitality", "value:universalism"] },
+        { "id": "b", "text": "Don't intrude. Unsolicited engagement can read as surveillance; the neighbor will reach out if they want help.", "tags": ["boundaries", "counterparty:stranger", "stake:low-social", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-011-i02",
+      "prompt": "At a gathering of friends-of-friends, you notice someone who clearly doesn't know anyone. The host hasn't introduced them around; the group has settled into existing conversation clusters.",
+      "options": [
+        { "id": "a", "text": "Cross over deliberately and start a conversation. Pull them into the cluster you're in.", "tags": ["hospitality", "universalism", "counterparty:stranger", "stake:low-social", "value:hospitality"] },
+        { "id": "b", "text": "Let them find their own footing. People at gatherings have different preferences for how they enter; some prefer to choose their moment.", "tags": ["boundaries", "discretion", "counterparty:stranger", "stake:low-social", "value:discretion"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-011-i03",
+      "prompt": "In an online community where you've been a member for years, a newcomer arrives asking questions you knew the answers to long ago. The community norm is mixed: some members welcome, some are curt about RTFM expectations.",
+      "options": [
+        { "id": "a", "text": "Answer warmly and link relevant resources. Carrying newcomers in is what makes the community survive turnover.", "tags": ["hospitality", "loyalty:community", "counterparty:new-peer", "stake:low-time", "value:hospitality", "value:loyalty"] },
+        { "id": "b", "text": "Point to the FAQ or established resources without elaborating. Community resources exist for this; over-helping creates dependence.", "tags": ["boundaries", "self_reliance:projected", "counterparty:new-peer", "stake:low-time", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-011-i04",
+      "prompt": "Someone you've known casually for years (work-adjacent, school-adjacent, kid-school-adjacent) is going through something substantive and reaches out to you specifically for emotional support. You like them but the friendship has always been casual.",
+      "options": [
+        { "id": "a", "text": "Step in as if you were closer. The reach-out is a request to widen; meet it where it lands.", "tags": ["hospitality", "loyalty:community", "counterparty:peer-distant", "stake:medium-emotional", "self-cost:none", "value:hospitality", "value:loyalty"] },
+        { "id": "b", "text": "Respond warmly but honestly about the relationship's scope. 'I'd love to be helpful but I don't think I'm the right person for this depth — let me suggest some other paths.'", "tags": ["boundaries", "discretion", "counterparty:peer-distant", "stake:low-emotional", "value:boundaries", "value:authenticity"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-011-i05",
+      "prompt": "A specific person has recently arrived in your area as a refugee or asylum-seeker. Through a mutual connection, you learn they need help with concrete logistics (paperwork translation, navigating systems, a stable contact). The ask is moderate but ongoing.",
+      "options": [
+        { "id": "a", "text": "Agree to be their contact and help materially. Inclusion happens through people, not just systems.", "tags": ["universalism", "hospitality", "generosity", "counterparty:stranger-known", "stake:medium-time", "self-cost:money", "value:universalism", "value:hospitality"] },
+        { "id": "b", "text": "Refer them to dedicated organizations that are set up for this. Specialist help is more durable than ad-hoc help; you'd be more useful pointing them at what works.", "tags": ["boundaries", "particularism", "counterparty:stranger-known", "stake:low-time", "value:boundaries"] }
+      ]
+    },
+    {
+      "id": "qf-ingroup-011-i06",
+      "prompt": "A relative of someone you've had a real, ongoing conflict with (genuine adversary — work, family, neighborhood) reaches out to you for help with something. The relative themselves has done nothing wrong; the conflict is squarely between you and the other family member.",
+      "options": [
+        { "id": "a", "text": "Help. The conflict shouldn't bleed onto an innocent third party who happens to share a name; meet them as themselves.", "tags": ["universalism", "hospitality", "counterparty:peer-distant", "stake:medium-emotional", "self-cost:reputation", "value:universalism", "value:hospitality"] },
+        { "id": "b", "text": "Politely decline. The relationship structure matters; helping across this line will be interpreted by the adversary in ways that will cost both of you.", "tags": ["loyalty:tribal", "boundaries", "counterparty:peer-distant", "stake:medium-social", "value:loyalty", "value:boundaries"] }
+      ]
+    }
+  ]
+}
