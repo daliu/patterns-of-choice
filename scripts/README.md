@@ -6,7 +6,8 @@ Utility scripts. **This is the first executable code in the repo.** Crosses the 
 
 - [`validate.py`](validate.py) — validates all scenario JSON files against their JSON Schemas and the cross-file integrity constraints scoring.md and SCHEMA.md require.
 - [`analyze.py`](analyze.py) — minimal analyzer implementing scoring.md §2-3 (per-item / per-session / per-user-per-domain revealed scores). Standard library only — no external dependency needed.
-- [`requirements.txt`](requirements.txt) — single dependency for `validate.py`: `jsonschema>=4.18`. `analyze.py` is standard library only.
+- [`check_analyzer_thresholds.py`](check_analyzer_thresholds.py) — analyzer regression gate. Runs `analyze.py` against the synthetic fixtures in `--json` mode and asserts that each hypothesis test produces the expected threshold-met outcome. **NOT a validation of the instrument** — that requires n≈200 cohort data. This is a regression gate that locks in analyzer behavior on the fixtures so future code changes don't silently shift outputs. CI workflow at [`.github/workflows/analyze.yml`](../.github/workflows/analyze.yml) runs it on every change to the analyzer, fixtures, or supporting data files. Standard library only.
+- [`requirements.txt`](requirements.txt) — single dependency for `validate.py`: `jsonschema>=4.18`. `analyze.py` and `check_analyzer_thresholds.py` are standard library only.
 
 ## Usage
 

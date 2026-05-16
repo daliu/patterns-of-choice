@@ -1,13 +1,14 @@
-.PHONY: help setup validate analyze demo clean
+.PHONY: help setup validate analyze check-analyzer demo clean
 
 help:
 	@echo "patterns-of-choice — common tasks"
 	@echo ""
-	@echo "  make setup     create .venv and install validator dependencies"
-	@echo "  make validate  run scripts/validate.py against the corpus"
-	@echo "  make analyze   run scripts/analyze.py on synthetic fixtures"
-	@echo "  make demo      open the static HTML demo in the default browser"
-	@echo "  make clean     remove .venv and Python bytecode caches"
+	@echo "  make setup           create .venv and install validator dependencies"
+	@echo "  make validate        run scripts/validate.py against the corpus"
+	@echo "  make analyze         run scripts/analyze.py on synthetic fixtures"
+	@echo "  make check-analyzer  run analyzer regression gate (asserts thresholds)"
+	@echo "  make demo            open the static HTML demo in the default browser"
+	@echo "  make clean           remove .venv and Python bytecode caches"
 	@echo ""
 	@echo "First-time setup: make setup && make validate"
 
@@ -18,6 +19,9 @@ setup:
 
 validate:
 	@./.venv/bin/python scripts/validate.py
+
+check-analyzer:
+	@./.venv/bin/python scripts/check_analyzer_thresholds.py
 
 analyze:
 	@./.venv/bin/python scripts/analyze.py \

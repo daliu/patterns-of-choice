@@ -1,0 +1,36 @@
+name: analyzer regression gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/analyze.py'
+      - 'scripts/check_analyzer_thresholds.py'
+      - 'analysis/fixtures/**'
+      - 'analysis/tag_axis_map_v*.csv'
+      - 'inventory/values-deck.json'
+      - 'inventory/pairwise-pairs.json'
+      - '.github/workflows/analyze.yml'
+  pull_request:
+    paths:
+      - 'scripts/analyze.py'
+      - 'scripts/check_analyzer_thresholds.py'
+      - 'analysis/fixtures/**'
+      - 'analysis/tag_axis_map_v*.csv'
+      - 'inventory/values-deck.json'
+      - 'inventory/pairwise-pairs.json'
+      - '.github/workflows/analyze.yml'
+  workflow_dispatch: {}
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run analyzer threshold gate
+        run: python scripts/check_analyzer_thresholds.py
