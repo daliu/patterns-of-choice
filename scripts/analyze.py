@@ -1323,6 +1323,45 @@ def main() -> int:
         if asp_filtered:
             gaps = compute_gaps(user_scores, asp_filtered, stated_source=source)
 
+    # H6 reuses the aspirational-stated layer used for the gap; computed
+    # here so both JSON and text consumers see it
+    h6_result: dict[str, Any] | None = None
+    if gaps and asp_filtered:
+        revealed_for_h6 = {k: v for k, v in user_scores.items() if k in asp_filtered}
+        h6_result = compute_h6_stated_revealed_correlation(
+            revealed_for_h6, asp_filtered
+        )
+
+    def _nan_to_none(v: float) -> float | None:
+        return None if v != v else v
+
+    def _correlation_json(r: dict[str, Any] | None) -> dict[str, Any] | None:
+        if r is None:
+            return None
+        return {
+            "r": r["r"],
+            "ci_low": _nan_to_none(r["ci_low"]),
+            "ci_high": _nan_to_none(r["ci_high"]),
+            "n": r["n"],
+            "pre_registered_threshold_met": r.get("pre_registered_threshold_met"),
+            "threshold_low": r.get("threshold_low"),
+            "threshold_high": r.get("threshold_high"),
+        }
+
+    def _per_domain_json(per_domain: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+        return [
+            {
+                "domain": domain,
+                "r": res["r"],
+                "ci_low": _nan_to_none(res["ci_low"]),
+                "ci_high": _nan_to_none(res["ci_high"]),
+                "n": res["n"],
+                "pre_registered_threshold_met": res.get("pre_registered_threshold_met"),
+                "threshold": res.get("threshold"),
+            }
+            for domain, res in sorted(per_domain.items())
+        ]
+
     if args.json:
         out: dict[str, Any] = {
             "revealed_scores": [
@@ -1374,6 +1413,29 @@ def main() -> int:
                 }
                 for (user, domain), g in sorted(gaps.items())
             ]
+        hypotheses: dict[str, Any] = {}
+        if h2_result is not None:
+            hypotheses["H2"] = _correlation_json(h2_result)
+        if h3_result:
+            hypotheses["H3"] = _per_domain_json(h3_result)
+        if h4_result is not None:
+            hypotheses["H4"] = _correlation_json(h4_result)
+        if h5_result:
+            hypotheses["H5"] = _per_domain_json(h5_result)
+        if h6_result is not None:
+            hypotheses["H6"] = {
+                "r": h6_result["r"],
+                "ci_low": _nan_to_none(h6_result["ci_low"]),
+                "ci_high": _nan_to_none(h6_result["ci_high"]),
+                "n": h6_result["n"],
+                "in_pre_registered_range": h6_result.get("in_pre_registered_range"),
+                "range_low": h6_result.get("range_low"),
+                "range_high": h6_result.get("range_high"),
+            }
+        if h7_result is not None:
+            hypotheses["H7"] = _correlation_json(h7_result)
+        if hypotheses:
+            out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
     else:
         print(render_table(user_scores))
@@ -1432,17 +1494,9 @@ def main() -> int:
                 "lower 95% CI ≥ 0.50",
                 h5_result,
             ))
-
-        # H6 reuses the existing aspirational-stated layer used for gap
-        if gaps and asp_filtered:
-            asp_for_h6 = {(u, d): v for (u, d), v in asp_filtered.items()}
-            revealed_for_h6 = {k: v for k, v in user_scores.items() if k in asp_for_h6}
-            h6_result = compute_h6_stated_revealed_correlation(
-                revealed_for_h6, asp_for_h6
-            )
-            if h6_result is not None:
-                print()
-                print(render_h6_result(h6_result))
+        if h6_result is not None:
+            print()
+            print(render_h6_result(h6_result))
 
     return 0
 

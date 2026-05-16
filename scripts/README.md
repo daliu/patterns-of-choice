@@ -119,6 +119,8 @@ user-bob                 truth-telling              cov-truth-002              +
 
 Revealed scores: range `[-1, +1]` per the clamp in scoring.md §2.2. Positive = ethical pole.
 
+**JSON output** (`--json` flag) includes a top-level `hypotheses` key with all computed pre-registered hypothesis tests keyed by hypothesis ID (`H2`, `H3`, `H4`, `H5`, `H6`, `H7`). Single-r hypotheses (H2/H4/H7) carry `{r, ci_low, ci_high, n, pre_registered_threshold_met, threshold_low, threshold_high}`. Per-domain hypotheses (H3/H5) carry an array of `{domain, r, ci_low, ci_high, n, pre_registered_threshold_met, threshold}`. H6 is a range-check, so it carries `{r, ci_low, ci_high, n, in_pre_registered_range, range_low, range_high}` instead of a single threshold-met flag. This shape is designed to be consumed by a CI gate or automated report.
+
 Probe scores: `log10` of break-point per scoring.md §4. Forward probes: positive (1 = breaks at $10 = weakest virtue, 5 = never accepts = strongest). Inverted probes: sign-flipped (so within the inverted range, higher = stronger virtue, but the magnitudes don't align with the forward range — per spec §4.2 cross-probe normalization happens at the per-domain CFA aggregation, not here).
 
 ## Fixtures
