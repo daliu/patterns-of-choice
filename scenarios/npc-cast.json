@@ -1,0 +1,79 @@
+{
+  "version": "0.1",
+  "purpose": "Recurring-NPC cast for the H8 narrative-immersion hypothesis. Defines the small set of named characters with cross-session backstory continuity that narrative scenarios reference via a recurring_npc:<id> tag. This is the metadata layer described in h8-narrative-immersion-design.md A1; it is NOT a scenario and is intentionally skipped by scripts/validate.py (no qf-/narr-/cov- prefix).",
+  "design_refs": {
+    "design": "h8-narrative-immersion-design.md (A1 cast spec; Q1 cast size; Q2 dual-mode)",
+    "scoring": "scoring.md §9.3 (attachment_strength is measured per-character)",
+    "decisions": "DECISIONS.md §17 (authoring this layer unlocks the §16 corpus 48 -> ~56-60)"
+  },
+  "cast_size_rationale": "Five named characters. Resolves design-doc Q1 (provisional 5-7) at the low end: five is enough to span the four domains and all five archetypes the design doc enumerates, while staying inside the participant's ability to track distinct characters across a 4-week protocol. A sixth/seventh can be added if pilot exit interviews show participants want more texture; the cast is additive, not locked.",
+  "dual_mode": {
+    "note": "Resolves how the cast is deployed under each arm of the design-doc Q2 split-sample (pilot-protocol.md §H8 calibration).",
+    "mode_a_central_buddy": "The animal-companion NPC (npc-biscuit) is THE central recurring figure; high-stakes H8b probes consistently feature it. The other four still appear, as supporting cast.",
+    "mode_b_flat_ensemble": "All five are a flat cast of equal standing; the high-stakes H8b probe uses whichever NPC that participant bonded with most (highest measured attachment_strength)."
+  },
+  "naming": "Each NPC ships with a default name. The animal companion's name may instead be participant-supplied at first appearance (as in the public h8-demo) — self-naming is expected to deepen attachment and is preferred where the runtime supports it. Human-NPC names are fixed for continuity.",
+  "cast": [
+    {
+      "id": "npc-nadia",
+      "default_name": "Nadia",
+      "archetype": "close-friend",
+      "primary_domains": ["truth-telling", "reciprocity-cooperation"],
+      "relationship": "A close friend the participant sees often; the relationship runs on small, repeated, mutual reliance.",
+      "arc_summary": "Built through low-stakes recurring contact: lending and being lent things, giving and receiving candid advice, covering or declining to cover small lapses. Attachment accrues by accumulation, not by any single dramatic beat.",
+      "h8_role": "debiasing-companion",
+      "h8_role_note": "Primary vehicle for H8a (debiasing): truth-telling and reciprocity choices made TO or ABOUT a friend the participant feels known by, where the abstract version of the same choice invites a tidier, more performed answer.",
+      "recurring_npc_tag": "recurring_npc:nadia"
+    },
+    {
+      "id": "npc-gran",
+      "default_name": "Gran",
+      "archetype": "family-member",
+      "primary_domains": ["resource-allocation", "in-group-out-group"],
+      "relationship": "An aging grandmother whose needs recur and gradually grow; the participant is among the people she counts on.",
+      "arc_summary": "Recurring, escalating dependency: small asks for time and help early, larger allocation tradeoffs (money, presence, competing obligations) later. The in-group weight of family is the live axis.",
+      "h8_role": "attachment-laden-stakes",
+      "h8_role_note": "Supports both: an H8a debiasing anchor for allocation/in-group, and a secondary H8b high-stakes figure when a probe pits her welfare against a broader or fairer claim.",
+      "recurring_npc_tag": "recurring_npc:gran"
+    },
+    {
+      "id": "npc-marisol",
+      "default_name": "Marisol",
+      "archetype": "out-group-new-arrival",
+      "primary_domains": ["in-group-out-group", "resource-allocation"],
+      "relationship": "A newcomer who moves in downstairs / joins the team — initially outside the participant's circle.",
+      "arc_summary": "The signature in-group/out-group instrument: her circle-membership status is deliberately unsettled and EVOLVES across sessions. Whether — and how fast — the participant brings her inside the circle of obligation is itself the measured signal. No fixed endpoint; the trajectory is the data.",
+      "h8_role": "debiasing-companion",
+      "h8_role_note": "H8a vehicle for in-group/out-group: an abstract 'how much do you owe a stranger' item vs. the same weighing about a specific newcomer the participant has watched become less of a stranger.",
+      "recurring_npc_tag": "recurring_npc:marisol"
+    },
+    {
+      "id": "npc-cole",
+      "default_name": "Cole",
+      "archetype": "adversary-with-redemption",
+      "primary_domains": ["reciprocity-cooperation"],
+      "relationship": "A former teammate who wronged the participant early (took credit for their work) and later shows genuine signs of change.",
+      "arc_summary": "Two-phase reciprocity arc: an early betrayal establishes a real grievance; later beats supply credible repair. Each subsequent encounter re-poses trust-vs-vigilance and forgiveness-vs-grudge with accumulated history behind it — the opposite of a cold one-shot trust game.",
+      "h8_role": "debiasing-companion",
+      "h8_role_note": "H8a vehicle for reciprocity: the abstract 'do you forgive a defector' item is bloodless; the same choice about someone with a specific betrayal-then-repair history is not.",
+      "recurring_npc_tag": "recurring_npc:cole"
+    },
+    {
+      "id": "npc-biscuit",
+      "default_name": "Biscuit",
+      "name_is_participant_supplied": true,
+      "archetype": "animal-companion-dependent",
+      "primary_domains": ["resource-allocation", "in-group-out-group"],
+      "relationship": "A dependent animal companion the participant cares for across the protocol — the figure from Dave's founding 'imaginary buddy dog' example.",
+      "arc_summary": "Pure attachment accrual with no agenda of its own: recurring small acts of care, recognition, routine. By design the companion asks for nothing and gives only its presence, which is what makes the eventual high-stakes welfare tradeoff land. Default name Biscuit, but participant self-naming at first appearance is preferred.",
+      "h8_role": "attachment-laden-stakes",
+      "h8_role_note": "THE primary H8b figure and the Mode-A central buddy: high-stakes probes weigh this companion's welfare against larger-but-anonymous stakes (the five-vs-one rescue framing). Its abstract counterpart is the same tradeoff with an un-named animal.",
+      "recurring_npc_tag": "recurring_npc:biscuit"
+    }
+  ],
+  "next_authoring_steps": [
+    "Retrofit existing narrative scenarios (narr-*) with recurring_npc:<id> tags where a generic role can become a named cast member without distorting the construct.",
+    "Author ~8-12 paired narrative-vs-abstract probes (scoring.md §9.1): each construct in both a cast-anchored narrative form and a structurally-equivalent abstract quick-fire form. This is the corpus expansion that unlocks DECISIONS §16 (48 -> ~56-60).",
+    "Add recurring_npc:<id> tags to analysis/tag_axis_map_v0.1.csv with contribution 0.0 (identity/markup tags, not axis-scoring tags) so the validator's tag-coverage check stays clean."
+  ]
+}
