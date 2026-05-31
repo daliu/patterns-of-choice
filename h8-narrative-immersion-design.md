@@ -126,19 +126,25 @@ If H8a passes, the instrument's social-desirability concerns are demonstrably mi
 
 ---
 
-## 6. Open design questions reserved for next iterations
+## 6. Open design questions — RESOLVED 2026-05-30
 
-These are not blocking the H8 framework, but will need decisions before H8 can be pre-registered:
+**Q5. Test placement — RESOLVED: MVP-1.** H8 is added to the MVP-1 pre-registration as a secondary hypothesis. Within-subject design uses the same n=200 cohort. Rationale: one cohort, one publication; the methodological claim lands with the validation rather than waiting on a separate study. OSF lock will include H8.
 
-**Q1. How many recurring NPCs in the cast?** Trade-off: more NPCs = richer attachment opportunities, but harder for the participant to track and remember. Suggestion: start with 5-7, calibrate from pilot exit interview.
+**Q2. Buddy NPC centrality — RESOLVED: defer to pilot.** Author the instrument in DUAL MODE:
+- **Mode A (central-buddy)**: one specific recurring dependent figure (e.g., an animal companion / child-figure NPC) appears across many sessions; high-stakes H8b probes consistently feature this figure.
+- **Mode B (flat-ensemble)**: 5-7 named NPCs as a flat cast; high-stakes H8b probes use whichever NPC the participant has happened to bond with most.
 
-**Q2. Should the imaginary-buddy NPC (Dave's example) be specifically a dog, or a more abstract dependent figure?** Dog has the highest-affect-anchor in pop-cultural memory; but a non-anthropomorphic figure may be more cross-culturally legible. Defer to pilot calibration.
+The n=10 pilot administers both modes (split-sample, ~5 participants each, randomized assignment). The exit interview asks specifically which mode "felt more like the choice was about a real person you knew." The mode that wins becomes the locked design for the n=200 main study; the other is deprecated post-pilot.
 
-**Q3. How are paired probes designed to be structurally equivalent across narrative/abstract?** The construct must be identical; only the framing differs. This is a significant authoring constraint and may reduce the number of paired probes that are cleanly possible.
+This is honest deferral: design both, test both, decide before main-study OSF lock.
 
-**Q4. Is attachment-strength measured per-NPC or globally?** Per-NPC gives finer-grained data but more measurement burden. Suggestion: per-NPC for the high-attachment cast (the buddy figure especially); global for the wider cast.
+### Remaining open questions for future iterations
 
-**Q5. Should H8 be tested only in MVP-1, or held for a dedicated MVP-1.5 study after MVP-1's primary validation?** Argument for MVP-1: tests the design while the cohort is already engaged. Argument for separate study: H8 has its own design requirements that may not align cleanly with the existing MVP-1 protocol. Defer to co-PI consultation.
+**Q1. How many recurring NPCs in the cast?** Trade-off: more NPCs = richer attachment opportunities, but harder for the participant to track and remember. Provisional: 5-7. Pilot data will inform final number.
+
+**Q3. How are paired probes designed to be structurally equivalent across narrative/abstract?** The construct must be identical; only the framing differs. This is a significant authoring constraint and may reduce the number of paired probes that are cleanly possible. Reserved for scenario-authoring iteration.
+
+**Q4. Is attachment-strength measured per-NPC or globally?** Per-NPC gives finer-grained data but more measurement burden. Provisional: per-NPC for the central-buddy figure (Mode A) or top-2 bonded NPCs (Mode B); global summary for the wider cast. Reserved for scoring.md §9 iteration.
 
 ---
 

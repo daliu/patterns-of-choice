@@ -264,6 +264,45 @@ Append-only. Older decisions remain in place even when revisited; revisits get n
 
 ---
 
+## 17. Add H8 (narrative-immersion-as-debiasing) to MVP-1; unlock corpus from DECISIONS §16
+
+**Question.** Dave's project-direction statement on 2026-05-29 named a novel methodological hypothesis: narrative-immersion-with-recurring-character-attachment as a measure-debiasing mechanism against social-desirability response. Should this be (a) deferred to MVP-2 / MVP-1.5 (the conservative path that protects MVP-1's primary validation scope), or (b) added to MVP-1 as a secondary hypothesis (the ambitious path that bundles the methodological contribution with the primary validation), and either way (c) what does this mean for the §16 corpus lock?
+
+**Decision.** Option (b) — add H8 to MVP-1 as a secondary hypothesis. Locked 2026-05-30 by Dave's explicit decision after presented with the trade-off. Corpus lock from §16 is unlocked with H8 as the explicit construct-gap motivation; new corpus target ~56-60 scenarios with ~8-12 paired narrative-vs-abstract probes added. The MVP-1 OSF filing will include H8a + H8b as the 8th hypothesis.
+
+**Rationale.**
+
+1. *One cohort, one publication.* H8 tested in MVP-1 means the methodological claim lands with the primary validation rather than waiting on a separate study that may never get funded. The within-subject design uses the same n=200 cohort; statistical power for the H8 secondary thresholds (lower 95% CI ≥ 0.15 / ≥ 0.20) is adequate.
+
+2. *§16's own trigger criterion is met.* §16 named the conditions for unlocking the corpus: "a specific construct gap from pilot data, co-PI review, or low CFA loadings for a particular item." H8 IS a construct gap — the existing instrument cannot test the narrative-immersion-as-debiasing hypothesis because it doesn't have paired narrative-vs-abstract probes by design. §16's unlock criterion is explicitly satisfied by §17 here. No retroactive rewriting of §16 is needed; §17 is a clean follow-on.
+
+3. *Methodological contribution opportunity.* The H8 framework (see [`h8-narrative-immersion-design.md`](h8-narrative-immersion-design.md) §5) is potentially a real contribution to moral psychology — narrative transportation has been studied in persuasion and health-education but not in measurement. If H8a confirms (debiasing), the instrument has a documented mitigation for the validity-threats.md §CV-1 social-desirability threat. If H8b confirms (attachment-grounding), the instrument has a measured mechanism that abstract framings can't replicate. Both findings are publishable independently of MVP-1's primary validation outcome.
+
+4. *Secondary status preserves the primary-validation gate.* H8 is added as SECONDARY (not gate-criterion). A failed H8 does not falsify the instrument; it just means the narrative-immersion-as-debiasing claim doesn't pan out. The primary validation (H1, H2, H3) remains the gate.
+
+**Considered and rejected.**
+
+- *Defer H8 to MVP-1.5* — cleaner experimentally; but the elapsed time between MVP-1 and MVP-1.5 is realistically 12+ months, during which the H8 claim either gets scooped or loses momentum. The bundling cost (slight MVP-1 scope expansion) is small relative to the bundling benefit (one cohort, one decision).
+- *Test H8 informally without pre-registration* — defeats the purpose. The contribution H8 makes is a pre-registered methodological claim; testing it post-hoc would be hypothesizing-after-results-known and not publishable as a rigorous finding.
+- *Add H8 but keep §16 locked at 48 by re-tagging existing scenarios as both "narrative" and "abstract" pairs* — the existing 48 scenarios were not authored for paired-probe construct equivalence; retrofitting would require either (a) accepting weaker construct equivalence than the H8 spec requires, or (b) heavy re-authoring of existing scenarios. Adding paired probes as new scenarios (option (b)) is cleaner.
+
+**Status.** Locked at 2026-05-30. Downstream changes triggered:
+- `pre-registration.md` §6 adds H8 (H8a + H8b) to the secondary hypotheses table
+- `pre-registration.md` §5 adds the within-subject paired-probe analysis plan
+- `concept.md` adds a "Narrative immersion as measure-debiasing" section; recurring-NPC mention promoted from idea to mechanism
+- `scoring.md` adds §9 operationalizing the divergence and attachment scores
+- `validity-threats.md` §CV-1 updates mitigation list (pending H8 outcome)
+- `pilot-protocol.md` gains the H8-calibration role (Mode A vs Mode B for buddy-NPC centrality per `h8-narrative-immersion-design.md` §6 Q2)
+- `pilot-pre-launch-checklist.md` Phase 4 gains ~8-12 paired-probe authoring + NPC cast + attachment instrument items
+- `scenarios/` corpus expands to ~56-60 with the paired-probe additions
+- `literature/narrative-immersion.md` new doc anchoring the Green & Brock + Tukachinsky + transportation-theory grounding
+
+These downstream changes are multi-iteration work, scheduled to be applied across subsequent iterations starting with concept + pre-registration in the same iteration as §17 lands.
+
+**Pilot calibration role.** Per `h8-narrative-immersion-design.md` §6 Q2 (resolved 2026-05-30 to "defer to pilot"), the n=10 pilot administers BOTH Mode A (central-buddy NPC) and Mode B (flat-ensemble NPC cast), split-sample with random assignment. Pilot exit interview asks which mode "felt more like the choice was about a real person you knew." The winning mode is locked for the n=200 main study. This is honest deferral within the H8-in-MVP-1 commitment, not a retreat from it.
+
+---
+
 ## How to add to this file
 
 Each new decision: copy the section template (Question / Decision / Rationale / Considered and rejected / Status). Number sequentially. Don't renumber when inserting historically — just add to the end.

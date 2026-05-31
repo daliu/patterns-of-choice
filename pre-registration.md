@@ -72,6 +72,7 @@ This document follows the OSF Standard Pre-Registration template. Sections in *i
 - Convergent validity: Pearson correlations with 95% bootstrap CIs (10,000 resamples). Pre-registered direction is positive for HEXACO H × revealed truth-telling; null hypothesis test reports against r = 0 with the pre-registered support threshold at lower-95%-CI ≥ 0.15 (a more conservative inferential anchor than NHST p < 0.05).
 - Reliability: Two-week split-half on weeks 1–2 vs. weeks 3–4 within-user revealed scores (Pearson r per domain), and Cronbach's α / McDonald's ω on quick-fire items within domain.
 - Discriminant validity: Pearson correlations with Big-5 neuroticism (administered as 8-item subscale from BFI-2 at baseline); pre-registered ceiling r ≤ 0.40.
+- *H8 narrative-immersion analysis (added 2026-05-30 per DECISIONS §17):* Within-subject paired-probe design. Each participant completes ~8-12 construct-paired probes; each pair consists of one narrative-embedded item (using a recurring NPC the participant has interacted with across prior sessions) and one structurally-equivalent abstract / one-shot item. Pair order counterbalanced across participants. **H8a (debiasing):** per participant *i* on pair *p*, compute `D_i^p = revealed(narrative) - revealed(abstract)`; test Pearson correlation of `D_i^p` with the participant's baseline stated-revealed gap on the abstract probe across the low-stakes paired-probe subset. Pre-registered threshold: lower 95% bootstrap CI of correlation ≥ 0.15. **H8b (attachment-grounding):** per participant *i*, compute `attachment_strength_i` as the mean of per-NPC PSR-PRD scores (Tukachinsky 2010) collected at sessions 8/16/24, restricted to the high-stakes attachment-laden paired-probe subset; test Pearson correlation of `D_i^p` magnitude with `attachment_strength_i`. Pre-registered threshold: lower 95% bootstrap CI ≥ 0.20. Both tests bootstrapped per `scoring.md` §8 with the pre-committed seed; per-pair and pooled correlations reported. Full operationalization in `scoring.md` §9 (pending iteration).
 
 **Transformations.** Response times log-transformed before analysis; revealed scores standardized within domain before gap computation; informant ratings averaged across informants per participant (when ≥ 2 are available).
 
@@ -82,6 +83,8 @@ This document follows the OSF Standard Pre-Registration template. Sections in *i
 - *Secondary*: informant convergence — point estimate r ≥ 0.20 (lower 95% CI not required).
 - *Secondary*: cost-of-virtue probe test-retest — point estimate r ≥ 0.50.
 - *Secondary*: discriminant — Big-5 neuroticism correlation r ≤ 0.40.
+- *Secondary (added 2026-05-30):* H8a narrative-immersion debiasing — lower 95% CI of `D_i^p` × baseline-gap correlation ≥ 0.15.
+- *Secondary (added 2026-05-30):* H8b attachment-grounding — lower 95% CI of `|D_i^p|` × attachment-strength correlation ≥ 0.20.
 
 **Data exclusion.** Pre-registered:
 - Participants with < 14 completed sessions (out of 53 protocol sessions) excluded from primary analyses (sensitivity-analyzed at < 7 and < 21).
@@ -112,8 +115,14 @@ This document follows the OSF Standard Pre-Registration template. Sections in *i
 | H5 | Cost-of-virtue test-retest r ≥ 0.50 | Concept doc |
 | H6 | Stated–revealed correlation falls within 0.20 ≤ r ≤ 0.60 (the "gap is real but not random noise" range) | Design hypothesis |
 | H7 | Big-5 neuroticism × revealed scores r ≤ 0.40 | Discriminant validity |
+| H8a | Narrative-embedded responses are closer to stated values than abstract responses; correlation of within-subject divergence with baseline stated-revealed gap, lower 95% CI ≥ 0.15 | Green & Brock 2000 transportation theory; see `h8-narrative-immersion-design.md` and DECISIONS §17 |
+| H8b | Attachment-laden narrative responses deviate from abstract responses in proportion to measured parasocial attachment strength; correlation lower 95% CI ≥ 0.20 | Horton & Wohl 1956 / Tukachinsky 2010 PSR-PRD; see `h8-narrative-immersion-design.md` |
+
+**H8 status.** Added 2026-05-30 per DECISIONS §17. Both sub-hypotheses (H8a and H8b) tested using within-subject paired narrative-vs-abstract probe design described in `pre-registration.md` §5 (analysis plan), `scoring.md` §9 (operationalization), and `h8-narrative-immersion-design.md` (full design rationale). Secondary status (reported with effect sizes; not used to gate primary instrument validation). The combined H8 claim — that narrative immersion shifts responses in *predictable construct-aware directions* rather than uniformly biasing them — requires both sub-hypotheses to pass. Partial passes (H8a only or H8b only) reported as informative partial findings.
 
 **Falsification thresholds.** Primary H1–H3 failing constitutes a failure of measurement validation. If H2 fails (lower CI < 0.15) but H1 and H3 pass, the result is reported as a "measures something real and reliable but does not converge with HEXACO H at the predicted level" finding — itself useful, with the secondary analyses interpreted as exploratory hypothesis-generation for MVP-2.
+
+**H8 falsification.** H8 as a whole is falsified if either H8a (lower CI < 0.15) or H8b (lower CI < 0.20) fails. A mixed result (one passes, one fails) is reported as a partial finding — for example, "narratives debias but do not add attachment-grounding" or "attachment grounds but does not debias." Both partial findings would be informative for moral-psychology methodology and would be published. A double-failure (both fail) would indicate the narrative-immersion-as-debiasing claim does not generalize, and the instrument's design choice to use narrative formats becomes purely a presentation choice rather than a measurement-quality choice.
 
 ---
 

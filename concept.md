@@ -93,7 +93,34 @@ A 2D grid: **domains** (situational territory) × **behavioral signatures** (wha
 - *Reigns*-style swipe cards for the quick-fire round
 - *Choice of Games* / 80 Days for the core narrative
 - Auction UI for the cost-of-virtue probe
-- **A recurring NPC** the user interacts with over weeks — builds parasocial weight so loyalty/honesty choices toward them carry actual emotional cost. Probably the single highest-leverage mechanic for getting past "it's just a game" surface behavior.
+- **A recurring NPC** the user interacts with over weeks — builds parasocial weight so loyalty/honesty choices toward them carry actual emotional cost. Probably the single highest-leverage mechanic for getting past "it's just a game" surface behavior. **Promoted from "idea worth borrowing" to "load-bearing methodological mechanism" via DECISIONS §17 and tested formally as H8 — see next section.**
+
+### Narrative immersion as measure-debiasing (H8)
+
+The recurring-NPC mechanism above is treated as a *load-bearing measurement choice*, not a presentation flourish. The working hypothesis (pre-registered as H8 per DECISIONS §17, drafted in [`h8-narrative-immersion-design.md`](h8-narrative-immersion-design.md)) is:
+
+> Narrative-embedding-with-recurring-character-attachment functions as a measure-debiasing mechanism against social-desirability response bias, AND as a stake-grounding mechanism for high-stakes attachment-laden choices.
+
+Two converging literatures motivate this:
+- **Narrative transportation theory** (Green & Brock 2000) — transportation reduces critical processing and source-monitoring, the cognitive substrate of social-desirability response. Choices made under transport are predicted to be closer to genuine preference and farther from performed-public-self.
+- **Parasocial attachment** (Horton & Wohl 1956; Tukachinsky 2010 PSR-PRD scale) — sustained engagement with named recurring characters produces measurable emotional bonds that correlate with self-reported attachment and behaviorally with stake-investment in character-welfare decisions.
+
+The instrument-level prediction has two sub-hypotheses tested as a paired structure:
+
+- **H8a (debiasing):** For low-stakes paired probes — same construct in both a narrative-embedded and an abstract framing — participants' narrative-condition responses are CLOSER to their stated values than their abstract-condition responses. Participants with the largest baseline stated-revealed gap show the LARGEST narrative-induced shift toward stated values.
+
+- **H8b (attachment-grounding):** For high-stakes attachment-laden paired probes — where a recurring NPC's welfare is at stake — participants with higher measured parasocial attachment to that NPC show LARGER deviations from their abstract-condition response, in the direction of weighting that specific character's welfare more heavily.
+
+Both sub-hypotheses are required for the combined H8 claim. The combined finding is that narrative immersion does NOT uniformly bias responses — it shifts them in *predictable construct-aware directions*, which is the methodological claim worth pre-registering.
+
+**Why this is a contribution rather than a feature.** Standard psychometric instruments treat narrative-embedding as either cosmetic (interesting-presentation) or a confounding source of variance to be controlled away. H8 inverts this: narrative-embedding-with-attachment is a FEATURE on a specific named falsifiable measurement-quality dimension. The closest precedent in the literature is narrative transportation applied to PERSUASION (Green & Brock) or HEALTH-EDUCATION (Hinyard & Kreuter 2007). H8 may be the first formal pre-registered attempt to apply transportation-theory mechanisms to a MEASUREMENT context rather than an intervention context.
+
+**Implications for design.** The instrument grows in three places to support H8:
+1. *Recurring NPC cast* (5-7 named characters with backstory continuity across sessions); pilot calibration of "central-buddy" vs "flat-ensemble" mode per H8 design Q2.
+2. *Paired probes* (~8-12) where the same construct is probed in both narrative and abstract formats, within-subject counterbalanced.
+3. *Attachment measurement* (self-report adapted from PSR-PRD + behavioral response-latency proxy).
+
+These additions take the corpus from 48 → ~56-60 scenarios; the DECISIONS §16 corpus lock is explicitly unlocked by §17 for this purpose.
 
 ---
 
