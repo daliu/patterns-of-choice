@@ -70,7 +70,10 @@ These predate the pre-launch sequence; included here for the dependency map.
 **Blocks:** Phase 5 (OSF lock requires content frozen). Can run in parallel with Phases 2-3.
 
 - [x] **Author final scenarios** to reach 48 corpus total — DONE. Distribution: 6 QF + 3 Narr + 3 CoV per domain × 4 = 48. All passing validator.
-- [ ] **Final editorial review of all scenarios.** Bias check, semantic-tag check, cross-domain consistency. Output: review-complete sign-off.
+- [x] **H8: author the recurring-NPC cast** (`h8-narrative-immersion-design.md` A1). DONE — `scenarios/npc-cast.json`: 5 named characters spanning all five archetypes and all four domains, with the Mode-A/Mode-B dual-mode deployment encoded.
+- [ ] **H8: author the paired narrative-vs-abstract probes** (~8–12, each construct in both a cast-anchored narrative form and a structurally-equivalent abstract form; `scoring.md` §9.1). This is the corpus expansion that unlocks `DECISIONS.md` §16→§17 (48 → ~56-60). The corpus-lock *decision* is made (§17); this is the remaining *authoring*. Output: paired-probe scenarios passing the validator, tag-axis map extended with `recurring_npc:*` markup tags.
+- [ ] **H8: build the attachment-measurement instrument** (`h8-narrative-immersion-design.md` A3; `scoring.md` §9.3). Short Tukachinsky-PSR adaptation per recurring NPC + the behavioral latency proxy. Output: instrument items authored; pilot administers near end of week 2 for calibration (`pilot-protocol.md` §H8).
+- [ ] **Final editorial review of all scenarios** (including the H8 paired probes). Bias check, semantic-tag check, cross-domain consistency. Output: review-complete sign-off.
 - [ ] **Lock the tag-axis map.** Per [`analysis/tag_axis_map_v0.1.csv`](analysis/tag_axis_map_v0.1.csv) versioning policy: bump to v1.0 at OSF filing. Output: v1.0 CSV.
 - [ ] **Lock all JSON schemas.** No schema changes after this point without an ADR. Output: schemas tagged as v1.0 in git.
 - [ ] **Lock the values deck and pairwise pairs.** Output: inventory module v1.0.
