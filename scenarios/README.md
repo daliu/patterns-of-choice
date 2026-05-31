@@ -24,6 +24,12 @@ See [`SCHEMA.md`](SCHEMA.md) for full field definitions.
 - **No "right answer."** Tags describe what each choice reveals (which signature, which counterparty, what stake level); they do not score one choice as better than another.
 - **Multiple framings of the same logical structure.** For each domain, we want scenarios that vary surface (workplace / family / anonymous online) while preserving the underlying choice structure — this is how the *consistency under reframing* signature gets measured.
 
+## Recurring-NPC cast (H8)
+
+[`npc-cast.json`](npc-cast.json) defines the small set of named recurring characters the H8 narrative-immersion hypothesis depends on (`../h8-narrative-immersion-design.md` A1). It is the metadata layer narrative scenarios reference via a `recurring_npc:<id>` tag — not a scenario, and intentionally outside `sample/` so the validator skips it (it globs only `sample/*.json`).
+
+Five characters span the four domains and the five archetypes the design doc enumerates: a close friend (`npc-nadia`), an aging family member (`npc-gran`), a new-arrival whose circle-membership evolves (`npc-marisol`), an adversary with a redemption arc (`npc-cole`), and an animal companion (`npc-biscuit`) — the "imaginary buddy" figure that anchors the high-stakes H8b probes and serves as the Mode-A central buddy. See the file's `dual_mode` and `next_authoring_steps` fields for deployment and what it unblocks.
+
 ## Domain coverage (MVP-1)
 
 The MVP scopes 4 domains; sample scenarios so far:
