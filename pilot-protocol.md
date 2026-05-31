@@ -117,6 +117,31 @@ Section 5 — Open (5 min)
 
 ---
 
+## H8 narrative-immersion calibration
+
+The pilot does **not** test H8 (`pre-registration.md` §6; `h8-narrative-immersion-design.md`). At n=10 it is nowhere near powered for the within-subject divergence statistics of `scoring.md` §9. Its H8 job is purely to **de-risk and calibrate** the design before the main study commits to it.
+
+**Three calibration goals.**
+1. **Do the recurring characters feel real?** The whole H8 mechanism rests on parasocial attachment forming across sessions. If exit interviews reveal the NPCs read as cardboard, H8 is not viable as designed and the main study should not carry it.
+2. **Does the attachment instrument behave?** Administer the short Tukachinsky-PSR adaptation (`scoring.md` §9.3) once near the end of week 2 and sanity-check it: range, ceiling/floor, whether participants can answer it about a two-week-old character without confusion. The behavioral latency proxy is logged but treated as exploratory until self-report is shown to vary.
+3. **Do the paired probes feel artificial?** Each H8 construct is probed in both narrative and abstract form (`scoring.md` §9.1). If participants notice and resent the repetition ("you already asked me this"), the pairing is burned and needs redesign before scale.
+
+**Dual-mode split-sample (resolves design-doc Q2).** The n=10 is split, randomized, into two authoring modes so the main study can lock the winner:
+- **Mode A — central-buddy** (~5 participants): one recurring dependent figure (e.g. an animal-companion NPC) appears across many sessions; the high-stakes attachment probe consistently features this figure.
+- **Mode B — flat-ensemble** (~5 participants): 5–7 named NPCs as a flat cast; the high-stakes probe uses whichever NPC that participant bonded with most.
+
+The exit interview asks, in both arms, a decision question: *"which moment felt most like the choice was about a real person you actually knew?"* The mode that more consistently produces that response becomes the locked design for the n=200 study; the other is deprecated post-pilot. This is honest deferral — design both, test both, decide before the main-study OSF lock.
+
+**Where this lands in the rest of the protocol.**
+- *Recruitment* gains a randomized Mode A / Mode B assignment at enrollment (~5 each).
+- *Protocol* schedules the attachment instrument once near the end of week 2 (before the profile reveal); narrative and abstract members of each paired probe fall on well-separated days, order counterbalanced across participants.
+- *Interview structure* already probes adjacent ground — the weekly check-in's "one scenario you most remember" and the exit interview's Section 3 ("did you feel the system wanted a particular answer?") are natural places to surface NPC-realness without leading the participant.
+- *Open questions* gains: do the NPCs feel like real people? does naming/continuity deepen across the two weeks? does the paired-probe repetition feel like a glitch or pass unnoticed?
+
+A NO on goal 1 or 3 is a legitimate reason to drop H8 from the main study while keeping the rest of the instrument — H8 is secondary by design and severable.
+
+---
+
 ## Decision criteria for proceeding to OSF lock
 
 The pilot is a go/no-go gate for the main study. Specific criteria:
