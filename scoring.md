@@ -76,7 +76,7 @@ Card-sort, pairwise, and story-prompt entries each have their own schemas; see `
 
 Each scenario item has a *primary axis* — the value dimension the item most clearly bears on. The user's choice yields a signed contribution on that axis.
 
-### 2.1 Tag-to-axis mapping (excerpt — full table in §10)
+### 2.1 Tag-to-axis mapping (excerpt — full table in §11)
 
 **Domain: truth-telling. Primary axis: `honesty` (range −1 to +1).**
 
@@ -104,7 +104,7 @@ Items where the chosen option carries *no* primary-axis tag are coded `NA` for t
 
 Two domains (in-group/out-group; reciprocity-cooperation) have meaningful *second* axes for cross-domain interpretation:
 
-- **In-group/out-group secondary axis: `circle_radius`** (boundaries → hospitality). Same tag-table approach; full mapping in §10.
+- **In-group/out-group secondary axis: `circle_radius`** (boundaries → hospitality). Same tag-table approach; full mapping in §11.
 - **Reciprocity-cooperation secondary axis: `cooperation_orientation`** (independence → cooperation). Same.
 
 Secondary axes are computed but not used in the primary CFA (§7); they're pre-registered as *exploratory* analyses.
@@ -228,7 +228,81 @@ All point estimates report **95% bootstrap CIs** with 10,000 resamples at the pa
 
 ---
 
-## 9. Exclusion rules
+## 9. H8 narrative-immersion scores (divergence and attachment)
+
+This section operationalizes the H8 secondary hypothesis (`pre-registration.md` §6; design rationale in `h8-narrative-immersion-design.md`). H8 has two sub-hypotheses, each with its own derived score. All inputs are the standard revealed per-item scores of §2–§3; nothing here introduces a new scale.
+
+### 9.1 Paired-probe divergence score `D`
+
+A *paired probe* is one construct presented to the same participant in two structurally-equivalent forms at well-separated sessions (order counterbalanced across participants):
+
+- **narrative form** — embedded in an established arc, attachment-laden where applicable;
+- **abstract form** — a structurally-equivalent quick-fire item.
+
+Both forms are scored on the same primary-axis scale as any other revealed item (§2.2). For participant *i* and paired probe *p*:
+
+```
+r_narr(i,p) = primary-axis revealed score, narrative form
+r_abs(i,p)  = primary-axis revealed score, abstract form
+D_i^p       = r_narr(i,p) - r_abs(i,p)
+```
+
+`D_i^p > 0` means the narrative form elicited a more axis-positive response (e.g. more honest, more generous) than the abstract form. Both terms are sample-standardized (§2) before subtraction, so `D` is in standard-deviation units.
+
+### 9.2 H8a — debiasing (low-stakes paired probes)
+
+H8a predicts that participants whose abstract-form behaviour falls furthest short of their *stated* values show the largest narrative-induced shift toward those values.
+
+Using the canonical gap convention of §6 (stated − revealed; positive = states higher than acts), define the per-probe abstract gap, then aggregate to one pair of values per participant over their low-stakes complete pairs:
+
+```
+gap_abs(i,p) = s_i(domain of p, aspirational) - r_abs(i,p)
+D_i^(low)    = mean_p D_i^p            over low-stakes pairs
+gap_i^(abs)  = mean_p gap_abs(i,p)     over the same pairs
+```
+
+**H8a test statistic:** Pearson correlation across participants `rho_8a = corr(D_i^(low), gap_i^(abs))`; the H8a criterion is a **lower 95% bootstrap-CI bound ≥ 0.15** (positive). Spearman is reported as a distribution-free robustness check.
+
+> **Sign note (pre-registration-critical).** The one-line statement in `h8-narrative-immersion-design.md` §1 calls this correlation "negative"; that phrasing assumed a *revealed − stated* gap. Under scoring.md §6's canonical *stated − revealed* convention the predicted sign is **positive**. scoring.md's convention is canonical for the OSF filing — the two statements describe the same prediction, differing only in the gap's sign convention. This must be reconciled to one sign before lock.
+
+> **Mathematical-coupling caveat.** `D_i^(low)` and `gap_i^(abs)` share the term `r_abs`, which inflates their correlation even under the null (a regression-to-the-mean artifact). The confirmatory H8a test is therefore paired with a **pre-registered de-coupled analysis**: regress `r_narr` jointly on `s_i` and `r_abs`, and test whether the partial association of `r_narr` with `s_i` is positive controlling for `r_abs` — i.e. the narrative response is pulled toward the stated value beyond what the abstract response already predicts. H8a is counted as supported only if the headline correlation criterion **and** the de-coupled partial-association sign agree.
+
+### 9.3 Attachment strength `attachment_strength`
+
+Attachment is measured **per character** (resolving design-doc Q4) so it can be matched to the specific character featured in each high-stakes probe. This is mode-agnostic: it works whether the locked design is Mode A (central-buddy) or Mode B (flat-ensemble). For participant *i* and recurring character *c*:
+
+```
+selfreport(i,c) = mean over administrations (sessions 8/16/24) of the
+                  z-scored PSR-PRD adaptation (Tukachinsky 2010) for c
+latencygap(i,c) = z-scored slope, over sessions, of
+                  RT(c-mentioning items) - RT(matched generic-role items)
+attachment_strength(i,c) = mean( selfreport(i,c), latencygap(i,c) )
+```
+
+If the behavioural channel is too sparse for character *c* (pre-registered minimum: latency available in ≥ 3 sessions), `attachment_strength` falls back to `selfreport` alone and the substitution is logged. Both channels are z-scored within-sample before combination so neither dominates by scale.
+
+### 9.4 H8b — attachment-laden shift (high-stakes paired probes)
+
+H8b predicts that, on high-stakes probes where a specific character's welfare is at stake, more-attached participants deviate more from their abstract-form response. Because the protective direction is not assumed in advance, H8b uses deviation **magnitude**. For each high-stakes attachment-laden pair *p* featuring character `c(p)`, aggregate per participant over their such pairs:
+
+```
+absD_i^(high) = mean_p | D_i^p |                     over high-stakes pairs
+att_i         = mean_p attachment_strength(i, c(p))  over the same pairs
+```
+
+**H8b test statistic:** Pearson correlation `rho_8b = corr(absD_i^(high), att_i)`; criterion **lower 95% bootstrap-CI bound ≥ 0.20**. A directional companion analysis (signed `D` toward the protective option, on probes that define one) is reported as exploratory.
+
+### 9.5 Estimation, inclusion, and power
+
+- **CIs and seed.** Both `rho_8a` and `rho_8b` use participant-level non-parametric bootstrap, 10,000 resamples, seed `20260510` — identical to §8.
+- **Per-participant inclusion.** A pair contributes only if **both** forms were completed (neither timed-out nor missing). A participant enters H8a with ≥ 3 complete low-stakes pairs; enters H8b with ≥ 2 complete high-stakes attachment-laden pairs **and** a valid `attachment_strength` for each featured character.
+- **Order effects.** Presentation order (narrative-first vs abstract-first) is counterbalanced and entered as a covariate; a non-trivial order main-effect is reported, and if large the analysis is re-run within order strata.
+- **Aggregation alternative.** Person-level aggregation (above) is the confirmatory specification, chosen for transparency. A probe-within-person mixed-effects model is pre-registered as a robustness check; material divergence between the two is reported.
+- **Status and power.** H8 is *secondary*: reported with effect sizes and CIs, never a gate-criterion for instrument validation (contrast §7 / H1). At n=200 the lower-CI thresholds (0.15, 0.20) are deliberately modest — H8 is powered to detect a directional effect, not to bound it tightly.
+
+---
+
+## 10. Exclusion rules
 
 Per `pre-registration.md` §5:
 
@@ -239,7 +313,7 @@ Per `pre-registration.md` §5:
 
 ---
 
-## 10. Tag-to-axis tables (truncated)
+## 11. Tag-to-axis tables (truncated)
 
 The full mapping table per domain ships as a versioned data file `analysis/tag_axis_map_v0.1.csv` and is referenced (not re-defined) in any analyzer. Maintaining the mapping in a separate file makes the analyzer independent of the scenario corpus and lets pre-registered tag-mappings be locked at OSF filing time while scenarios continue to evolve.
 
@@ -265,7 +339,7 @@ Authoring discipline: a new scenario item's tag set must be auditable against th
 
 ---
 
-## 11. What's not yet specified (open questions)
+## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.
 - **Inter-rater reliability target for LLM story-coding.** README claims κ ≥ 0.70 before LLM coding is trusted at scale. The reference labels need to come from somewhere; gold-standard manual coding of ~50 stories per domain (~200 total) by 2 raters is the obvious approach but is real labor.
