@@ -2,7 +2,7 @@
 
 Notes from the first literature review pass on `concept.md` (draft 0.1).
 
-This index catalogs reviewed sources by area. Each file follows the format:
+This index catalogs reviewed sources by area (the first eight files are the draft-0.1 pass; `narrative-immersion.md` was added later as the H8 theoretical anchor). Each file follows the format:
 - Key sources (author, year, title)
 - 2–4 sentences on what each contributes
 - Note on relevance / contradiction with the concept doc
@@ -17,6 +17,7 @@ This index catalogs reviewed sources by area. Each file follows the format:
 - [`replication-concerns.md`](replication-concerns.md) — Gino fraud case, moral licensing replications, overjustification dispute, what hasn't held up
 - [`adjacent-instruments.md`](adjacent-instruments.md) — existing products / research instruments in the space
 - [`ethical-frameworks.md`](ethical-frameworks.md) — virtue ethics (Annas, MacIntyre, Aristotle), deontology, consequentialism, meta-ethical positioning
+- [`narrative-immersion.md`](narrative-immersion.md) — transportation (Green & Brock), EORM (Moyer-Gusé), parasocial attachment (Horton & Wohl, Tukachinsky), social-desirability components (Paulhus BIDR) — the H8 anchor
 
 ## Coverage status
 

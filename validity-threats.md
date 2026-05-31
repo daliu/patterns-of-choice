@@ -21,13 +21,15 @@
 - Quick-fire timer (8 seconds per item) compresses deliberation, reducing self-presentation tuning
 - The candor moment in onboarding explicitly says "this is unvalidated; you might step away" — primes honesty in the relational sense
 - Cost-of-virtue probes structurally externalize the construct: response is a stake-ladder, not an opinion
+- **Narrative immersion as active debiasing (H8a).** The narrative-embedding-with-attachment design is hypothesized to *reduce the impression-management component* of social-desirability responding: transportation lowers self-monitoring (Green & Brock 2000), and entertainment-overcoming-resistance theory names reduced self-presentation as a direct consequence of narrative engagement and parasocial bonding (Moyer-Gusé 2008). H8a makes this a falsifiable, pre-registered prediction rather than an assumption — see `literature/narrative-immersion.md` and `scoring.md` §9.2. **This mitigation is itself under test**, not assumed to work; if H8a fails, this row's residual risk does not improve.
 
-**Residual risk: MEDIUM.** The timer helps but doesn't eliminate; the population using a paid panel still skews toward people who are explicitly performing for a researcher.
+**Residual risk: MEDIUM.** The timer helps but doesn't eliminate; the population using a paid panel still skews toward people who are explicitly performing for a researcher. Note the threat is specifically *impression management* (audience-facing editing), not *self-deceptive enhancement* (honest but inflated self-view, per Paulhus 1984) — narrative debiasing (H8a) can plausibly touch only the former, which bounds how much this residual risk can fall.
 
 **Detection in pilot/main study.**
 - Pilot exit interview Section 3 (honesty-of-self-reporting) directly asks participants whether they performed; transcript analysis is the primary signal
 - Convergent validity test H2 against HEXACO honesty-humility: if H2 fails because revealed scores compress toward the ceiling (everyone scoring high on truth-telling), social-desirability is a leading hypothesis
 - Discriminant test H7 against Big-5 neuroticism: if revealed scores correlate positively with N, the social-desirability hypothesis becomes more plausible (anxious users perform virtue more)
+- H8a paired narrative-vs-abstract divergence (`scoring.md` §9.2): if narrative-framed responses shift toward stated values most for participants with the largest abstract-condition gap, that is direct positive evidence the narrative design reduces impression-management bias; if H8a's lower CI sits at/below zero, narrative is not debiasing and this threat stands undiminished
 
 ---
 
