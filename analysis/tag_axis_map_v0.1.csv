@@ -178,5 +178,10 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,vigilance:self-protection,,vigilance subtype (workplace self-protective omission; not separately scored — lie:omission on the same choice captures the honesty-axis contribution)
 *,metadata,value:loyalty,,cross-domain value-reference (home: in-group-out-group; appears in other domains as descriptive metadata per per-scenario-domain scoring model)
 *,metadata,value:fairness:equal,,multi-segment tag — value:fairness with equal-split modifier; treat as metadata since value:fairness already scores
+*,metadata,recurring_npc:nadia,,H8 recurring-NPC identity markup (close friend; see scenarios/npc-cast.json) — non-scoring; identifies which named character a scenario features
+*,metadata,recurring_npc:gran,,H8 recurring-NPC identity markup (aging family member; npc-cast.json) — non-scoring identity tag
+*,metadata,recurring_npc:marisol,,H8 recurring-NPC identity markup (new arrival / evolving circle; npc-cast.json) — non-scoring identity tag
+*,metadata,recurring_npc:cole,,H8 recurring-NPC identity markup (adversary with redemption arc; npc-cast.json) — non-scoring identity tag
+*,metadata,recurring_npc:biscuit,,H8 recurring-NPC identity markup (animal companion; npc-cast.json) — non-scoring identity tag
 
 

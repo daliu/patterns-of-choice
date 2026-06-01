@@ -74,6 +74,6 @@
   "next_authoring_steps": [
     "Retrofit existing narrative scenarios (narr-*) with recurring_npc:<id> tags where a generic role can become a named cast member without distorting the construct.",
     "Author ~8-12 paired narrative-vs-abstract probes (scoring.md §9.1): each construct in both a cast-anchored narrative form and a structurally-equivalent abstract quick-fire form. This is the corpus expansion that unlocks DECISIONS §16 (48 -> ~56-60).",
-    "Add recurring_npc:<id> tags to analysis/tag_axis_map_v0.1.csv with contribution 0.0 (identity/markup tags, not axis-scoring tags) so the validator's tag-coverage check stays clean."
+    "DONE — recurring_npc:<id> tags are registered in analysis/tag_axis_map_v0.1.csv as `*,metadata,recurring_npc:<id>,,` (domain '*', EMPTY contribution, matching the existing non-scoring metadata-tag convention; not the literal 0.0 a scoring tag would carry). The validator's tag-coverage check now passes for NPC-tagged scenarios. NOTE: where an NPC tag structurally attaches is still open — the scenario schemas have no scenario-level `tags` field (additionalProperties:false), so NPC markup would live on choice/scene `tags` arrays, or the schema gains a scenario-level field; that schema decision is unresolved and separate from this tag-registration."
   ]
 }
