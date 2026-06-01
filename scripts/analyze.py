@@ -48,6 +48,24 @@ Reserved for the future validation-cohort analyzer:
 - Per-domain probe aggregation as a CFA indicator (§7)
 - Longitudinal cost-of-virtue probe trajectories (§4.3) — needs
   > 2 time windows of probe data
+- H8a / H8b narrative-immersion divergence + attachment (§9 of
+  scoring.md, 8th pre-reg hypothesis). The statistics themselves
+  (two Pearson correlations with bootstrap CIs) are stdlib-tractable
+  and would reuse the _domain_test_retest_r / bootstrap_ci machinery
+  below. It is reserved NOT for a library reason but because it has
+  unresolved INPUT preconditions that are design decisions, not code:
+  (a) scenarios/h8-probe-pairs.json currently declares zero pairs —
+      there is nothing to compute on until the paired probes are
+      authored (an editorial task, see pilot-pre-launch-checklist.md);
+  (b) how a narrative resolves to one scalar r_narr — terminal-based
+      vs path-based — is the open question in scoring.md §11 and must
+      be resolved before the divergence score is well-defined;
+  (c) the H8a sign convention is flagged in scoring.md §9.2 as
+      reconcile-before-OSF-lock.
+  Implementing H8 before (a)-(c) are settled would bake in choices that
+  are the project owner's / pilot's to make. When they are, this is a
+  natural next analyzer addition with a check_analyzer_thresholds gate
+  alongside H2-H7.
 
 Usage:
     python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
