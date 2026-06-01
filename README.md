@@ -37,8 +37,8 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`PROJECT-STATUS.md`](PROJECT-STATUS.md) — current state snapshot across every track. Solid vs provisional, open decisions waiting on the owner, dependency checklists to launch each phase, realistic timeline.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — five-minute orientation for any new contributor. What to read first, by-goal entry points, conventions, what kinds of contributions are in/out of scope.
 - [`Makefile`](Makefile) — `make setup` / `make validate` / `make analyze` / `make demo` — the common-task entry points.
-- [`scripts/`](scripts/) — utility scripts. Currently: `validate.py` (content-validation, Python, single dependency `jsonschema`). The first executable code in the repo. See [`scripts/README.md`](scripts/README.md) for the engineering-line-crossing rationale.
-- [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schema (4 quick-fires, 4 cost-of-virtue probes, 1 branching narrative)
+- [`scripts/`](scripts/) — utility scripts (Python). `validate.py` (content-validation, single dependency `jsonschema`), `analyze.py` (stdlib-only analyzer implementing the scoring-spec subset + hypotheses H2–H7), and `check_analyzer_thresholds.py` (regression gate run by CI). See [`scripts/README.md`](scripts/README.md) for the engineering-line-crossing rationale.
+- [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schemas. Full MVP-1 corpus: 48 scenarios (6 quick-fire + 3 branching-narrative + 3 cost-of-virtue per domain × 4 domains), all schema-validated. Also holds the H8 recurring-NPC cast (`npc-cast.json`) and paired-probe manifest (`h8-probe-pairs.json`)
 - [`inventory/`](inventory/) — stated-values inventory module: values deck, forced-choice pairs, three-layer prompts, story prompts
 - [`literature/`](literature/) — literature notes and citations (iterated by research agents)
 
