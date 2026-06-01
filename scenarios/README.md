@@ -30,6 +30,8 @@ See [`SCHEMA.md`](SCHEMA.md) for full field definitions.
 
 Five characters span the four domains and the five archetypes the design doc enumerates: a close friend (`npc-nadia`), an aging family member (`npc-gran`), a new-arrival whose circle-membership evolves (`npc-marisol`), an adversary with a redemption arc (`npc-cole`), and an animal companion (`npc-biscuit`) — the "imaginary buddy" figure that anchors the high-stakes H8b probes and serves as the Mode-A central buddy. See the file's `dual_mode` and `next_authoring_steps` fields for deployment and what it unblocks.
 
+[`h8-probe-pairs.json`](h8-probe-pairs.json) is the companion **paired-probe manifest**: it declares which narrative scenario form pairs with which abstract (quick-fire) form for a single construct, so the analyzer can compute the H8 divergence `D = r_narr − r_abs` (`../scoring.md` §9.1). Like the cast file it lives outside `sample/` (the validator skips it) and like `../inventory/pairwise-pairs.json` it keeps the pairing relationship in a manifest separate from the items. The contract exists; **no pairs are authored yet** — each new pair is one narrative scenario + one abstract quick-fire item + one manifest entry (the open H8 item in `../pilot-pre-launch-checklist.md` Phase 4).
+
 ## Domain coverage (MVP-1)
 
 The MVP scopes 4 domains; sample scenarios so far:

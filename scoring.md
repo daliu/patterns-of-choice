@@ -239,6 +239,8 @@ A *paired probe* is one construct presented to the same participant in two struc
 - **narrative form** — embedded in an established arc, attachment-laden where applicable;
 - **abstract form** — a structurally-equivalent quick-fire item.
 
+**Which forms pair (input).** The narrative↔abstract pairing is *not* inferable from the scenarios themselves; it is declared in a manifest, `scenarios/h8-probe-pairs.json` (mirroring how `inventory/pairwise-pairs.json` declares pairwise comparisons). Each entry carries `pair_id`, `construct`, `domain`, `stakes_level` (`low` → H8a pool §9.2, `high` → H8b pool §9.4), a `narrative_ref` {scenario_id, signal}, an `abstract_ref` {scenario_id, item_id}, and — for high-stakes pairs — an `npc_ref` into `scenarios/npc-cast.json` so §9.4 can fetch the matching `attachment_strength`. The analyzer reads pairs from this manifest; a pair contributes only if the participant completed *both* referenced forms (§9.5 inclusion). Note `narrative_ref.signal` pins *which* scene/terminal is read, not *how* a narrative resolves to one scalar — that (terminal-based vs path-based) is the open question in §11 and must be resolved before lock.
+
 Both forms are scored on the same primary-axis scale as any other revealed item (§2.2). For participant *i* and paired probe *p*:
 
 ```

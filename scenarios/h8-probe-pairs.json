@@ -1,0 +1,33 @@
+{
+  "version": "0.1",
+  "purpose": "Paired-probe manifest for the H8 narrative-immersion hypothesis. Declares which narrative scenario form pairs with which abstract (quick-fire) form for a single construct, so the analyzer can compute the within-person divergence D_i^p = r_narr - r_abs (scoring.md §9.1). Mirrors inventory/pairwise-pairs.json: the pairing relationship lives in a manifest separate from the scenarios themselves. This file is the data contract; the scenarios it references are editorial work authored separately.",
+  "design_refs": {
+    "scoring": "scoring.md §9.1 (D divergence), §9.2 (H8a, low-stakes pool), §9.4 (H8b, high-stakes attachment-laden pool)",
+    "design": "h8-narrative-immersion-design.md A2 (paired narrative-vs-abstract probes)",
+    "cast": "scenarios/npc-cast.json (npc_ref targets)",
+    "decisions": "DECISIONS.md §17 (these probes are the construct-gap that unlocks the §16 corpus 48 -> ~56-60)"
+  },
+  "entry_field_spec": {
+    "pair_id": "Stable unique id, pattern pp-{domain-slug}-{nnn} (pp = paired-probe).",
+    "construct": "One-sentence description of the single construct probed in BOTH forms. The forms must be structurally equivalent — same choice, different framing (h8-narrative-immersion-design.md Q3).",
+    "domain": "One of the four MVP-1 domains.",
+    "stakes_level": "'low' routes the pair into the H8a debiasing pool (scoring.md §9.2); 'high' routes it into the H8b attachment-laden pool (§9.4). Drives which test the pair contributes to.",
+    "narrative_ref": "Which scenario+signal yields r_narr. {scenario_id, signal}. 'signal' names the scene/terminal/decision within the narrative whose primary-axis score is taken as the narrative-form response. HOW a narrative resolves to one scalar (terminal-based vs path-based) is the open question in scoring.md §11 and must be resolved before lock — this manifest only PINS which signal is read, not how it's scored.",
+    "abstract_ref": "Which quick-fire item yields r_abs. {scenario_id, item_id}. The structurally-equivalent abstract form.",
+    "npc_ref": "Required when stakes_level='high': the npc-cast.json id of the character whose welfare is at stake (so §9.4 can fetch that participant's attachment_strength for this character). Null for low-stakes pairs.",
+    "counterbalance": "Always true in practice: presentation order (narrative-first vs abstract-first) is randomized across participants and entered as a covariate (scoring.md §9.5). Recorded per-entry only if a pair intentionally fixes order."
+  },
+  "status": "No pairs authored yet. The cast (npc-cast.json) and the contract (this file) exist; authoring the ~8-12 pairs is the remaining editorial work (pilot-pre-launch-checklist.md Phase 4, the open H8 item). Each new pair = one narrative scenario + one abstract quick-fire item + one entry here.",
+  "illustrative_example": {
+    "_note": "ILLUSTRATIVE ONLY — the scenario ids below are placeholders (0XX) and are NOT authored. This shows the shape of a real entry. Delete this block once real pairs exist in `pairs`.",
+    "pair_id": "pp-truth-001",
+    "construct": "Whether to admit an inconvenient truth to someone you have a continuing relationship with.",
+    "domain": "truth-telling",
+    "stakes_level": "low",
+    "narrative_ref": { "scenario_id": "narr-truth-0XX", "signal": "scene-confront-or-avoid" },
+    "abstract_ref": { "scenario_id": "qf-truth-0XX", "item_id": "qf-truth-0XX-i03" },
+    "npc_ref": null,
+    "counterbalance": true
+  },
+  "pairs": []
+}
