@@ -303,6 +303,26 @@ These downstream changes are multi-iteration work, scheduled to be applied acros
 
 ---
 
+## 18. Runtime architecture (revisit of §14: runtime line now designed)
+
+**Question.** §14 left the product/runtime stack open. What is the runtime architecture — storage, sync, rewind, scoring, security — for the pilot and beyond?
+
+**Decision.** Adopt the architecture specified in [`runtime-architecture.md`](runtime-architecture.md): a **local-first PWA** (React + TS + Vite) whose source of truth is the **`SessionLogEntry` append-only event stream** in IndexedDB; **scores are deterministic projections**, **rewind is replay-to-timestamp**, sync is **opt-in client-encrypted** (libsodium/Argon2id) ciphertext to a dumb relay. Pilot server: thin Fastify + SQLite (Litestream), ciphertext-only. Pilot auth: magic-link → passkey at n=200. This is a *design*, not yet a build commitment; the open decisions in `runtime-architecture.md §10` are the owner's call (the load-bearing one: where the canonical reveal is computed — see below).
+
+**Key sub-decisions (ADRs, condensed from the design doc):**
+- **Event-sourcing is the spine.** `types.ts` + `scoring.md §1.1` already half-built it (five append-only timestamped user-keyed event types; tags denormalized at log-write time). Rewind = timestamp filter; score history = the log; backup = the log. Rejected: mutable LWW store (no exact rewind, lets a row-edit silently change a published score, tempts a queryable plaintext server — the §10 honey-pot).
+- **`scripts/analyze.py` stays canonical; never ported to TS.** Its reproducibility rests on CPython Mersenne-Twister + `BOOTSTRAP_SEED=20260510`; a byte-exact TS port is a perpetual liability for a pre-registered instrument. Device computes only the RNG-free associative descriptive surface (`§2–3` means) live; every canonical/OSF number comes from Python over a consented export. (Correction caught in audit: the **Bradley-Terry point estimate is deterministic and portable**; only its bootstrap CI is RNG-bound.)
+- **No CRDT on the choice streams** (append-only, single-writer-per-device, conflict-free by construction → union-merge); a CRDT is reserved only for the small mutable settings doc, and even that is deferred out of the pilot.
+- **Privacy is structural, not policy:** no central plaintext honey-pot, E2E for opt-in sync, no-training enforced by data flow, no schema slot for streaks/social-comparison. Honors §6/§7/§8/§9/§10.
+
+**The load-bearing finding (audit).** The **per-domain gap — the headline reveal number — is not computable from a single user's data**: it needs sample-level z-standardization across users (`analyze.py` returns nothing with <2 users). So the reveal needs either researcher-side cohort computation (recommended for the pilot) or a versioned population-norms artifact (n=200 option). This is `runtime-architecture.md §10` decision #1 and must be resolved before the reveal is built.
+
+**Considered and rejected.** Cloud-first/serverless-Postgres (re-introduces the §10 honey-pot). Maximal zero-knowledge per-device-keypair stack from day one (right destination, wrong starting line — front-loads key-management UX that delays the pilot for capability it doesn't need). Byte-for-byte TS analyzer port (a reproducibility liability the conformance gate would constantly fight).
+
+**Status.** Runtime **designed and audited** (sound-with-fixes, zero load-bearing-constraint violations); build not yet started. Supersedes §14's "runtime open" with "runtime designed, build phased (see `runtime-architecture.md §9`), 7 owner decisions outstanding." The canonical analyzer and the corpus are unaffected.
+
+---
+
 ## How to add to this file
 
 Each new decision: copy the section template (Question / Decision / Rationale / Considered and rejected / Status). Number sequentially. Don't renumber when inserting historically — just add to the end.
