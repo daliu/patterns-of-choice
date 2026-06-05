@@ -1,0 +1,161 @@
+{
+  "id": "narr-truth-012",
+  "type": "core-narrative",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "The show you said you loved",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8 paired-probe narrative form (pp-truth-003, H8a low-stakes debiasing pool). Probes the construct 'volunteering an unflattering truth about yourself to a close friend who has not asked and would never find out otherwise.' The structural twin is the first decision (scene-the-tell): volunteer the small self-implicating truth vs. let the flattering false impression stand, with no risk of discovery. Later decisions ladder the same honesty/social-desirability conflict so the cost-of-virtue curve and consistency-under-reframing can be read against the matched abstract item.",
+    "domain_anchor": "Hofmann et al. 2014 Science (everyday, low-stakes moral situations carry better lab-to-life correspondence than dramatic dilemmas); Vazire 2010 SOKA (close-peer honesty is exactly where the gap between self-presentation and acted behaviour is most diagnostic).",
+    "estimated_duration_seconds": 240,
+    "content_warnings": []
+  },
+  "setup": "Nadia is one of your closest friends — the kind you see most weeks, the one you text without thinking about it. A while back, mid-conversation, she lit up about a show she'd just finished and asked if you'd watch it. You said you would. You half-meant it. A few weeks later, when she asked how you were liking it, you said 'oh, it's so good' — partly to keep the conversation easy, partly because you liked that she liked sharing it with you. The truth is you watched twenty minutes of the first episode and never went back.\n\nNow you're at her place on a slow weeknight. She brings it up again, properly this time — she's rewatching it, she wants to talk about the ending, she's been saving it for you because you're the one friend she thought would really get it. There is no possible way she could ever find out you didn't actually watch it. She's looking at you, happy, waiting.",
+  "scenes": [
+    {
+      "id": "scene-the-tell",
+      "text": "She's already half into describing the finale, then stops herself — 'wait, no, I don't want to spoil it for you.' She grins. 'Okay. Where are you in it? Tell me everything.'\n\nYou could answer along, nod, fake it — she would never know. Or you could tell her the small, unflattering truth about yourself: that you never actually watched it, and that you said you loved it anyway.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Tell her: 'Okay — confession. I never actually watched it. And I told you I loved it, which was a lie. I'm sorry, that was a dumb thing to do.'",
+          "next": "scene-how-much",
+          "tags": [
+            "truth:commission",
+            "value:authenticity",
+            "self-cost:reputation",
+            "social-cost:low",
+            "counterparty:close",
+            "stake:low-social",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Play along — ask her a vague question and let her carry it. She'll never know the difference.",
+          "next": "scene-played-along",
+          "tags": [
+            "lie:omission",
+            "self-cost:none",
+            "social-cost:none",
+            "counterparty:close",
+            "stake:low-social",
+            "recurring_npc:nadia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-how-much",
+      "text": "She blinks, then laughs — caught off guard. 'Wait, the whole time? You little—' She's not actually mad; there's a flicker of something underneath it though, a small recalibration of how well she thought she had you pegged. 'Why'd you say you loved it?'\n\nIt's a real question. You can feel the easy version sitting right there.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Give her the honest reason: 'Because I liked that you liked sharing it with me, and saying yes was easier than admitting I bounced off it.'",
+          "next": "scene-end-full-disclosure",
+          "tags": [
+            "truth:commission",
+            "value:authenticity",
+            "self-cost:reputation",
+            "counterparty:close",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Soften it: 'I don't know, I just got busy and didn't want to make it a thing.'",
+          "next": "scene-end-honest-softened",
+          "tags": [
+            "truth:partial",
+            "value:tact",
+            "self-cost:none",
+            "counterparty:close",
+            "recurring_npc:nadia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-played-along",
+      "text": "You ask something vague — 'remind me who the sister ends up trusting?' — and she's off, delighted, filling in the gaps without noticing they're gaps. It's easy. It's actually nice. She thinks she's sharing this with someone who gets it.\n\nLater, washing up in her kitchen while she keeps talking from the couch, the small thing sits in your chest. Nobody will ever know. You could still say something.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Call back from the kitchen: 'Hey — okay, I have to come clean. I never actually watched it. I just liked that you were into it.'",
+          "next": "scene-end-late-disclosure",
+          "tags": [
+            "truth:deferred-confront",
+            "value:authenticity",
+            "self-cost:reputation",
+            "social-cost:low",
+            "counterparty:close",
+            "stake:laddered-up",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Let it go. It's a tiny thing, she's happy, and it genuinely costs her nothing.",
+          "next": "scene-end-let-stand",
+          "tags": [
+            "lie:omission",
+            "value:discretion",
+            "self-cost:residual",
+            "social-cost:none",
+            "counterparty:close",
+            "recurring_npc:nadia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-full-disclosure",
+      "text": "She's quiet for a second, then her face softens into something warmer than before. 'That's so dumb. You could've just told me.' She bumps your shoulder. 'I'd rather know you didn't watch it than have you fake-loving things at me forever.' You spend the next hour talking about other stuff — none of it the show. Something small feels squared away, like a coin pressed flat.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned",
+        "value:authenticity"
+      ]
+    },
+    {
+      "id": "scene-end-honest-softened",
+      "text": "She accepts it easily — 'fair, no big deal' — and the moment passes. You did tell her the core truth, even if you steered around the most exposing part of why. She never picks the show up with you again, and you're not sure if that's nothing or a little something. Mostly it's fine.",
+      "terminal": true,
+      "tags": [
+        "resolution:acknowledge",
+        "value:tact",
+        "tracked-discomfort"
+      ]
+    },
+    {
+      "id": "scene-end-late-disclosure",
+      "text": "She pokes her head round the doorway, mock-betrayed. 'You let me explain the whole sister arc!' But she's laughing, and there's relief in it too — yours more than hers. You told her in the end, just the long way around. 'You're an idiot,' she says, fondly. 'Watch it for real this time.' Maybe you will.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned-late",
+        "value:authenticity"
+      ]
+    },
+    {
+      "id": "scene-end-let-stand",
+      "text": "You dry your hands and go back to the couch and the evening carries on, easy and good. She never finds out; there was never any chance she would. Weeks later you catch the title on a poster somewhere and feel the small private snag of it — not guilt exactly, just the quiet knowledge that she thinks she shared something with you that she didn't. It stays your secret, because it always could.",
+      "terminal": true,
+      "tags": [
+        "resolution:avoidance",
+        "value:discretion",
+        "self-cost:residual",
+        "moral-residue"
+      ]
+    }
+  ],
+  "reflection_prompt": "When you chose what to tell Nadia, the only thing on the line was how she'd see you — she'd never have found out otherwise. Was that the choice that fit who you want to be?",
+  "domain_signatures_captured": [
+    "stated_revealed_gap",
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "observed_vs_anonymous"
+  ]
+}

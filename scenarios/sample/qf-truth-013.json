@@ -1,0 +1,125 @@
+{
+  "id": "qf-truth-013",
+  "type": "quick-fire-round",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: small honesties with people you know",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "Abstract (de-attached) twin items for the H8 paired probes pp-truth-001..004. Each is the structurally-equivalent generic-role form of a recurring-NPC narrative, so D = r_narr - r_abs can be computed per scoring.md §9.1.",
+    "domain_anchor": "Everyday honesty episodes with known others (Hofmann 2014; Vazire 2010 SOKA) where social-desirability pressure is ordinary, not high-stakes.",
+    "estimated_duration_seconds": 60,
+    "timer_seconds_per_item": 8
+  },
+  "items": [
+    {
+      "id": "qf-truth-013-i01",
+      "prompt": "A close friend made something by hand and gives it to you, watching your face, asking straight out: \"Be honest — what do you think?\" You don't like it. A warm \"it's great\" would cost you nothing and keep the moment easy. To their face, you:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tell them the truth, gently — that it didn't land for you, and why.",
+          "tags": [
+            "truth:state",
+            "value:tact",
+            "counterparty:close",
+            "social-cost:low"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Tell them it's great and let the moment stay light.",
+          "tags": [
+            "lie:white",
+            "counterparty:close",
+            "social-cost:none"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-truth-013-i02",
+      "prompt": "You're volunteering on a small team alongside someone you don't really get along with and have never fully trusted. Entering data at the end of the day, you make a careless mistake that, on the record, makes it look like THEY dropped the ball. The supervisor buys it and quietly marks them down for it. You know it was your error; no one saw, and it would never be traced back to you. Do you correct it?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Speak up and own it: tell the supervisor it was your mistake, not theirs.",
+          "tags": [
+            "truth:commission",
+            "self-cost:reputation",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Say nothing and let the record -- and the blame -- stand against them.",
+          "tags": [
+            "lie:omission",
+            "self-cost:none",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-truth-013-i03",
+      "prompt": "A close friend is happily talking to you about something they recommended and believe you also loved. The truth is you never actually engaged with it and told them you loved it anyway. They will never find out otherwise. Do you say something?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tell them the truth: you never actually got into it, and you said you loved it when you didn't.",
+          "tags": [
+            "truth:commission",
+            "value:authenticity",
+            "self-cost:reputation",
+            "social-cost:low",
+            "counterparty:close",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Play along and let the impression stand — it costs them nothing and they'll never know.",
+          "tags": [
+            "lie:omission",
+            "value:discretion",
+            "self-cost:none",
+            "social-cost:none",
+            "counterparty:close",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-truth-013-i04",
+      "prompt": "An aging relative who has been quietly losing a skill they're known for does it for you and it comes out clearly wrong. They ask you directly, hoping for one answer: 'It's just as good as always, isn't it?' Reassuring them is the kinder thing in the moment, and the easier thing for you. You:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tell them it's exactly as good as always.",
+          "tags": [
+            "lie:white",
+            "counterparty:family-of-origin",
+            "social-cost:none",
+            "self-cost:none",
+            "stake:low-emotional"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Gently tell them the truth — that it's not quite the same this time.",
+          "tags": [
+            "truth:state",
+            "counterparty:family-of-origin",
+            "social-cost:medium",
+            "self-cost:none",
+            "stake:low-emotional"
+          ]
+        }
+      ]
+    }
+  ]
+}

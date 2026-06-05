@@ -1,0 +1,164 @@
+{
+  "id": "narr-allocation-008",
+  "type": "core-narrative",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "High water",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8b high-stakes paired-probe narrative form. Probes the construct: choosing under time pressure between the welfare of one dependent the participant has come to love (the recurring animal companion, npc-biscuit) and a larger but faceless claim of strangers downstream. The signal scene (scene-the-choice) is the structural twin of the abstract quick-fire item in pp-allocation-001: it is a clean mutually-exclusive binary — carry the one vs serve the many, no have-it-both-ways option — so the narrative form probes the same forced trade as the abstract form (carrying the dog, you cannot also reach the ridge in time). High emotional stakes are sanctioned here per the H8b purpose (h8-narrative-immersion-design.md A2 paired-probes and Q2's 'attachment-laden high-stakes probes'; npc-cast.json h8_role 'attachment-laden-stakes' for npc-biscuit): attachment-grounding of a specific character's welfare against a broader claim is exactly what H8b measures, so the usual mundane-over-dramatic authoring preference yields to real stakes for this probe class. The two terminal branches differ only in which pole of the same binary the participant lands on (protect the one / serve the many), keeping the narrative score on the same generosity axis as the abstract twin.",
+    "domain_anchor": "Greene 2001/2009 dual-process moral-judgment work on personal-force dilemmas (carrying-vs-redirecting maps onto the up-close dependent vs. distant aggregate); identifiable-victim effect (Small & Loewenstein 2003; Jenni & Loewenstein 1997) — a named, present dependent is weighted against a statistical many. Aknin 2013 on what sustained care feels like grounds the attachment accrual.",
+    "estimated_duration_seconds": 300,
+    "content_warnings": [
+      "natural disaster",
+      "flood",
+      "peril to an animal companion",
+      "life-and-death decision under time pressure"
+    ]
+  },
+  "setup": "You named the dog yourself, the first week. By now the name fits like a worn collar. Biscuit is not a brave dog and not a clever one — afraid of the dishwasher, useless with a ball, certain that the mail carrier is an ongoing threat to the household. What Biscuit is, is yours: the warm weight that finds your feet under the desk, the one who waits by the window without resentment when you're late, who asks for nothing and gives only the fact of being there. Across these months that has turned out to be a great deal.\n\nThe river behind your road has been rising for two days. The radio has been calm about it, then less calm. Tonight the rain is the kind that doesn't sound like drops anymore, just a single sustained noise against the roof. You and Biscuit are the last ones on this stretch; the neighbors left this afternoon. The bridge out is low and old, and you've watched the water climb its pilings hour by hour.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "It's late. Biscuit will not settle — pacing, ears working, pressing against your shin every time the house shifts in the wind. Before anything is decided, before there's anything to decide, there's just the next hour to get through together.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Sit on the floor with the dog. Back against the couch, one hand on the broad warm side, and let the breathing slow — both of you.",
+          "next": "scene-the-warning",
+          "tags": [
+            "need_sensitivity",
+            "recurring_npc:biscuit",
+            "counterparty:animal-dependent",
+            "stake:high-emotional",
+            "value:need_sensitivity"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Stay practical. Pack the go-bag, find the leash, set your boots by the door, keep moving so you're ready for whatever the night does.",
+          "next": "scene-the-warning",
+          "tags": [
+            "independence",
+            "recurring_npc:biscuit",
+            "stake:high-emotional",
+            "value:vigilance"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "Keep checking the river through the window, phone in hand, refreshing the gauge upstream while Biscuit circles your ankles.",
+          "next": "scene-the-warning",
+          "tags": [
+            "vigilance:mild",
+            "recurring_npc:biscuit",
+            "stake:high-emotional",
+            "value:vigilance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-warning",
+      "text": "At 1:40 the power drops. In the new dark your phone screams the tone you've only ever heard as a test: FLASH FLOOD EMERGENCY. SEEK HIGHER GROUND NOW. A second alert stacks under it from the county line — the old siren station two miles up your road, the one that covers the trailer cluster and the campground in the bottoms below you, is offline. Nobody down there has heard a thing.\n\nYour truck is on high ground at the ridge turnout, a ten-minute climb on foot. Biscuit is pressed flat to the floor now, shaking, eyes on you. The water is at the top step.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Leash on, dog up, and move — get the two of you to the truck and clear of the water first; think about the rest from there.",
+          "next": "scene-the-choice",
+          "tags": [
+            "need_sensitivity",
+            "recurring_npc:biscuit",
+            "counterparty:animal-dependent",
+            "stake:high-emotional",
+            "value:need_sensitivity"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Grab the truck keys and the air horn from the go-bag — the people in the bottoms are the ones with no warning at all.",
+          "next": "scene-the-choice",
+          "tags": [
+            "consequentialist-lean",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "Don't move yet. Try the one bar of signal — call 911, report the dead siren, see if anyone is already coming for the bottoms.",
+          "next": "scene-the-choice",
+          "tags": [
+            "trust:institutional",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:trust"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-choice",
+      "text": "The call won't connect — circuits dead or towers down. The water is over the floor now, cold around your shins, climbing visibly. You have one window, and it is closing: one trip up the road before the low ground between you and the ridge goes under for good. There is no version of tonight where you do both.\n\nYou can carry Biscuit. Sixty pounds of frightened dog, slow going through current, but Biscuit lives and the two of you make the truck. Carrying that weight, you will not reach the ridge in time to warn anyone, and the dog at your chest in this current is as much as your arms can do.\n\nOr you can leave the dog the highest dry place you can reach and run light and fast to the ridge turnout — lay on the horn and the headlights down toward the bottoms, long and sustained, the signal a campground full of sleeping strangers might wake to in time. You will never see their faces. You don't know if it's six people or sixty or none. But you cannot run light and carry the dog; choosing the horn means leaving Biscuit to the water's odds.\n\nThe water takes the bottom hinge of the door. Biscuit looks at you and does not understand any of it — only that you are here, which has always been enough.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Pick up the dog. Whatever else is true tonight, you are not leaving Biscuit in this water. Carry your own to the truck — and let the ridge go.",
+          "next": "scene-end-stayed",
+          "tags": [
+            "generosity",
+            "need_sensitivity",
+            "recurring_npc:biscuit",
+            "counterparty:animal-dependent",
+            "stake:high-emotional",
+            "value:generosity",
+            "self-cost:residual"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Leave the dog the highest dry place you can reach inside, and run light for the ridge — the horn for the people who have no one else, and Biscuit left to the water.",
+          "next": "scene-aftermath-went",
+          "tags": [
+            "need_sensitivity",
+            "consequentialist-lean",
+            "recurring_npc:biscuit",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism",
+            "self-cost:residual"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-stayed",
+      "text": "You carry Biscuit the whole way, current to your hips, the dog rigid and silent against your chest until the ground rises and the water lets you go. The ridge window closes behind you while you climb; there was never a way to make it with sixty pounds in your arms. In the truck Biscuit shakes for an hour and then sleeps with a paw against your leg.\n\nIn the morning the bottoms are gone — the campground, the trailers, swept. The radio reads names you don't know. You will not know, ever, whether the horn would have reached them, whether it would have been six or sixty or none. You saved the one life you could put your hands on. Some nights that is the whole of what you are sure of; some nights it is not enough, and both of those are true at once.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "moral-residue",
+        "self-cost:residual"
+      ]
+    },
+    {
+      "id": "scene-aftermath-went",
+      "text": "You set Biscuit on the kitchen counter, the highest dry thing, and the look the dog gives you as you turn for the door is the thing you will carry. You run light, the water at your thighs at the low spot, and you make the ridge with seconds to spare — seconds you would not have had with the dog in your arms. The horn and the headlights pour down into the bottoms, long and steady, until your hand cramps.\n\nBy dawn the rescue boats find people clinging to the campground oaks — alive, some of them, who say a horn woke them. You go back for the house when the water drops. The counter is bare. You find the leash by the door where you'd left it. You did a large and faceless good, and you will count its cost in a small and particular silence for a long time.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "consequentialist-lean",
+        "moral-residue",
+        "self-cost:residual"
+      ]
+    }
+  ],
+  "reflection_prompt": "Earlier, with the water rising and one window left, you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be, or only the one your hands could make in time?",
+  "domain_signatures_captured": [
+    "cost_of_virtue_curve",
+    "speed_vs_deliberation",
+    "consistency_under_reframing",
+    "stated_revealed_gap"
+  ]
+}

@@ -17,17 +17,87 @@
     "npc_ref": "Required when stakes_level='high': the npc-cast.json id of the character whose welfare is at stake (so §9.4 can fetch that participant's attachment_strength for this character). Null for low-stakes pairs.",
     "counterbalance": "Always true in practice: presentation order (narrative-first vs abstract-first) is randomized across participants and entered as a covariate (scoring.md §9.5). Recorded per-entry only if a pair intentionally fixes order."
   },
-  "status": "No pairs authored yet. The cast (npc-cast.json) and the contract (this file) exist; authoring the ~8-12 pairs is the remaining editorial work (pilot-pre-launch-checklist.md Phase 4, the open H8 item). Each new pair = one narrative scenario + one abstract quick-fire item + one entry here.",
-  "illustrative_example": {
-    "_note": "ILLUSTRATIVE ONLY — the scenario ids below are placeholders (0XX) and are NOT authored. This shows the shape of a real entry. Delete this block once real pairs exist in `pairs`.",
-    "pair_id": "pp-truth-001",
-    "construct": "Whether to admit an inconvenient truth to someone you have a continuing relationship with.",
-    "domain": "truth-telling",
-    "stakes_level": "low",
-    "narrative_ref": { "scenario_id": "narr-truth-0XX", "signal": "scene-confront-or-avoid" },
-    "abstract_ref": { "scenario_id": "qf-truth-0XX", "item_id": "qf-truth-0XX-i03" },
-    "npc_ref": null,
-    "counterbalance": true
-  },
-  "pairs": []
+  "status": "5 pairs authored (4 low-stakes truth-telling for H8a + 1 high-stakes attachment-laden allocation for H8b). Authored via adversarially-verified workflow; all narratives + abstract twins schema-valid. Corpus is now 48 + 5 narrative + 2 quick-fire = 55 scenarios. Further pairs (toward the ~8-12 target in DECISIONS §17) and the attachment-measurement instrument remain.",
+  "pairs": [
+    {
+      "pair_id": "pp-truth-001",
+      "construct": "Telling a close friend to their face that something they made did not land well with you, when a warm little lie would cost nothing and spare the moment.",
+      "domain": "truth-telling",
+      "stakes_level": "low",
+      "narrative_ref": {
+        "scenario_id": "narr-truth-008",
+        "signal": "scene-the-verdict"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-truth-013",
+        "item_id": "qf-truth-013-i01"
+      },
+      "npc_ref": null,
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-truth-002",
+      "construct": "Owning a small mistake of yours that quietly landed blame on someone you have a wary, complicated history with, when you could let it pass unnoticed and untraced.",
+      "domain": "truth-telling",
+      "stakes_level": "low",
+      "narrative_ref": {
+        "scenario_id": "narr-truth-010",
+        "signal": "scene-1"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-truth-013",
+        "item_id": "qf-truth-013-i02"
+      },
+      "npc_ref": null,
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-truth-003",
+      "construct": "Volunteering an unflattering truth about yourself to a close friend who has not asked and would never find out otherwise.",
+      "domain": "truth-telling",
+      "stakes_level": "low",
+      "narrative_ref": {
+        "scenario_id": "narr-truth-012",
+        "signal": "scene-the-tell"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-truth-013",
+        "item_id": "qf-truth-013-i03"
+      },
+      "npc_ref": null,
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-truth-004",
+      "construct": "Whether to tell an aging family member a gentle but real truth about a capacity they are visibly losing, when reassurance would be kinder in the moment and easier for you.",
+      "domain": "truth-telling",
+      "stakes_level": "low",
+      "narrative_ref": {
+        "scenario_id": "narr-truth-014",
+        "signal": "scene-the-question"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-truth-013",
+        "item_id": "qf-truth-013-i04"
+      },
+      "npc_ref": null,
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-allocation-001",
+      "construct": "Choosing, under irreversible time pressure, between the welfare of one dependent you have come to love and a larger but faceless claim of strangers you will never meet, where the resource (one trip, the same minutes, one dose) is genuinely indivisible so the two cannot both be served.",
+      "domain": "resource-allocation",
+      "stakes_level": "high",
+      "narrative_ref": {
+        "scenario_id": "narr-allocation-008",
+        "signal": "scene-the-choice"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-allocation-013",
+        "item_id": "qf-allocation-013-i01"
+      },
+      "npc_ref": "npc-biscuit",
+      "counterbalance": true
+    }
+  ]
 }

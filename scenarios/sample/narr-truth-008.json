@@ -1,0 +1,216 @@
+{
+  "id": "narr-truth-008",
+  "type": "core-narrative",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "The cookies",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8 paired-probe narrative form (pairs with abstract item pp-truth-001). The signal decision scene-the-verdict isolates one construct: telling a close friend, to their face, that something she made did not land — when a warm little lie costs nothing and spares the moment. Branches let the same conflict re-pose itself (hold the lie, walk it back, get cornered) so the to-her-face honesty/warm-lie poles can be read against the structurally-equivalent abstract item.",
+    "domain_anchor": "Hofmann et al. 2014 Science (everyday honesty episodes, not trolley-class dilemmas, carry lab-to-life validity); Vazire 2010 SOKA (close-other honesty is exactly where informant validity is highest). The pull here is ordinary social-desirability — sparing a friend's small disappointment — not a high-stakes consequence.",
+    "estimated_duration_seconds": 180,
+    "content_warnings": []
+  },
+  "setup": "Nadia is at your kitchen counter, where she has been a hundred times. The two of you run on the small stuff — she has your spare key, you have her good mixing bowl, you trade blunt advice over whatever either of you is making this month. This month it's baking. She has been texting you about it for two weeks.\n\nShe's brought over a tin of her latest experiment: miso-cardamom cookies. \"I went off-recipe,\" she says, which from Nadia means she is either about to delight you or has gone too far. She watches you take one. You bite in.\n\nThey are not good. The miso is loud and salty in a way that fights the cardamom; the texture is dense and a little raw in the middle. Nadia is leaning on the counter, chin in her hand, reading your face the way only someone who has known you a long time can.",
+  "scenes": [
+    {
+      "id": "scene-the-verdict",
+      "text": "\"Okay,\" Nadia says, half a smile already up, \"honest verdict. You always tell me. What do you think?\" The easy thing is right there — a warm little \"these are great\" that costs you nothing and lets the afternoon stay light. The true thing is also right there, and she did ask.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "\"Mm — these are great. Really good.\"",
+          "next": "scene-she-presses",
+          "tags": [
+            "lie:white",
+            "counterparty:close",
+            "social-cost:none",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "\"Honestly? Not my favorite. The miso's really fighting everything else — it's a lot of salt.\"",
+          "next": "scene-honest-fallout",
+          "tags": [
+            "truth:state",
+            "value:tact",
+            "counterparty:close",
+            "social-cost:low",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "\"They're... interesting. Very you. Definitely a choice.\"",
+          "next": "scene-dodge-corner",
+          "tags": [
+            "truth:partial",
+            "counterparty:close",
+            "social-cost:none",
+            "recurring_npc:nadia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-she-presses",
+      "text": "Nadia's smile holds, but something flickers behind it. She takes one herself, chews slowly, and makes a small face she clearly didn't plan to make. \"...Are they, though?\" she says, looking back up at you. \"You did the thing with your jaw. You always do the thing with your jaw.\" She's giving you an opening — almost asking you to take the lie back.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Hold it. \"I mean it — they grow on you. I'd eat the whole tin.\"",
+          "next": "scene-end-held-lie",
+          "tags": [
+            "lie:white",
+            "counterparty:close",
+            "social-cost:none",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Walk it back. \"Okay — no. The miso's too much. I didn't want to be a jerk about it, but you asked.\"",
+          "next": "scene-end-recovered-truth",
+          "tags": [
+            "truth:state",
+            "value:tact",
+            "counterparty:close",
+            "social-cost:low",
+            "recurring_npc:nadia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-honest-fallout",
+      "text": "Nadia exhales and laughs, a little deflated. \"Yeah. Yeah, you're right, the miso's a disaster.\" She pokes at one. \"I was kind of proud of the idea.\" Then she looks up, half-hopeful: \"Would you even want to try the next version, or am I wasting cookies on you?\"",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Stay in it. \"Try it with way less miso — like a quarter — and bake them two minutes longer, they're raw in the middle. I'll absolutely eat those.\"",
+          "next": "scene-end-honest-warm",
+          "tags": [
+            "truth:state",
+            "value:tact",
+            "counterparty:close",
+            "social-cost:low",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Soften it. \"I mean — they're honestly not bad, I'm being picky. Don't change much, the idea's good.\"",
+          "next": "scene-end-honest-then-soft",
+          "tags": [
+            "truth:soft-confront",
+            "counterparty:close",
+            "social-cost:none",
+            "recurring_npc:nadia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-dodge-corner",
+      "text": "Nadia narrows her eyes, amused and not fooled. \"'Interesting' is what you say about my ex,\" she says. \"Come on. No wriggling. Would you actually eat these again — yes or no?\" There's no room left to be vague; she's pinned you to the wall, kindly.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Give it to her straight now. \"No. Not like this — the miso's way too much. Sorry, you did ask.\"",
+          "next": "scene-end-recovered-truth",
+          "tags": [
+            "truth:state",
+            "value:tact",
+            "counterparty:close",
+            "social-cost:low",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Take the easy out. \"Yes! Yes, I'd eat them. Stop interrogating me.\"",
+          "next": "scene-end-dodge-to-lie",
+          "tags": [
+            "lie:white",
+            "counterparty:close",
+            "social-cost:none",
+            "recurring_npc:nadia"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "Stay just out of reach. \"I'd eat one. For you. Let's leave it at that.\"",
+          "next": "scene-end-stayed-vague",
+          "tags": [
+            "truth:partial",
+            "value:discretion",
+            "counterparty:close",
+            "social-cost:none",
+            "recurring_npc:nadia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-held-lie",
+      "text": "\"Okay, good,\" Nadia says, deciding to believe you, and the afternoon stays easy. She leaves the tin. It sits on your counter for four days; you throw most of it out the night before she's due back, and tell her you finished them. Nothing about this is a big deal. It's just a small, soft thing you'll be quietly managing — the next batch, and the one after that.",
+      "terminal": true,
+      "tags": [
+        "resolution:pretend",
+        "self-cost:residual"
+      ]
+    },
+    {
+      "id": "scene-end-recovered-truth",
+      "text": "Nadia laughs — relieved, weirdly. \"See, that's why I ask you and not other people. Everyone else just says 'yum.'\" There's a small honest beat between you, a little less comfortable than the lie would have been and a lot more solid. She takes the tin back to fix the recipe.",
+      "terminal": true,
+      "tags": [
+        "resolution:honest-discomfort",
+        "stated-revealed-aligned-late"
+      ]
+    },
+    {
+      "id": "scene-end-honest-warm",
+      "text": "\"Quarter the miso, two minutes longer,\" Nadia repeats, already typing it into her phone. \"Okay. You're getting the next one.\" She leaves lighter than she came. A week later a new tin shows up, genuinely better, with a note: 'told you you'd be useful.' The truth cost you a slightly awkward thirty seconds and bought you the good version.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-honest-then-soft",
+      "text": "\"Okay, okay,\" Nadia says, half-reassured, and you can see her quietly file it under 'they were just being nice.' She makes the same recipe again next month, barely changed. You eat one, say it's better, and it isn't really. The honesty was real for a second; then you let it dissolve to keep things smooth.",
+      "terminal": true,
+      "tags": [
+        "resolution:acknowledge",
+        "balance"
+      ]
+    },
+    {
+      "id": "scene-end-dodge-to-lie",
+      "text": "\"Ha — fine, I'll allow it,\" Nadia says, and lets you off the hook. She leaves the tin, pleased. It does its slow work on your counter for a few days. She'll make these again, confident you love them, and you'll keep finding small ways to make that look true.",
+      "terminal": true,
+      "tags": [
+        "resolution:pretend",
+        "self-cost:residual"
+      ]
+    },
+    {
+      "id": "scene-end-stayed-vague",
+      "text": "\"'One. For me.' Wow, glowing,\" Nadia says, laughing, and lets it go without ever quite getting a straight answer. Neither the lie nor the truth fully happened. She takes the tin, unsure whether to change the recipe, and the not-quite-said thing sits faintly between you for the rest of the visit.",
+      "terminal": true,
+      "tags": [
+        "resolution:avoidance",
+        "tracked-discomfort"
+      ]
+    }
+  ],
+  "reflection_prompt": "When Nadia asked you straight out, you chose to {chosen_path}. Looking back — was that the version of you you'd want her to know?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "stated_revealed_gap",
+    "cost_of_virtue_curve"
+  ]
+}

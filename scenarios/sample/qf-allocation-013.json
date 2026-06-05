@@ -1,0 +1,128 @@
+{
+  "id": "qf-allocation-013",
+  "type": "quick-fire-round",
+  "domain": "resource-allocation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: the one and the many",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "Abstract (de-attached) twin items for the H8 high-stakes paired probe pp-allocation-001. Item i01 is the structural twin of the narrative 'High water' rescue choice; the rest are same-construct one-vs-many allocation siblings. Supports D = r_narr - r_abs per scoring.md §9.1.",
+    "domain_anchor": "One-vs-many allocation under irreversibility; the abstract pole of the H8b attachment-grounding test (h8-narrative-immersion-design.md).",
+    "estimated_duration_seconds": 40,
+    "timer_seconds_per_item": 8
+  },
+  "items": [
+    {
+      "id": "qf-allocation-013-i01",
+      "prompt": "A wildfire is closing on a rural road and you have minutes. You can drive to a remote barn and free a single penned animal that will otherwise burn, OR spend the same minutes phoning ahead to warn a campground of strangers downwind whose only road out you know is about to be cut. You can't do both in time.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Drive to the barn and get the one animal out yourself.",
+          "tags": [
+            "generosity",
+            "need_sensitivity",
+            "counterparty:animal-dependent",
+            "stake:high-emotional",
+            "value:generosity"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Make the warning calls for the strangers and leave the animal to its odds.",
+          "tags": [
+            "need_sensitivity",
+            "consequentialist-lean",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-allocation-013-i02",
+      "prompt": "You have one free Saturday and a fixed amount of money. You can spend both on hands-on care for a single elderly neighbor you visit weekly, OR donate the money and time to a food bank that will feed many people you'll never meet. You can only do one.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Spend it on the one neighbor whose week you can actually change.",
+          "tags": [
+            "generosity",
+            "need_sensitivity",
+            "counterparty:close",
+            "stake:high-time",
+            "value:generosity"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Give it to the food bank so it reaches more people.",
+          "tags": [
+            "need_sensitivity",
+            "consequentialist-lean",
+            "counterparty:anonymous",
+            "stake:high-time",
+            "value:universalism"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-allocation-013-i03",
+      "prompt": "Your team has budget for exactly one thing this quarter. You can fund a tool that noticeably helps one struggling teammate keep their job, OR a small process change that gives a tiny, barely-noticeable benefit to the whole forty-person org.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Fund the tool for the one teammate who needs it now.",
+          "tags": [
+            "generosity",
+            "need_sensitivity",
+            "counterparty:peer-in-team",
+            "stake:high-financial",
+            "value:generosity"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Fund the change that spreads thinly across everyone.",
+          "tags": [
+            "fairness:equal",
+            "consequentialist-lean",
+            "counterparty:community",
+            "stake:high-financial",
+            "value:fairness"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-allocation-013-i04",
+      "prompt": "You have one rare medication dose and a choice. You can give it to a single sick pet in front of you whose survival it would secure, OR hand it to a clinic that will split it across several anonymous patients, helping each a little and none for certain.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Give the whole dose to the one animal you can save outright.",
+          "tags": [
+            "generosity",
+            "need_sensitivity",
+            "counterparty:animal-dependent",
+            "stake:high-emotional",
+            "value:generosity"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Hand it to the clinic to spread across the many.",
+          "tags": [
+            "need_sensitivity",
+            "consequentialist-lean",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism"
+          ]
+        }
+      ]
+    }
+  ]
+}

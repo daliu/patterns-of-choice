@@ -1,0 +1,179 @@
+{
+  "id": "narr-truth-010",
+  "type": "core-narrative",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "The wrong row",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8 paired-probe (pp-truth-002), narrative form. Probes one construct -- owning a small mistake of yours that quietly hurt someone you have a wary, complicated history with, when you could let it pass unnoticed -- embedded in the recurring Cole arc so the narrative-vs-abstract divergence D = r_narr - r_abs (scoring.md 9.1) isolates attachment and shared history, not surface content. scene-1 is the structural twin of the de-attached abstract item.",
+    "domain_anchor": "Hofmann et al. 2014 Science (everyday workplace honesty dominates real moral life and predicts behavior better than dramatic dilemmas); Vazire 2010 SOKA (peer-context honesty is where informant validity is highest). The slip is mundane; the only real pressure is ordinary self-presentation against an old grievance.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": [
+      "workplace conflict"
+    ]
+  },
+  "setup": "You volunteer one evening a week at a small community tool library -- a free lending shelf of drills, sanders, and ladders run out of a converted garage. It is unglamorous work: logging returns, chasing down overdue items, keeping the shared spreadsheet straight.\n\nCole volunteers the same shift. You have history. Years ago you two were on a project team and Cole quietly took credit for a chunk of work that was yours -- let a manager believe it, never corrected it, and it stung for a long time. You did not expect to ever see him again. But here he is, and the strange thing is he has been different: steady, early, genuinely useful, the one who stays late to re-shelve. A few weeks back he said, unprompted and a little awkwardly, that he knew he had not always been someone people could count on, and that he was trying to be. You are not sure what you believe. You keep a careful, wary distance.\n\nTonight you were the one entering returns into the spreadsheet. You were tired and moving fast. You now realize you logged a returned circular saw against the wrong row -- Cole's row, the items checked out under his name -- instead of the borrower's. On paper it now looks like Cole is the one sitting on an overdue power tool he never brought back.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "At the end of the shift the coordinator runs her eye down the sheet and lands on the flagged row. 'Cole -- you've still got the circular saw out? It's two weeks over.' Cole looks honestly confused. 'I don't think I ever took that one home,' he says, but he says it uncertainly, like someone who has learned his own word does not carry far. The coordinator gives a small, knowing nod -- the nod of someone filing away that Cole is unreliable.\n\nYou know exactly what happened. It was your error. Nobody saw you make it. If you say nothing, it lands on Cole, and no one will ever trace it back to you. There is even a small, ugly part of you that notices the symmetry: he once let you carry the blame for something that was his.\n\nWhat do you do?",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Speak up: 'That's on me -- I logged the return against the wrong row. The saw came back, it's my mistake.'",
+          "next": "scene-owned",
+          "tags": [
+            "truth:commission",
+            "self-cost:reputation",
+            "counterparty:peer-known-past",
+            "stake:low-social",
+            "recurring_npc:cole"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Say nothing. Let the record stand and let it land on Cole.",
+          "next": "scene-stayed-silent",
+          "tags": [
+            "lie:omission",
+            "self-cost:none",
+            "counterparty:peer-known-past",
+            "stake:low-social",
+            "recurring_npc:cole"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-owned",
+      "text": "The coordinator's face clears. 'Oh -- okay, easy fix. Thanks for catching it.' She corrects the row and moves on; it is genuinely no big deal to her. Cole, though, looks at you for a moment longer than the moment needs. He knows you didn't have to say anything. He knows the history between you as well as you do.\n\nAs you are stacking chairs he comes over, quiet so only you can hear. 'You could've let that ride,' he says. 'I would've.' A pause. 'Thanks for not.'\n\nHow do you leave it?",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "'It was just a typo. Anyone could've made it.' Keep it small; don't make it about the past.",
+          "next": "scene-end-clean",
+          "tags": [
+            "truth:state",
+            "balance",
+            "counterparty:peer-known-past",
+            "recurring_npc:cole"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "'Yeah, well. I know what it's like to wear someone else's mistake.' Say the quiet part once, then let it go.",
+          "next": "scene-end-named",
+          "tags": [
+            "truth:commission",
+            "boundary-setting",
+            "tracked-discomfort",
+            "counterparty:peer-known-past",
+            "recurring_npc:cole"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-stayed-silent",
+      "text": "The coordinator pencils a note next to Cole's name and the shift breaks up. Cole gathers his jacket, a little subdued, and doesn't argue further. The room empties. The sheet says what it says.\n\nDriving home, the evening sits in your chest in a way you didn't expect. It really was just a typo. It would take you ten seconds and one text to the coordinator to fix it. But fixing it now means admitting you sat there and let it land on him.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Text the coordinator tonight: 'Realized I logged that saw return against Cole's row by mistake -- it's back, my error. Sorry.'",
+          "next": "scene-end-late-fix",
+          "tags": [
+            "truth:deferred-confront",
+            "self-cost:reputation",
+            "stake:low-social",
+            "counterparty:peer-known-past",
+            "recurring_npc:cole"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Fix the row quietly in the shared sheet yourself, but don't say it was your mistake.",
+          "next": "scene-end-quiet-correct",
+          "tags": [
+            "truth:implicit",
+            "self-cost:none",
+            "counterparty:peer-known-past",
+            "recurring_npc:cole"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "Leave it. It's a tool library spreadsheet. It will sort itself out eventually.",
+          "next": "scene-end-let-stand",
+          "tags": [
+            "truth:abandon",
+            "avoid",
+            "self-cost:residual",
+            "counterparty:peer-known-past",
+            "recurring_npc:cole"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-clean",
+      "text": "Cole huffs a short laugh and nods. 'Fair enough.' He goes back to stacking chairs. Nothing is overhauled between you -- he is still someone you keep a careful eye on -- but the wariness has lost a degree of its edge. You corrected the record because it was wrong, and that turns out to be its own clean, sufficient reason.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned",
+        "recurring_npc:cole"
+      ]
+    },
+    {
+      "id": "scene-end-named",
+      "text": "Cole goes still. He doesn't get defensive. 'Yeah,' he says quietly. 'I know you do. That was me. I never said sorry for it properly.' He looks like he means it. It doesn't erase the old thing, but it is the first time it has been spoken plainly between you, and something in the room is a little less heavy. You don't fully trust him yet. But you told the truth in both directions tonight.",
+      "terminal": true,
+      "tags": [
+        "resolution:acknowledge",
+        "stated-revealed-aligned",
+        "moral-residue",
+        "recurring_npc:cole"
+      ]
+    },
+    {
+      "id": "scene-end-late-fix",
+      "text": "The coordinator writes back a thumbs-up and 'no worries, thanks for flagging.' The next week she mentions to Cole, offhand, that the saw thing was a mix-up on the sheet, not him. He catches your eye across the garage and gives you a small nod. You don't talk about it. But he knows you went back and set it right after the fact, and you know he knows.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned-late",
+        "recurring_npc:cole"
+      ]
+    },
+    {
+      "id": "scene-end-quiet-correct",
+      "text": "The row is right again the next time anyone looks. The overdue flag is gone; on paper Cole is clear. But the coordinator's filed-away impression of him stays exactly where it was -- nobody told her she was wrong about him -- and Cole never learns the record was ever against him. You fixed the fact and left the blame where it fell.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "self-cost:none",
+        "moral-residue",
+        "recurring_npc:cole"
+      ]
+    },
+    {
+      "id": "scene-end-let-stand",
+      "text": "You don't fix it. The next shift, the flag is still there, and the saw turns up on a low shelf where the borrower had quietly returned it -- so it resolves on its own, eventually, with no thanks to you. Cole never makes a thing of it. But for a little while he wore a small mark that was yours, and you let him, and only you know it. It becomes one of those things that just sits there.",
+      "terminal": true,
+      "tags": [
+        "resolution:avoidance",
+        "self-cost:residual",
+        "moral-residue",
+        "recurring_npc:cole"
+      ]
+    }
+  ],
+  "reflection_prompt": "Earlier you decided whether to own the slip that landed on Cole. Knowing your history with him -- was that the choice that fits who you want to be?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "observed_vs_anonymous",
+    "stated_revealed_gap"
+  ]
+}

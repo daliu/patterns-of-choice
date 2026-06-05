@@ -1,0 +1,197 @@
+{
+  "id": "narr-truth-014",
+  "type": "core-narrative",
+  "domain": "truth-telling",
+  "version": "0.1",
+  "metadata": {
+    "title": "The same as always",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8 paired-probe (narrative form, pp-truth-004). Probes one construct — telling an aging family member a gentle but real truth about a capacity they are losing, when reassurance would be kinder in the moment — embedded in the recurring Gran arc so it can be compared against a structurally-equivalent abstract quick-fire twin. The narrative_signal scene (scene-the-question) is the exact structural twin of the abstract item; surrounding scenes supply only attachment and consequence, never a new trade. Branches differ in observable honesty signature (reassure / gentle truth / soften) so the same conflict is readable at different cost.",
+    "domain_anchor": "Hofmann et al. 2014 Science (everyday moral situations dominate real moral life and predict behavior better than trolley-class dilemmas); the construct is the ordinary white-lie-of-kindness vs. gentle-honesty trade toward family, exactly the low-stakes social-desirability register H8a targets.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": [
+      "aging",
+      "cognitive decline"
+    ]
+  },
+  "setup": "Gran is your grandmother. For the last year or so you've been coming by more — first it was little things, a lightbulb she couldn't reach, a form she couldn't make sense of, and lately it's been most Sundays. You don't mind. Her kitchen is the same as it's always been, down to the tin of buttons on the windowsill.\n\nToday she made the braised noodles she's made your whole life — the dish that means her, the one nobody else in the family can get right. She's been making it from memory since before you were born. You watched her move around the stove a little slower than she used to, checking the back of a cupboard twice for the same jar.\n\nShe sets your bowl down and sits across from you, hands folded, watching your face while you take the first bite. It's wrong. Not ruined — but the balance is off, too much salt, and something in the timing missed; the noodles have gone soft. She has clearly noticed something is off too, because before you've even swallowed she asks, lightly, the way you ask a question you want one answer to: 'It tastes the same as always, doesn't it?'",
+  "scenes": [
+    {
+      "id": "scene-the-question",
+      "text": "Gran is watching you, waiting. The easy thing — the kind thing, right now — is to tell her it's perfect, like always. But it isn't, and you both half-know it. What do you say?",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Smile. 'Exactly the same. Best thing I'll eat all week.'",
+          "next": "scene-after-reassure",
+          "tags": [
+            "lie:white",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "social-cost:none",
+            "self-cost:none",
+            "stake:low-emotional"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Gently: 'It's a little saltier than usual today, Gran. Still yours, but — not quite the same.'",
+          "next": "scene-after-truth",
+          "tags": [
+            "truth:state",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "social-cost:medium",
+            "self-cost:none",
+            "stake:low-emotional"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-after-reassure",
+      "text": "Her shoulders come down. 'Good,' she says, almost to herself. 'I wasn't sure.' She eats a little of her own bowl, and you watch her not quite enjoy it, and not say so. The afternoon is easy after that — the news on low, the same three stories about your cousins.\n\nDoing the dishes, you notice it: a column of sticky notes inside the cupboard door, in her handwriting. SALT FIRST. CHECK THE TIME. One of them, newer, just says the word for noodles, underlined twice, as if she'd been afraid of losing it. She's been managing this alone, and covering for it. She comes in with the last bowl and sees you looking at the notes.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Say nothing about the notes; dry the bowl and let the afternoon stay easy.",
+          "next": "scene-end-pretend",
+          "tags": [
+            "lie:omission",
+            "recurring_npc:gran",
+            "social-cost:none",
+            "self-cost:residual"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "'These are a good idea, Gran. Want to do them together so they're easier to follow?'",
+          "next": "scene-end-scaffold",
+          "tags": [
+            "truth:soft-confront",
+            "recurring_npc:gran",
+            "social-cost:low",
+            "self-cost:time",
+            "balance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-after-truth",
+      "text": "Something crosses her face — not hurt exactly, more like a thing she'd been holding finally set down. She looks at her own bowl for a moment. 'I thought so,' she says quietly. 'I couldn't tell anymore. I keep — losing the order of it.' It's the most she's admitted out loud. She doesn't cry; she just looks tired, and a little relieved, and very much your grandmother.\n\nThen she straightens, the way she does, and tries to make it small again: 'Don't go telling your mother I've lost my marbles over a pot of noodles.'",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "'I won't make a thing of it. This stays between us.'",
+          "next": "scene-end-private",
+          "tags": [
+            "truth:acknowledge",
+            "lie:protective",
+            "recurring_npc:gran",
+            "social-cost:none",
+            "self-cost:none"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "'I'm not going to make a thing of it. But I think we should tell Mum — not because anything's wrong with you, just so you're not carrying it by yourself.'",
+          "next": "scene-calling-mum",
+          "tags": [
+            "truth:confront-mild",
+            "recurring_npc:gran",
+            "social-cost:medium",
+            "self-cost:none",
+            "stake:medium-emotional",
+            "balance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-pretend",
+      "text": "You close the cupboard door without a word and finish the dishes. 'Same time next week?' she says, and you say of course. Driving home, the sticky notes stay with you — SALT FIRST, the underlined word — and the way she looked when you said it was perfect. She got the answer she asked for. You're not sure it was the one she needed, and you know you chose the easier afternoon for both of you. Next Sunday the dish is a little further off, and neither of you mentions that either.",
+      "terminal": true,
+      "tags": [
+        "resolution:pretend",
+        "moral-residue",
+        "self-cost:residual"
+      ]
+    },
+    {
+      "id": "scene-end-scaffold",
+      "text": "You spend twenty minutes at the table rewriting the notes with her — bigger, in order, the steps she keeps dropping. She's prickly about it at first ('I'm not a child'), then absorbed, correcting your spelling of her own recipe. It isn't a diagnosis and you don't pretend it is; it's just two people making the thing she loves a little easier to hold onto. 'You're a good egg,' she says at the door, which is what she says when she means more than that. Nothing is fixed. Something is shared that wasn't before.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned",
+        "tracked-discomfort"
+      ]
+    },
+    {
+      "id": "scene-end-private",
+      "text": "'Our secret,' you tell her, and you mean it, and for a while it's even a sweet one — your standing Sunday thing. But over the next months you watch the secret get heavier. There are other days, other dropped threads; the noodles are only the first. You're the only one who knows how much she's covering, and you start to wonder whether keeping it between you was kindness or just the version of kindness that was easiest to give. She trusts you with it. You're not certain you're carrying it right alone.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "moral-residue",
+        "self-cost:residual"
+      ]
+    },
+    {
+      "id": "scene-calling-mum",
+      "text": "She grumbles — 'you're as bad as your mother' — but she doesn't say no, which from Gran is a yes. That evening you actually make the call, and on the phone you hit the same fork again, smaller this time: how much to say. Your mum picks up with 'everything okay?' already in her voice.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Keep it small and true: 'She's finding the cooking harder, and I think she'd let us help more than she lets on.'",
+          "next": "scene-end-loop-in-soft",
+          "tags": [
+            "truth:partial",
+            "recurring_npc:gran",
+            "value:tact",
+            "social-cost:low",
+            "stake:medium-emotional",
+            "balance"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Say it plainly: 'Mum, I think Gran's memory is slipping. The recipe she's made for fifty years — she couldn't hold the steps today. I think it's time we talked properly.'",
+          "next": "scene-end-loop-in-full",
+          "tags": [
+            "truth:state",
+            "recurring_npc:gran",
+            "social-cost:medium",
+            "stake:medium-emotional"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-loop-in-soft",
+      "text": "Your mum is quiet, then grateful; she'd been half-worrying without knowing how to ask. You've told her the true thing without the heavy word for it, and you let her arrive at the rest in her own time. The next few Sundays are less lonely for Gran, two of you turning up instead of one. It was harder to say than 'it's perfect.' It also meant she wasn't doing this by herself. Some part of you wonders if you softened it as much for your mum's sake as for Gran's.",
+      "terminal": true,
+      "tags": [
+        "resolution:honest-discomfort",
+        "stated-revealed-aligned",
+        "balance"
+      ]
+    },
+    {
+      "id": "scene-end-loop-in-full",
+      "text": "There's a long pause on the line. 'Okay,' your mum says, and you can hear her recalibrating a whole picture of her own mother in real time. It's a heavier conversation than the soft version would have been, and harder on her tonight. But nothing is left for anyone to find out later, and when the three of you sit down the next week, you're all working from the same honest map. Gran is embarrassed, then, slowly, lighter. You said the true thing all the way through, and it cost more, and it left less hidden.",
+      "terminal": true,
+      "tags": [
+        "resolution:honest-discomfort",
+        "stated-revealed-aligned"
+      ]
+    }
+  ],
+  "reflection_prompt": "When Gran asked whether it tasted the same as always, you chose to {chosen_path}. With a little distance now — was that the kindness she needed, or the one that was easier to give?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "stated_revealed_gap"
+  ]
+}
