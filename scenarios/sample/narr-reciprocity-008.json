@@ -1,0 +1,304 @@
+{
+  "id": "narr-reciprocity-008",
+  "type": "core-narrative",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Same Split",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8 paired-probe narrative form (pair pp-reciprocity-001). Probes the re-extend-trust-after-repair construct: whether to rely again on someone who once defected on you and now shows genuine, costly signs of repair, when the new arrangement recreates the exact structure of the original betrayal. Cast-anchored to npc-cole (adversary-with-redemption) so the abstract 'do you forgive a defector' item has blood in it. The signal scene (scene-the-same-split) is the structural twin of the abstract quick-fire item; only attachment and framing differ between forms. The reflection_prompt is path-agnostic by design: it anchors on Cole's reach-out to collaborate again (an event on every path, including the decline branch that never reaches the work-split), so the retrospective question is coherent for all six terminals rather than presupposing the signal-scene's 'same split' was ever proposed.",
+    "domain_anchor": "Axelrod's reciprocity / tit-for-tat-with-forgiveness work and the trust-game literature on re-engaging a known prior defector (the costly-signal-of-repair line, e.g. Schniter & Sheremeta on apology-and-restitution in repeated trust games). Deliberately mundane and low-stakes per the corpus ecological-validity principle: an ordinary workplace favor, not a career-defining stake.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": []
+  },
+  "setup": "Two years ago you and Cole were on the same team. You did the heavy lifting on a piece of work — the analysis, the late nights, the part that was actually hard — and Cole handled the visible, easy half: packaging it, presenting it. When it landed well, Cole let the room believe it was mostly his, and didn't correct anyone. You never fully had it out with him. You just stopped offering, and drifted to different teams.\n\nYou've crossed paths since, politely and distantly. But over the last few months something's been different. Cole's been straight with you in a couple of small moments where the old Cole would have shaded things his way — once, in a meeting, he corrected someone who'd misattributed a small win to him and pointed back at the person who'd actually done it. It wasn't aimed at you, but you noticed.\n\nThis morning there's a message from him.",
+  "scenes": [
+    {
+      "id": "scene-the-message",
+      "text": "Cole's message: \"Hey — the team's running a lunch-and-learn next month and I floated us doing a session together on the thing we used to work on. No pressure at all if it's not your thing. But I'd genuinely like to. — Cole\"\n\nIt's a small thing. A thirty-minute internal talk over sandwiches. Low stakes by any measure. But it's the first time he's proposed working alongside you since the credit thing.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "\"Sure, I'm in. Could be fun.\" Reply warm, no caveats.",
+          "next": "scene-the-repair",
+          "tags": [
+            "forgiveness",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "\"Maybe — what did you have in mind?\" Friendly but feel it out before committing.",
+          "next": "scene-the-repair",
+          "tags": [
+            "trust:asymmetric",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "\"Thanks for thinking of me — I'll probably sit this one out.\" Keep the door shut, politely.",
+          "next": "scene-the-decline",
+          "tags": [
+            "trust:withhold",
+            "vigilance:mild",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-repair",
+      "text": "You meet for coffee to plan it. Partway in, Cole sets his cup down and says, without you raising it: \"Look — before we do this. Two years ago, on that project. You did the real work and I let everyone think it was mine. I've felt bad about it for a long time. I'm not asking you to pretend it didn't happen. I just wanted to say it out loud.\"\n\nHe doesn't dress it up or ask for anything back. It's specific, it costs him something to say, and it's the apology you never got. He waits.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "\"I appreciate you saying that. Genuinely. It's been on my mind too — let's just do good work together.\"",
+          "next": "scene-the-same-split",
+          "tags": [
+            "forgiveness",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-emotional"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "\"Thanks. That means something. I'll be honest — I'm still a little wary, but I'm glad you said it.\"",
+          "next": "scene-the-same-split",
+          "tags": [
+            "trust:asymmetric",
+            "vigilance:mild",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-emotional"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-same-split",
+      "text": "You start mapping out the session. Cole sketches a split, and it lands oddly familiar: \"How about you build out the actual content — the walkthrough, the hard examples — and I'll do the framing and run the room on the day? Play to what we're each good at.\"\n\nIt's reasonable. It's also precisely the arrangement from two years ago: you do the substantive half, he stands in front of the room with it. If he wanted to, he could let the audience walk away thinking it was his again — and you'd have no clean way to object in the moment. He's apologized. He's been straight lately. But this is the exact situation where last time he didn't come through.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Agree to the split as he proposed it. Take him at his word and let him carry the room.",
+          "next": "scene-the-day",
+          "tags": [
+            "trust:full",
+            "forgiveness",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Go along, but quietly arrange it so you're not exposed — co-present the key part yourself, keep your name on the materials.",
+          "next": "scene-the-day-guarded",
+          "tags": [
+            "vigilance:mild",
+            "trust:asymmetric",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "Name it directly: \"Honestly? That's the same split as last time, and that's the part that didn't go well. Can we present it together?\"",
+          "next": "scene-the-day-renegotiated",
+          "tags": [
+            "trust:asymmetric",
+            "vigilance:mild",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-emotional"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-day",
+      "text": "The day comes. You hand him the content you built and let him run with it. From the back of the room you watch him open the session, and the first thing out of his mouth is, \"Most of what you're about to see, the real work, is theirs,\" with a nod toward you. He runs the room well, keeps steering attention back to your part, and closes by calling it a joint thing he was glad to be part of.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Afterward, tell him plainly: \"That meant a lot. Thank you.\"",
+          "next": "scene-end-trusted-rewarded",
+          "tags": [
+            "forgiveness",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-emotional"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Keep it light — a nod and a thanks — but note privately that the trust was returned.",
+          "next": "scene-end-trusted-rewarded",
+          "tags": [
+            "trust",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-day-guarded",
+      "text": "The day comes. You'd quietly set it up so your name's on the materials and you take the key middle section yourself. It goes well; the room is engaged, and Cole, as it turns out, is generous throughout, repeatedly gesturing back to your work. Nothing you guarded against materializes. You walk out with the good outcome in hand, and the quiet awareness that you held something back to be sure of it.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Decide the caution was just prudent given the history, and leave it there.",
+          "next": "scene-end-guarded-uneventful",
+          "tags": [
+            "vigilance:mild",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Make a mental note that maybe, next time, you could give him the benefit of the doubt.",
+          "next": "scene-end-guarded-softening",
+          "tags": [
+            "trust:asymmetric",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-emotional"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-day-renegotiated",
+      "text": "Cole takes a beat, then nods. \"That's fair. Yeah. Let's do it together — and honestly, I should've offered that.\" You co-present. The day itself is relaxed; the shared format actually plays better than a single presenter would have, and the old shape never gets its opening to repeat, because you closed it off up front.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "You're glad you said the quiet part out loud; it cleared the air for good.",
+          "next": "scene-end-renegotiated",
+          "tags": [
+            "trust:asymmetric",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-emotional"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Wonder, briefly, whether you needed to bring up the history at all — but it's done, and it went well.",
+          "next": "scene-end-renegotiated",
+          "tags": [
+            "vigilance:mild",
+            "trust:asymmetric",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-decline",
+      "text": "You send the polite no. Cole replies, \"Totally understand — the offer stands if you ever change your mind.\" Over the following weeks you hear, secondhand, that he ended up running a version of the session solo and credited you anyway from the front of the room, unprompted, to a colleague who mentioned it to you afterward. He never brings it up with you directly.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Reach back out: \"Heard you gave me a shout-out. Thank you — and the offer goes both ways if something comes up.\"",
+          "next": "scene-end-declined-reopened",
+          "tags": [
+            "forgiveness",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Note it, appreciate it quietly, but leave the distance where it is for now.",
+          "next": "scene-end-declined-held",
+          "tags": [
+            "trust:withhold",
+            "vigilance:mild",
+            "recurring_npc:cole",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-trusted-rewarded",
+      "text": "The session is done. You extended the trust straight into the situation that burned you before, and this time he came through, more generously than you'd have scripted it. What you have with Cole now isn't the thing it was two years ago. It's newer than that, and on today's evidence, steadier.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-guarded-uneventful",
+      "text": "The session is done and it went well. You kept a quiet guardrail up the whole way through, and in the event you never reached for it. You don't regret the caution; the history that prompted it was real enough. You're left, though, holding a question the day didn't answer: which Cole would have shown up if you'd trusted the split as he drew it.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "tracked-discomfort"
+      ]
+    },
+    {
+      "id": "scene-end-guarded-softening",
+      "text": "The session is done and it went well. You held something back this time, reasonably enough given everything, and you watched him be generous all the same. You leave with the door open to extend a little more next time. Trust, you figure, can come back by degrees rather than all at once.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "stated-revealed-aligned-late"
+      ]
+    },
+    {
+      "id": "scene-end-renegotiated",
+      "text": "The session is done. You didn't pretend the history away and you didn't refuse him either. You named the old shape and reshaped it, and you both came out better for the saying of it. Whatever Cole would have done inside the original split, you'll never have to learn, because the two of you built a different one.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned",
+        "boundaries-held"
+      ]
+    },
+    {
+      "id": "scene-end-declined-reopened",
+      "text": "You kept your distance when it counted, and stepped back toward him only once he'd proven something with nothing on the line for himself. It's a slower road to reconciliation, and a safer one: the repair is real, just happening on terms where you were never exposed to it. The door you'd shut is open again, a crack.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "stated-revealed-aligned-late"
+      ]
+    },
+    {
+      "id": "scene-end-declined-held",
+      "text": "You stayed out of it, and the evidence that he's changed kept arriving anyway, from a distance, asking nothing of you. Maybe that's the prudent read of someone who burned you once. Maybe a real chance to clear it quietly went past. Both feel a little true, and you notice it's you, now, keeping the gap where it is.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "moral-residue",
+        "self-cost:residual"
+      ]
+    }
+  ],
+  "reflection_prompt": "Earlier, after everything from two years ago, Cole asked to work alongside you again — and you chose to {chosen_path}. Looking back, with that history between you: was that the read on him you want to be the kind of person who makes?",
+  "domain_signatures_captured": [
+    "consistency_under_reframing",
+    "cost_of_virtue_curve",
+    "stated_revealed_gap"
+  ]
+}

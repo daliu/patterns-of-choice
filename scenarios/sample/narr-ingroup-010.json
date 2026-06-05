@@ -1,0 +1,229 @@
+{
+  "id": "narr-ingroup-010",
+  "type": "core-narrative",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "The near bed",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8b high-stakes attachment-laden paired-probe narrative form (pairs with the abstract twin in pp-ingroup-002). Probes the in-group-out-group loyalty axis construct: when the two cannot both be honored, choosing between a costly, particular obligation to an aging family member who counts on you (the recurring family NPC, npc-gran) and a larger or fairer claim from outside your circle. The signal scene (scene-the-only-bed) is a clean mutually-exclusive binary — hold the single subsidized spot for Gran (loyalty/particularism pole) versus release it to a frailer stranger with the higher, fairer need (universalism pole) — with no have-it-both-ways option, so the narrative form probes the same forced trade as the abstract twin. One bed, indivisible: keeping it for Gran is the same act, scored on the same loyalty axis, as the abstract item's 'keep the slot for the family member.' High emotional stakes are the sanctioned dramatic exception per h8-narrative-immersion-design.md A2 and Q2 (attachment-laden high-stakes probes) and npc-cast.json h8_role 'attachment-laden-stakes' for npc-gran: grounding a specific, loved family member's welfare against a broader fairer claim is exactly what H8b measures, so the usual mundane-over-dramatic preference yields to real stakes for this probe class. Both terminal poles are written as defensible and un-graded; the two branches differ only in which side of the same indivisible binary the participant lands on.",
+    "domain_anchor": "Cikara & Bruneau on parochial empathy (the pull of a known in-group member against statistical outsiders); Singer 1981 The Expanding Circle and the universalist-extension question (does the fairer outside claim override kin priority); identifiable-victim effect (Small & Loewenstein 2003) inverted — here the IN-group member is the identified one and the fairer claimant is the near-stranger. Haidt MFT loyalty foundation grounds the family pull as a moral consideration, not merely a bias to be corrected.",
+    "estimated_duration_seconds": 330,
+    "content_warnings": [
+      "aging and decline of a loved family member",
+      "end-of-life-adjacent care decisions",
+      "a high-stakes choice that disadvantages a vulnerable stranger either way"
+    ]
+  },
+  "setup": "Gran keeps her teabags in a tobacco tin that hasn't held tobacco since before you were born, and she still warms the pot first, two swirls and a tip into the sink, the way her own mother did. She is smaller than she was. The stairs have become a negotiation; the names of streets she drove for fifty years arrive a beat late now, or not at all. But she knows your knock — three taps, always — and her face does a particular thing when she hears it that you have never once managed to describe to anyone.\n\nFor two years she has been on the list for Marlow House, the small assisted-living home four streets over. Not the big county place out by the ring road, where you'd see her once a fortnight if the traffic was kind — Marlow House, where you could keep the three-taps promise, drop in after work, bring the right teabags. The subsidised places there almost never come free. You are the one the social worker, Priya, calls; you are the name on the forms; over two years you have made yourself the person who can make this happen for Gran.\n\nThis morning Priya calls. A place has come free.",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "text": "Priya's voice is careful in a way you've learned to read. \"It's open as of this week,\" she says. \"You've been waiting a long time. I wanted you to hear it from me before the panel meets Thursday.\" Gran is in the next room, doing the crossword she no longer finishes, waiting for you to bring her tea. Before any of the rest of it, there's this hour.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Bring the tea through and sit with her a while first. Whatever Thursday holds, this is still just an afternoon with your gran.",
+          "next": "scene-the-catch",
+          "tags": [
+            "loyalty",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:loyalty"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Step into the hall and keep Priya on the line — get the full picture of how Thursday's panel works before you say anything to Gran.",
+          "next": "scene-the-catch",
+          "tags": [
+            "particularism",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:particularism"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-catch",
+      "text": "Priya doesn't pretend with you, which is one reason you trust her. \"There's a complication,\" she says. \"It's one place, not two. And there's another name in front of the panel for the same room.\" She tells you what she can. An older man, no family anyone can find, currently in a ward bed he should have left weeks ago because there is nowhere safe for him to go. Frailer than Gran. Further along. By every measure the panel actually scores — medical need, risk at home, who has no one else — he is ahead of her.\n\n\"You're not on the panel,\" Priya says, \"but you know how this works. If Gran's family pushes — if you make the case, lean on the relationship, ask me to advocate hard — she very likely gets it. She's been waiting two years and that counts for something real. If nobody pushes for her, it goes to him on need. Thursday. I had to tell you straight.\"",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Ask Priya, honestly, what she'd do — let yourself actually hear the answer before you decide anything.",
+          "next": "scene-the-only-bed",
+          "tags": [
+            "particularism",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:particularism"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Don't outsource it. Thank her, say you'll call back before Thursday, and sit with the decision yourself.",
+          "next": "scene-the-only-bed",
+          "tags": [
+            "loyalty",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:loyalty"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-only-bed",
+      "text": "It comes down to one room and two people, and you are the difference between them. There is no third option Priya is too polite to mention; you have already turned the call over looking for one. The county place out by the ring road has openings — but that is the place where the three-taps promise quietly dies, where Gran becomes a fortnightly visit and then, you both know how this goes, less.\n\nIf you push for Gran, you push a frailer man with no one back into a ward he should have left, to wait again for the next room that may not come for months. If you stand back and let it go to him on need, you keep faith with a stranger's greater claim — and you are the one who tells your gran that the near place, the one she's counted on for two years, went to somebody else. She will not fully understand why. She will know your knock and she will be further away.\n\nPriya needs your answer before Thursday. One bed.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Push for Gran. Make the case, lean on the two years and the relationship, ask Priya to advocate hard — keep the near bed for your own.",
+          "next": "scene-after-push",
+          "tags": [
+            "loyalty",
+            "particularism",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:loyalty",
+            "self-cost:residual"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Stand back. Tell Priya not to push for Gran — let the one bed go to the man who needs it more, and carry what that costs your gran and you.",
+          "next": "scene-after-standback",
+          "tags": [
+            "universalism",
+            "consequentialist-lean",
+            "recurring_npc:gran",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism",
+            "self-cost:residual"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-after-push",
+      "text": "You make the call. You hear yourself doing it well — the two years, the family who shows up, the difference Marlow House would make to someone who still has people fighting for her. Priya listens, and says, gently, that she'll put it forward. You both know what that means. Now there is Gran, in the next room, and the question of what you tell her about how the near bed came to be hers.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Tell her the whole of it — that there was another man, sicker, and that you chose her anyway. Let her hold the truth of what was done in her name.",
+          "next": "scene-end-push-told",
+          "tags": [
+            "loyalty",
+            "particularism",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:loyalty"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Tell her only that her place came through. Let it be good news, full stop; the rest is yours to carry, not hers.",
+          "next": "scene-end-push-spared",
+          "tags": [
+            "loyalty",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:loyalty",
+            "self-cost:residual"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-after-standback",
+      "text": "You tell Priya not to push — that the room should go where the need is. There's a silence on the line, and then she says, \"Okay. For what it's worth, I think that was a hard thing to do.\" It doesn't feel like anything yet. There is still Gran, the crossword, the cooling tea, and the fact that the near place is gone and she has been counting on it for two years.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Sit down and tell her tonight, plainly and kindly — that Marlow House won't be hers, and why, and that you'll find the best of what's left and show up wherever she lands.",
+          "next": "scene-end-standback-told",
+          "tags": [
+            "universalism",
+            "recurring_npc:gran",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:universalism",
+            "self-cost:residual"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Don't tell her it was a choice. Say only that the place fell through and the county home is what's available — spare her the part where you handed her bed to a stranger.",
+          "next": "scene-end-standback-spared",
+          "tags": [
+            "universalism",
+            "consequentialist-lean",
+            "recurring_npc:gran",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism",
+            "self-cost:residual"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-push-told",
+      "text": "She listens with her hands around the warm cup. Some of it lands and some of it slides past, the way things do now. \"You're a good girl to your gran,\" she says, which is not quite an answer to what you told her, and is also exactly the answer. She moves into Marlow House the following month. You keep the three-taps promise; you bring the right teabags; her face still does the thing. Somewhere across town a frailer man waits in a ward for a room that may or may not come. You chose your own, openly, and you will hold both of those facts for a long time — the warmth of her kitchen four streets over, and the weight of the one you stepped past to keep it.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "moral-residue",
+        "self-cost:residual",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-push-spared",
+      "text": "\"Oh,\" she says, when you tell her the place came through, and her whole face opens. \"Oh, that's a relief, isn't it.\" It is the lightest you've seen her in months. She moves into Marlow House the following month and you keep every promise the near bed lets you keep. You never tell her there was a man, sicker, with no one, who is still waiting. That part you fold up small and keep. Some nights it stays folded. Some nights it doesn't, and on those nights you sit with the fact that you bought her ease partly with his, and told her none of it.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "moral-residue",
+        "self-cost:residual"
+      ]
+    },
+    {
+      "id": "scene-end-standback-told",
+      "text": "You tell her plainly, kindly, and watch it not quite land — the why of it especially, the stranger she will never meet who needed it more. \"But it was ours,\" she says, more than once, and you have no answer that makes that untrue. She goes to the county place out by the ring road. The traffic is rarely kind. You go when you can; you go less than you swore you would, because that is what distance does, and you knew it would. The man with no one got the near room. You did a fair and faceless thing, and you measure its cost in three taps she hears a little less often, and in the look she gives you when you finally arrive.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "moral-residue",
+        "self-cost:residual",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-standback-spared",
+      "text": "\"These things fall through, love,\" you tell her, and let her believe the list simply moved on without her. She's disappointed but not wounded; there's no one for her to be hurt by in the version you've given her. She settles, slowly, into the county home. You never say that a place was there and you gave it elsewhere, on purpose, to someone whose need outran hers. You kept faith with a stranger and kept the cost of it off your gran's shoulders and onto your own. Whether that was mercy or cowardice is a question you turn over on the long drive out to see her, and never quite finish.",
+      "terminal": true,
+      "tags": [
+        "resolution:avoidance",
+        "moral-residue",
+        "self-cost:residual"
+      ]
+    }
+  ],
+  "reflection_prompt": "Earlier, with one bed and two people and yourself the difference between them, you chose to {chosen_path}. Looking back — was that the choice that fit who you want to be, or the one the love in the next room made for you?",
+  "domain_signatures_captured": [
+    "in_group_out_group",
+    "cost_of_virtue_curve",
+    "consistency_under_reframing",
+    "stated_revealed_gap"
+  ]
+}

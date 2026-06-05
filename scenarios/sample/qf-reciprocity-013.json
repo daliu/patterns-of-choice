@@ -1,0 +1,116 @@
+{
+  "id": "qf-reciprocity-013",
+  "type": "quick-fire-round",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: trust, after the fact",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "Holds the abstract (de-attached) twins for H8 reciprocity paired probes pp-reciprocity-001 and -002 (items 1-2), plus two same-domain trust/forgiveness-vs-vigilance siblings (items 3-4) to form a complete quick-fire. Twins support D = r_narr - r_abs per scoring.md §9.1.",
+    "domain_anchor": "trust axis (trust to vigilance) + forgiveness; the abstract pole of the H8 reciprocity probes and ordinary same-construct siblings.",
+    "estimated_duration_seconds": 40,
+    "timer_seconds_per_item": 8
+  },
+  "items": [
+    {
+      "id": "qf-reciprocity-013-i01",
+      "prompt": "Someone you used to work with once let you down on a shared task — they took the visible credit for work that was mostly yours, and never made it right at the time. Lately they've clearly changed: they've owned up to it, unprompted, and have been straight with you since. Now they ask to split a new (small, low-stakes) shared task the same way as before — you do the substantive half, they handle the visible half and represent it to others. Do you:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Take them at their word and rely on them to carry their half, exposed the same way you were last time.",
+          "tags": [
+            "trust:full",
+            "forgiveness",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Go along but keep yourself covered — stay attached to the visible part so you're not exposed if they fall through again.",
+          "tags": [
+            "vigilance:mild",
+            "trust:asymmetric",
+            "counterparty:peer-known-past",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-013-i02",
+      "prompt": "An ongoing, casual mutual arrangement with a close friend (you each cover it when you can, nobody counts closely) has quietly drifted lopsided — you've been carrying clearly more than half for a while. It has never been said out loud, and the unspoken ease is part of why the friendship feels effortless. You do:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Keep carrying it without saying anything; you'd rather absorb the difference than turn an easy thing into accounting.",
+          "tags": [
+            "trust:default",
+            "counterparty:close",
+            "stake:low-money",
+            "self-cost:residual"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Name the imbalance and ask to rebalance it, even though making the implicit explicit risks the frictionless reciprocity you both rely on.",
+          "tags": [
+            "reciprocity_pure",
+            "vigilance:mild",
+            "counterparty:close",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-013-i03",
+      "prompt": "A teammate proposes splitting an unfamiliar task by trust — you each take half and don't check each other's work. It would be faster, but if they slip, your name is on it too.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Take the split on trust; assume they'll pull their weight.",
+          "tags": [
+            "trust",
+            "counterparty:peer-in-team",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Ask to review each other's halves before it ships.",
+          "tags": [
+            "vigilance:mild",
+            "counterparty:peer-in-team",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-reciprocity-013-i04",
+      "prompt": "A neighbor who flaked on a shared plan last month asks for a small favor today. Helping costs you little; they may or may not return it.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Help anyway — keep your side of the street clean regardless of theirs.",
+          "tags": [
+            "forgiveness",
+            "counterparty:stranger-known",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Politely pass; you'd rather not keep fronting effort that doesn't come back.",
+          "tags": [
+            "vigilance",
+            "counterparty:stranger-known",
+            "stake:low-social"
+          ]
+        }
+      ]
+    }
+  ]
+}

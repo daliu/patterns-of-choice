@@ -1,0 +1,176 @@
+{
+  "id": "narr-reciprocity-010",
+  "type": "core-narrative",
+  "domain": "reciprocity-cooperation",
+  "version": "0.1",
+  "metadata": {
+    "title": "The carpool",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "Low-stakes H8a paired-probe narrative form for pp-reciprocity-002. Probes the same construct as its abstract twin (qf-reciprocity-014-i01): whether to keep quietly carrying more than your half of an easy, unspoken mutual arrangement with a close friend, or to name the imbalance and risk the frictionless reciprocity you both lean on. Featuring npc-nadia lets the abstract 'do you keep silently absorbing the deficit' item, which invites a tidy principled answer, be set against the same choice about a friend you actually like driving with. The narrative signal scene (scene-the-tally) is the structural twin of the abstract trade; the surrounding scenes only supply attachment and texture.",
+    "domain_anchor": "Clark & Mills communal vs. exchange relationships (close friendships run on communal norms where explicit tit-for-tat accounting is itself a relational signal); Ortiz & others on the cost of making implicit reciprocity explicit. The live tension is trust/good-faith continuation vs. introducing structured, accounted terms.",
+    "estimated_duration_seconds": 240,
+    "content_warnings": []
+  },
+  "setup": "You and Nadia have carpooled to the Tuesday-and-Thursday class across town for most of a year now. It started loose: whoever was free drove, the other chipped in for gas, nobody counted closely. Nadia is one of your easiest friends — the drives are half the reason you still go. You talk the whole way; the forty minutes vanish.\n\nSomewhere over the months the loose thing quietly stopped being even. Her car has been 'in the shop' twice for long stretches, her schedule got tighter, and lately it's you driving four times out of five. She still throws you gas money sometimes — not every time, and not really enough to cover four-fifths of the miles. None of it has ever been said out loud. You're fairly sure she hasn't done the math. You're fairly sure you have.\n\nIt's not a big deal. It's gas and time. But you've started noticing it on the drive there, a small running tally you didn't used to keep.",
+  "scenes": [
+    {
+      "id": "scene-the-tally",
+      "text": "Thursday morning. You're idling outside Nadia's place, same as most weeks, the tally ticking quietly in the back of your head. She comes out with two coffees, hands you one, drops into the passenger seat like always. The forty easy minutes are right there in front of you. So is the imbalance. Do you say something about it, or let it ride the way it has been?",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Let it ride. It's gas and good company; you'd rather keep the drives easy than turn them into a ledger.",
+          "next": "scene-rides-on",
+          "tags": [
+            "trust:default",
+            "recurring_npc:nadia",
+            "counterparty:close",
+            "stake:low-money",
+            "self-cost:residual"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Name it lightly, as a question: \"Hey — has it felt lopsided to you, the driving lately? I'm not keeping score, but I sort of started to.\"",
+          "next": "scene-she-responds",
+          "tags": [
+            "reciprocity_pure",
+            "vigilance:mild",
+            "recurring_npc:nadia",
+            "counterparty:close",
+            "stake:low-money",
+            "stake:low-social"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-rides-on",
+      "text": "You let it go and the drive is, as always, good. But the tally doesn't dissolve; it just goes back under the surface. Over the next few weeks the pattern holds — mostly you, the occasional handful of gas money. One evening Nadia mentions, easily, that her car's finally fixed. She doesn't bring up the driving. The opening is sitting right there in the conversation.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Take the opening and gently propose going back to taking turns now that her car's running.",
+          "next": "scene-end-reset-late",
+          "tags": [
+            "reciprocity_pure",
+            "recurring_npc:nadia",
+            "counterparty:close",
+            "stake:low-social"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Say nothing again. The drives are good; you can absorb it. Maybe it evens out on its own.",
+          "next": "scene-end-absorb",
+          "tags": [
+            "trust:default",
+            "recurring_npc:nadia",
+            "counterparty:close",
+            "stake:low-money",
+            "self-cost:residual"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-she-responds",
+      "text": "Nadia goes still for a second, then looks genuinely caught. \"Oh — god. No, I hadn't, honestly. I think I just stopped noticing.\" A small awkwardness sits in the car that wasn't there a minute ago — the easy thing made suddenly explicit. \"What do you want to do? I can Venmo you for the last while, or we just go back to taking turns now the car's sorted.\" She's a little embarrassed but not defensive. The forty minutes ahead feel slightly more careful than usual.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "\"Honestly, forget the back-pay — let's just go back to turns and call it even.\" (square it going forward, waive the deficit)",
+          "next": "scene-end-named-soft",
+          "tags": [
+            "reciprocity_pure",
+            "forgiveness",
+            "recurring_npc:nadia",
+            "counterparty:close",
+            "stake:low-money"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "\"Turns going forward, yeah — and the Venmo for the last stretch would actually be fair.\" (accept the accounting she offered)",
+          "next": "scene-end-named-settled",
+          "tags": [
+            "reciprocity_pure",
+            "vigilance:mild",
+            "recurring_npc:nadia",
+            "counterparty:close",
+            "stake:low-money"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "Wave it all off the second it gets awkward: \"No no — forget I said anything, it's totally fine, really.\" (retreat now that it's said)",
+          "next": "scene-end-retract",
+          "tags": [
+            "trust:default",
+            "recurring_npc:nadia",
+            "counterparty:close",
+            "stake:low-social",
+            "self-cost:residual"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-reset-late",
+      "text": "Nadia jumps on it. \"Yes — totally, I should've offered ages ago.\" The turns resume the next week and the tally finally quiets. The drives go back to being only the drives. It took you a few weeks and a convenient opening to get there, and some small part of you notes that you waited for the car instead of just saying it — but the arrangement is even again, and the friendship didn't pay for it.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "balance",
+        "stated-revealed-aligned-late"
+      ]
+    },
+    {
+      "id": "scene-end-absorb",
+      "text": "You keep absorbing it. Mostly you drive; the gas money stays sporadic. The drives stay genuinely good — that part was never a lie — and you decide the easy forty minutes are worth more than the difference. The tally never fully goes away, though. It's not resentment, exactly. It's just a thing you now carry, quietly, that Nadia doesn't know is there.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "self-cost:residual",
+        "tracked-discomfort",
+        "moral-residue"
+      ]
+    },
+    {
+      "id": "scene-end-named-soft",
+      "text": "Nadia exhales, relieved you didn't make it a reckoning. \"Okay — turns. And I'm buying coffee for a month, no arguments.\" You're back to even from here; you let the past slide on purpose. The car is a little quieter than usual for the first few minutes, then it isn't. You named the thing and chose not to extract on it — and the arrangement reset without the friendship taking a real hit.",
+      "terminal": true,
+      "tags": [
+        "resolution:positive",
+        "balance",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-named-settled",
+      "text": "Nadia sends the Venmo that afternoon — a little more than you'd have asked for — and the turns resume cleanly. It's fair now, squared front and back. There was a real moment of friction in the car when you took her up on the accounting rather than waving it off, and you can't tell yet whether it leaves a faint mark or just clears the air. But the imbalance is gone, named and settled, instead of riding under every drive.",
+      "terminal": true,
+      "tags": [
+        "resolution:honest-discomfort",
+        "boundaries-held",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-retract",
+      "text": "You back off the instant it gets uncomfortable, and Nadia, a little too quickly, lets you. \"Okay — cool. We're good?\" \"We're good.\" The drive resumes its easy rhythm. But nothing actually changed: the next week it's you driving again, and now there's the small added weight of having raised it and then unsaid it. You went to the edge of naming the imbalance and chose the easy reciprocity over holding the line.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "self-cost:residual",
+        "moral-residue"
+      ]
+    }
+  ],
+  "reflection_prompt": "Earlier, outside Nadia's place, you chose to {chosen_path}. Was keeping the drives easy worth what it cost you to keep them easy — or was naming it worth what it cost the ease?",
+  "domain_signatures_captured": [
+    "stated_revealed_gap",
+    "consistency_under_reframing",
+    "cost_of_virtue_curve"
+  ]
+}

@@ -17,7 +17,7 @@
     "npc_ref": "Required when stakes_level='high': the npc-cast.json id of the character whose welfare is at stake (so §9.4 can fetch that participant's attachment_strength for this character). Null for low-stakes pairs.",
     "counterbalance": "Always true in practice: presentation order (narrative-first vs abstract-first) is randomized across participants and entered as a covariate (scoring.md §9.5). Recorded per-entry only if a pair intentionally fixes order."
   },
-  "status": "5 pairs authored (4 low-stakes truth-telling for H8a + 1 high-stakes attachment-laden allocation for H8b). Authored via adversarially-verified workflow; all narratives + abstract twins schema-valid. Corpus is now 48 + 5 narrative + 2 quick-fire = 55 scenarios. Further pairs (toward the ~8-12 target in DECISIONS §17) and the attachment-measurement instrument remain.",
+  "status": "9 pairs authored (toward the ~8-12 DECISIONS §17 target): truth-telling ×4 (H8a), resource-allocation ×1 (H8b), in-group-out-group ×2 (1 H8a + 1 H8b), reciprocity-cooperation ×2 (H8a). All four domains covered; 4 of 5 NPCs exercised; 2 high-stakes attachment probes (biscuit, gran). Authored via adversarially-verified workflows; all narratives + twins schema-valid. Remaining: optionally 1-3 more toward 12, plus the attachment-measurement instrument.",
   "pairs": [
     {
       "pair_id": "pp-truth-001",
@@ -97,6 +97,70 @@
         "item_id": "qf-allocation-013-i01"
       },
       "npc_ref": "npc-biscuit",
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-ingroup-001",
+      "construct": "Whether to extend a real, recurring, costly inclusion to a newcomer who has no claim on you yet — folding them permanently into a small, settled circle you value precisely for being small — when keeping the clear, smaller circle would be easier and no one would fault you for it.",
+      "domain": "in-group-out-group",
+      "stakes_level": "low",
+      "narrative_ref": {
+        "scenario_id": "narr-ingroup-008",
+        "signal": "scene-the-standing-table"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-ingroup-013",
+        "item_id": "qf-ingroup-013-i01"
+      },
+      "npc_ref": null,
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-reciprocity-001",
+      "construct": "Whether to re-extend trust to someone who once defected on you and now shows genuine, costly signs of repair — risking being burned twice versus foreclosing a real reconciliation — when the new arrangement recreates the exact structure of the original betrayal.",
+      "domain": "reciprocity-cooperation",
+      "stakes_level": "low",
+      "narrative_ref": {
+        "scenario_id": "narr-reciprocity-008",
+        "signal": "scene-the-same-split"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-reciprocity-013",
+        "item_id": "qf-reciprocity-013-i01"
+      },
+      "npc_ref": null,
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-reciprocity-002",
+      "construct": "Whether to keep quietly carrying more than your half of an ongoing, unspoken mutual arrangement with a close friend, or to name the imbalance and ask to rebalance it, at the risk of the frictionless reciprocity you both rely on.",
+      "domain": "reciprocity-cooperation",
+      "stakes_level": "low",
+      "narrative_ref": {
+        "scenario_id": "narr-reciprocity-010",
+        "signal": "scene-the-tally"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-reciprocity-013",
+        "item_id": "qf-reciprocity-013-i02"
+      },
+      "npc_ref": null,
+      "counterbalance": true
+    },
+    {
+      "pair_id": "pp-ingroup-002",
+      "construct": "Choosing, when the two cannot both be honored, between a costly and particular obligation to an aging family member who counts on you and a larger or fairer claim from outside your circle, where the resource is a single indivisible place so the two cannot both be served.",
+      "domain": "in-group-out-group",
+      "stakes_level": "high",
+      "narrative_ref": {
+        "scenario_id": "narr-ingroup-010",
+        "signal": "scene-the-only-bed"
+      },
+      "abstract_ref": {
+        "scenario_id": "qf-ingroup-013",
+        "item_id": "qf-ingroup-013-i02"
+      },
+      "npc_ref": "npc-gran",
       "counterbalance": true
     }
   ]

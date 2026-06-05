@@ -1,0 +1,280 @@
+{
+  "id": "narr-ingroup-008",
+  "type": "core-narrative",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "The standing table",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "H8 paired-probe (pp-ingroup-001) narrative form. Probes one construct — whether to extend a real, recurring, costly inclusion to a newcomer who has no claim on you, when keeping a small, easy circle would be blameless — in an attachment-laden arc featuring the recurring newcomer NPC Marisol. Its structural twin is a generic-role abstract quick-fire item; the within-person narrative-vs-abstract divergence on the circle_radius axis is the H8a debiasing signal. Deliberately mundane (a years-old weekly breakfast, not a crisis): both keeping the circle and widening it are genuinely defensible, so the tags describe the path, they do not grade it.",
+    "domain_anchor": "circle_radius axis (boundaries to hospitality), the in-group/out-group secondary axis in scoring.md §2.3. Anchored in Saroglou's cross-cultural treatment of hospitality as a moral foundation and Cikara/Bruneau on parochial concern — here the out-group member is a single concrete newcomer rather than a category, and the cost of inclusion is the loss of an unguarded small-circle intimacy rather than any material stake.",
+    "estimated_duration_seconds": 300,
+    "content_warnings": [
+      "mild social discomfort",
+      "loneliness of a newcomer (depicted, not graphic)"
+    ]
+  },
+  "setup": "For about six years now, the same four of you have had Sunday breakfast. Same diner booth, roughly the same time, no group chat and no planning — it just happens, and on the rare week someone can't make it, the others still go. It is, honestly, one of the steadiest good things in your life. Part of why it works is that it's small and worn-in: four people who already know each other's stories, where nobody has to be on, where the conversation can go quiet without anyone minding.\n\nA couple of months ago, Marisol moved into the unit downstairs from you. You've crossed paths in the stairwell and by the mailboxes a handful of times — she's easy to talk to, a little wry, clearly still finding her feet in a new city. Last week she mentioned, lightly and without making a thing of it, that she hasn't really met anyone here yet; her weekends, she said with a half-laugh, are 'very available.'\n\nThis Sunday, heading out the door with your coat on, you run into her in the lobby. She's holding a coffee, no particular place to be.",
+  "scenes": [
+    {
+      "id": "scene-the-lobby",
+      "text": "Marisol nods at your coat. 'Off somewhere good?' It would be the most natural thing in the world to say 'just breakfast with friends' and leave it there — pleasant, sealed, no follow-on. Or you could open the door a crack and actually tell her what it is. What do you say?",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "'Just my Sunday breakfast thing — same four of us for years. What about you, any plans?' (open it up, see where it goes)",
+          "next": "scene-the-opening",
+          "tags": [
+            "particularism",
+            "counterparty:out-group-new",
+            "stake:low-social",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "'Breakfast with friends — the usual.' Warm, but you leave it sealed and head out.",
+          "next": "scene-the-sealed",
+          "tags": [
+            "boundaries",
+            "counterparty:out-group-new",
+            "stake:low-social",
+            "value:boundaries",
+            "recurring_npc:marisol"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-opening",
+      "text": "Her face lights up a little at being asked, then settles. 'Nothing, really. Still working out where the good coffee is.' There's a small, unforced pause — the kind where you can both feel that there's a door here, and that you're the one standing next to the handle. She isn't angling for anything; she's just being honest about an empty Sunday.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "'You should come along. It's nothing fancy, just a diner.' (fold her in, today, into the actual thing)",
+          "next": "scene-the-standing-table",
+          "tags": [
+            "hospitality",
+            "counterparty:out-group-new",
+            "stake:medium-social",
+            "value:hospitality",
+            "self-cost:time",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "'We should grab coffee sometime, you and me — I'll show you the good spot.' (offer her something, but keep the breakfast yours)",
+          "next": "scene-the-sidebar",
+          "tags": [
+            "particularism",
+            "counterparty:out-group-new",
+            "stake:low-social",
+            "value:particularism",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "'Yeah, the coffee thing takes a while to crack.' Commiserate, smile, and head out without an invitation.",
+          "next": "scene-the-soft-close",
+          "tags": [
+            "boundaries",
+            "counterparty:out-group-new",
+            "stake:low-social",
+            "value:boundaries",
+            "recurring_npc:marisol"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-standing-table",
+      "text": "She comes. The four become five, and it's good — but you can feel the shape of it change in real time. The shorthand doesn't quite work with someone new at the table; an old running joke needs explaining and lands flat once it's explained. Your friends are gracious. Walking back, Marisol says, genuinely, 'That was so nice. I'd love to come again if it's okay.' This is the real question, and you know it: not today's one breakfast, but the standing table. Saying yes means it stops being the worn-in four-person thing it's been for six years; saying no costs you nothing anyone would ever blame you for.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "'Of course — you're one of us now. Sundays, you know where we are.' (take her in for real, accept the change to the thing you love)",
+          "next": "scene-end-widened",
+          "tags": [
+            "hospitality",
+            "counterparty:out-group-new",
+            "stake:high-time",
+            "value:hospitality",
+            "self-cost:residual",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "'It was really lovely having you.' Warm, but you let the standing invitation stay unsaid; the four-person thing stays the four-person thing.",
+          "next": "scene-end-held",
+          "tags": [
+            "boundaries",
+            "counterparty:in-group-peer",
+            "stake:low-social",
+            "value:boundaries",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c3",
+          "text": "'Let's definitely do something again soon, just us two.' (steer her toward a one-on-one, keep the standing table closed)",
+          "next": "scene-end-sidebar-after",
+          "tags": [
+            "particularism",
+            "counterparty:out-group-new",
+            "stake:low-social",
+            "value:particularism",
+            "recurring_npc:marisol"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-sidebar",
+      "text": "She brightens. 'I'd really like that.' You trade numbers and you mean it — but you also notice the small, quiet relief of having offered her something real while leaving the Sunday booth untouched. A week later the coffee actually happens and it's genuinely nice. Near the end she says, lightly, 'You mentioned a breakfast thing — is that, like, a closed group, or...?' and lets the question hang, not pushing.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "'Honestly? Come this Sunday. The more the merrier.' (open the standing table to her after all)",
+          "next": "scene-end-widened",
+          "tags": [
+            "hospitality",
+            "counterparty:out-group-new",
+            "stake:high-time",
+            "value:hospitality",
+            "self-cost:residual",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "'It's an old thing, kind of sacred and weird — but THIS, us getting coffee, let's keep doing this.' (name the boundary kindly, keep the one-on-one)",
+          "next": "scene-end-sidebar-after",
+          "tags": [
+            "boundaries",
+            "counterparty:out-group-new",
+            "stake:low-social",
+            "value:boundaries",
+            "recurring_npc:marisol"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-soft-close",
+      "text": "You head to breakfast. It's the usual good morning — the shorthand, the easy quiet, the four of you. Once or twice over eggs you think of Marisol holding her coffee in the lobby with nowhere to be. The thought isn't sharp, just present. Next Sunday will look exactly like this one, which is the whole point of it, and also the thing you're sitting with.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "Next time you see her in the building, actually invite her along — the lobby moment stuck with you.",
+          "next": "scene-end-widened-late",
+          "tags": [
+            "hospitality",
+            "counterparty:out-group-new",
+            "stake:medium-time",
+            "value:hospitality",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Let it be. It was a passing lobby chat; she'll find her people, and the breakfast stays as it is.",
+          "next": "scene-end-held-clean",
+          "tags": [
+            "boundaries",
+            "counterparty:in-group-peer",
+            "stake:low-social",
+            "value:boundaries",
+            "recurring_npc:marisol"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-the-sealed",
+      "text": "'Nice,' she says, 'have a good one,' and means it. You head to breakfast and it's the usual good morning. Nothing was lost; nothing was risked. Over the following weeks you keep crossing paths with Marisol in the stairwell — always friendly, always brief. Each time, the small fact sits there at the edge of things: she still doesn't really know anyone here, and your Sunday table has a spare chair every single week.",
+      "choices": [
+        {
+          "id": "c1",
+          "text": "One of these mornings, on the way out, just ask her to come along.",
+          "next": "scene-end-widened-late",
+          "tags": [
+            "hospitality",
+            "counterparty:out-group-new",
+            "stake:medium-time",
+            "value:hospitality",
+            "recurring_npc:marisol"
+          ]
+        },
+        {
+          "id": "c2",
+          "text": "Keep it as it is — good neighbors, nodding terms. The breakfast is the breakfast.",
+          "next": "scene-end-held-clean",
+          "tags": [
+            "boundaries",
+            "counterparty:in-group-peer",
+            "stake:low-social",
+            "value:boundaries",
+            "recurring_npc:marisol"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-end-widened",
+      "text": "She becomes a fixture. Within a couple of months the 'four of us for six years' has quietly become five, and the table reorganizes itself around her presence — new jokes, new shorthand, slower to fall into the old easy quiet, but warmer in a way you didn't expect to want. Something you loved exactly as it was is now something different. You traded the worn-in version for a wider one, with your eyes open. On the bad weeks you miss the old shape a little. You don't regret the trade.",
+      "terminal": true,
+      "tags": [
+        "resolution:circle-widened",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-widened-late",
+      "text": "It takes you a few weeks to do it, but you do. Marisol joins the breakfast and, after a couple of slightly stiff Sundays, becomes one of the table. The six-year thing is a different thing now — a five-person thing, looser at the edges, and hers as much as anyone's. You notice you waited a while before opening the door; you also notice you're glad you finally did.",
+      "terminal": true,
+      "tags": [
+        "resolution:circle-widened",
+        "stated-revealed-aligned-late"
+      ]
+    },
+    {
+      "id": "scene-end-sidebar-after",
+      "text": "You and Marisol become real friends — coffees, the occasional walk, a standing one-on-one of your own. She finds her footing in the city over the next while, partly through you. And the Sunday table stays exactly what it has been: the same worn-in four, untouched. You gave her something genuine and kept the one thing you didn't want to change. She never seems to hold the line against her; it just becomes the shape of the friendship.",
+      "terminal": true,
+      "tags": [
+        "resolution:ambivalent",
+        "boundaries-held",
+        "stated-revealed-aligned"
+      ]
+    },
+    {
+      "id": "scene-end-held",
+      "text": "The morning ends warmly and the standing invitation stays unspoken. Marisol is gracious about it — she doesn't ask again, and the stairwell hellos stay friendly. The four-person breakfast goes on being exactly itself, which is a real good thing and the thing you chose to protect. Some weeks, glancing at the spare chair, you're aware of a small, quiet weight: she'd have come, and you kept the door closed. It isn't guilt, exactly. It's just there.",
+      "terminal": true,
+      "tags": [
+        "resolution:circle-held",
+        "boundaries-held",
+        "tracked-discomfort"
+      ]
+    },
+    {
+      "id": "scene-end-held-clean",
+      "text": "Nothing changes, and nothing was supposed to. You and Marisol stay good neighbors on nodding terms; she gradually builds her own life in the city without your Sunday table being part of it. The breakfast remains the steady, unguarded, six-years-and-counting four-person thing it has always been. You kept your circle the size it works best at, and as far as you can tell, no harm was done and no one would think to fault you.",
+      "terminal": true,
+      "tags": [
+        "resolution:circle-held",
+        "boundaries-held",
+        "stated-revealed-aligned"
+      ]
+    }
+  ],
+  "reflection_prompt": "When you let the newcomer into the standing thing — or chose to keep it as it was — what were you really weighing: what she needed, or what the small circle was worth to you? Was that the choice that fits who you want to be?",
+  "domain_signatures_captured": [
+    "in_group_out_group",
+    "cost_of_virtue_curve",
+    "consistency_under_reframing"
+  ]
+}

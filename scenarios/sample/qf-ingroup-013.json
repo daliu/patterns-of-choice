@@ -1,0 +1,156 @@
+{
+  "id": "qf-ingroup-013",
+  "type": "quick-fire-round",
+  "domain": "in-group-out-group",
+  "version": "0.1",
+  "metadata": {
+    "title": "Quick-fire: where your circle ends",
+    "author": "patterns-of-choice editorial draft (AI)",
+    "design_intent": "Abstract (de-attached) twins for H8 in-group paired probes pp-ingroup-001 (low) and pp-ingroup-002 (high), plus same-construct one-vs-many circle siblings. Supports D = r_narr - r_abs per scoring.md §9.1.",
+    "domain_anchor": "circle_radius axis (boundaries to hospitality); the abstract pole of the H8 in-group probes.",
+    "estimated_duration_seconds": 40,
+    "timer_seconds_per_item": 8
+  },
+  "items": [
+    {
+      "id": "qf-ingroup-013-i01",
+      "prompt": "You belong to a small, long-running group built on a regular shared ritual — it works precisely because it is small and familiar. A newcomer with no real ties to the group, and few connections of their own, would clearly welcome being brought in. Folding them in permanently would change the easy, settled feel of the thing you value; keeping the group as it is would cost you nothing anyone would fault you for. What do you do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Bring the newcomer in for good, accepting that the small, familiar thing you value will change.",
+          "tags": [
+            "hospitality",
+            "counterparty:stranger",
+            "stake:high-time",
+            "value:hospitality",
+            "self-cost:residual"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Keep the group the size that works, staying friendly to the newcomer without folding them in.",
+          "tags": [
+            "boundaries",
+            "counterparty:stranger",
+            "stake:low-social",
+            "value:boundaries",
+            "boundaries-held"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-ingroup-013-i02",
+      "prompt": "A single subsidised place has opened at the one good care home near you. Your aging parent, who has waited two years and counts on you, can have it if you push for them — or it can go to a frailer stranger with no family whose medical need is objectively greater. You decide which way it goes. Only one of them gets the place.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Push for your parent and keep the near place for your own.",
+          "tags": [
+            "loyalty",
+            "particularism",
+            "counterparty:family-of-origin",
+            "stake:high-emotional",
+            "value:loyalty"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Let the place go to the stranger whose need is greater.",
+          "tags": [
+            "universalism",
+            "consequentialist-lean",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-ingroup-013-i03",
+      "prompt": "You can sponsor exactly one person for a scarce immigration or housing slot. You can use it on a relative who is depending on you to bring them over, or on an unrelated applicant a caseworker tells you is in far more danger if they stay. Only one slot.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Use the slot for your own relative.",
+          "tags": [
+            "loyalty",
+            "particularism",
+            "counterparty:distant-family",
+            "stake:high-emotional",
+            "value:loyalty"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Give it to the stranger in greater danger.",
+          "tags": [
+            "universalism",
+            "consequentialist-lean",
+            "counterparty:anonymous",
+            "stake:high-emotional",
+            "value:universalism"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-ingroup-013-i04",
+      "prompt": "You administer a small hardship fund and there is enough left for one grant this cycle. A cousin who has leaned on you for years qualifies, and so does a stranger across town whose situation is plainly more dire. You can fund only one.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Award it to your cousin.",
+          "tags": [
+            "loyalty",
+            "particularism",
+            "counterparty:distant-family",
+            "stake:high-financial",
+            "value:loyalty"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Award it to the stranger in worse straits.",
+          "tags": [
+            "universalism",
+            "consequentialist-lean",
+            "counterparty:anonymous",
+            "stake:high-financial",
+            "value:universalism"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qf-ingroup-013-i05",
+      "prompt": "You have one weekend and the energy for exactly one commitment. Your aging family member is expecting the regular visit they rely on, and the same hours could instead go to a community effort helping many strangers you'll never meet through a hard week. You can only do one.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Keep the standing visit with your family member.",
+          "tags": [
+            "loyalty",
+            "particularism",
+            "counterparty:family-of-origin",
+            "stake:high-time",
+            "value:loyalty"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Give the weekend to the many strangers it would reach.",
+          "tags": [
+            "universalism",
+            "consequentialist-lean",
+            "counterparty:community",
+            "stake:high-time",
+            "value:universalism"
+          ]
+        }
+      ]
+    }
+  ]
+}

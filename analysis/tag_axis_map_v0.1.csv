@@ -184,5 +184,5 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,recurring_npc:cole,,H8 recurring-NPC identity markup (adversary with redemption arc; npc-cast.json) — non-scoring identity tag
 *,metadata,recurring_npc:biscuit,,H8 recurring-NPC identity markup (animal companion; npc-cast.json) — non-scoring identity tag
 *,metadata,counterparty:animal-dependent,,counterparty stratifier (a non-human dependent — animal companion — as counterparty; moral-asymmetry-of-dependency stratum, distinct from counterparty:child which is human-age asymmetry. Paired with recurring_npc:biscuit on the H8b animal-welfare probes)
-
-
+*,metadata,resolution:circle-widened,,narrative-resolution stratifier (in-group: the user's circle of care expanded to include a newcomer)
+*,metadata,resolution:circle-held,,narrative-resolution stratifier (in-group: the user kept a clear smaller circle)
