@@ -1,6 +1,6 @@
 # Project Status
 
-**Last updated:** 2026-05-31 (after the H8 framework + public UI/UX pass)
+**Last updated:** 2026-06-04 (after the max-effort workflow pass: H8 paired probes authored, runtime architecture designed, scoring §13 weighting layer, on-ramp + profile-reveal pages)
 
 A consolidating snapshot of where every track sits right now, what's solid vs. provisional, what's waiting on which kind of human decision, and what's actually needed to launch each phase. Updated when material state changes.
 
@@ -10,7 +10,7 @@ For overview see [`README.md`](README.md). For decisions-made see [`DECISIONS.md
 
 ## One-paragraph state
 
-The repo holds a complete pre-launch specification of a longitudinal instrument for revealed-vs-stated ethical values: design, build spec, onboarding copy, pilot protocol, pre-registration template, scoring spec, interpretation guide, six pilot-operational documents, decision-log, type definitions, JSON schemas, validator + analyzer covering most of the scoring spec, CI workflow, **48 authored scenarios** (the full MVP-1 corpus) across 4 domains × 3 scenario types, complete inventory module, 14 literature notes. A novel 8th hypothesis — **H8 (narrative-immersion as measure-debiasing)** — is now specified end-to-end (concept, pre-reg, scoring §9, DECISIONS §17, pilot-protocol calibration, validity-threats CV-1, literature anchor, and a 5-character recurring-NPC cast). A **public-facing landing page + four interactive demos** (quick-fire, card sort, H8 "Weight of a Name", all client-side) ship on `daliu.github.io/patterns-of-choice/`. As of the 2026-05-31 pass the validator (48/48) and analyzer regression gate (H2–H7) both pass green. The project is at the gate of "everything needed to start running real-world work has been drafted" — what remains is real-world execution (recruit a co-PI, do an IRB submission, build the runtime app) plus the H8 creative authoring (paired probes + attachment instrument), both of which need human decisions and editorial voice beyond what can be authored autonomously.
+The repo holds a complete pre-launch specification of a longitudinal instrument for revealed-vs-stated ethical values: design, build spec, onboarding copy, pilot protocol, pre-registration template, scoring spec, interpretation guide, **a designed-and-audited runtime architecture**, six pilot-operational documents, decision-log, type definitions, JSON schemas, validator + analyzer covering most of the scoring spec, CI workflow, **55 authored scenarios** (the full 48-scenario MVP-1 corpus + the first 5 H8 paired narrative-vs-abstract probes) across 4 domains × 3 scenario types, complete inventory module, 14 literature notes. The novel 8th hypothesis — **H8 (narrative-immersion as measure-debiasing)** — is specified end-to-end (concept, pre-reg, scoring §9, DECISIONS §17, pilot-protocol calibration, validity-threats CV-1, literature anchor, a 5-character recurring-NPC cast, a paired-probe manifest, and 5 authored pairs). A **per-person value-weighting layer** (scoring §13: ipsative ordering + cost-of-virtue price + word/deed concordance) is specified, honesty-audited, and rendered in the profile-reveal page. A **public-facing landing page + five interactive demos** ship on `daliu.github.io/patterns-of-choice/`: a "Two-Minute Self-Portrait" on-ramp, the quick-fire, the card sort, the H8 "Weight of a Name", and a sample profile reveal (gap + §13 weighting). As of the 2026-06-04 pass the validator (55/55) and analyzer regression gate (H2–H7) both pass green. What remains is real-world execution (recruit a co-PI, IRB submission, **build** the now-designed runtime app) plus continued H8 authoring (more paired probes toward ~8–12 + the attachment instrument) — all needing human decisions and partnerships beyond autonomous work.
 
 ---
 
@@ -19,7 +19,7 @@ The repo holds a complete pre-launch specification of a longitudinal instrument 
 ### Design and rationale: **complete and stable**
 
 - [`concept.md`](concept.md) — Draft 0.3 with both literature passes integrated. Foundational empirical risk explicitly named in the Premise. Effect-size estimates calibrated to ~0.3–0.5 SD per Yeager/Milkman megastudies. Smuggled-values section names the MacIntyre/Confucian role-ethics challenge. TTM stage-matching prescriptive claim removed.
-- [`DECISIONS.md`](DECISIONS.md) — 15 ADR-format entries. Load-bearing operating constraints codified. Engineering decision-point officially "line crossed for tooling, runtime still open."
+- [`DECISIONS.md`](DECISIONS.md) — 18 ADR-format entries. Load-bearing operating constraints codified. §17 adds H8 + unlocks the corpus; §18 records the designed runtime architecture (revisit of §14).
 
 These two documents are likely to need only small revisions before any real-world work. They're the load-bearing design.
 
@@ -28,7 +28,7 @@ These two documents are likely to need only small revisions before any real-worl
 - [`mvp.md`](mvp.md) — MVP-1 build spec. Solid; revisions in place after lit-pass 2 (HEXACO r ≥ 0.25 not 0.30; informant reports as primary Phase-2; die-roll/sender-receiver as truth-telling paradigm).
 - [`pre-registration.md`](pre-registration.md) — OSF-filing template. Three primary hypotheses, **five secondary (H8 added 2026-05-30 as the 8th hypothesis)**. Falsification thresholds explicit. *Does not yet have a co-PI listed or IRB protocol number*; both are bound to the co-PI recruitment step.
 - [`pilot-protocol.md`](pilot-protocol.md) — n=10 pilot specification. Pre-registered go/no-go criteria. *Independent of the main-study pre-reg* — the pilot's own criteria could be separately pre-registered before pilot launch.
-- [`scoring.md`](scoring.md) — analytical spec. Seven sections implemented in the analyzer (§2-3, §4, §5.1, §5.2, §5.3, §6, §8); one reserved (§7 CFA) for the validation-cohort analyzer, plus §4.3 longitudinal probe trajectories. Plus **six of the seven pre-registered hypotheses** end-to-end runnable: H2 HEXACO self-convergent, H3 revealed test-retest per-domain, H4 informant convergent, H5 cost-of-virtue probe test-retest per-domain, H6 stated-revealed range check, H7 Big-5 N discriminant. Only H1 (CFA) is reserved — it legitimately requires lavaan / statsmodels.sem and cannot run under the stdlib-only constraint.
+- [`scoring.md`](scoring.md) — analytical spec. Sections implemented in the analyzer (§2-3, §4, §5.1, §5.2, §5.3, §6, §8); reserved: §7 CFA (needs lavaan/statsmodels), §4.3 longitudinal trajectories, §9 H8 divergence/attachment (reserved on unresolved design inputs, not a lib gap), and §13 the per-person value-weighting layer (specified + honesty-audited + rendered in the profile page; analyzer implementation pending — it's stdlib-feasible and reference-free). **Six of the eight pre-registered hypotheses** end-to-end runnable: H2, H3, H4, H5, H6, H7. Reserved: H1 (CFA) and H8a/H8b (see scoring §9 / §13).
 
 These are pre-launch templates. Need final author-pass against the chosen co-PI's institutional IRB.
 
@@ -52,19 +52,19 @@ These need institutional review and customization before use. The candor framing
 
 These are user-facing prose. They will iterate against real pilot participant feedback.
 
-### Scenarios: **MVP-1 corpus complete (48/48), structurally symmetric**
+### Scenarios: **55 authored (48 MVP-1 + 5 H8 paired probes), structurally symmetric**
 
-48 of 48 target scenarios. All 4 domains have 6 quick-fires + 3 narratives + 3 cost-of-virtue probes (= 12 scenarios per domain, 48 total). Validator passes all 48 (re-verified 2026-05-31).
+55 of the now-unlocked ~56–60 target. The 48-scenario MVP-1 base is complete (6 quick-fires + 3 narratives + 3 cost-of-virtue per domain × 4); on top of it, the first **5 H8 paired narrative-vs-abstract probes** are authored (4 low-stakes truth-telling for H8a + 1 high-stakes "High water" attachment probe for H8b), bundled with their abstract quick-fire twins. Validator passes all 55 (re-verified 2026-06-04).
 
-| Type | Authored | Target | Authoring cost per scenario |
+| Type | Authored | MVP-1 target | Note |
 |---|---|---|---|
-| Quick-fire rounds | 24 | 24 | ~30 min |
-| Branching narratives | 12 | 12 | ~90 min |
-| Cost-of-virtue probes | 12 | 12 | ~20 min |
+| Quick-fire rounds | 26 | 24 | +2 hold the H8 abstract twins |
+| Branching narratives | 17 | 12 | +5 H8 paired-probe narratives |
+| Cost-of-virtue probes | 12 | 12 | complete |
 
-The MVP-1 corpus target is reached at full structural symmetry (`DECISIONS.md` §16). The corpus lock is now deliberately *unlocked* by §17 for the one documented construct gap — H8's paired narrative-vs-abstract probes — which would take the corpus to ~56–60. That authoring is the remaining scenario work (see H8 track below); it is genuinely editorial and benefits from Dave's voice.
+The MVP-1 base reached full structural symmetry (`DECISIONS.md` §16); §17 unlocked the lock for the H8 paired probes (the one documented construct gap). Remaining scenario work: more paired probes toward the ~8–12 target + the attachment-measurement instrument — editorial, benefits from Dave's voice.
 
-**H8 recurring-NPC cast authored:** `scenarios/npc-cast.json` — 5 named characters (close friend, aging family member, evolving new-arrival, adversary-with-redemption, animal companion) spanning all four domains and all five design-doc archetypes, with the Mode-A/Mode-B dual-mode deployment encoded. This is the metadata layer the paired probes will reference; it lives outside `sample/` so the validator skips it.
+**H8 substrate authored:** `scenarios/npc-cast.json` — 5 named characters (close friend, aging family member, evolving new-arrival, adversary-with-redemption, animal companion) spanning all four domains and all five design-doc archetypes, Mode-A/Mode-B deployment encoded — plus `scenarios/h8-probe-pairs.json`, the paired-probe manifest now holding 5 entries linking each narrative signal to its abstract twin. Both live outside `sample/` so the validator skips them.
 
 ### Inventory module: **complete**
 
@@ -74,7 +74,7 @@ The MVP-1 corpus target is reached at full structural symmetry (`DECISIONS.md` �
 
 [`scripts/`](scripts/) holds two scripts, both pure-Python, single dependency for the validator:
 - `validate.py` — scenario + inventory schema validation with cross-file integrity checks; path reachability; tag-map lookup. Catches drift before merge. Currently 48 scenarios validate cleanly (MVP-1 corpus target reached).
-- `analyze.py` — implements scoring.md §2-3 (revealed), §4 (probe), §5.1 (card-sort), §5.2 (Bradley-Terry pairwise via Hunter 2004 MM), §5.3 (combined stated), §6 (gap), §8 (bootstrap CIs), plus **six of the seven pre-registered hypotheses** that fit within the stdlib-only constraint (H2 HEXACO self, H3 revealed test-retest per-domain, H4 informant HEXACO, H5 probe test-retest per-domain, H6 stated-revealed range, H7 Big-5 N discriminant). **Pure Python, no external statistical library.** The genuinely reserved sections (§7 CFA / H1, §4.3 longitudinal probe trajectories beyond two windows) need either external statistical libraries or richer cohort data than synthetic fixtures provide.
+- `analyze.py` — implements scoring.md §2-3 (revealed), §4 (probe), §5.1 (card-sort), §5.2 (Bradley-Terry pairwise via Hunter 2004 MM), §5.3 (combined stated), §6 (gap), §8 (bootstrap CIs), plus **six of the eight pre-registered hypotheses** that fit within the stdlib-only constraint (H2 HEXACO self, H3 revealed test-retest per-domain, H4 informant HEXACO, H5 probe test-retest per-domain, H6 stated-revealed range, H7 Big-5 N discriminant). **Pure Python, no external statistical library.** Reserved: §7 CFA / H1 (needs lavaan/statsmodels), §4.3 longitudinal probe trajectories beyond two windows, and §9/§13 H8 + value-weighting (stdlib-feasible but reserved on unresolved design inputs — see the analyzer docstring's reserved section).
 
 Plus [`types.ts`](types.ts) (declarative TypeScript schemas), JSON Schema files in `scenarios/schemas/`, GitHub Actions CI workflow auto-running the validator on push/PR, and synthetic fixture data demonstrating end-to-end runs.
 
@@ -86,22 +86,23 @@ Plus [`types.ts`](types.ts) (declarative TypeScript schemas), JSON Schema files 
 
 A public face for the project ships at `daliu.github.io/patterns-of-choice/` (in the separate public repo, not this one):
 - Landing page — framing, methodology, the four domains, all 8 hypotheses, a dedicated H8 explainer, and a consolidated "Try it yourself" section.
-- Four client-side interactive demos, each ~2 min, nothing recorded: the **quick-fire** (predict-then-reveal stated-vs-revealed gap), the **card sort** (real 20-value deck, the stated channel), and **"The Weight of a Name"** (the H8 paired abstract-vs-narrative effect, with the honest debiasing-vs-manipulation caveat).
-- Reachable from both the site's homepage hero and the portfolio's featured-projects card. Calm, research-stage aesthetic distinct from the portfolio theme.
+- Five client-side interactive demos, each ~2 min, nothing recorded, forming a funnel: the **on-ramp** ("Two-Minute Self-Portrait" — a pop-quiz that returns no verdict, teaching the stated-vs-revealed distinction); the **card sort** (real 20-value deck, the stated channel); the **quick-fire** (predict-then-reveal stated-vs-revealed gap, the revealed channel); **"The Weight of a Name"** (the H8 paired abstract-vs-narrative effect, with the honest debiasing-vs-manipulation caveat); and the **sample profile reveal** (the gap across four domains + the §13 ipsative-weighting and word/deed-concordance reads). Cross-linked; all constraint-audited (descriptive-not-prescriptive, no verdict/score/comparison; a11y + link audits green).
+- Reachable from the site's homepage hero and the portfolio's featured-projects card. Calm, research-stage aesthetic distinct from the portfolio theme.
 
-This is the public-communication layer, not the research runtime — it deliberately uses single-file vanilla HTML/JS and embeds reduced content. It does not substitute for the production pilot runtime (still open; see Engineering).
+This is the public-communication layer, not the research runtime — single-file vanilla HTML/JS with reduced/sample content. It does not substitute for the production pilot runtime (now designed, see Engineering; not yet built).
 
-### Engineering: **tooling line crossed; runtime line touched at minimum-step**
+### Engineering: **tooling crossed; runtime now designed-and-audited (build pending)**
 
 Crossed (tooling track):
 - Validator (validate.py, single dependency)
 - CI workflow (.github/workflows/validate.yml)
-- Analyzer (analyze.py, standard library, seven scoring-spec sections)
+- Analyzer (analyze.py, standard library, scoring-spec subset + hypotheses H2–H7)
 
-Smallest possible runtime step taken:
-- `demo/first-session.html` — single-file vanilla JS demo of one quick-fire scenario. Demonstrates the format renders interactively, includes the candor moment + step-away branch + timer + session-end observation. Does not commit to React / Svelte / any specific stack; the production runtime decision genuinely remains open.
+Runtime architecture — **designed and adversarially audited** (`runtime-architecture.md`, `DECISIONS.md §18`): local-first PWA, the `SessionLogEntry` append-only event stream as source of truth, scores as deterministic projections, rewind as replay-to-timestamp, opt-in client-encrypted sync to a ciphertext-only relay; `analyze.py` stays canonical (not ported). The audit was sound-with-fixes (zero load-bearing-constraint violations) and surfaced the load-bearing finding that the gap needs cohort norms (so the reveal is researcher-side or norms-artifact-driven). Seven owner decisions remain (see the doc §10). **Designed, not yet built.**
 
-Not crossed (production runtime):
+Public-communication layer shipped (5 vanilla single-file demos on daliu.github.io) — see the Public UI/UX track. These are the front door, NOT the production runtime.
+
+Not crossed (production runtime — the now-designed build):
 - The product app itself with full session orchestration (multiple scenarios, three-layer card sort, story prompt, profile reveal)
 - The sync infrastructure
 - The auth layer
@@ -156,7 +157,7 @@ These are choices that need human judgment from the project owner and shouldn't 
 4. **Hosting decision.** Self-hosted, Vercel, institutional infrastructure?
 5. **Open-sourcing schedule.** The repo is currently private. When does it go public — at pilot launch, at main-study launch, at first preprint?
 6. **Whether to even continue.** This is the most upstream decision. The repo represents a genuine multi-year commitment to do this seriously. If the answer is "this was a useful design exercise but I'm not going to actually run it," that's a fine answer too — but the design itself doesn't need further iteration.
-7. **H8 creative authoring.** The ~8–12 paired narrative-vs-abstract probes and the per-NPC attachment instrument are specified (`scoring.md` §9) and the cast exists, but the scenarios themselves are pre-registered research artifacts where editorial voice matters — better authored with Dave than generated autonomously. The framework is done; the writing waits.
+7. **H8 creative authoring (in progress).** The substrate is complete (cast, manifest, scoring §9/§13) and the **first 5 paired probes are authored** (workflow-generated, adversarially verified). Remaining: more pairs toward the ~8–12 target + the per-NPC attachment instrument. These are pre-registered research artifacts where editorial voice matters — best continued with Dave's review, though the proven author→verify→repair workflow can draft them.
 
 ---
 
@@ -169,10 +170,10 @@ What's needed beyond what's currently in the repo:
 - [ ] IRB exemption or approval
 - [ ] OSF account set up; pilot's go/no-go criteria pre-registered
 - [ ] Recruitment platform account (Prolific or similar)
-- [ ] Runtime app built (React + TypeScript per mvp.md, OR alternative)
-- [ ] Sync infrastructure deployed
+- [~] Runtime app — **architecture designed + audited** (`runtime-architecture.md`, DECISIONS §18); build not started
+- [ ] Sync infrastructure deployed (design: opt-in ciphertext-only relay, per the architecture)
 - [x] 48 scenarios authored to MVP-1 target — DONE (full corpus, validator green)
-- [ ] H8 paired narrative-vs-abstract probes (~8–12) + attachment instrument authored — editorial work, needs Dave's voice (corpus → ~56–60)
+- [~] H8 paired narrative-vs-abstract probes — **5 of ~8–12 authored** (validator green); remaining + attachment instrument are continued editorial work (corpus now 55 → ~56–60)
 - [ ] Pilot scheduling: 10 participants × 4 weeks + 1 week analysis = ~5 weeks active
 - [ ] $500 in compensation budget + platform fees
 
@@ -231,4 +232,4 @@ The design work is not wasted regardless of the launch decision.
 
 When a material state change happens — new commit landing a substantive artifact, a track flipping from "provisional" to "solid," an open question getting resolved — update the relevant section here. The document's value is in being current.
 
-Last comprehensive review: 2026-05-15.
+Last comprehensive review: 2026-06-04.
