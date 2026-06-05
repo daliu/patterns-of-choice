@@ -168,6 +168,49 @@ Cross-domain `value:X` tags (e.g., `value:loyalty` appearing in a truth-telling 
 
 ---
 
+## Reading the value-weighting layer (scoring.md §13)
+
+This layer answers "what do I weight?" **without** a single number and **without** comparing you to anyone. Everything here is computed from your own data and is the longitudinal, self-against-self feedback the project permits — it is **not** the gap (the gap needs a cohort; see "Single-user domains" above). Read it as three separate reads that are **never added together**.
+
+### The fixed frame (applies to every read below)
+
+> **Relative to your own average, not to other people, and says nothing about your absolute level.** A top read is not "your value"; a bottom read is not "not your value." This is an *ordering and a price*, not a verdict (`concept.md`: "an experiment they are part of, not a verdict").
+
+### Your domain ordering (behavioral)
+
+Rendered as pairwise relations — "you reach for truth-telling **more than** resource-allocation," "fairness and loyalty are **about the same** for you" — **never** as ranks 1–4 or a bar chart. Centering on your own average is what makes this honest: it strips out "is +0.6 high?" (which would need a norm) and keeps only your internal contrast.
+
+- **Ties are real, not failures.** Adjacent domains closer than your own session-to-session noise are shown as "about the same," because the data can't tell them apart *for you*.
+- **The ipsative zero-sum trap.** Centering forces a top and a bottom *even if you are uniformly high (or uniformly low) across all four domains*. "Last place" can be a value you act on strongly in absolute terms. If your four domains are level within your own noise, you'll see **"no reliable ordering — your four values are roughly level for you,"** and that is the correct, honest output, not a missing result.
+- **One session ≠ an ordering.** With a single session per domain the standard error is undefined, so the ordering is **suppressed** (not shown as "provisional"). You need the §10 session minimum before an order is firm.
+
+### Your revealed prices (cost-of-virtue)
+
+Read each break-point as **a price you set, in your own dollars**: "I won't trade honesty for a paid review anywhere on the ladder — my price is **at or above $10k**." A `"never"` is **censored** ("above the ladder top — we didn't measure how much higher"), not a number; we never pretend to know your price beyond the top rung.
+
+- **Compare prices only on the same ladder, in the same direction.** "It took ~100x more before I traded X than Y" is only meaningful when X and Y were asked on the **identical** stake rungs *and* both measure cost in the same ethical direction. Across different ladders you'll see **"not comparable — different stake ladders,"** because a "$10 break" on a `$10–$10k` probe and a "$5k break" on a `$5k–$5M` probe differ mostly because the *ladders* differ, not because *you* do.
+- **Small gaps are nothing.** A gap smaller than your own across-session wobble is shown as **"indistinguishable for you."**
+- **There is no total.** Your prices are never summed into one figure — a cross-domain "price total" has no meaning for one person.
+
+### Your word-vs-deed concordance
+
+This is the one read that uses what you *said* (card-sort) against what you *did* (choices). It asks a single internal question: **do your words and your deeds rank your own domains the same way?**
+
+- Reported as **low / moderate / high divergence** plus the **specific pair that flipped** — never as a bare number, and never on a 0-to-2 scale (the statistic only takes a handful of values, so a decimal would be false precision). The right next move is always to look at *which* pair disagrees, e.g. "you rank reciprocity **last** in your card-sort but it's your **highest** revealed-virtue domain."
+- **Low divergence** = the domains you say you prioritize are the ones you act on most; your self-knowledge of your own *ordering* is calibrated. **High / inverted** = your stated order barely tracks your behavioral order. **Neither is good or bad.** An inverted flip can be an *unclaimed strength* (you act on it without claiming it), exactly as a negative gap can be modesty rather than vice (see "What positive vs negative gap means").
+- **Needs ≥3 domains.** With only 2 comparable domains it is **undefined** (one pair forces a perfect or perfectly-inverted result) — you'll see the raw orderings only. (The Alice fixture has revealed data in just two domains, so concordance is correctly undefined for her.)
+- **Fragile flips are flagged.** If a flip rests on two revealed means that are nearly equal, it's marked **"fragile"** — one noisy item could reverse it.
+- **One assumption stated plainly.** This compares the *order* you rank domains in words against the *order* your choices fall on the **ethical-pole axis**, and it assumes that axis points the right way. That pole is deliberate but contested (moral particularism; see `literature/ethical-frameworks.md`) — a particularist would say the behavioral order isn't even well-defined. Treat the concordance as a conversation-starter, not a measurement.
+
+### What this layer will not tell you
+
+- Whether you are honest / generous / loyal **in absolute terms** (every read is internal contrast or a self-set price).
+- Where you sit **versus anyone else** — there is no percentile, no leaderboard, no cohort here by design (`DECISIONS.md`).
+- A **single "weighting score."** There isn't one, and the refusal is deliberate: a weighted sum over your domains has no interpretation without a reference distribution.
+- Whether your **behavioral order and your price order agree** as one number — at most you'll see directional agreement on individual same-ladder probes, captioned as an N-of-1 observation that can't be tested.
+
+---
+
 ## How findings connect to the validation hypotheses
 
 The pre-registration's primary hypotheses are:

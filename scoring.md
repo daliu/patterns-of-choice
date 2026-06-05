@@ -341,9 +341,104 @@ Authoring discipline: a new scenario item's tag set must be auditable against th
 
 ---
 
+## 13. Per-person value weighting (ipsative; reference-free)
+
+**Status:** Draft 0.1. Defines the "value-weighting" layer. Every quantity here is computed from **one person's own rows** and is interpretable for an N of 1. This section deliberately does **not** add any new scale and does **not** invoke the §6 gap or any sample z-score (those need ≥2 users; see §6 and interpretation.md "Single-user domains"). It is the self-against-self longitudinal case explicitly permitted by `DECISIONS.md` ("No leaderboards") — not a cross-person comparison.
+
+A "weighting" is **a within-person ordering and a revealed price, never a composite and never a score-out-of-N** (`concept.md`: "refuse to ship a single 'ethics score'"). Three independent reads are produced; they are **never averaged together** (different units — averaging would manufacture a pseudo-quantity).
+
+### 13.1 Ipsative domain ordering (behavioral)
+
+For person *i*, take the per-domain revealed means `m_i(d) = revealed_score(user=i, d, primary_axis)` (§3.2, range [−1,+1]) over the domains `D_i` that clear §10 inclusion (≥14 sessions; sensitivity ≥7). Domains below inclusion are **omitted, not zero-filled**.
+
+Self-anchor on the person's **own** unweighted cross-domain mean:
+
+```
+mbar_i   = mean_{d in D_i} m_i(d)
+dev_i(d) = m_i(d) - mbar_i
+```
+
+The ordering is `rank(dev_i(d))` descending. **Deltas are gated by the person's own across-session noise, not a cohort SD.** For an adjacent pair `(d, d')`, assert "d above d'" only if
+
+```
+| m_i(d) - m_i(d') |  >  k * sqrt( se_i(d)^2 + se_i(d')^2 )
+```
+
+where `se_i(d)` is the §3.2/§8 within-person across-session SE (use `k = 1` for the descriptive readout; bootstrap per §8 if sessions allow). Pairs failing the gate are an explicit **TIE band**, not a rank.
+
+**Hard preconditions (suppress the ordering entirely if unmet):**
+- `se_i(d)` must be **computable** for the gated domains, i.e. ≥2 sessions/domain. With a single session (`se = nan`, see interpretation.md "Single-session users") the ordering is **suppressed**, not emitted as "provisional" — a "provisional rank" is read as a rank.
+- Require **≥3 informative domains**. With 2 domains the "order" is a single sign and carries no representable uncertainty; it is suppressed.
+- If the total spread `max_d dev_i(d) − min_d dev_i(d)` is itself within the pooled within-person SE, report **"no reliable ordering — your four values are roughly level for you,"** not a rank (this is the load-bearing defense against the ipsative zero-sum artifact, §13.4).
+
+### 13.2 Cost-of-virtue revealed price (the per-person price atom)
+
+The §4 break-point is read **directly as a revealed price in the person's own currency** — an absolute, self-anchored quantity, meaningful at N=1 because dollars are an external scale the person committed to. For person *i*, domain *d*, and a single probe *p*:
+
+```
+price_i(p) = log10( first_accept_stake )            # forward probe
+price_i(p) = -log10( first_return_stake )           # inverted probe (axis-direction flip, §4.2)
+```
+
+**Censoring is explicit and load-bearing.** A `"never"` (or `always_keep`) response is **not a measured price**; it is `price > ladder top`. It is reported as right-censored ("at or above the $X ladder top — not measured higher") and **must never be turned into a finite number** for a gap (§13.3). The §4.1 `log10(max_rung)+1` recode is for the longitudinal-trajectory use (§4.3) only; it is **not** a price and is **not** admissible into a §13.3 delta.
+
+Always retain the dollar form `10**price` and the modal break-rung for plain-language reporting.
+
+**Per-domain price** is reported per-probe, not as one scalar, **unless** all of that domain's probes share one ladder (same rung-stake tuple) and one axis-direction. If a domain mixes ladders (e.g. reciprocity holds a `$0–$100k` forgiveness probe and a `$10k–$10M` cooperation probe) or mixes forward/inverted probes, each probe's price is reported separately; **no per-domain price average is taken.**
+
+### 13.3 Within-person break-point gap (the pairwise readout)
+
+The unit of meaning is the **gap between two of the person's own prices**:
+
+```
+delta_i(p1, p2) = price_i(p1) - price_i(p2)     # "~10**delta times more/fewer dollars before trading p1 vs p2"
+```
+
+A delta is computed **only if both probes share an identical rung-stake ladder AND the same ethical-axis direction**; otherwise emit **"not comparable — different stake ladders / opposite cost direction,"** not a number. (Verified necessity: a break at the floor of a `$5k–$5M` ladder vs the floor of a `$10–$10k` ladder yields `delta = log10(5000/10)` from *probe authoring*, not from a real price difference. In the current corpus the only large comparable family is the `$10–$10k` forward set.)
+
+Axis-direction is **not** the §4 inverted flag (which is set only by `break_point_field == 'first_return_stake'` and does not encode true ethical direction). Read direction from each probe's `analysis.no_break_point_handling` ("lower break-point = more ethical" vs "higher = more ethical") and carry it through every comparison.
+
+Each surviving delta is gated behind **both** the within-person across-session SD test (§4.3 trajectory machinery reused as a within-person error bar — a single-subject quantity) **and** the §10 minimum probe count, labeling sub-threshold pairs **"indistinguishable for you."** Any delta with a censored (`"never"`) endpoint is **suppressed** (you cannot subtract `price > top`).
+
+**Invariant (enforced in code, not prose): prices are never summed or averaged across domains into any single figure.** A cross-domain total has no N=1 interpretation.
+
+### 13.4 Stated-vs-revealed concordance (word-order vs deed-order)
+
+This compares **two of the person's own orderings** of the same domains and is the only one of the three reads that touches the stated layer. It is **not** the §6 gap: it uses raw card-sort fractions and raw self-anchored means, never sample standardization.
+
+Over the set `C` of domains for which **both** an aspirational card-sort `frac_in_top5` (§5.1) and a valid revealed per-domain mean (§3.2) exist (**require `|C| ≥ 3`**):
+
+```
+stated_i(d)   = card_sort_stated(i, d, layer = "aspirational")     # [0,1], 6 levels
+revealed_i(d) = revealed_score(i, d, primary_axis)                 # [-1,+1]
+```
+
+Compute Kendall **tau-b** (tie-correcting; required because `frac_in_top5` is tie-dense) between the two vectors. For every unordered domain pair count concordant `nc`, discordant `nd`, and pairs tied on stated `t_s` / revealed `t_r`:
+
+```
+tau_b = (nc - nd) / sqrt( (nc + nd + t_s) * (nc + nd + t_r) )
+```
+
+**Output is the 3-band ordinal `{low / moderate / high divergence}` derived from `tau_b`, the two raw orderings, `|C|`, `nc`, `nd`, `t_s`, `t_r`, and the named domain-pair(s) that flip — never a bare scalar.** A continuous `D = 1 − tau_b` on `[0,2]` is **not** reported: with `|C| = 3` it can take only ~4 values, so a real-interval framing asserts precision the statistic cannot carry.
+
+**Stability guards (both required):**
+- **`|C| ≥ 3`**, else emit "concordance undefined — needs ≥3 domains with both stated and revealed data" and show the raw orderings only. (With 2 domains there is one pair, so tau-b is mechanically ±1 — a coin-flip dressed as a measurement.)
+- Flag any flipped pair whose **revealed** means differ by less than a within-person noise threshold (the larger of the two per-domain SEs, or `|delta_revealed| < 0.1` on the [−1,+1] axis) as **"fragile"** rather than a confident flip. tau-b's exact-tie correction does nothing for near-ties on 3-item means.
+
+Any uncertainty estimate shown alongside concordance must be derived **within-person** (e.g. leave-one-pair-out over the person's own domains), **never** from `analyze.py`'s cohort-relative bootstrap CIs.
+
+### 13.5 What §13 deliberately does not compute
+
+- **No cross-channel scalar.** The §13.1 ordering and the §13.2/.3 price are **not** correlated into a single self-consistency number (e.g. a Kendall tau between the behavioral order and a cost-of-virtue order). Such a tau is a forced single-subject statistic with no reference distribution (n=4, or n=2 where it is mechanically ±1). At most, report **directional agreement on individual same-ladder probes** as a plain concordant/discordant count, captioned "this is N of 1; it cannot be tested and is not a correlation," and only where both reads are independently valid.
+- **No per-domain cost-of-virtue aggregate across mixed probe types** (interpretation.md L70: forward and inverted are not comparable without §7 CFA cohort standardization).
+- **No composite "values score," no rank rendered as 1/2/3/4, no sorted bar chart, no cross-person comparison of anything.**
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.
 - **Inter-rater reliability target for LLM story-coding.** README claims κ ≥ 0.70 before LLM coding is trusted at scale. The reference labels need to come from somewhere; gold-standard manual coding of ~50 stories per domain (~200 total) by 2 raters is the obvious approach but is real labor.
 - **Within-user trajectory model.** Should the trajectory be linear, monotone-isotonic, or unconstrained? Strong priors weakly held; defer to pilot.
 - **Handling of users who pass on the profile reveal (per `onboarding.md`).** No design difference for measurement, but the analyzer should log this so MVP-2's intervention-engagement modeling can use it.
+- **`analyze.py` "never"-recode bug (flagged during §13 design).** §4.1 recodes a `never` break-point to `log10(max_rung)+1`, but the analyzer hardcodes a single ceiling (`LADDER_CEIL_LOG10 = 4.0`, i.e. a $10k top) for *all* probes regardless of their actual ladder top — so a `never` on a high-ceiling probe (e.g. the $5M `cov-ingroup-002`) is mis-scored identically to a `never` on a $10k probe. §13 sidesteps this by keeping `never` censored (never a finite number), but the §4.3 trajectory path inherits the bug; the fix is `ceiling = log10(that probe's real ladder top) + 1`. A structured `analysis.axis_direction: "forward"|"inverted"` field on the probe schema (instead of string-matching `no_break_point_handling` prose) would also let §13.3 and `validate.py` stop parsing free text.
