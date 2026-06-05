@@ -343,7 +343,7 @@ Tracking what the literature pass surfaced and what each revision has incorporat
 
 - **Aknin et al. 2013, 2022 on prosocial spending and well-being.** Robustly replicated cross-cultural finding directly relevant to the "Effort and self-sacrifice" domain — which is itself excluded from MVP-1. The Aknin work would inform the design when that domain enters scope (MVP-2 or later).
 - **Engineering: deciding whether to start.** Repo has spec coverage for the entire pipeline (content → scoring → analysis → pre-reg). No code exists. First-commit options enumerated in commit-message threads on `mvp.md`, `scoring.md`, and `analysis/README.md`.
-- **Additional scenarios.** 9 of ~48 target authored. Each subsequent quick-fire is ~30 min editorial; each narrative ~90 min; each cost-of-virtue probe ~20 min. The MVP-1 corpus is on a 3–4 week authoring timeline once started in earnest.
+- **Additional scenarios.** The 48-scenario MVP-1 base is complete, plus the first 5 H8 paired probes (55 total). Remaining H8 authoring (toward ~8–12 pairs) runs ~30 min editorial per quick-fire, ~90 min per narrative, ~20 min per cost-of-virtue probe.
 - **CI hook for tag-mapping validation.** `analysis/README.md` flags this as TODO; would prevent drift between scenario tags and the analyzer.
 - **LLM story-coding inter-rater reliability calibration.** Per `inventory/story-prompts.json` and `scoring.md`, the LLM coding pipeline needs κ ≥ 0.70 against gold-standard manual coding before story data folds into primary analyses; ~200 gold-standard manual codes (50 per domain by 2 raters) is the prerequisite.
 

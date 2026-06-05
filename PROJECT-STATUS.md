@@ -73,7 +73,7 @@ The MVP-1 base reached full structural symmetry (`DECISIONS.md` §16); §17 unlo
 ### Tooling: **complete for the pre-launch phase**
 
 [`scripts/`](scripts/) holds two scripts, both pure-Python, single dependency for the validator:
-- `validate.py` — scenario + inventory schema validation with cross-file integrity checks; path reachability; tag-map lookup. Catches drift before merge. Currently 48 scenarios validate cleanly (MVP-1 corpus target reached).
+- `validate.py` — scenario + inventory schema validation with cross-file integrity checks; path reachability; tag-map lookup. Catches drift before merge. Currently all 55 scenarios validate cleanly (48 MVP-1 base + 5 H8 paired probes).
 - `analyze.py` — implements scoring.md §2-3 (revealed), §4 (probe), §5.1 (card-sort), §5.2 (Bradley-Terry pairwise via Hunter 2004 MM), §5.3 (combined stated), §6 (gap), §8 (bootstrap CIs), plus **six of the eight pre-registered hypotheses** that fit within the stdlib-only constraint (H2 HEXACO self, H3 revealed test-retest per-domain, H4 informant HEXACO, H5 probe test-retest per-domain, H6 stated-revealed range, H7 Big-5 N discriminant). **Pure Python, no external statistical library.** Reserved: §7 CFA / H1 (needs lavaan/statsmodels), §4.3 longitudinal probe trajectories beyond two windows, and §9/§13 H8 + value-weighting (stdlib-feasible but reserved on unresolved design inputs — see the analyzer docstring's reserved section).
 
 Plus [`types.ts`](types.ts) (declarative TypeScript schemas), JSON Schema files in `scenarios/schemas/`, GitHub Actions CI workflow auto-running the validator on push/PR, and synthetic fixture data demonstrating end-to-end runs.

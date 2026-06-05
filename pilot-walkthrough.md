@@ -187,6 +187,6 @@ For those, see the corresponding documents in the cross-references.
 - [`first-session-walkthrough.md`](first-session-walkthrough.md) — screen-level for session 1
 - [`onboarding.md`](onboarding.md) — the actual copy the participant sees on each screen
 - [`pilot-materials/`](pilot-materials/) — operational documents (consent, recruitment, interviews, informant protocol, data handling)
-- [`scenarios/`](scenarios/) — the authored scenario corpus (40 of ~48 target)
+- [`scenarios/`](scenarios/) — the authored scenario corpus (55: the 48-scenario MVP-1 base + 5 H8 paired probes)
 - [`interpretation.md`](interpretation.md) — what the analyzer's profile-reveal numbers actually mean
 - [`scoring.md`](scoring.md) — how the analyzer computes the numbers shown at session 15

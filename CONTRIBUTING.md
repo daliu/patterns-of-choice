@@ -36,7 +36,7 @@ If all four succeeded, you've verified the validator, the analyzer, the fixture 
 
 **The code is intentionally minimal.** Two pure-Python scripts (one validator, one analyzer) and one single-file HTML demo. No build tooling, no framework lock-in. This is by design — the production runtime stack remains an open decision.
 
-**The corpus is provisional.** 37 of ~48 target scenarios are authored. They will get editorial revision against actual pilot participant feedback. Treat scenario wordings as drafts, not as a locked instrument.
+**The corpus is provisional.** 55 scenarios are authored (the full 48-scenario MVP-1 base + the first 5 H8 paired probes). They will get editorial revision against actual pilot participant feedback. Treat scenario wordings as drafts, not as a locked instrument.
 
 **The candor moment is structurally load-bearing.** The recurring "this instrument is unvalidated; you might step away" framing in `onboarding.md`, the consent form, and the demo is not rhetorical. It's the project's response to the contested-ecological-validity premise. Reviewers used to standard consumer-app or research framings will sometimes object to it. Don't soften without reading the rationale.
 
