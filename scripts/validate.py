@@ -527,6 +527,24 @@ def validate_arc_file(
                         f"beat {bid}: scenario_ref '{ref}' not found in scenarios/sample/"
                     )
 
+        # H8a beats carry a signal scene + an abstract twin (the generic comparison)
+        if data.get("mode") == "h8a" and kind == "encounter" and not ("signal" in beat and "abstract_twin" in beat):
+            errors.append(f"beat {bid}: h8a encounter must have both 'signal' and 'abstract_twin'")
+        if "signal" in beat and beat["signal"] not in {s.get("id") for s in (beat.get("scenes") or [])}:
+            errors.append(f"beat {bid}: signal '{beat.get('signal')}' is not a scene in the beat")
+        if "abstract_twin" in beat:
+            tw = beat["abstract_twin"] or {}
+            if not tw.get("item_id"):
+                errors.append(f"beat {bid}: abstract_twin missing 'item_id'")
+            if not tw.get("prompt"):
+                errors.append(f"beat {bid}: abstract_twin missing 'prompt'")
+            opts = tw.get("options") or []
+            if len(opts) < 2:
+                errors.append(f"beat {bid}: abstract_twin needs >=2 options")
+            for o in opts:
+                if not o.get("id") or not o.get("text"):
+                    errors.append(f"beat {bid}: abstract_twin option needs 'id' and 'text'")
+
         if kind in ("naming", "encounter"):
             prior_encounters += 1
 
