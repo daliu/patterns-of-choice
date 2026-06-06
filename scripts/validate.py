@@ -51,9 +51,12 @@ except ImportError:
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCENARIOS_DIR = REPO_ROOT / "scenarios" / "sample"
+ARCS_DIR = REPO_ROOT / "scenarios" / "arcs"
 SCHEMAS_DIR = REPO_ROOT / "scenarios" / "schemas"
 INVENTORY_DIR = REPO_ROOT / "inventory"
 ANALYSIS_DIR = REPO_ROOT / "analysis"
+
+ARC_BEAT_KINDS = {"naming", "encounter", "attachment_probe", "high_stakes"}
 
 
 def load_json(path: Path) -> Any:
@@ -404,6 +407,122 @@ def validate_scenario_file(
     return errors
 
 
+def validate_arc_file(
+    path: Path,
+    known_tags: set[str],
+    seen_ids: set[str],
+) -> list[str]:
+    """Validate a recurring-character arc (scenarios/arcs/*.json) per arc-model.md.
+
+    Arcs are not core-narrative scenarios (different envelope), so they get a
+    dedicated pass: structural fields, beat ordering, encounter-gating sanity,
+    per-beat scene-graph integrity (reusing validate_narrative_paths), the
+    required recurring_npc tag on every choice/terminal, tag coverage, and
+    scenario_ref resolution for high_stakes beats.
+    """
+    errors: list[str] = []
+    try:
+        data = load_json(path)
+    except json.JSONDecodeError as e:
+        return [f"json: malformed — {e.msg} at line {e.lineno} col {e.colno}"]
+
+    aid = data.get("arc_id")
+    if not aid:
+        errors.append("structure: missing top-level 'arc_id'")
+    elif aid in seen_ids:
+        errors.append(f"structure: duplicate id '{aid}'")
+    else:
+        seen_ids.add(aid)
+
+    for field in ("version", "npc_ref", "recurring_npc_tag", "primary_domain", "beats"):
+        if field not in data:
+            errors.append(f"structure: missing top-level '{field}'")
+
+    npc_tag = data.get("recurring_npc_tag")
+    if npc_tag and npc_tag not in known_tags:
+        errors.append(f"tags: recurring_npc_tag '{npc_tag}' not in tag map")
+
+    beats = data.get("beats")
+    if not isinstance(beats, list) or not beats:
+        errors.append("structure: 'beats' must be a non-empty array")
+        return errors
+
+    # arc-level tag coverage (walks the whole tree: beats -> scenes -> choices)
+    errors.extend(validate_tags(data, known_tags))
+
+    name_captures = 0
+    prior_encounters = 0  # naming/encounter beats seen so far (the gate currency)
+    expected_order = 1
+    beat_ids: set[str] = set()
+    for beat in beats:
+        bid = beat.get("beat_id", "(no id)")
+        if bid in beat_ids:
+            errors.append(f"beat {bid}: duplicate beat_id")
+        beat_ids.add(bid)
+
+        kind = beat.get("kind")
+        if kind not in ARC_BEAT_KINDS:
+            errors.append(f"beat {bid}: unknown kind '{kind}'")
+
+        if beat.get("order") != expected_order:
+            errors.append(
+                f"beat {bid}: order {beat.get('order')} not sequential "
+                f"(expected {expected_order})"
+            )
+        expected_order += 1
+
+        mpe = beat.get("min_prior_encounters")
+        if not isinstance(mpe, int) or mpe < 0:
+            errors.append(f"beat {bid}: min_prior_encounters must be a non-negative int")
+        elif mpe > prior_encounters:
+            errors.append(
+                f"beat {bid}: min_prior_encounters {mpe} exceeds the "
+                f"{prior_encounters} encounter/naming beat(s) before it — never unlockable"
+            )
+
+        if beat.get("captures_name"):
+            name_captures += 1
+
+        has_inline = "scenes" in beat
+        has_ref = "scenario_ref" in beat
+        if has_inline == has_ref:
+            errors.append(
+                f"beat {bid}: must have EITHER inline 'scenes' OR a 'scenario_ref' "
+                f"(found {'both' if has_inline else 'neither'})"
+            )
+
+        if has_inline:
+            errors.extend(f"beat {bid}: {e}" for e in validate_narrative_paths(beat))
+            for scene in beat["scenes"]:
+                if scene.get("terminal") and npc_tag and npc_tag not in (scene.get("tags") or []):
+                    errors.append(
+                        f"beat {bid} scene {scene.get('id')}: terminal missing '{npc_tag}'"
+                    )
+                for choice in scene.get("choices") or []:
+                    if npc_tag and npc_tag not in (choice.get("tags") or []):
+                        errors.append(
+                            f"beat {bid} scene {scene.get('id')} choice "
+                            f"{choice.get('id')}: missing '{npc_tag}'"
+                        )
+        elif has_ref:
+            ref = beat["scenario_ref"]
+            if not (SCENARIOS_DIR / f"{ref}.json").exists():
+                errors.append(
+                    f"beat {bid}: scenario_ref '{ref}' not found in scenarios/sample/"
+                )
+
+        if kind in ("naming", "encounter"):
+            prior_encounters += 1
+
+    if data.get("name_is_participant_supplied") and name_captures != 1:
+        errors.append(
+            f"structure: name_is_participant_supplied but {name_captures} beats "
+            f"capture a name (expected exactly 1)"
+        )
+
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--quiet", action="store_true", help="only print failures")
@@ -429,18 +548,28 @@ def main() -> int:
         file_errors["inventory/"] = inv_errors
 
     scenario_paths = sorted(SCENARIOS_DIR.glob("*.json"))
+    arc_paths = sorted(ARCS_DIR.glob("*.json")) if ARCS_DIR.exists() else []
     if not args.quiet:
-        print(f"Validating inventory + {len(scenario_paths)} scenarios...")
+        print(
+            f"Validating inventory + {len(scenario_paths)} scenarios "
+            f"+ {len(arc_paths)} arcs..."
+        )
 
     for path in scenario_paths:
         errors = validate_scenario_file(path, schemas, known_tags, value_ids, seen_ids)
         if errors:
             file_errors[path.name] = errors
 
+    for path in arc_paths:
+        errors = validate_arc_file(path, known_tags, seen_ids)
+        if errors:
+            file_errors[path.name] = errors
+
+    total_files = len(scenario_paths) + len(arc_paths)
     if file_errors:
         total = sum(len(e) for e in file_errors.values())
         print(
-            f"\nFAILED: {total} errors in {len(file_errors)} of {len(scenario_paths)} files\n",
+            f"\nFAILED: {total} errors in {len(file_errors)} of {total_files} files\n",
             file=sys.stderr,
         )
         for fname, errs in file_errors.items():
@@ -450,7 +579,7 @@ def main() -> int:
         return 1
 
     if not args.quiet:
-        print(f"OK: all {len(seen_ids)} scenarios valid.")
+        print(f"OK: all {len(seen_ids)} scenarios + arcs valid.")
     return 0
 
 

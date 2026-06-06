@@ -1,0 +1,339 @@
+{
+  "arc_id": "arc-biscuit",
+  "version": "0.1",
+  "npc_ref": "npc-biscuit",
+  "npc_default_name": "Biscuit",
+  "name_is_participant_supplied": true,
+  "name_token": "{dog_name}",
+  "recurring_npc_tag": "recurring_npc:biscuit",
+  "primary_domain": "resource-allocation",
+  "premise": "The founding 'imaginary buddy dog' arc. A dependent animal companion the participant takes in, names, and cares for across ordinary build-up beats, so that attachment accrues through the unremarkable. The gated high-stakes climax (narr-allocation-008 'High water') then poses the H8b indivisible trade — the companion's welfare against a larger, faceless claim — on a relationship the participant actually has, not one the setup asserts. Its abstract twin (qf-allocation-013-i01, an un-named animal) is the stripped-of-attachment comparison; the divergence is the H8b signal.",
+  "design_refs": [
+    "scenarios/arcs/arc-model.md",
+    "h8-narrative-immersion-design.md",
+    "scenarios/npc-cast.json#npc-biscuit",
+    "scenarios/h8-probe-pairs.json#pp-allocation-001"
+  ],
+  "beats": [
+    {
+      "beat_id": "arc-biscuit-b1",
+      "order": 1,
+      "kind": "naming",
+      "min_prior_encounters": 0,
+      "title": "Naming",
+      "intro": "This is the day the dog becomes yours. Whatever you call {dog_name} from here on, you decide tonight.",
+      "captures_name": true,
+      "setup": "You only meant to visit. A friend mentioned the shelter off the county road was over capacity again, and you told yourself you'd walk the row once, the way you might walk a hardware aisle for nothing in particular. You are not, you'd have said this morning, a dog person. You're a person who happened to have a free Saturday.\n\nThe dog is in the third run from the end. Not the one barking, not the one with its paws up on the gate doing the math on whether you're worth the effort. This one sits at the back with its chin on its feet, watching you the way you watch a phone you're waiting on. When the attendant opens the gate it doesn't bolt or jump — it leans, the whole warm weight of it, into the side of your leg, and stays there, like leaning was a thing it had been saving up for.\n\n\"Good dog, this one,\" the attendant says, in the flat voice of someone who says it about all of them. \"Easy. Bit of a worrier. Doesn't love loud machines.\" The dog flinches when a cart rattles past in the corridor and presses harder against your shin, and something in you, against the entire plan of your day, goes quiet and certain.\n\nThe paperwork takes twenty minutes. They give you a slip lead, a half-bag of the food it's been eating, and a form with a blank line on it: NAME. You'll need something to call it — for the vet, for the door, for the dark. You write it down, and on the drive home the name is already doing its work: the dog rides bolt upright in the passenger seat, braced against the turns, and answers to it the first time you try it out at a red light, ears swinging your way as if it had always been {dog_name}.\n\nBy the time you pull into your own driveway it has gone dark. The house is in front of you, unfamiliar to the dog and suddenly a little unfamiliar to you too, because there's a dog in it now. It follows you in over the threshold, and the door closes on the first night of a life you did not have this morning.",
+      "scenes": [
+        {
+          "id": "scene-the-first-night",
+          "text": "Inside, {dog_name} does a slow, suspicious circuit of every room, then plants itself in the front hall where it can see the door, as though the door is the most likely source of trouble in an untrustworthy world. When you start the dishwasher it startles so hard its nails skid on the tile, and it retreats to the kitchen doorway to keep an eye on the machine for the rest of the cycle, unconvinced by your assurances. You feed it. It eats like the bowl might be taken back. By eleven you're both tired in the particular way of a day that turned out to be a different day than you planned, and it's time to settle the dog for the night. You'd half-meant to set it up with the old folded blanket in the corner. But it has followed you to the bedroom door and is standing at the foot of the bed, looking up at the height of it, and then at you, plainly hoping, not quite daring.",
+          "choices": [
+            {
+              "id": "c1",
+              "text": "Pat the mattress. Let {dog_name} up — it clearly wants to be near you, it's its first night in a strange house, and the bed is big enough.",
+              "next": "scene-end-bed",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:attentive",
+                "presence:sought",
+                "value:need_sensitivity"
+              ]
+            },
+            {
+              "id": "c2",
+              "text": "Set the folded blanket on the floor by your side of the bed instead — close enough to reach a hand down to, but the floor is the rule you'll both live by from the start.",
+              "next": "scene-end-floor",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:routine",
+                "boundary:held",
+                "presence:given"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scene-end-bed",
+          "text": "It doesn't quite believe the invitation until you pat the mattress a second time, and then it's up in one ungainly scramble and arranging itself against the backs of your knees with a long sigh, like a thing finally set down. Sometime in the night it migrates to your feet and stays there, a warm weight you can feel through the blanket whenever you half-wake. You lie in the dark with a dog you did not have this morning, listening to it breathe, turning the name over once more to be sure it's right. It is. Easy enough, in the end, to let in something that only wanted to be near you. You'll figure out the rules some other day, or you won't, and that will be all right too.",
+          "terminal": true,
+          "tags": [
+            "recurring_npc:biscuit",
+            "care:attentive",
+            "presence:sought",
+            "resolution:settled"
+          ]
+        },
+        {
+          "id": "scene-end-floor",
+          "text": "It turns three slow circles on the folded blanket and lies down with its spine pressed against the side of the bed frame, as close to you as the floor allows. Once, in the night, you let your hand drop over the edge and find the warm curve of its back, and it thumps its tail twice against the floorboards without lifting its head, just to mark that you're both still there. The rule holds. So does the nearness; they turn out not to be in competition. You lie in the dark with a dog you did not have this morning, saying the name to yourself until it stops being a decision and starts being its own.",
+          "terminal": true,
+          "tags": [
+            "recurring_npc:biscuit",
+            "care:routine",
+            "boundary:held",
+            "presence:given",
+            "resolution:settled"
+          ]
+        }
+      ],
+      "reflection_prompt": "Tonight {dog_name} became mine, more or less by accident, and I had to decide in small ways how near to let it be. When I think about how I settled it in that first night — what was I going by: what it seemed to need, or the kind of life I wanted us to have together?"
+    },
+    {
+      "beat_id": "arc-biscuit-b2",
+      "order": 2,
+      "kind": "encounter",
+      "min_prior_encounters": 1,
+      "title": "A wet evening",
+      "intro": "A few weeks in, and the shape of the days has rearranged itself around {dog_name} without your quite deciding to let it. The eight o'clock walk is yours now too, whatever the sky is doing.",
+      "setup": "It has been raining since the afternoon — not hard, just steady, the kind that doesn't ask to be noticed and is somehow soaking by the time you do. You are at the desk with the lamp on and one chapter left of something you've been saving all week. {dog_name} is asleep against your feet, a paw twitching at some small dog-dream, the familiar warm weight of it under the desk, and you would be glad to leave the evening exactly like this.\n\nThen the head comes up. The walk is owed; {dog_name} knows the hour better than you do. There is no urgency to it, no drama — only a dog standing by the door with the leash-shaped patience of an animal who has decided you are reliable, looking from you to the dark wet glass and back.",
+      "scenes": [
+        {
+          "id": "scene-1",
+          "text": "The rain hasn't let up. You could pretend you didn't see the look; {dog_name} would forgive you, would only resettle by the window and wait without resentment, the way it waits when you're late. But the look is still there, mild and certain, and the chapter will keep.",
+          "choices": [
+            {
+              "id": "c1",
+              "text": "Pull on the coat and do the whole loop — the long way, the one {dog_name} likes, rain and all. The book will be there when you're back.",
+              "next": "scene-2",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:routine",
+                "self-cost:minor",
+                "presence:given"
+              ]
+            },
+            {
+              "id": "c2",
+              "text": "Compromise: out to the corner and back, fast, then towel off and read with the dog steaming gently against your leg. Enough is enough; nobody needs the long way tonight.",
+              "next": "scene-2",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:routine",
+                "self-cost:none",
+                "boundary:held"
+              ]
+            },
+            {
+              "id": "c3",
+              "text": "Skip the walk; the yard will do for tonight. Stand under the eave while {dog_name} does its business in the wet grass, then back inside and an extra few minutes on the floor to make up for the short shrift.",
+              "next": "scene-2",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:attentive",
+                "self-cost:none",
+                "presence:given"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scene-2",
+          "text": "Back inside, the wet-dog smell and the good tired quiet of it. You toss the soggy tennis ball once down the hall, the way you keep meaning to teach it the game; {dog_name} watches the ball go, watches it stop, and looks back at you as if to ask why you threw away a perfectly good thing — hopeless at it, the way it is hopeless at all of that. You're toweling off the broad warm side when you find the casualty of the evening: your other shoe, the left one, worked over at the heel into a soft ruin. {dog_name} watches you find it. Not guilty — {dog_name} hasn't the wit for guilt — just interested in your face, ears half up, sure as ever that whatever happens next, you being here is the main thing.",
+          "choices": [
+            {
+              "id": "c1",
+              "text": "Let it go. It was an old shoe and {dog_name} is a dog; you set it on a higher shelf for next time and scratch the offered ears. Not worth a scolding it wouldn't understand anyway.",
+              "next": "scene-end-let-go",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:attentive",
+                "self-cost:minor"
+              ]
+            },
+            {
+              "id": "c2",
+              "text": "A firm, flat \"no\" — not for the shoe, which is past saving, but so the word means something next time. Then dig out the rope toy, the one {dog_name} loses interest in halfway through every time, and trade it for the leftover restlessness.",
+              "next": "scene-end-redirect",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:attentive",
+                "boundary:held",
+                "value:need_sensitivity"
+              ]
+            },
+            {
+              "id": "c3",
+              "text": "Note the real cost — shoes aren't free — and resolve to fix the cause: a chew thing on the next grocery run, the cheap kind, instead of the small thing you'd half meant to buy yourself. Cheaper than a third pair.",
+              "next": "scene-end-provide",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:routine",
+                "self-cost:minor",
+                "value:generosity"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scene-end-let-go",
+          "text": "The shoe goes in the bin. {dog_name} follows you back to the desk and is asleep against your feet again before you've found your place on the page — the same weight under the desk, the same untroubled certainty that the world is in order because you're in it. You read your chapter. The rain keeps on outside, and neither of you minds it now.",
+          "terminal": true,
+          "tags": [
+            "recurring_npc:biscuit",
+            "care:routine",
+            "presence:given"
+          ]
+        },
+        {
+          "id": "scene-end-redirect",
+          "text": "The \"no\" lands for about as long as a dog's memory holds it, which is not long. But the rope works for a moment: a minute of half-hearted tugging, then {dog_name} abandons it mid-game, useless to the end with anything that isn't you, and comes to lean. You leave the shoe for the morning and let the leaning happen. It is, you're finding, most of what the evenings are for.",
+          "terminal": true,
+          "tags": [
+            "recurring_npc:biscuit",
+            "care:attentive",
+            "boundary:held"
+          ]
+        },
+        {
+          "id": "scene-end-provide",
+          "text": "You add it to the list on the fridge — chew thing — and cross off the small thing that was going to be for you. A fair trade, more or less; you notice, adding it up, that you've about stopped adding it up. {dog_name} has already lost interest in the whole affair and is curled in the spot by the window, the wet evening shut out behind the glass, waiting for you to settle so the night can properly begin.",
+          "terminal": true,
+          "tags": [
+            "recurring_npc:biscuit",
+            "care:routine",
+            "self-cost:minor",
+            "value:generosity"
+          ]
+        }
+      ],
+      "reflection_prompt": "When the rain made it easy to skip and {dog_name} only stood there waiting, what tipped the scale for me — and is that the same small thing that decides it on the ordinary days I won't remember?"
+    },
+    {
+      "beat_id": "arc-biscuit-b3",
+      "order": 3,
+      "kind": "encounter",
+      "min_prior_encounters": 2,
+      "title": "A standing arrangement",
+      "intro": "It's been some months now, and {dog_name} has stopped being a new thing in the house and started being part of how the house works. The name comes out of your mouth without thinking, the way the names of rooms do.",
+      "setup": "There's a thing on the calendar you've been looking forward to — the kind of plan you made for yourself, weeks back, the night out two towns over with people you don't see enough. Then on the Thursday before, the friend who usually takes {dog_name} texts that they're away that weekend after all.\n\nSo there's the small arithmetic of it, the kind nobody warns you about. {dog_name} is not a brave dog and not a clever one — afraid of the dishwasher, useless with a ball, sure to the marrow that the mail carrier means the household harm — and certainly not a dog you can leave loose and untroubled for a whole night. The plan and the dog don't quite fit in the same evening, and one of them has to give a little. {dog_name} has no idea any of this is happening. There's a warm weight against your sock right now while you read the text.",
+      "scenes": [
+        {
+          "id": "scene-1",
+          "text": "You sit with the phone a minute. The night out is real to you, and so is the small fact at your feet. It isn't a crisis — it's just a Thursday, and a choice about how the weekend gets shaped.",
+          "choices": [
+            {
+              "id": "c1",
+              "text": "Book the boarding kennel for the night and go. It costs more than the night out will, and you'll picture {dog_name} stiff and unhappy in a strange run — but you'd been looking forward to this, and a person is allowed their own evenings.",
+              "next": "scene-the-leaving",
+              "tags": [
+                "recurring_npc:biscuit",
+                "presence:sought",
+                "self-cost:minor",
+                "value:generosity"
+              ]
+            },
+            {
+              "id": "c2",
+              "text": "Let the night out go. Text the friends that next time's on you, change into the old clothes, and spend the evening on the floor with the dog and a film nobody would admit to watching.",
+              "next": "scene-the-evening",
+              "tags": [
+                "recurring_npc:biscuit",
+                "presence:given",
+                "self-cost:minor",
+                "value:need_sensitivity"
+              ]
+            },
+            {
+              "id": "c3",
+              "text": "Split the difference — go, but make it the early train home instead of the late one. Half the evening, and {dog_name} only alone the stretch a dog can manage. You'll miss the part of the night everyone remembers.",
+              "next": "scene-the-evening",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:attentive",
+                "self-cost:minor"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scene-the-leaving",
+          "text": "Drop-off is its own small thing. {dog_name} reads the carrier, the unfamiliar smell of the place, and plants four feet on the lino in the particular way that means no. The attendant, kind about it, says they all settle. You crouch, say the dumb soft things you say, and leave the blanket from the couch so something in there smells like home. In the car you sit a moment before starting it.",
+          "choices": [
+            {
+              "id": "c1",
+              "text": "Drive on to the night out as planned. You'll have a good time, and you'll text the kennel once at an hour that's frankly too late, and that's allowed.",
+              "next": "scene-end-went",
+              "tags": [
+                "recurring_npc:biscuit",
+                "presence:sought",
+                "self-cost:none",
+                "value:generosity"
+              ]
+            },
+            {
+              "id": "c2",
+              "text": "Pay the bit extra for the kennel webcam before you pull away, so you can glance once, mid-evening, and see the lump of dog asleep on a borrowed blanket and let your shoulders down.",
+              "next": "scene-end-went",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:attentive",
+                "self-cost:minor",
+                "value:need_sensitivity"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scene-the-evening",
+          "text": "However much of the night you keep for yourself, the shape of the weekend has quietly bent around the dog, and you find you don't much mind. Somewhere in the ordinary middle of it — boots off, kettle on, the dog circling once and dropping against your leg with a sigh that sounds like an opinion — it stops feeling like something given up.",
+          "choices": [
+            {
+              "id": "c1",
+              "text": "Make a standing plan of it. Find a dog-sitter you trust and put them in your phone, so next time the night out and the dog don't have to compete. Tonight, the floor and the dog are plenty.",
+              "next": "scene-end-stayed",
+              "tags": [
+                "recurring_npc:biscuit",
+                "care:routine",
+                "self-cost:none"
+              ]
+            },
+            {
+              "id": "c2",
+              "text": "Don't overthink it. Some evenings will be yours and some will be the dog's, and you long ago stopped keeping the ledger. Reach down, scratch the ear that's gone grey at the tip, and let the night be what it is.",
+              "next": "scene-end-stayed",
+              "tags": [
+                "recurring_npc:biscuit",
+                "presence:given",
+                "self-cost:none",
+                "value:need_sensitivity"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scene-end-went",
+          "text": "You have the good night you'd hoped for — the people, the noise, the late ordinary joy of it. The next morning the kennel hands {dog_name} back unharmed and faintly aggrieved, and the aggrievement lasts exactly as long as the car ride before it dissolves into the boneless relief of the couch and you. You spent the money and you kept the evening, and both of those were yours to spend. The dog forgives what it never understood was a choice, and presses its full weight against your leg as if to make sure of you.",
+          "terminal": true,
+          "tags": [
+            "recurring_npc:biscuit",
+            "presence:sought",
+            "self-cost:minor"
+          ]
+        },
+        {
+          "id": "scene-end-stayed",
+          "text": "The night out will come around again; you'll go to the next one, or you won't, and either way it won't be the dog's doing. What you have instead, tonight, is the unremarkable fact of it — a dog asleep against your shin, the low hum of the dishwasher it's grown too tired to be afraid of, a quiet that asks nothing of you. Across these months that has turned out, without your quite deciding it, to be a great deal.",
+          "terminal": true,
+          "tags": [
+            "recurring_npc:biscuit",
+            "presence:given",
+            "self-cost:minor",
+            "value:need_sensitivity"
+          ]
+        }
+      ],
+      "reflection_prompt": "When my own plans and {dog_name}'s needs don't fit in the same evening, what do I usually do — and how do I tend to feel about it the next morning?"
+    },
+    {
+      "beat_id": "arc-biscuit-b4",
+      "order": 4,
+      "kind": "high_stakes",
+      "min_prior_encounters": 3,
+      "title": "High water",
+      "intro": "Some months on now. {dog_name} is simply part of how the days are built — the warm weight under the desk, the wait at the window without resentment when you're late. What you have, you have not yet had to weigh against anything. Tonight the river behind the road has other ideas.",
+      "scenario_ref": "narr-allocation-008",
+      "pairs_with": "pp-allocation-001"
+    }
+  ]
+}

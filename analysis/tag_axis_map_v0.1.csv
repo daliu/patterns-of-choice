@@ -186,3 +186,11 @@ reciprocity-cooperation,cooperation_orientation,reciprocity_pure,0.5,structured 
 *,metadata,counterparty:animal-dependent,,counterparty stratifier (a non-human dependent — animal companion — as counterparty; moral-asymmetry-of-dependency stratum, distinct from counterparty:child which is human-age asymmetry. Paired with recurring_npc:biscuit on the H8b animal-welfare probes)
 *,metadata,resolution:circle-widened,,narrative-resolution stratifier (in-group: the user's circle of care expanded to include a newcomer)
 *,metadata,resolution:circle-held,,narrative-resolution stratifier (in-group: the user kept a clear smaller circle)
+*,metadata,care:routine,,arc build-up relationship-texture (non-scoring): an ordinary/habitual act of care
+*,metadata,care:attentive,,arc build-up relationship-texture (non-scoring): an attentive/responsive act of care
+*,metadata,self-cost:minor,,arc build-up texture (non-scoring): the choice carried a minor personal cost
+*,metadata,self-cost:none,,arc build-up texture (non-scoring): the choice carried no real personal cost
+*,metadata,presence:sought,,arc build-up texture (non-scoring): participant sought the companion's nearness
+*,metadata,presence:given,,arc build-up texture (non-scoring): participant allowed/gave nearness without seeking it
+*,metadata,boundary:held,,arc build-up texture (non-scoring): participant kept a gentle rule/boundary while caring
+*,metadata,resolution:settled,,narrative-resolution stratifier (arc build-up): settled, unremarkable belonging
