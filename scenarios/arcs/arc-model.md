@@ -128,11 +128,71 @@ Derived from the append-only event log, never stored as mutable state:
   Divergence is reported descriptively (reference-free, no verdict), per the
   no-forced-single-subject-statistic rule.
 
-## First arc
+## First arcs (H8b — attachment-laden stakes)
 
-`arc-biscuit` — the founding "imaginary buddy dog" example, four beats:
-naming → routine care → a small ordinary sacrifice → (gated) "High water"
-high-stakes climax (`narr-allocation-008`). Build-up beats authored to match
-the climax's established character exactly: a dog afraid of the dishwasher,
-useless with a ball, certain the mail carrier is a threat — a warm weight that
-finds your feet under the desk and waits at the window without resentment.
+`arc-biscuit` and `arc-gran` are **H8b** arcs (`mode: "h8b"`, the default): build-up
+beats accrue attachment, then a single *gated dramatic climax* poses a high-stakes
+trade whose abstract twin (a generic version) is the comparison. Only the cast's
+`attachment-laden-stakes` figures (Biscuit, Gran) fit this shape.
+
+- `arc-biscuit` — the "imaginary buddy dog": naming → routine care → small
+  sacrifice → (gated) "High water" climax (`narr-allocation-008`).
+- `arc-gran` — an aging grandmother (human, non-named): three escalating-dependency
+  encounters → (gated) "The near bed" climax (`narr-ingroup-010`).
+
+## H8a arcs (debiasing-companion — accumulation, no climax)
+
+The remaining cast (`npc-nadia`, `npc-marisol`, `npc-cole`) are **H8a**
+debiasing-companions (`h8_role: "debiasing-companion"`). Their specs are explicit:
+attachment accrues *by accumulation, not by any single dramatic beat*. So an H8a
+arc has a different shape and a different read — and it implements the H8a half of
+the hypothesis (the H8b runtime above measures only the high-stakes half).
+
+```jsonc
+{
+  "arc_id": "arc-nadia",
+  "mode": "h8a",                          // distinguishes from the h8b climax arcs
+  "npc_ref": "npc-nadia",
+  "npc_default_name": "Nadia",
+  "name_is_participant_supplied": false,
+  "recurring_npc_tag": "recurring_npc:nadia",
+  "primary_domain": "truth-telling",       // the value axis the pairs score on
+  "evolves": false,                        // true for marisol/cole (trajectory IS the signal)
+  "beats": [ /* ordered low-stakes "encounter" beats, each with an abstract_twin */ ]
+}
+```
+
+H8a beat = an ordinary, **low-stakes** encounter (no peril, no climax) whose signal
+choice is a truth / reciprocity / in-group choice made ABOUT the known figure,
+PLUS an inline **abstract twin** — the same choice posed generically (about an
+acquaintance / a stranger / "someone"), which "invites a tidier, more performed
+answer" (npc-cast h8_role_note). The twin is presented separately in time.
+
+```jsonc
+{
+  "beat_id": "arc-nadia-b1",
+  "order": 1,
+  "kind": "encounter",
+  "min_prior_encounters": 0,
+  "title": "...", "intro": "...",
+  "setup": "...", "scenes": [ /* core-narrative scene graph; the SIGNAL choice carries
+                                a value-axis tag, e.g. honesty / lie:white */ ],
+  "reflection_prompt": "...",
+  "signal": "scene-id-of-the-choice",     // which scene's choice is the measured one
+  "abstract_twin": {                       // the generic, performed-answer version
+    "item_id": "arc-nadia-b1-twin",
+    "prompt": "...about an acquaintance...",
+    "options": [ { "id":"a","text":"...","tags":["..."] }, { "id":"b","text":"...","tags":["..."] } ]
+  }
+}
+```
+
+**The H8a read (debiasing):** for each beat, compare the participant's *narrative*
+signal choice (about the figure) with their *abstract twin* answer on the value
+axis (via the tag map's signed contribution). A systematic gap — typically a
+tidier/more-virtuous abstract answer vs. a more candid one about the friend — is
+the H8a debiasing signal. Reported per-pair and as a pattern, descriptively, with
+NO aggregate score (the no-forced-single-subject-statistic rule). For `evolves`
+arcs the *trajectory* of the gap across the ordered beats is the signal (e.g.
+marisol's circle-membership widening; cole's trust returning after repair).
+H8a arcs have no `high_stakes` beat and no single `pairs_with`.
