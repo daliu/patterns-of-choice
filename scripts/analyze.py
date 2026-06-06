@@ -289,7 +289,37 @@ def load_probe_inversion_map() -> dict[str, bool]:
     return out
 
 
-def probe_break_point_score(response: dict, inversion_map: dict[str, bool]) -> tuple[float, bool] | None:
+def load_probe_ceiling_map() -> dict[str, float]:
+    """
+    Read each cov-*.json; return {probe_id: log10(max ladder-rung stake)} — each
+    probe's OWN ceiling, used to anchor the out-of-range "never"/"always" pole.
+
+    Replaces a previously-hardcoded $10K ceiling that collapsed a refusal on a
+    high-ceiling probe (e.g. cov-ingroup-002's $100K ladder — a stronger virtue
+    signal) to the same score as a refusal on a $10K probe.
+    """
+    out: dict[str, float] = {}
+    for path in sorted(SCENARIOS_DIR.glob("cov-*.json")):
+        try:
+            with path.open() as f:
+                data = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            continue
+        stakes = [
+            r.get("stake")
+            for r in (data.get("ladder") or [])
+            if isinstance(r.get("stake"), (int, float)) and r.get("stake") > 0
+        ]
+        if stakes:
+            out[data["id"]] = math.log10(max(stakes))
+    return out
+
+
+def probe_break_point_score(
+    response: dict,
+    inversion_map: dict[str, bool],
+    ceiling_map: dict[str, float] | None = None,
+) -> tuple[float, bool] | None:
     """
     Compute log10 of the break-point per scoring.md §4. Returns (score, inverted)
     or None if the response can't be scored.
@@ -310,15 +340,16 @@ def probe_break_point_score(response: dict, inversion_map: dict[str, bool]) -> t
     stake = response.get("first_accept_stake")
     rung = response.get("first_accept_rung")
 
-    # Conservative default ladder ceiling = $10,000 for normalization (cov-ingroup-002
-    # uses $100K but most probes use $10K; analyzer can re-normalize at validation time).
-    LADDER_CEIL_LOG10 = 4.0  # log10(10_000)
+    # Per-probe ladder ceiling = log10 of the probe's OWN top rung (so a refusal on a
+    # $100K probe scores above a refusal on a $10K one). Falls back to $10K only when
+    # the probe definition is unavailable. Fixes the prior hardcoded 4.0.
+    ladder_ceil_log10 = (ceiling_map or {}).get(probe_id, 4.0)
 
     if rung == "never":
-        # User refused at all rungs
+        # User refused at all rungs → one decade above the probe's own ceiling (spec §4.1)
         if inverted:
-            return (-LADDER_CEIL_LOG10 - 1.0, True)  # would never do the ethical thing
-        return (LADDER_CEIL_LOG10 + 1.0, False)  # would never do the unethical thing
+            return (-ladder_ceil_log10 - 1.0, True)  # would never do the ethical thing
+        return (ladder_ceil_log10 + 1.0, False)  # would never do the unethical thing
 
     if isinstance(stake, (int, float)) and stake > 0:
         log_score = math.log10(stake)
@@ -339,6 +370,7 @@ def probe_break_point_score(response: dict, inversion_map: dict[str, bool]) -> t
 def probe_scores_by_user_domain(
     responses: list[dict],
     inversion_map: dict[str, bool],
+    ceiling_map: dict[str, float] | None = None,
 ) -> dict[tuple[str, str], list[dict[str, Any]]]:
     """
     Per-user per-domain bucketing. Each item in the list is one probe response
@@ -346,7 +378,7 @@ def probe_scores_by_user_domain(
     """
     grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for r in responses:
-        score = probe_break_point_score(r, inversion_map)
+        score = probe_break_point_score(r, inversion_map, ceiling_map)
         if score is None:
             continue
         log_score, inverted = score
@@ -1210,7 +1242,8 @@ def main() -> int:
             print(f"ERROR loading probe file: {e}", file=sys.stderr)
             return 2
         inversion_map = load_probe_inversion_map()
-        probe_grouped = probe_scores_by_user_domain(probe_responses, inversion_map)
+        ceiling_map = load_probe_ceiling_map()
+        probe_grouped = probe_scores_by_user_domain(probe_responses, inversion_map, ceiling_map)
 
     cs_scores: dict[tuple[str, str, str], float] = {}
     if args.card_sort:
@@ -1306,7 +1339,8 @@ def main() -> int:
             print(f"ERROR loading window-B probe responses: {e}", file=sys.stderr)
             return 2
         inversion_map_b = load_probe_inversion_map()
-        probe_grouped_b = probe_scores_by_user_domain(probe_responses_b, inversion_map_b)
+        ceiling_map_b = load_probe_ceiling_map()
+        probe_grouped_b = probe_scores_by_user_domain(probe_responses_b, inversion_map_b, ceiling_map_b)
         h5_result = compute_h5_test_retest_probes(probe_grouped, probe_grouped_b)
 
     # Pick the best-available stated layer for gap computation

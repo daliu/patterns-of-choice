@@ -121,6 +121,30 @@ def check_range(hid: str, payload: dict, expected_in_range: bool) -> tuple[bool,
     return True, f"{hid}: ✓ in_range = {in_range} (r = {payload['r']:+.3f}, range [{payload['range_low']}, {payload['range_high']}])"
 
 
+def check_probe_ceiling() -> tuple[bool, list[str]]:
+    """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
+    anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
+    Inversion-agnostic (sign just flips), so we assert on the magnitude."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    cm = A.load_probe_ceiling_map()
+    inv = A.load_probe_inversion_map()
+    def never_mag(pid):
+        s = A.probe_break_point_score({"probe_id": pid, "first_accept_rung": "never"}, inv, cm)
+        return abs(s[0]) if s else None
+    checks = [
+        ("corpus has ladders above $10K (map is per-probe, not hardcoded 4.0)", any(v > 4.0 + 1e-9 for v in cm.values())),
+        ("cov-reciprocity-003 ceiling == log10($10M) == 7.0", abs(cm.get("cov-reciprocity-003", 0) - 7.0) < 1e-9),
+        ("'never' on the $10M probe scores |8.0| (was the buggy |5.0|)", never_mag("cov-reciprocity-003") == 8.0),
+        ("'never' on a genuine $10K probe still scores |5.0|", never_mag("cov-truth-001") == 5.0),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  probe-ceiling: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def main() -> int:
     out = run_analyzer()
     hypotheses = out.get("hypotheses")
@@ -143,6 +167,12 @@ def main() -> int:
         print(f"  {msg}")
         if not ok:
             all_pass = False
+
+    ceil_ok, ceil_msgs = check_probe_ceiling()
+    for m in ceil_msgs:
+        print(m)
+    if not ceil_ok:
+        all_pass = False
 
     if all_pass:
         print("OK: all expectations met.")
