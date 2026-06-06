@@ -483,33 +483,49 @@ def validate_arc_file(
         if beat.get("captures_name"):
             name_captures += 1
 
-        has_inline = "scenes" in beat
-        has_ref = "scenario_ref" in beat
-        if has_inline == has_ref:
-            errors.append(
-                f"beat {bid}: must have EITHER inline 'scenes' OR a 'scenario_ref' "
-                f"(found {'both' if has_inline else 'neither'})"
-            )
-
-        if has_inline:
-            errors.extend(f"beat {bid}: {e}" for e in validate_narrative_paths(beat))
-            for scene in beat["scenes"]:
-                if scene.get("terminal") and npc_tag and npc_tag not in (scene.get("tags") or []):
-                    errors.append(
-                        f"beat {bid} scene {scene.get('id')}: terminal missing '{npc_tag}'"
-                    )
-                for choice in scene.get("choices") or []:
-                    if npc_tag and npc_tag not in (choice.get("tags") or []):
-                        errors.append(
-                            f"beat {bid} scene {scene.get('id')} choice "
-                            f"{choice.get('id')}: missing '{npc_tag}'"
-                        )
-        elif has_ref:
-            ref = beat["scenario_ref"]
-            if not (SCENARIOS_DIR / f"{ref}.json").exists():
+        if kind == "attachment_probe":
+            # a self-report beat: items + a numeric scale, no scene graph / no scenario_ref
+            items = beat.get("items")
+            if not isinstance(items, list) or not items:
+                errors.append(f"beat {bid}: attachment_probe must have a non-empty 'items' array")
+            else:
+                for it in items:
+                    if not it.get("id") or not it.get("text"):
+                        errors.append(f"beat {bid}: each attachment_probe item needs 'id' and 'text'")
+            sc = beat.get("scale")
+            if not (isinstance(sc, dict) and isinstance(sc.get("min"), int)
+                    and isinstance(sc.get("max"), int) and sc["min"] < sc["max"]):
+                errors.append(f"beat {bid}: attachment_probe needs a numeric 'scale' with min < max")
+            if "scenes" in beat or "scenario_ref" in beat:
+                errors.append(f"beat {bid}: attachment_probe must not carry 'scenes'/'scenario_ref'")
+        else:
+            has_inline = "scenes" in beat
+            has_ref = "scenario_ref" in beat
+            if has_inline == has_ref:
                 errors.append(
-                    f"beat {bid}: scenario_ref '{ref}' not found in scenarios/sample/"
+                    f"beat {bid}: must have EITHER inline 'scenes' OR a 'scenario_ref' "
+                    f"(found {'both' if has_inline else 'neither'})"
                 )
+
+            if has_inline:
+                errors.extend(f"beat {bid}: {e}" for e in validate_narrative_paths(beat))
+                for scene in beat["scenes"]:
+                    if scene.get("terminal") and npc_tag and npc_tag not in (scene.get("tags") or []):
+                        errors.append(
+                            f"beat {bid} scene {scene.get('id')}: terminal missing '{npc_tag}'"
+                        )
+                    for choice in scene.get("choices") or []:
+                        if npc_tag and npc_tag not in (choice.get("tags") or []):
+                            errors.append(
+                                f"beat {bid} scene {scene.get('id')} choice "
+                                f"{choice.get('id')}: missing '{npc_tag}'"
+                            )
+            elif has_ref:
+                ref = beat["scenario_ref"]
+                if not (SCENARIOS_DIR / f"{ref}.json").exists():
+                    errors.append(
+                        f"beat {bid}: scenario_ref '{ref}' not found in scenarios/sample/"
+                    )
 
         if kind in ("naming", "encounter"):
             prior_encounters += 1
