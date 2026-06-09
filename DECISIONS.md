@@ -341,7 +341,7 @@ These downstream changes are multi-iteration work, scheduled to be applied acros
 
 - *Defer H9 to MVP-2* — loses the shared cohort, the free H8/H9 cross-link (an H8 divergence `D` decomposed into foreseen vs surprised components), and momentum; same logic as §17's rejection of MVP-1.5 deferral.
 - *Test H9 without a reactivity control* — uninterpretable: the prediction beat can itself change the choice (question–behavior effect). The counterbalanced no-prediction control (`scoring.md §14.6`) is mandatory, not optional.
-- *Pool cost-of-virtue into H9c's high-stakes magnitude test* — rejected on unit-consistency grounds (`scoring.md §14.5`/§14.7): axis units and log-dollar units cannot be averaged. CoV calibration is a separate convergent read instead (flagged for one-spec reconciliation before OSF lock).
+- *Pool cost-of-virtue into H9c's high-stakes magnitude test* — rejected on unit-consistency grounds (`scoring.md §14.5`/§14.7): axis units and log-dollar units cannot be averaged. CoV calibration is a separate convergent read instead (reconciliation **resolved 2026-06-08** in favor of `scoring.md §14.5`; `h9-self-calibration.md §1.4` updated to match).
 
 **Status.** Locked 2026-06-08. Downstream changes:
 - `scoring.md §14` — calibration math, censoring-aware (**done, this iteration**)

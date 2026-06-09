@@ -55,10 +55,11 @@ Two parts, both required to claim "new axis, not a relabeling":
 Within-person, self-prediction error magnitude is **larger on high-stakes probes than low-stakes probes**:
 
 ```
-blind_i = mean|e_i^p| over high-stakes probes  −  mean|e_i^p| over low-stakes probes
+blind_i = mean|e_i^p| over H8b high-stakes attachment-laden pairs
+        − mean|e_i^p| over H8a low-stakes pairs
 ```
 
-**Test statistic:** lower 95% bootstrap-CI bound of `mean_i blind_i` > **0** (one-sided; no fixed magnitude floor — the directional claim is the prediction). High-stakes pool = cost-of-virtue probes + the H8b attachment-laden pairs; low-stakes pool = H8a low-stakes pairs + matched quick-fire. A participant enters H9c only with ≥1 valid error in each pool.
+For unit consistency the confirmatory statistic uses the **axis-scale H8 pools only** (both resolve to primary-axis scores, §9.1). **Test statistic:** lower 95% bootstrap-CI bound of `mean_i blind_i` > **0** (one-sided; no fixed magnitude floor — the directional claim is the prediction). A participant enters H9c with ≥1 valid axis-channel error in *each* H8 pool. The cost-of-virtue break-point calibration (`scoring.md` §14.5, censoring-aware) — "do you predict your own breaking point?" — is the most vivid high-stakes read but, being in log-dollar units, is reported **convergently, not pooled** into `blind_i` (it cannot share a scale with axis units; see `scoring.md` §14.7).
 
 This is the behavioral fingerprint of the measurement-under-power problem: people mispredict themselves *most* precisely where the high-stakes self diverges from the low-stakes self. **H9c confirming is direct evidence for `validity-threats.md` EV-4** (the stakes/power discontinuity) — the instrument measures its own most dangerous extrapolation boundary. See §8.
 

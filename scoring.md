@@ -507,7 +507,7 @@ A participant enters H9c with ≥ 1 valid axis-channel error in *each* pool.
 
 **Convergent read (CoV channel, price units — reported, not pooled).** The cost-of-virtue break-point calibration `|e_price_i^p|` (§14.1, censoring-aware) is the high-stakes self-knowledge read in its own units; reported alongside H9c as convergent evidence but **not pooled** into `blind_i` (mixing axis and log-dollar units would manufacture a pseudo-quantity, §13.5). Directional CoV miscalibration — predicting a higher break-point than realized ("I thought I'd hold out longer") — is summarized descriptively over the uncensored CoV pairs.
 
-> **Spec reconciliation (pre-registration-critical).** `h9-self-calibration.md` §1.4 names cost-of-virtue *in* the high-stakes pool. For unit consistency the confirmatory `blind_i` is computed on the axis-scale H8 pools only, with CoV as the separate convergent read above. The two documents must be reconciled to one specification before OSF lock; **scoring.md is canonical for the filing** (cf. the §9.2 sign-convention note).
+> **Spec reconciliation — RESOLVED 2026-06-08.** Earlier `h9-self-calibration.md` §1.4 named cost-of-virtue *in* the high-stakes pool. Reconciled in favor of this section: the confirmatory `blind_i` uses the **axis-scale H8 pools only** (H8b high vs H8a low), with cost-of-virtue calibration as a **separate convergent read** in price units. Rationale: pooling axis units with log-dollar prices would require cross-channel standardization, which violates the §13.5 unit discipline and forfeits the N=1 property (§14.2). `h9-self-calibration.md` §1.4 has been updated to match; scoring.md remains canonical for the OSF filing.
 
 ### 14.6 Estimation, inclusion, and reactivity netting
 
