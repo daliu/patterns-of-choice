@@ -112,8 +112,8 @@
 
 Cheap-and-clean first, expensive-or-fragile last; sequence the meta-layer (C1) after enough channels exist.
 
-1. **H10 — cross-situational moral consistency** (B1). No new elicitation; fully N=1; cleanest falsifiable hypothesis. ← *next*
-2. **H-A1 — informant/peer prediction** (A1). Biggest true "branch out"; completes the self/other × predict/act matrix with H9.
+1. **H10 — cross-situational moral consistency** (B1). No new elicitation; fully N=1; cleanest falsifiable hypothesis. ✓ **done** — [`h10-cross-situational-consistency.md`](h10-cross-situational-consistency.md) (iteration 2).
+2. **H-A1 — informant/peer prediction** (A1). Biggest true "branch out"; completes the self/other × predict/act matrix with H9. ← *next*
 3. **H12 — moral hypocrisy / double-standard** (B3). Pairs with H9; light authoring (add judge-other framings).
 4. **H11 — moral-circle radius** (B2). Validated construct; deepens the in-group domain; `circle_radius` stub already exists.
 5. **A2 — consequential real-stakes channel.** Gold standard for EV-3/EV-4; expensive, so after the cheap branches.
@@ -123,7 +123,7 @@ Cheap-and-clean first, expensive-or-fragile last; sequence the meta-layer (C1) a
 9. **B4 — value-change dynamics.** Gated on longitudinal data.
 10. **C2 — adversarial/stress conditions.** Theoretically fragile; build last, carefully.
 
-**Checked off:** _(none yet — opened this iteration)_
+**Checked off:** B1 → **H10** — `h10-cross-situational-consistency.md` (iteration 2, 2026-06-09; MVP-1 lock pending Dave's review).
 
 ---
 
