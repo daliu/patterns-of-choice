@@ -52,20 +52,24 @@ Reserved for the future validation-cohort analyzer:
   scoring.md, 8th pre-reg hypothesis). The statistics themselves
   (two Pearson correlations with bootstrap CIs) are stdlib-tractable
   and would reuse the _domain_test_retest_r / bootstrap_ci machinery
-  below. It is reserved NOT for a library reason but because it has
-  unresolved INPUT preconditions that are design decisions, not code:
-  (a) scenarios/h8-probe-pairs.json currently declares zero pairs —
-      there is nothing to compute on until the paired probes are
-      authored (an editorial task, see pilot-pre-launch-checklist.md);
+  below. It is reserved NOT for a library reason but because it still
+  has unresolved INPUT preconditions that are design decisions, not code:
+  (a) RESOLVED — scenarios/h8-probe-pairs.json now declares 9 paired
+      probes (plus 5 recurring-character arcs in scenarios/arcs/), so
+      there is content to compute on;
   (b) how a narrative resolves to one scalar r_narr — terminal-based
       vs path-based — is the open question in scoring.md §11 and must
       be resolved before the divergence score is well-defined;
   (c) the H8a sign convention is flagged in scoring.md §9.2 as
       reconcile-before-OSF-lock.
-  Implementing H8 before (a)-(c) are settled would bake in choices that
-  are the project owner's / pilot's to make. When they are, this is a
-  natural next analyzer addition with a check_analyzer_thresholds gate
-  alongside H2-H7.
+  With (b)-(c) settled this is a natural next analyzer addition with a
+  check_analyzer_thresholds gate alongside H2-H7.
+- H9a/H9b/H9c self-prediction calibration (§14 of scoring.md, 9th
+  pre-reg hypothesis, DECISIONS §19). Stdlib-tractable (means + Pearson
+  correlations + bootstrap, all already present) but depends on a
+  `prediction` event type that does not yet exist in types.ts / the
+  runtime (PredictionLogEntry, DECISIONS §19 marks it pending) and on
+  the same narrative-scalar question (b) above.
 
 Usage:
     python scripts/analyze.py --log analysis/fixtures/sample-session-log.json

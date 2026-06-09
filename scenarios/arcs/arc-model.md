@@ -196,3 +196,13 @@ NO aggregate score (the no-forced-single-subject-statistic rule). For `evolves`
 arcs the *trajectory* of the gap across the ordered beats is the signal (e.g.
 marisol's circle-membership widening; cole's trust returning after repair).
 H8a arcs have no `high_stakes` beat and no single `pairs_with`.
+
+**Optional `scoring: "inclusion"` (in-group arcs only).** `arc-marisol` (the
+in-group/out-group arc) sets top-level `"scoring": "inclusion"`. Its signal and
+twin choices are scored on the **circle-widened / circle-held** poles
+(`resolution:circle-widened` = +1, `resolution:circle-held` = −1), NOT on the
+loyalty axis — because the construct is universalism↔particularism (widening the
+circle of care), which the loyalty axis does not capture. Every other arc omits
+`scoring` and uses the primary-domain tag map. The runtime (`h8aDebiasing`) and
+any analyzer MUST branch on this field, so keep it documented here — this canonical
+model is the one source both consume, so they cannot drift.
