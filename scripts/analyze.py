@@ -130,21 +130,47 @@ def load_tag_axis_map(path: Path) -> dict[tuple[str, str], tuple[str, float]]:
     return m
 
 
+# Per scoring.md §2.2 the per-item revealed score is computed on the domain's
+# PRIMARY axis only. These names match runtime/tag-axis-map.v0.1.json `primary_axis`;
+# the cross-impl parity test guards against drift from the on-device projection.
+PRIMARY_AXIS = {
+    "truth-telling": "honesty",
+    "resource-allocation": "generosity",
+    "in-group-out-group": "loyalty",
+    "reciprocity-cooperation": "trust",
+}
+
+# §10: a session×domain whose MEDIAN item response time is below this is dropped
+# as inattentive (matches poc-projection.js revealedScores).
+INATTENTIVE_RT_MS = 2000
+
+
+def _median(xs: list[float]) -> float:
+    s = sorted(xs)
+    n = len(s)
+    if n == 0:
+        return float("nan")
+    return s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2.0
+
+
 def item_score(entry: dict, tag_map: dict[tuple[str, str], tuple[str, float]]) -> tuple[float, int]:
     """
-    Sum scoring contributions for the entry's tags on the primary axis of
-    the entry's domain. Clamped to [-1, +1] per scoring.md §2.2.
+    Sum scoring contributions for the entry's tags **on the domain's primary
+    axis** (scoring.md §2.2); clamped to [-1, +1]. Tags on a secondary axis
+    (e.g. in-group's circle_radius) are excluded, exactly as the on-device
+    projection does — so the two implementations agree on the revealed score.
 
-    Returns (score, contributing_tag_count). If no tags contribute, returns
-    (0.0, 0); the caller should treat this as NA-for-score-purposes.
+    Returns (score, contributing_tag_count). If no tag contributes, returns
+    (0.0, 0); the caller treats this as NA-for-score-purposes.
     """
     domain = entry.get("domain", "")
+    primary = PRIMARY_AXIS.get(domain)
     total = 0.0
     n = 0
     for tag in entry.get("tags", []):
-        if (domain, tag) in tag_map:
-            _, contrib = tag_map[(domain, tag)]
-            total += contrib
+        hit = tag_map.get((domain, tag))
+        if hit and hit[0] == primary:
+            total += hit[1]
             n += 1
     return (max(-1.0, min(1.0, total)), n)
 
@@ -154,18 +180,29 @@ def session_aggregates(
     tag_map: dict[tuple[str, str], tuple[str, float]],
 ) -> dict[tuple[str, str, str], list[float]]:
     """
-    Group per-item scores by (user_id, session_id, domain). Returns
-    raw lists of scores; caller can compute mean / variance / count.
+    Group per-item scores by (user_id, session_id, domain). Returns raw lists of
+    scores; caller can compute mean / variance / count.
 
-    Items where no tag matched the domain's primary axis are excluded.
+    Items where no tag matched the domain's primary axis are excluded. A whole
+    session×domain group is dropped when its MEDIAN item response time is below
+    INATTENTIVE_RT_MS (§10), matching poc-projection.js. The gate fails open when
+    response times are absent/non-numeric (e.g. synthetic fixtures), like the
+    projection's NaN-median behavior.
     """
-    grouped: dict[tuple[str, str, str], list[float]] = defaultdict(list)
+    raw: dict[tuple[str, str, str], dict[str, list]] = defaultdict(lambda: {"scores": [], "rts": []})
     for entry in entries:
         score, n = item_score(entry, tag_map)
         if n == 0:
             continue
         key = (entry["user_id"], entry["session_id"], entry["domain"])
-        grouped[key].append(score)
+        raw[key]["scores"].append(score)
+        raw[key]["rts"].append(entry.get("response_time_ms"))
+    grouped: dict[tuple[str, str, str], list[float]] = {}
+    for key, g in raw.items():
+        rts = g["rts"]
+        if all(isinstance(r, (int, float)) for r in rts) and _median(rts) < INATTENTIVE_RT_MS:
+            continue  # §10 inattentive drop
+        grouped[key] = g["scores"]
     return grouped
 
 
@@ -333,7 +370,9 @@ def probe_break_point_score(
       - "always_return" (rung 0 conceptually) → 0 ethical-pole anchor
       - "always_keep" / never returns → -log10(max ladder rung) - 1
     """
-    probe_id = response.get("probe_id")
+    # The app/runtime emit 'scenario_id'; older fixtures/synthetic data use
+    # 'probe_id'. Accept either as the probe identifier.
+    probe_id = response.get("probe_id") or response.get("scenario_id")
     if not probe_id:
         return None
     inverted = inversion_map.get(probe_id, response.get("is_inverted", False))
@@ -345,8 +384,10 @@ def probe_break_point_score(
     # the probe definition is unavailable. Fixes the prior hardcoded 4.0.
     ladder_ceil_log10 = (ceiling_map or {}).get(probe_id, 4.0)
 
-    if rung == "never":
-        # User refused at all rungs → one decade above the probe's own ceiling (spec §4.1)
+    # Refusal pole: the app writes the boolean 'no_break_point'; fixtures use the
+    # sentinel rung == "never". Either means "wouldn't, at any stake in range".
+    if response.get("no_break_point") is True or rung == "never":
+        # refused at all rungs → one decade above the probe's own ceiling (spec §4.1)
         if inverted:
             return (-ladder_ceil_log10 - 1.0, True)  # would never do the ethical thing
         return (ladder_ceil_log10 + 1.0, False)  # would never do the unethical thing
@@ -383,12 +424,12 @@ def probe_scores_by_user_domain(
             continue
         log_score, inverted = score
         grouped[(r["user_id"], r["domain"])].append({
-            "probe_id": r.get("probe_id"),
+            "probe_id": r.get("probe_id") or r.get("scenario_id"),
             "value_slot": r.get("value_slot"),
             "log_score": log_score,
             "inverted": inverted,
             "first_accept_stake": r.get("first_accept_stake"),
-            "first_accept_rung": r.get("first_accept_rung"),
+            "first_accept_rung": r.get("first_accept_rung") or r.get("break_point_rung"),
         })
     return grouped
 

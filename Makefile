@@ -1,4 +1,4 @@
-.PHONY: help setup validate analyze check-analyzer demo clean
+.PHONY: help setup validate analyze check-analyzer check-parity check demo clean
 
 help:
 	@echo "patterns-of-choice — common tasks"
@@ -7,6 +7,8 @@ help:
 	@echo "  make validate        run scripts/validate.py against the corpus"
 	@echo "  make analyze         run scripts/analyze.py on synthetic fixtures"
 	@echo "  make check-analyzer  run analyzer regression gate (asserts thresholds)"
+	@echo "  make check-parity    assert the JS projection and Python analyzer agree"
+	@echo "  make check           run validate + both analyzer gates"
 	@echo "  make demo            open the static HTML demo in the default browser"
 	@echo "  make clean           remove .venv and Python bytecode caches"
 	@echo ""
@@ -22,6 +24,12 @@ validate:
 
 check-analyzer:
 	@./.venv/bin/python scripts/check_analyzer_thresholds.py
+
+check-parity:
+	@./.venv/bin/python scripts/check_impl_parity.py
+
+check: validate check-analyzer check-parity
+	@echo "All checks passed."
 
 analyze:
 	@./.venv/bin/python scripts/analyze.py \
