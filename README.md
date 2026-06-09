@@ -2,7 +2,7 @@
 
 A longitudinal instrument for measuring revealed ethical preferences, comparing them against stated values, and offering opt-in scaffolding for user-defined growth.
 
-**Status:** Concept stage. No code yet. See [`concept.md`](concept.md) for the working design (Draft 0.2) and [`mvp.md`](mvp.md) for the proposed first build spec.
+**Status:** Build / runtime shipped; empirical validation pending (needs a co-PI, IRB, and a research cohort). A working local-first runtime app, a validator, an analyzer, and a public landing page + interactive demos all ship; the multi-user pilot study has not run. See [`concept.md`](concept.md) for the working design (Draft 0.3) and [`mvp.md`](mvp.md) for the first build spec.
 
 ## What this is
 
@@ -17,7 +17,7 @@ Existing instruments measure one side or the other. None systematically operatio
 
 ## Repo layout
 
-- [`concept.md`](concept.md) — the working concept document (Draft 0.2)
+- [`concept.md`](concept.md) — the working concept document (Draft 0.3)
 - [`mvp.md`](mvp.md) — proposed scope for the first measurement-validation build (MVP-1)
 - [`onboarding.md`](onboarding.md) — user-facing copy and sequence for the first 3 sessions and the profile reveal
 - [`pre-registration.md`](pre-registration.md) — OSF-filing-ready template for MVP-1's measurement-validation study, with pre-specified hypotheses, analysis plan, and falsification thresholds
@@ -30,16 +30,16 @@ Existing instruments measure one side or the other. None systematically operatio
 - [`pilot-pre-launch-checklist.md`](pilot-pre-launch-checklist.md) — operational forward-sequence: what has to happen, in what order, by whom, before recruitment opens. Phases 0-9 from concept-complete through GO/NO-GO decision. Companion to PROJECT-STATUS (current-state) and pilot-protocol (spec); this one is the do-list with output artifacts named per item. End-to-end realistic timeline: 9-15 months
 - [`validity-threats.md`](validity-threats.md) — adversarial audit. Construct / internal / external / reliability / statistical validity threats categorized; mitigation traces; residual-risk ratings; detection method via pilot or main study. Surfaces four concrete recommended additions to the pre-registration that aren't currently scheduled (inter-rater tag-axis agreement, financial-situation sensitivity, familywise-corrected hypothesis reporting, CI-aware SEM-fit reporting). Audience: prospective co-PI, grant reviewer, or replication-extension researcher
 - [`h8-narrative-immersion-design.md`](h8-narrative-immersion-design.md) — design proposal for H8: narrative-immersion-with-recurring-character-attachment as a measure-debiasing mechanism against social-desirability response. NOVEL methodological claim (not a psychometric import). H8a tests debiasing; H8b tests attachment-grounding. Source document for downstream multi-iteration changes to concept / pre-reg / scoring / DECISIONS / pilot-protocol; outlines instrument modifications needed (recurring NPC cast, paired narrative-vs-abstract probes, immersion instrument). Per Dave's direction 2026-05-30
-- [`demo/`](demo/) — single self-contained HTML demo file that renders one quick-fire scenario interactively. Vanilla JS, no build tooling. (The public site `daliu.github.io/patterns-of-choice/` now hosts a fuller five-demo funnel built from this pattern.)
-- [`runtime-architecture.md`](runtime-architecture.md) — the designed-and-audited production runtime (local-first event-sourced PWA, deterministic projections, replay-to-timestamp rewind, opt-in E2E sync). Closes the DECISIONS §14 "runtime open" item; see DECISIONS §18. Designed, not yet built.
+- [`demo/`](demo/) — single self-contained HTML demo file that renders one quick-fire scenario interactively. Vanilla JS, no build tooling. (The public site `daliu.github.io/patterns-of-choice/` now hosts a fuller demo funnel built from this pattern, plus the full local-first runtime app at `app.html`.)
+- [`runtime-architecture.md`](runtime-architecture.md) — the designed-and-audited runtime (local-first event-sourced PWA, deterministic projections, replay-to-timestamp rewind, opt-in E2E sync). Closes the DECISIONS §14 "runtime open" item; see DECISIONS §18. The single-user on-device portion is now **BUILT & shipped** as a dependency-free vanilla-JS PWA at `daliu.github.io/patterns-of-choice/app.html` (event-sourced IndexedDB log, on-device projection/scorer, offline service worker, ~170 tests; onboarding, the recurring-character arc player, sessions, animated reveal, shareable portrait, type-to-confirm wipe — all on-device). The **multi-user production pilot runtime** (encrypted sync + auth + scheduling for a research cohort) remains designed-but-not-built.
 - [`analysis/`](analysis/) — versioned data files the analyzer consumes (currently: the tag-to-axis mapping). Part of the pre-registration; locked at OSF filing
 - [`types.ts`](types.ts) — TypeScript type definitions for all the JSON content schemas. Declarative only; no runtime or framework commitment. Schema-in-code complement to `scenarios/SCHEMA.md` and `inventory/SCHEMA.md`. Any future implementation can typecheck against this contract.
 - [`DECISIONS.md`](DECISIONS.md) — running log of load-bearing design choices with rationale; lightweight ADR format. Append-only.
 - [`PROJECT-STATUS.md`](PROJECT-STATUS.md) — current state snapshot across every track. Solid vs provisional, open decisions waiting on the owner, dependency checklists to launch each phase, realistic timeline.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — five-minute orientation for any new contributor. What to read first, by-goal entry points, conventions, what kinds of contributions are in/out of scope.
 - [`Makefile`](Makefile) — `make setup` / `make validate` / `make analyze` / `make demo` — the common-task entry points.
-- [`scripts/`](scripts/) — utility scripts (Python). `validate.py` (content-validation, single dependency `jsonschema`), `analyze.py` (stdlib-only analyzer implementing the scoring-spec subset + hypotheses H2–H7), and `check_analyzer_thresholds.py` (regression gate run by CI). See [`scripts/README.md`](scripts/README.md) for the engineering-line-crossing rationale.
-- [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schemas. 55 scenarios: the full 48-scenario MVP-1 base (6 quick-fire + 3 branching-narrative + 3 cost-of-virtue per domain × 4) plus the first 5 H8 paired narrative-vs-abstract probes, all schema-validated. Also holds the H8 recurring-NPC cast (`npc-cast.json`) and the paired-probe manifest (`h8-probe-pairs.json`)
+- [`scripts/`](scripts/) — utility scripts (Python). `validate.py` (content-validation, single dependency `jsonschema`), `analyze.py` (stdlib-only analyzer implementing the scoring-spec subset + hypotheses H2–H7; H1/H8/H9 reserved), `check_analyzer_thresholds.py` (regression gate run by CI), and `check_impl_parity.py` (cross-implementation parity gate asserting the JS on-device projection and the Python analyzer agree; `make check`). See [`scripts/README.md`](scripts/README.md) for the engineering-line-crossing rationale.
+- [`scenarios/`](scenarios/) — authored-scenario corpus and JSON schemas. 61 scenarios: the full 48-scenario MVP-1 base (6 quick-fire + 3 branching-narrative + 3 cost-of-virtue per domain × 4) plus 9 H8 paired narrative-vs-abstract probes, all schema-validated, plus 5 recurring-character arcs in [`scenarios/arcs/`](scenarios/arcs/) (the validator reports "all 66 scenarios + arcs valid"). Also holds the H8 recurring-NPC cast (`npc-cast.json`) and the paired-probe manifest (`h8-probe-pairs.json`)
 - [`inventory/`](inventory/) — stated-values inventory module: values deck, forced-choice pairs, three-layer prompts, story prompts
 - [`literature/`](literature/) — literature notes and citations (iterated by research agents)
 
@@ -56,4 +56,4 @@ These are design commitments, not nice-to-haves. They follow from the trust prem
 
 ## Status
 
-Concept Draft 0.2 (incorporates first literature review pass). MVP-1 spec drafted. Not yet validated, not yet built.
+Concept Draft 0.3 (incorporates both literature review passes). MVP-1 spec drafted. Validator + analyzer + a built local-first runtime app + public landing page & interactive demos all ship. **Not yet empirically validated** — the multi-user pilot study has not run; a co-PI, IRB approval, funding, and a research cohort all remain open. The separate multi-user production pilot runtime (encrypted sync + auth + scheduling) is designed but not yet built.
