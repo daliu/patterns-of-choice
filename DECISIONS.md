@@ -323,6 +323,37 @@ These downstream changes are multi-iteration work, scheduled to be applied acros
 
 ---
 
+## 19. Add H9 (self-prediction calibration) to MVP-1; reuse existing corpus (no expansion)
+
+**Question.** A June 2026 design thread (see `h9-self-calibration.md` Provenance) proposed a second measurement axis: not the *size* of a participant's stated–revealed gap (already measured) but their *awareness* of it — how well they predict their own revealed choices (self-prediction calibration; the Epley & Dunning 2000 self-insight limit made longitudinal). Should this be (a) deferred to MVP-2, or (b) added to MVP-1 as a secondary hypothesis, and (c) what does it do to the §16/§17 corpus?
+
+**Decision.** Option (b) — add **H9** (H9a self-enhancement bias / H9b distinct-stable-axis / H9c stakes-blindness) to MVP-1 as a secondary hypothesis. Locked 2026-06-08 by Dave's explicit decision. H9 reuses the existing cost-of-virtue probes and the H8 paired-probe corpus via a counterbalanced **prediction beat**; it adds **no new scenarios**, so the §16 corpus lock and the §17 H8 expansion are **untouched**. Scoring is `scoring.md §14`; the MVP-1 OSF filing adds H9a/b/c as the 9th hypothesis (secondary, non-gating). Exploratory **H9d** (calibration improves with use) defers to MVP-2 per §2 (measurement-only MVP-1).
+
+**Rationale.**
+
+1. *One cohort, one publication* (parallels §17.1). The within-subject prediction beat uses the same n=200 cohort; the self-insight finding lands with the primary validation.
+2. *Near-zero authoring cost* (distinguishes from §17, which expanded the corpus). H9 adds a runtime beat + a scoring section, not content; §16/§17 stay locked.
+3. *N=1-computable* (`scoring.md §14.2`). Calibration compares prediction vs choice on the same scale, so it needs no cohort standardization — it enriches the personal reveal without the §6 / `runtime-architecture.md §10` cohort-norm dependency. Few PoC signals have this property.
+4. *Strengthens the validity audit.* H9c is a behavioral test for `validity-threats.md` EV-4 (the stakes/power discontinuity), and H9 is the detector for IN-2 (self-gaming → anomalously perfect calibration). H9 pays for itself in the audit before its own results land.
+5. *Secondary status preserves the primary gate.* H1/H2/H3 remain the gate; a null H9 does not falsify the instrument.
+
+**Considered and rejected.**
+
+- *Defer H9 to MVP-2* — loses the shared cohort, the free H8/H9 cross-link (an H8 divergence `D` decomposed into foreseen vs surprised components), and momentum; same logic as §17's rejection of MVP-1.5 deferral.
+- *Test H9 without a reactivity control* — uninterpretable: the prediction beat can itself change the choice (question–behavior effect). The counterbalanced no-prediction control (`scoring.md §14.6`) is mandatory, not optional.
+- *Pool cost-of-virtue into H9c's high-stakes magnitude test* — rejected on unit-consistency grounds (`scoring.md §14.5`/§14.7): axis units and log-dollar units cannot be averaged. CoV calibration is a separate convergent read instead (flagged for one-spec reconciliation before OSF lock).
+
+**Status.** Locked 2026-06-08. Downstream changes:
+- `scoring.md §14` — calibration math, censoring-aware (**done, this iteration**)
+- `validity-threats.md` EV-4 + Incentive-validity §§IN-1/IN-2 — cross-linked to H9 (**done, this iteration**)
+- `pre-registration.md` §6 (H9 in secondary table) + §5 (prediction-beat analysis plan + reactivity contrast) — **pending**
+- `concept.md` — "Self-prediction calibration" measurement subsection; note the N=1-reveal property — **pending**
+- `types.ts` `PredictionLogEntry` (append-only, user-keyed, timestamped) + runtime prediction beat + counterbalancing schedule — **pending**
+- `pilot-protocol.md` — exit-interview items for `h9-self-calibration.md` §6 Q3 (band vs exact) and Q4 (timer interaction) — **pending**
+- Open design questions remain in `h9-self-calibration.md` §6 (prediction granularity; timer interaction; in-group signed bias; reactivity-control allocation).
+
+---
+
 ## How to add to this file
 
 Each new decision: copy the section template (Question / Decision / Rationale / Considered and rejected / Status). Number sequentially. Don't renumber when inserting historically — just add to the end.

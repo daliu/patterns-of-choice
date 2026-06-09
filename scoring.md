@@ -435,6 +435,95 @@ Any uncertainty estimate shown alongside concordance must be derived **within-pe
 
 ---
 
+## 14. Self-prediction calibration scores (H9)
+
+Operationalizes the H9 secondary hypothesis (`pre-registration.md` §6; design rationale in `h9-self-calibration.md`; locked in `DECISIONS.md` §19). H9 measures how well a participant predicts their own revealed choices. Like §9 it introduces **no new scale**: predictions resolve on the same primary axis (§2.2) and the same cost-of-virtue ladder (§4) as the choices they forecast. All *cohort* statistics use participant-level non-parametric bootstrap, 10,000 resamples, seed `20260510` (identical to §8/§9).
+
+### 14.1 The calibration primitive
+
+Before a designated calibration probe resolves, the participant records a non-binding self-prediction (the "prediction beat"; `h9-self-calibration.md` §3 A1), logged as a `prediction` event `{user_id, session_id, probe_id, predicted_option_id | predicted_rung, timestamp_iso}`. **Two channels, never pooled** (different units; §14.7):
+
+**Axis channel (primary).** For a choice-based calibration probe `p` (quick-fire or H8-paired item), the predicted option is scored on the primary axis with the *same* tag-to-axis map (§2.1) as the actual choice:
+
+```
+pred_i^p = clamp( sum(tag_contribution for tag in predicted_option.tags), -1, +1 )
+rev_i^p  = item_score of the actual choice (§2.2)
+e_i^p    = pred_i^p - rev_i^p              # signed, axis units
+```
+
+`e_i^p > 0` = predicted a more axis-positive (more honest / generous / trusting) choice than was made.
+
+**Cost-of-virtue channel (separate, price units).** For a CoV probe the participant predicts their own break-rung on the identical ladder. Using the §13.2 price atom:
+
+```
+pred_price_i^p = log10(predicted_break_stake)     # forward;  -log10(...) for inverted (§4.2 direction)
+rev_price_i^p  = log10(first_accept_stake)         # the realized §4 break-point, same flip
+e_price_i^p    = pred_price_i^p - rev_price_i^p    # log10-dollar units
+```
+
+**Censoring discipline (inherited from §13.2/§13.3, load-bearing).** If *either* the predicted or the realized break-point is `"never"` (right-censored, `price > ladder top`), `e_price` is **suppressed — never made finite.** The pair is reported only categorically: `{predicted-never & acted-never}`, `{predicted-never & acted-finite}` ("expected to hold out, didn't"), `{predicted-finite & acted-never}` ("expected to break, held"). A finite `e_price` is admissible only when both endpoints are measured prices on an identical rung ladder and shared axis direction — the same gate as a §13.3 delta.
+
+### 14.2 Person-level indices (reveal-eligible, N=1)
+
+On the axis channel, over a participant's completed calibration probes:
+
+```
+cal_bias_i  = mean_p e_i^p        # signed self-enhancement bias
+cal_error_i = mean_p |e_i^p|      # magnitude; lower = better self-knowledge
+```
+
+**N=1 interpretability.** Because `pred` and `rev` sit on the *same* pre-defined axis (and the CoV channel on the same external dollar ladder), no cross-scale or cross-person standardization is needed — contrast the §6 gap (`interpretation.md` "Single-user domains"). `cal_bias_i` and `cal_error_i` are therefore meaningful for a single user and **eligible for the personal reveal without cohort norms** (relevant to `runtime-architecture.md` §10 #1). This is the §13 "self-against-self, N-of-1" case extended to a genuinely new quantity (self-knowledge). The reveal renders them descriptively ("you tend to predict yourself as more generous than you act, by about X, across N probes") — never a score-out-of-N (`concept.md`).
+
+The H9a/H9b/H9c statistics below are *cohort* research tests (like §9's H8 statistics), separate from this within-person reveal read.
+
+### 14.3 H9a — self-enhancement bias
+
+Restricted to the **axis channel** and to the three domains with a consensual desirable pole (truth-telling, resource-allocation, reciprocity-cooperation); the in-group axis (loyalty +, universalism −) is value-contested and entered **exploratory only** (`h9-self-calibration.md` §1.1, §6 Q5).
+
+```
+H9a statistic:  lower 95% bootstrap-CI bound of  mean_i cal_bias_i  ≥ 0.10   (axis units)
+```
+
+**No mathematical-coupling inflation** (contrast §9.2): `pred` and `rev` are independent measurements, so `mean(pred − rev)` carries no shared-term artifact. The real confound is **reactivity** (the prediction beat changing the choice), netted in §14.6.
+
+### 14.4 H9b — calibration is a distinct, stable axis
+
+Two parts, both required to claim a new axis rather than a relabeling of the gap:
+
+- **Stability.** Split-window test–retest of `cal_error_i` (first-half vs second-half sessions): lower 95% CI ≥ **0.40**. Deliberately below H3's 0.60 — a second-order derived quantity is noisier than a first-order score.
+- **Discriminant.** Regress `cal_error_i` on `[ gap_i , revealed_level_i ]`, where `gap_i = mean_d |gap(i,d)|` (§6, absolute, over included domains) and `revealed_level_i = mean_d revealed_score(i,d,axis)` (§3.2). The model R² has **upper** 95% CI **< 0.50** — at least half the calibration variance is unexplained by how large the gap is or how virtuous the person acts.
+
+### 14.5 H9c — the stakes-blindness signature
+
+**Confirmatory test (axis channel only, for unit consistency).** Compare self-prediction error magnitude on the high- vs low-stakes H8 pools (both resolve to axis scores per §9.1):
+
+```
+blind_i = mean_p |e_i^p|  over H8b high-stakes attachment-laden pairs
+        - mean_p |e_i^p|  over H8a low-stakes pairs
+H9c statistic:  lower 95% bootstrap-CI bound of  mean_i blind_i  > 0     (one-sided; directional)
+```
+
+A participant enters H9c with ≥ 1 valid axis-channel error in *each* pool.
+
+**Convergent read (CoV channel, price units — reported, not pooled).** The cost-of-virtue break-point calibration `|e_price_i^p|` (§14.1, censoring-aware) is the high-stakes self-knowledge read in its own units; reported alongside H9c as convergent evidence but **not pooled** into `blind_i` (mixing axis and log-dollar units would manufacture a pseudo-quantity, §13.5). Directional CoV miscalibration — predicting a higher break-point than realized ("I thought I'd hold out longer") — is summarized descriptively over the uncensored CoV pairs.
+
+> **Spec reconciliation (pre-registration-critical).** `h9-self-calibration.md` §1.4 names cost-of-virtue *in* the high-stakes pool. For unit consistency the confirmatory `blind_i` is computed on the axis-scale H8 pools only, with CoV as the separate convergent read above. The two documents must be reconciled to one specification before OSF lock; **scoring.md is canonical for the filing** (cf. the §9.2 sign-convention note).
+
+### 14.6 Estimation, inclusion, and reactivity netting
+
+- **Reactivity netting (load-bearing).** A counterbalanced subset of comparable probes carries **no** prediction beat (`h9-self-calibration.md` §3 A3). Let `Δreact` = mean revealed axis score on predicted items − mean on matched non-predicted items (between- or within-subject per the §6-Q2 locked allocation). If `Δreact`'s 95% CI excludes 0, the beat is altering behavior; H9a/H9c are then computed on **reactivity-adjusted** revealed scores (with the unadjusted values reported alongside), and a large `Δreact` is logged as an MVP-2 intervention signal (self-prediction increases consistency).
+- **Per-participant inclusion.** Axis channel: a probe contributes only if both the prediction and the choice were recorded (neither timed-out/missing). H9a requires ≥ 3 valid consensual-domain probes; H9b requires `cal_error` computable in both windows (≥ 2 valid probes each); H9c requires ≥ 1 valid error in each H8 pool. CoV channel: only uncensored pairs (§14.1) yield a finite `e_price`.
+- **Order effects.** Prediction-beat placement is counterbalanced; a beat-position main effect is reported and, if large, the analysis re-run within strata.
+- **Status and power.** H9 is *secondary*: reported with effect sizes and CIs, never a gate-criterion (contrast §7/H1). At n=200 the thresholds are deliberately modest — powered to detect direction, not to bound it tightly.
+
+### 14.7 What §14 deliberately does not compute
+
+- **No cross-channel pooling.** The axis-channel indices and the CoV-channel price errors are never averaged or correlated into one "self-knowledge score" (different units; a forced single-subject correlation has no reference distribution — the §13.5 discipline).
+- **No composite calibration score, no cross-person ranking of calibration in any user-facing surface.** The cohort H9a/b/c statistics live only in the research analysis; the reveal stays within-person and descriptive (§14.2).
+- **No finite calibration error across a censored cost-of-virtue endpoint** (§14.1). "I'll never sell out" predicted, then a \$5M break observed, is a categorical mismatch, not a number.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.

@@ -166,6 +166,23 @@
 
 ---
 
+### EV-4. The stakes/power discontinuity: low-stakes choices may be categorically different from high-stakes behavior, not merely noisier predictors of it.
+
+**Threat.** EV-3 frames the lab→field gap as *attenuation* — a low but positive correlation. There is a stronger, worse version. Stakes are not a scaling parameter applied to a stable preference; they are a **treatment that changes the decision-maker.** Under real stakes or real power, the person choosing is a different system — visceral/hot-state, loss-facing, socially exposed — than the one who laddered through hypothetical rungs in a calm app session. If so, the cost-of-virtue curve can be *locally* valid (orderly within the probed range) and *globally* non-extrapolable: a phase transition exists at real stakes that no amount of low-stakes laddering reveals. This is the "measurement-under-power" problem — you cannot sample how someone behaves with power until they have it, and acquiring it changes them. It subsumes the cost-of-virtue confound in IV-2 but is more fundamental: even with perfect within-range measurement, the *shape* may not continue.
+
+**Mitigations in design.**
+- MVP-1's claim is bounded to the low-stakes self-mirror; `concept.md` positions the instrument as a "long-form mirror," explicitly not a predictor of high-stakes conduct
+- `scoring.md` §13.2 reads the cost-of-virtue break-point as a within-person *revealed price*, a local quantity, not a global integrity constant — the spec already refuses the extrapolation this threat warns against
+- The optional **real-stakes nights** (`concept.md` — small real money / charity) are the one in-instrument probe that can *detect* a discontinuity rather than assume its absence
+
+**Residual risk: HIGH for any extrapolation to high-stakes / under-power conduct; LOW for the bounded low-stakes self-mirror claim MVP-1 actually makes.** The danger is not in the measurement but in a reader (or a future product surface) treating the low-stakes curve as a prediction of conduct under real pressure.
+
+**Detection.**
+- Real-stakes-night choices analyzed as a *bend* away from the laddered prediction (systematic sign), not merely added variance — a bend is the discontinuity's signature
+- **Cross-link to H9c** (`h9-self-calibration.md` §1.4; `scoring.md` §14, proposed): if participants' self-prediction error concentrates at high stakes, the high-stakes self is demonstrably not reachable from the low-stakes self by extrapolation — the behavioral fingerprint of this discontinuity. H9c confirming is evidence *for* EV-4; H9c null lowers the residual risk. Either way the instrument measures its own most dangerous extrapolation boundary, which is the honest thing for it to do.
+
+---
+
 ## Reliability
 
 *Would re-running produce similar results?*
@@ -247,6 +264,43 @@
 
 ---
 
+## Incentive validity
+
+*Under what use does the instrument measure values at all?*
+
+**Framing principle — validity and misuse-resistance are the same property.** Every threat above asks "is the number measuring values?" This category asks the prior question: *under what conditions does it measure values in the first place?* The answer is sharp. PoC measures values only in the **non-instrumental regime** — where the participant gains nothing by scoring a particular way. The instant a PoC score *pays* — gates a job, a date, a loan, a reputation, or even serves the user's own self-image as a target to beat — Goodhart's law applies: the measure becomes a target, and a targeted measure of virtue stops measuring virtue and starts measuring performance-under-incentive. The most skilled impression-managers then produce the cleanest profiles, exactly *inverting* the signal.
+
+This reframes the operating constraints in `DECISIONS.md` §6 (descriptive-never-prescriptive), §7 (no enterprise/screening ever; no engagement monetization), §9 (no social comparison), and §10 (local-first, user-owned, deletable). They are usually presented as *ethical* commitments. They are equally **measurement-validity boundary conditions** — the envelope within which the instrument's numbers mean anything. An ethics violation here is simultaneously a validity collapse, and that equivalence is the strongest available defense against the most probable future pressures (a B2B screening product, a shareable score, a leaderboard): each would not merely be wrong, it would *void the measurement*. The `concept.md` meta-risk section ("the product attracts exactly the actors who would corrupt it") is this same threat seen from the ethics side.
+
+### IN-1. If the instrument's output ever gates a decision, revealed scores invert into a measure of gaming-ability.
+
+**Threat.** The moment any third party (employer, partner, court, government, platform) or the product itself uses a PoC profile to *select* or *rank*, the measured population shifts from "people revealing values" to "people optimizing a visible target." Per Goodhart, the scores stop tracking values; per the leaders-discussion provenance, this is the "valid as a compass, not as a selector" boundary — a compass that starts steering gets gamed. The failure is not gradual degradation; it is a discontinuous inversion (the best gamers float to the top).
+
+**Mitigations in design.**
+- `DECISIONS.md` §7 ("no enterprise/employer-screening product ever") and §10 (local-first, no central plaintext honey-pot, user-deletable) make gating *architecturally* hard, not merely discouraged
+- §6 (no verdict) and §9 (no comparison) remove the in-product targets a user could optimize toward
+- `runtime-architecture.md` §18 has *no schema slot* for social comparison or streaks on values — the data model itself refuses the surface
+
+**Residual risk: LOW while the operating constraints hold; CATASTROPHIC and discontinuous if any is ever relaxed.** This is not a statistic to monitor but an invariant to preserve.
+
+**Detection.** Governance/architecture invariant, not a study test: the §7 "no enterprise ever" lock and the §10 data architecture are the enforcement. Any proposal that would let a third party require the test, or attach a stake to the output, is the tripwire.
+
+### IN-2. Self-gaming: once a solo user infers what is measured, they can perform to it.
+
+**Threat.** Even with no external gate, a user can turn the instrument into a target for their *self-image* — choosing the option they want to be true of themselves rather than the one that is. This degrades the revealed channel toward a second stated channel (the CV-1 threat, self-initiated).
+
+**Mitigations in design.**
+- §6's descriptive-never-prescriptive stance removes the score-to-beat: there is deliberately no number to optimize, which removes most of the motive
+- Anti-gaming design in `concept.md` (noise filler items, full profile withheld ~10–15 sessions, aggressive surface variation across workplace/family/public/anonymous settings)
+- H8 narrative immersion lowers self-monitoring (CV-1 mitigation; `scoring.md` §9.2), which also lowers self-gameability
+- **H9 supplies a detector** (`h9-self-calibration.md` §8): a user performing their ideal predicts and produces that ideal, yielding anomalously *low* self-prediction error — so near-perfect calibration is a self-gaming flag rather than a success.
+
+**Residual risk: MEDIUM.** A determined self-gamer cannot be fully stopped; the absence of any payoff (no score, no comparison, local-only) removes most of the incentive, and H9 makes the residue partly detectable.
+
+**Detection.** The CV-1 convergent/discriminant signals (ceiling compression on revealed scores; positive correlation with neuroticism) plus the H9 calibration flag above.
+
+---
+
 ## Recommended additions surfaced by this audit
 
 Items this audit found are **NOT currently in the pre-registration, pilot-protocol, or pre-launch checklist** that should be added before OSF filing:
@@ -255,6 +309,7 @@ Items this audit found are **NOT currently in the pre-registration, pilot-protoc
 2. **Sensitivity-to-financial-situation analysis on CoV probes** (IV-2 mitigation). Extend the analyzer post-MVP-1 to stratify CoV trajectories by self-reported financial-situation change.
 3. **Familywise-corrected reporting of H1–H7** (SV-1). Specify in pre-registration that Holm-Bonferroni-corrected p-values will be reported alongside uncorrected effect-size estimates.
 4. **CI-aware reporting of H1 RMSEA / CFI** (SV-3). Specify in pre-registration that point estimates AND 95% CIs of the SEM-fit indices will be reported; the H1 decision rule should account for CI width.
+5. **Self-prediction reactivity control** (IN-2 / H9). Counterbalanced no-prediction control items, so the calibration beat's question–behavior effect on the subsequent choice can be estimated and removed before H9 scoring; pre-specify the predicted-vs-non-predicted contrast (also an MVP-2 intervention candidate if prediction increases stated–revealed consistency). See `h9-self-calibration.md` §3 A3.
 
 These are not blockers for the current MVP-1 plan but are concrete additions a co-PI would likely require before signing off.
 
@@ -268,4 +323,6 @@ These are not blockers for the current MVP-1 plan but are concrete additions a c
 - [`scoring.md`](scoring.md) §8 — bootstrap CI seed
 - [`literature/ecological-validity-positive.md`](literature/ecological-validity-positive.md) — the headline ecological-validity discussion (EV-3)
 - [`DECISIONS.md`](DECISIONS.md) — the design-choice ADRs each threat references
-- [`pilot-pre-launch-checklist.md`](pilot-pre-launch-checklist.md) Phase 4 — where the four recommended additions belong
+- [`pilot-pre-launch-checklist.md`](pilot-pre-launch-checklist.md) Phase 4 — where the recommended additions belong
+- [`h9-self-calibration.md`](h9-self-calibration.md) — H9 (self-prediction calibration); EV-4 and IN-2 cross-link to its scoring (§14, proposed) and its self-gaming detector
+- Originating design conversation (June 2026 "measurement-under-power / calibration" thread) — provenance for EV-4's discontinuity framing and the Incentive-validity reframe
