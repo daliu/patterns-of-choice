@@ -51,6 +51,8 @@ H10c statistic:  lower 95% bootstrap-CI bound of  mean_i obs_gap_i  > 0   (one-s
 
 H10c grounds H10 in a confirmable directional anchor (variance alone is sign-agnostic) and folds the observed↔anonymous contrast — one dimension of context — into the broader variability construct.
 
+> **Scope note (MVP-1 vs MVP-2).** "Public/observed" here means the scenario's **depicted** setting (items where the portrayed situation is witnessed/public vs. anonymous-online) — a surface-context dimension already present in the MVP-1 corpus (`concept.md` §"Anti-gaming"). It is **distinct** from a participant-level **observer mode** (informing participants that their *own* session answers are watched), which `pre-registration.md` defers to MVP-2 ("no observer mode in MVP-1"). H10c uses the former and does **not** require the latter; an MVP-2 observer mode would add a second, stronger test of the same effect.
+
 ### 1.5 N=1 interpretability and value-neutrality
 
 **N=1.** `sd_i(c)` is a within-person quantity on a fixed axis — no cohort standardization — so each participant's per-construct context-sensitivity is reveal-eligible (descriptive: "your honesty is steady across settings; your generosity swings between public and anonymous"). The split-half reliability (H10a) and the discriminant test (H10b) are *cohort* statistics, separate from the reveal — as §14 separated cohort H9 statistics from the N=1 reveal read.
