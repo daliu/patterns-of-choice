@@ -115,15 +115,15 @@ Cheap-and-clean first, expensive-or-fragile last; sequence the meta-layer (C1) a
 1. **H10 — cross-situational moral consistency** (B1). No new elicitation; fully N=1; cleanest falsifiable hypothesis. ✓ **done** — [`h10-cross-situational-consistency.md`](h10-cross-situational-consistency.md) (iteration 2).
 2. **H-A1 — informant/peer prediction** (A1). Biggest true "branch out"; completes the self/other × predict/act matrix with H9. ✓ **done** — [`h-a1-informant-prediction.md`](h-a1-informant-prediction.md) (iteration 3).
 3. **H12 — moral hypocrisy / double-standard** (B3). Pairs with H9; light authoring (add judge-other framings). ✓ **done** — [`h12-moral-hypocrisy.md`](h12-moral-hypocrisy.md) (iteration 4).
-4. **H11 — moral-circle radius** (B2). Validated construct; deepens the in-group domain; `circle_radius` stub already exists. ← *next*
-5. **A2 — consequential real-stakes channel.** Gold standard for EV-3/EV-4; expensive, so after the cheap branches.
+4. **H11 — moral-circle radius** (B2). Validated construct; deepens the in-group domain; `circle_radius` stub already exists. ✓ **done** — [`h11-moral-circle-radius.md`](h11-moral-circle-radius.md) (iteration 5).
+5. **A2 — consequential real-stakes channel.** Gold standard for EV-3/EV-4; expensive, so after the cheap branches. ← *next*
 6. **A3 — moral-language profile.** Extends the story-prompt channel.
 7. **C1 — multi-method convergence.** Gated on ≥3 channels existing.
 8. **A4 / A5 — process & emotion signals.** High novelty, high noise; need tight pre-registered claims.
 9. **B4 — value-change dynamics.** Gated on longitudinal data.
 10. **C2 — adversarial/stress conditions.** Theoretically fragile; build last, carefully.
 
-**Checked off:** B1 → **H10** (it. 2); A1 → **H-A1** (it. 3, Phase-2); B3 → **H12** — `h12-moral-hypocrisy.md` (it. 4, 2026-06-10, MVP-1 secondary + a §16-unlock for the standard-setting items). Locks pending Dave's review.
+**Checked off:** B1 → **H10** (it. 2); A1 → **H-A1** (it. 3, Phase-2); B3 → **H12** — `h12-moral-hypocrisy.md` (it. 4, MVP-1 + §16-unlock); B2 → **H11** — `h11-moral-circle-radius.md` (it. 5, 2026-06-12, MVP-1 re-analysis; full circle MVP-2). Locks pending Dave's review. **All four B/A-series construct branches now drafted; remaining roadmap is the heavier modality/meta branches (A2 real-stakes, A3 language, C1 MTMM, A4/A5, B4, C2).**
 
 ---
 
