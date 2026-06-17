@@ -1,0 +1,48 @@
+{
+  "_comment": "Public-presentation source of truth for the 'research program' card grid on daliu.github.io/patterns-of-choice/. When the extension loop ships a branch, add one card here (in this repo, same commit as the branch) instead of hand-editing the site HTML. The site regenerates from this via daliu.github.io/scripts/build_patterns_program.py. Keep blurbs accessible (this is public-facing copy, distinct from the technical design docs). 'spec' is the design-doc filename; the build script links it at /blob/main/<spec>. 'status' is the honest label: 'pre-registered' vs 'design-stage' (the loop leaves locks pending Dave's review). The H-A2 real-stakes keystone lives in the site's validity section, not this grid, so it is intentionally not a card here.",
+  "spec_base": "https://github.com/daliu/patterns-of-choice/blob/main/",
+  "cards": [
+    {
+      "id": "H9",
+      "question": "Do you know your own gap?",
+      "status": "pre-registered",
+      "spec": "h9-self-calibration.md",
+      "blurb": "Before you choose, you predict what you'll do; the instrument scores how well you forecast yourself. Two people with the same stated–revealed gap are different if one saw the slip coming and the other was blindsided — self-knowledge vs. self-deception."
+    },
+    {
+      "id": "H10",
+      "question": "Are you the same person across rooms?",
+      "status": "design-stage",
+      "spec": "h10-cross-situational-consistency.md",
+      "blurb": "How much your choices swing across settings — work, family, public, anonymous — treated as a stable trait in its own right. Steady or context-driven; neither is graded as better."
+    },
+    {
+      "id": "H12",
+      "question": "Do you hold yourself to your own standard?",
+      "status": "design-stage",
+      "spec": "h12-moral-hypocrisy.md",
+      "blurb": "The gap between what you demand of others and what you demand of yourself — the self–other double standard, cleanly separated from ordinary weakness of will."
+    },
+    {
+      "id": "The \"moral 360\"",
+      "question": "Do others read you better than you read yourself?",
+      "status": "design-stage, later phase",
+      "spec": "h-a1-informant-prediction.md",
+      "blurb": "Someone who knows you makes blind predictions of your choices; the gap between their accuracy and your own measures how legible your character is to others vs. to yourself."
+    },
+    {
+      "id": "H11",
+      "question": "How far does your concern reach?",
+      "status": "design-stage",
+      "spec": "h11-moral-circle-radius.md",
+      "blurb": "The radius of your moral circle, read from real choices — how concern falls off from kin to friends to strangers to out-groups to animals. A break point on the distance axis, the way the cost-of-virtue probe is one on the stakes axis. Wide or narrow; neither graded as better."
+    },
+    {
+      "id": "The moral-language channel",
+      "question": "Do you walk what you talk?",
+      "status": "design-stage",
+      "spec": "h-a3-moral-language.md",
+      "blurb": "What you spontaneously moralize about in your own words, vs. what you actually do — the talk–walk gap. A third channel beside stated values and behavior (and what makes multi-method cross-checking possible)."
+    }
+  ]
+}
