@@ -116,14 +116,14 @@ Cheap-and-clean first, expensive-or-fragile last; sequence the meta-layer (C1) a
 2. **H-A1 — informant/peer prediction** (A1). Biggest true "branch out"; completes the self/other × predict/act matrix with H9. ✓ **done** — [`h-a1-informant-prediction.md`](h-a1-informant-prediction.md) (iteration 3).
 3. **H12 — moral hypocrisy / double-standard** (B3). Pairs with H9; light authoring (add judge-other framings). ✓ **done** — [`h12-moral-hypocrisy.md`](h12-moral-hypocrisy.md) (iteration 4).
 4. **H11 — moral-circle radius** (B2). Validated construct; deepens the in-group domain; `circle_radius` stub already exists. ✓ **done** — [`h11-moral-circle-radius.md`](h11-moral-circle-radius.md) (iteration 5).
-5. **A2 — consequential real-stakes channel.** Gold standard for EV-3/EV-4; expensive, so after the cheap branches. ← *next*
-6. **A3 — moral-language profile.** Extends the story-prompt channel.
+5. **A2 — consequential real-stakes channel.** Gold standard for EV-3/EV-4; expensive, so after the cheap branches. ✓ **done** — [`h-a2-real-stakes.md`](h-a2-real-stakes.md) (iteration 6, the keystone validity probe; Phase-2, cohort-level not N=1).
+6. **A3 — moral-language profile.** Extends the story-prompt channel. ← *next*
 7. **C1 — multi-method convergence.** Gated on ≥3 channels existing.
 8. **A4 / A5 — process & emotion signals.** High novelty, high noise; need tight pre-registered claims.
 9. **B4 — value-change dynamics.** Gated on longitudinal data.
 10. **C2 — adversarial/stress conditions.** Theoretically fragile; build last, carefully.
 
-**Checked off:** B1 → **H10** (it. 2); A1 → **H-A1** (it. 3, Phase-2); B3 → **H12** — `h12-moral-hypocrisy.md` (it. 4, MVP-1 + §16-unlock); B2 → **H11** — `h11-moral-circle-radius.md` (it. 5, 2026-06-12, MVP-1 re-analysis; full circle MVP-2). Locks pending Dave's review. **All four B/A-series construct branches now drafted; remaining roadmap is the heavier modality/meta branches (A2 real-stakes, A3 language, C1 MTMM, A4/A5, B4, C2).**
+**Checked off:** B1 → **H10** (it. 2); A1 → **H-A1** (it. 3, Phase-2); B3 → **H12** — `h12-moral-hypocrisy.md` (it. 4, MVP-1 + §16-unlock); B2 → **H11** — `h11-moral-circle-radius.md` (it. 5, MVP-1 re-analysis); A2 → **H-A2** — `h-a2-real-stakes.md` (it. 6, 2026-06-16, Phase-2 keystone validity probe). Locks pending Dave's review. **The four construct branches (H10/H12/H11 + H-A1) and now the first real-stakes modality (H-A2) are drafted; remaining roadmap: A3 language, C1 MTMM, A4/A5 process & emotion, B4 value-drift, C2 stress.**
 
 ---
 
