@@ -120,12 +120,12 @@ Cheap-and-clean first, expensive-or-fragile last; sequence the meta-layer (C1) a
 4. **H11 — moral-circle radius** (B2). Validated construct; deepens the in-group domain; `circle_radius` stub already exists. ✓ **done** — [`h11-moral-circle-radius.md`](h11-moral-circle-radius.md) (iteration 5).
 5. **A2 — consequential real-stakes channel.** Gold standard for EV-3/EV-4; expensive, so after the cheap branches. ✓ **done** — [`h-a2-real-stakes.md`](h-a2-real-stakes.md) (iteration 6, the keystone validity probe; Phase-2, cohort-level not N=1).
 6. **A3 — moral-language profile.** Extends the story-prompt channel. ✓ **done** — [`h-a3-moral-language.md`](h-a3-moral-language.md) (iteration 7; MVP-1 exploratory, κ≥0.70-gated; unlocks C1 as the 3rd channel).
-7. **C1 — multi-method convergence.** Gated on ≥3 channels existing — **now unblocked** (inventory + language + behavior). ← *next*
-8. **A4 / A5 — process & emotion signals.** High novelty, high noise; need tight pre-registered claims.
+7. **C1 — multi-method convergence.** Gated on ≥3 channels existing — now unblocked (inventory + language + behavior). ✓ **done** — [`c1-multimethod-convergence.md`](c1-multimethod-convergence.md) (iteration 8, the MTMM capstone; cohort matrix + N=1 profile; no public card).
+8. **A4 / A5 — process & emotion signals.** High novelty, high noise; need tight pre-registered claims. ← *next*
 9. **B4 — value-change dynamics.** Gated on longitudinal data.
 10. **C2 — adversarial/stress conditions.** Theoretically fragile; build last, carefully.
 
-**Checked off:** B1 → **H10** (it. 2); A1 → **H-A1** (it. 3, Phase-2); B3 → **H12** — `h12-moral-hypocrisy.md` (it. 4, MVP-1 + §16-unlock); B2 → **H11** — `h11-moral-circle-radius.md` (it. 5, MVP-1 re-analysis); A2 → **H-A2** — `h-a2-real-stakes.md` (it. 6, Phase-2 keystone); A3 → **H-A3** — `h-a3-moral-language.md` (it. 7, 2026-06-16, MVP-1 exploratory, κ-gated). Locks pending Dave's review. **7 branches drafted (H10/H12/H11/H-A1 constructs + H-A2 real-stakes + H-A3 language). The language channel makes inventory+language+behavior three channels, so C1 (MTMM convergence) is now unblocked and is next. Remaining after C1: A4/A5 process & emotion, B4 value-drift, C2 stress.**
+**Checked off:** B1 → **H10** (it. 2); A1 → **H-A1** (it. 3, Phase-2); B3 → **H12** — `h12-moral-hypocrisy.md` (it. 4, MVP-1 + §16-unlock); B2 → **H11** — `h11-moral-circle-radius.md` (it. 5, MVP-1 re-analysis); A2 → **H-A2** — `h-a2-real-stakes.md` (it. 6, Phase-2 keystone); A3 → **H-A3** — `h-a3-moral-language.md` (it. 7, MVP-1 exploratory, κ-gated); C1 → **MTMM capstone** — `c1-multimethod-convergence.md` (it. 8, 2026-06-17, analysis layer, no public card). Locks pending Dave's review. **8 branches drafted — the four constructs (H10/H12/H11/H-A1), two real channels (H-A2 real-stakes, H-A3 language), and the C1 MTMM capstone that integrates them all (and unifies the instrument's gap-zoo as one matrix). Remaining: A4/A5 process & emotion, B4 value-drift, C2 stress.**
 
 ---
 
