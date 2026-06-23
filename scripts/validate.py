@@ -14,6 +14,8 @@ Checks performed:
 - Each scenario JSON validates against its type-specific JSON Schema
   (scenarios/schemas/*.schema.json).
 - Narrative choice.next references resolve to scene IDs within the same file.
+- Every choice path eventually reaches a terminal scene (cycle-safe), and every
+  scene is reachable from a root (no orphans).
 - Narrative scenes are either decision-points OR terminal (schema enforces
   this; rechecked here for clearer error messages).
 - Cost-of-virtue probe value_slot references an existing value ID in
@@ -27,9 +29,6 @@ Out of scope (not yet validated here):
 - Inventory file structure (pairwise-pairs.json, three-layer-prompts.json,
   story-prompts.json, relational-variant.json). JSON Schemas for these
   don't exist yet; types.ts is the only typed contract.
-- Every narrative path eventually reaches a terminal scene. The current
-  checks catch unreachable next-ids but not orphan terminals or cyclic
-  paths. Adding path-reachability is a TODO.
 """
 
 import argparse

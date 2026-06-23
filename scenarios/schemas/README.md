@@ -51,7 +51,7 @@ check-jsonschema \
   scenarios/sample/qf-*.json
 ```
 
-The custom-validator script that handles the cross-file integrity checks (`choice.next` resolution, tag-map lookup, etc.) is a TODO; recommended as the next engineering artifact after these schemas land.
+The custom-validator script that handles the cross-file integrity checks (`choice.next` resolution, narrative path-reachability, tag-map lookup, etc.) is [`scripts/validate.py`](../../scripts/validate.py) (run via `make validate`).
 
 ## Versioning
 
