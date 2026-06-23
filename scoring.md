@@ -366,6 +366,8 @@ The ordering is `rank(dev_i(d))` descending. **Deltas are gated by the person's 
 
 where `se_i(d)` is the §3.2/§8 within-person across-session SE (use `k = 1` for the descriptive readout; bootstrap per §8 if sessions allow). Pairs failing the gate are an explicit **TIE band**, not a rank.
 
+A small **floor** is applied to each `se_i(d)` in quadrature — `se_eff = sqrt(se_i(d)^2 + se_floor^2)`, with `se_floor = 0.05` on the [−1,+1] axis — so that an implausibly small within-person SE (e.g. a domain with only 2 sessions that happened to land identically, giving `se = 0`) cannot collapse the gate to zero and manufacture a confident ordering from a trivial mean difference. At `se = 0` the floor sets the minimum orderable adjacent gap to `≈ k·se_floor·√2 ≈ 0.07`, consistent in spirit with the §13.4 fragility threshold (`|delta_revealed| < 0.1`). The floor is a tunable constant (`SE_FLOOR` in `runtime/poc-projection.js`).
+
 **Hard preconditions (suppress the ordering entirely if unmet):**
 - `se_i(d)` must be **computable** for the gated domains, i.e. ≥2 sessions/domain. With a single session (`se = nan`, see interpretation.md "Single-session users") the ordering is **suppressed**, not emitted as "provisional" — a "provisional rank" is read as a rank.
 - Require **≥3 informative domains**. With 2 domains the "order" is a single sign and carries no representable uncertainty; it is suppressed.
