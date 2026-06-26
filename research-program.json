@@ -71,6 +71,13 @@
       "status": "design-stage",
       "spec": "r1-moral-identity-centrality.md",
       "blurb": "How load-bearing morality is to your self-concept — and whether it's internalized (being good is core to who you are, and it drives your choices) or symbolic (being seen as good drives your self-presentation). It's the meta-trait that predicts how tightly your actions track your values at all. Self-report here is flattery-prone, so it's read against your actual consistency — design-stage."
+    },
+    {
+      "id": "Letting yourself off the hook",
+      "question": "Which excuses do you reach for?",
+      "status": "design-stage",
+      "spec": "r3-moral-disengagement.md",
+      "blurb": "When you act against your own standards, what lets you do it without guilt — 'everyone does it,' 'they had it coming,' 'it's not really that bad,' 'I had no choice'? It maps which of these you reach for. The honest hard part: a real justification looks identical to a self-serving excuse, so it's read for the tells of self-exculpation (self-serving, inconsistent, after-the-fact), not flagged the moment you give a reason."
     }
   ]
 }
