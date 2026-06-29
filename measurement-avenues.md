@@ -137,9 +137,11 @@ Round 1 (the 10 items above) is complete. These are genuinely new, validated, et
 - **R2. Sacred / protected values** ✓ **done** — [`r2-sacred-protected-values.md`](r2-sacred-protected-values.md) (iteration 12; re-reads the censored cost-of-virtue `never`s as the protected-value set; R2b protected≠expensive via quantity-insensitivity + a taboo marker; carded). Baron & Spranca 1997; Tetlock taboo-tradeoffs.
 - **R3. Moral disengagement** ✓ **done** — [`r3-moral-disengagement.md`](r3-moral-disengagement.md) (iteration 14; Bandura's 8 mechanisms; R3b decouples the gap from guilt — the A5 negative pole; the load-bearing justification-vs-disengagement discriminant; carded). Bandura 1999/2002; Moore et al. 2012.
 - **R4. Moral attentiveness** ✓ **done** — [`r4-moral-attentiveness.md`](r4-moral-attentiveness.md) (iteration 15; Rest's component-1 *perception* as a trait; R4b the upstream gate, distinct from values/R1; non-reactive detection; carded). Reynolds 2008; Gantman & Van Bavel 2014.
-- **R5. Moral typecasting / dyadic structure** — how you parse a situation into agent (doer) vs. patient (victim) (Gray & Wegner; Gray, Young & Waytz 2012). The *structure* you impose on moral scenes, not the choice — the most speculative of the five. ← *next* (Round 2's last)
+- **R5. Moral typecasting / dyadic structure** ✓ **done** — [`r5-moral-typecasting.md`](r5-moral-typecasting.md) (iteration 16; agent/patient parsing = a justice/care emphasis; Gray TDM + Gilligan; the most exploratory branch — weakest operationalization, R5c needs dedicated items; carded). **← Round 2 complete (R1–R5).**
 
 Each still owes the unit / N=1 / censoring / no-composite / value-neutral disciplines and the fraud/non-replication exclusions.
+
+**Status (2026-06-28): Round 2 complete — R1–R5 drafted (iterations 12–16). Both the original 10-item map and its Round-2 extension are now exhausted.** ~17 measurement branches exist across choice / inventory / language / calibration / informant / real-stakes / process / emotion, plus the MTMM (C1) and moral-identity (R1) integrators. The genuine constraint is now **build-and-validate** — a co-PI, IRB, the multi-user runtime, the κ-validation that ungates the language channel — **not design**. Further rounds risk padding: the loop should weigh each new candidate hard against "is this a real, distinct, *validated* construct the instrument can actually measure," and **flag-and-stop rather than manufacture filler** (per the loop's own stop condition).
 
 ---
 

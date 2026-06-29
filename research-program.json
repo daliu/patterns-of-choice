@@ -85,6 +85,13 @@
       "status": "design-stage",
       "spec": "r4-moral-attentiveness.md",
       "blurb": "Before you can weigh a moral choice, you have to notice there is one. This is the perceptual front-end — how readily you register the ethical dimension of an ordinary situation someone else would read as purely practical. It sits upstream of everything else here. More isn't better: high attention can be conscience or scrupulosity; low can be a relaxed non-moralizing eye or a real blind spot — descriptive, design-stage."
+    },
+    {
+      "id": "Doer or done-to",
+      "question": "Whose side of a moral scene do you see first?",
+      "status": "design-stage, exploratory",
+      "spec": "r5-moral-typecasting.md",
+      "blurb": "When you look at a moral situation, do you read it through the one who acts (the agent — responsibility, intent, blame) or the one acted upon (the patient — harm, suffering, need)? It's the structure you impose on the scene before any judgment — a justice-vs-care emphasis, neither better. The most exploratory of the set: for now the instrument can only glimpse it indirectly."
     }
   ]
 }
