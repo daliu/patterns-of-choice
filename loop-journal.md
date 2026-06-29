@@ -13,6 +13,58 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Checkpoint — 2026-06-28 (after iteration 17): design phase CLOSED → pivot to build-and-validate
+
+R6 shipped (iteration 17, below) — the design phase's last branch, per Dave's redirect
+("continue into R6, but then build and validate sounds like a good way forward"). The map
+now holds ~18 design branches (Round 1's 10 + R1–R6); **R7 (licensing) and R8 (shame-vs-
+guilt) are deferred, not dropped** (genuine, bar-clearing candidates for a later design pass).
+
+**Pivot executed.** The loop turns from *designing* branches to *building and validating* what's
+specified. Grounding scan of the repo: the engineering already exists and is **green** —
+`scripts/analyze.py` (~1600 lines) implements the core validity spine (the stated↔revealed gap,
+censoring-aware probes, H2–H7), with JS↔Python parity (`check_impl_parity.py`) against the
+on-device runtime projection, a threshold-gate (`check_analyzer_thresholds.py`), 66 valid
+scenarios, and CI. `make check` = exit 0. **What's spec-only = every branch the design phase
+added (H8–H12, A-series, R1–R6).** Closing that gap is the new backlog → `build-and-validate.md`.
+
+**Loop re-armed:** design cron `8819f3b8` **deleted**; build-and-validate cron **`f67f29c9`**
+(7,22,37,52 * * * *, 15-min, session-only, 7-day auto-expire). Mandate: one branch per iteration,
+implement scoring in analyze.py (+ the JS projection where it touches the reveal) + fixtures + a
+threshold gate, keep `make check` green, honor every discipline, **never push a red state**,
+surface IRB / κ / co-PI / real-stakes / runtime-stack decisions to Dave. First build target:
+**H9 self-calibration** (scoring §14 — fully specced, N=1, the window-b fixtures already exist).
+
+---
+
+## Iteration 17 — 2026-06-28 — R6 · Moral conviction / metaethical objectivism (design phase's last)
+
+- **Branch.** `r6-moral-conviction.md` — the meta-stance toward your own values: do you hold a
+  moral position as an objective **fact** (true for everyone) or as your **own** commitment?
+  `objectivism_i` / `conviction_i`. A **stated anchor** (the Goodwin & Darley objectivism probe:
+  fact-vs-opinion + the disagreement-resolution follow-up) + **revealed signatures** (tolerance/
+  compromise toward divergent others; objectivist-vs-subjectivist moral language, A3, κ-gated) —
+  held apart, never pooled (§13.5).
+- **Grounding.** Skitka 2010 (moral conviction — already enters via Hofmann 2014); Goodwin &
+  Darley 2008 (metaethical objectivism). Both well-replicated; takes **no** position on moral
+  realism itself.
+- **Distinctness (R6b, load-bearing).** Not value-content (inventory), not tradeability (R2
+  sacredness — the key discriminant pair: *epistemic status ≠ tradeoff resistance*, they
+  dissociate), not centrality (R1). R6c lifts the stated-vs-revealed logic to the **meta-layer**:
+  the professed relativist who acts with absolute conviction; the professed absolutist who lives
+  and lets live.
+- **Honesty.** Heavy, charged behavioral payload (conviction predicts intolerance / refusal to
+  compromise / any-means acceptance) → value-neutrality binds with **extra force**: descriptive-
+  only, both poles dual-read (objectivism = clarity *or* rigidity; subjectivism = pluralism *or*
+  won't-stand-for-anything). Censoring preserved (compromise-refusal stays censored, not priced).
+- **Card.** Yes — "Facts or your own / Are your morals true for everyone, or true for you?"
+  (design-stage). Manifest → 14 cards.
+- **Shipped.** poc `9b177ad` (r6 doc + map R6✓ + Round-3/pivot notes + research-program.json).
+  Site regenerated 13→14, `--check` green, R6 link 200, daliu `3344b20` (master). scoring §31 +
+  DECISIONS entry proposed (pending Dave's lock).
+
+---
+
 ## Checkpoint — 2026-06-28 (after iteration 16): planned roadmap complete, Round 3 opened (not exhausted)
 
 Both planned rounds of `measurement-avenues.md` are now drafted: Round 1 (10 items,
