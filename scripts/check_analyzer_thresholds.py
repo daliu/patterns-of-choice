@@ -65,6 +65,17 @@ Expected outcomes on the current synthetic fixtures:
   regression (check_r1_no_pool): the two facets are DISJOINT item sets scored
   separately — never averaged into one moral-identity score — a declined item
   drops (never imputed to 0), and a facet below the item floor is suppressed.
+- R6 (metaethical objectivism — moral conviction): R6a objectivism reliability
+  (split-half odd/even correlation of the MORAL read, lower CI ≥ 0.50 — the higher
+  bar, objectivism being a stable individual difference) and R6d the moral > taste
+  objectivism anchor (mean_i of the within-scale moral−taste delta > 0, directional
+  — moral claims treated as more fact-like than tastes, Goodwin & Darley 2008) both
+  met = True on the fixtures, with the moral and taste reads exposed SEPARATELY and
+  ≥1 both-scored profile. Plus the §13.5 NO-POOL regression (check_r6_no_pool): the
+  STATED probe is never pooled with the (deferred) revealed tolerance/language
+  signatures, moral and taste route to DISJOINT means (never a moral/taste blend), a
+  declined item drops (never imputed to 0), and a claim-type below the item floor is
+  suppressed.
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -97,6 +108,7 @@ EXPECTATIONS = {
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True}},
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
+    "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True}},
 }
 
 
@@ -119,6 +131,7 @@ def run_analyzer() -> dict:
         "--protected-log", str(FIXTURES / "sample-protected-values-log.json"),
         "--hypocrisy-log", str(FIXTURES / "sample-hypocrisy-log.json"),
         "--identity-log", str(FIXTURES / "sample-identity-centrality-log.json"),
+        "--objectivism-log", str(FIXTURES / "sample-objectivism-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -375,6 +388,53 @@ def check_r1(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     if payload.get("profile_n", 0) < 1:
         return False, (
             f"{hid}: no complete two-facet profile "
+            f"(profile_n={payload.get('profile_n')})"
+        )
+    parts.append(f"profile×{payload['profile_n']}")
+    return True, f"{hid}: ✓ {', '.join(parts)}"
+
+
+def check_r6(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
+    """R6 metaethical objectivism / moral conviction. Assert each present sub-
+    hypothesis (R6a the MORAL-read split-half reliability, R6d the moral > taste
+    objectivism directional anchor) hit its pre-registered outcome, and that ≥1
+    participant has both reads scored. Crucially, assert the §13.5 NO-POOL
+    discipline in the shape of the payload itself: the block must expose the moral
+    and taste reads SEPARATELY (mean_moral_objectivism / mean_taste_objectivism) and
+    must NOT carry any pooled 'objectivism'/'conviction' scalar — the STATED probe is
+    never pooled with the (deferred) revealed tolerance/language signatures, and the
+    moral read is never blended with the taste read. The claim-type-separation /
+    missing-data lock is asserted directly against the code in check_r6_no_pool()."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    pooled_keys = {"conviction", "conviction_score", "objectivism_score",
+                   "r6_score", "moral_conviction"}
+    present_pooled = pooled_keys & set(payload)
+    if present_pooled:
+        return False, (
+            f"{hid}: pooled objectivism/conviction key(s) present {sorted(present_pooled)} "
+            f"— the stated probe is never pooled with the revealed signatures, and the "
+            f"moral read is never blended with the taste read (§13.5)"
+        )
+    parts = []
+    for sub, expected in sub_met.items():
+        block = payload.get(sub)
+        if block is None:
+            return False, f"{hid}: sub-hypothesis {sub} missing"
+        met = block.get("pre_registered_threshold_met")
+        if met != expected:
+            return False, f"{hid}.{sub}: threshold_met = {met!r}, expected {expected!r}"
+        if block.get("n", block.get("n_participants", 0)) < 3:
+            return False, f"{hid}.{sub}: n too small ({block})"
+        parts.append(f"{sub}={met}")
+    if "mean_moral_objectivism" not in payload or "mean_taste_objectivism" not in payload:
+        return False, (
+            f"{hid}: the moral and taste reads must be exposed separately "
+            f"(mean_moral_objectivism / mean_taste_objectivism), got keys {sorted(payload)}"
+        )
+    if payload.get("profile_n", 0) < 1:
+        return False, (
+            f"{hid}: no both-scored objectivism profile "
             f"(profile_n={payload.get('profile_n')})"
         )
     parts.append(f"profile×{payload['profile_n']}")
@@ -699,6 +759,79 @@ def check_r1_no_pool() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_r6_no_pool() -> tuple[bool, list[str]]:
+    """The R6 analog of check_r1_no_pool: the §13.5 NO-POOL discipline (§20.1) for
+    metaethical objectivism. The STATED objectivism probe is never pooled with the
+    (deferred, κ-gated) REVEALED tolerance/compromise + language signatures into one
+    'conviction score'; AND the two claim types — moral (the reveal read) and taste
+    (the cohort baseline) — are DISJOINT item sets scored SEPARATELY, never blended
+    into one (M+T)/2 objectivism scalar. A declined item (objectivism None / non-
+    numeric / bool) DROPS from its claim-type — never imputed to 0 — and a claim-type
+    below the item floor is SUPPRESSED, never scored on thin data. Asserted directly
+    against the code so a regression that starts pooling, imputing declines, or
+    scoring a two-item read is caught even if the fixture is later changed:
+      (i)   a valid Likert response scores; None / str / bool → None (droppable);
+      (ii)  the moral and taste reads route to DISJOINT means — moral 6.0 and taste
+            2.0 stay separate, neither becomes the pooled 4.0;
+      (iii) a declined item drops from its claim-type (3 scorable, not 4 with a 0);
+      (iv)  a claim-type below the ≥3-item floor is SUPPRESSED (absent), not scored."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    # (ii) disjoint routing: user with 3 moral @6.0 and 3 taste @2.0.
+    recs = [
+        {"user": "q1", "session": "q1-s1", "item_id": "mor-1", "claim_type": "moral", "objectivism": 6.0},
+        {"user": "q1", "session": "q1-s1", "item_id": "mor-2", "claim_type": "moral", "objectivism": 6.0},
+        {"user": "q1", "session": "q1-s2", "item_id": "mor-3", "claim_type": "moral", "objectivism": 6.0},
+        {"user": "q1", "session": "q1-s1", "item_id": "tas-1", "claim_type": "taste", "objectivism": 2.0},
+        {"user": "q1", "session": "q1-s1", "item_id": "tas-2", "claim_type": "taste", "objectivism": 2.0},
+        {"user": "q1", "session": "q1-s2", "item_id": "tas-3", "claim_type": "taste", "objectivism": 2.0},
+    ]
+    moral = A.objectivism_by_user(recs, "moral")
+    taste = A.objectivism_by_user(recs, "taste")
+    # (iii) declined item drops: q2 has 3 valid moral items + 1 declined.
+    recs_declined = [
+        {"user": "q2", "session": "q2-s1", "item_id": "mor-1", "claim_type": "moral", "objectivism": 5.0},
+        {"user": "q2", "session": "q2-s1", "item_id": "mor-2", "claim_type": "moral", "objectivism": 5.0},
+        {"user": "q2", "session": "q2-s2", "item_id": "mor-3", "claim_type": "moral", "objectivism": 5.0},
+        {"user": "q2", "session": "q2-s2", "item_id": "mor-4", "claim_type": "moral", "objectivism": None},
+    ]
+    items_q2 = A.objectivism_items_by_user(recs_declined, "moral")["q2"]
+    moral_q2 = A.objectivism_by_user(recs_declined, "moral")
+    # (iv) below-floor suppression: q3 has only 2 moral items (floor is 3).
+    recs_thin = [
+        {"user": "q3", "session": "q3-s1", "item_id": "mor-1", "claim_type": "moral", "objectivism": 6.0},
+        {"user": "q3", "session": "q3-s1", "item_id": "mor-2", "claim_type": "moral", "objectivism": 6.0},
+    ]
+    thin = A.objectivism_by_user(recs_thin, "moral")
+    checks = [
+        ("a valid Likert response scores (float)",
+         A._objectivism_response({"objectivism": 4}) == 4.0),
+        ("a declined item (None) → None, droppable not 0",
+         A._objectivism_response({"objectivism": None}) is None),
+        ("a non-numeric response (str) → None",
+         A._objectivism_response({"objectivism": "5"}) is None),
+        ("a bool response → None (guards against True==1 coercion)",
+         A._objectivism_response({"objectivism": True}) is None),
+        ("the moral read scores its own items (6.0), not pooled",
+         abs(moral["q1"] - 6.0) < 1e-9),
+        ("the taste read scores its own items (2.0), not pooled",
+         abs(taste["q1"] - 2.0) < 1e-9),
+        ("the two reads are DISJOINT — neither equals the pooled (M+T)/2 = 4.0",
+         abs(moral["q1"] - 4.0) > 1e-9 and abs(taste["q1"] - 4.0) > 1e-9),
+        ("a declined item DROPS from its claim-type (3 scorable, not 4 with a 0)",
+         len(items_q2) == 3 and all(v == 5.0 for v in items_q2)),
+        ("the moral mean ignores the declined item (stays 5.0)",
+         abs(moral_q2["q2"] - 5.0) < 1e-9),
+        ("a claim-type below the ≥3-item floor is SUPPRESSED (absent, not scored)",
+         "q3" not in thin),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r6-nopool: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -752,6 +885,8 @@ def main() -> int:
             ok, msg = check_h12(hid, payload, spec["sub_met"])
         elif spec["kind"] == "r1":
             ok, msg = check_r1(hid, payload, spec["sub_met"])
+        elif spec["kind"] == "r6":
+            ok, msg = check_r6(hid, payload, spec["sub_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -798,6 +933,12 @@ def main() -> int:
     for m in r1pool_msgs:
         print(m)
     if not r1pool_ok:
+        all_pass = False
+
+    r6pool_ok, r6pool_msgs = check_r6_no_pool()
+    for m in r6pool_msgs:
+        print(m)
+    if not r6pool_ok:
         all_pass = False
 
     if all_pass:

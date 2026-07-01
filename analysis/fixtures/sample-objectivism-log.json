@@ -1,0 +1,1353 @@
+[
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u01",
+    "session": "r6-u01-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u02",
+    "session": "r6-u02-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u03",
+    "session": "r6-u03-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u04",
+    "session": "r6-u04-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u05",
+    "session": "r6-u05-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 2.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u06",
+    "session": "r6-u06-s1",
+    "item_id": "mor-3",
+    "claim_type": "moral",
+    "objectivism": null
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u07",
+    "session": "r6-u07-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u08",
+    "session": "r6-u08-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 7.0
+  },
+  {
+    "user": "r6-u09",
+    "session": "r6-u09-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u10",
+    "session": "r6-u10-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 6.0
+  },
+  {
+    "user": "r6-u11",
+    "session": "r6-u11-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 3.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s1",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s1",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s1",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s1",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s2",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s2",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s2",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s2",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s3",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s3",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s3",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s3",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s4",
+    "item_id": "mor-1",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s4",
+    "item_id": "tas-1",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s4",
+    "item_id": "mor-2",
+    "claim_type": "moral",
+    "objectivism": 4.0
+  },
+  {
+    "user": "r6-u12",
+    "session": "r6-u12-s4",
+    "item_id": "tas-2",
+    "claim_type": "taste",
+    "objectivism": 5.0
+  }
+]

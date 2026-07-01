@@ -115,6 +115,18 @@ Implemented here:
   symbolizing. A declined item drops, never imputed; a facet below the item floor is
   suppressed. R1b — whether centrality MODERATES the §6 gap / H10–H12 — deferred,
   cohort-coupled (like the H9b/H10b/H11b/R2c discriminant halves).
+- R6a/R6d moral conviction / metaethical objectivism (§20 of scoring.md, 15th pre-reg
+  branch). When --objectivism-log is supplied (per-item objectivism ratings across
+  moral + taste claim types, Goodwin & Darley 2008): the STATED objectivism probe is
+  read as a standalone quantity and NEVER pooled with the (deferred, κ-gated) REVEALED
+  tolerance/compromise/language signatures (§13.5, load-bearing here). R6a reliability
+  (split-half odd/even correlation of the moral read, lower CI ≥ 0.50 — the higher bar)
+  and R6d the moral > taste anchor (mean_i of the within-scale delta > 0, directional —
+  moral claims treated as more fact-like than tastes). Value-neutral with EXTRA FORCE
+  (§20.4): holding morals as objective facts is not ranked above holding them as your
+  own (moral clarity OR rigid intolerance; each pole dual-read). A declined item drops,
+  never imputed; a read below the item floor is suppressed. R6b (discriminant) and R6c
+  (the stated–revealed meta-gap) deferred — cohort-coupled / κ-gated.
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -2302,6 +2314,141 @@ def compute_r1c_internalization_anchor(
     }
 
 
+# --- R6: moral conviction / metaethical objectivism (scoring.md §20, Goodwin & Darley
+# 2008 + Skitka 2010). The STATED objectivism probe: how OBJECTIVE a person treats a
+# moral claim (a fact true for everyone) vs. a matter of opinion (their own). The
+# load-bearing discipline (§13.5) is to hold the STATED probe apart from the REVEALED
+# tolerance/compromise/language signatures — NEVER pooled into one "conviction score" —
+# and the revealed signatures (κ-gated language + tolerance coding) are DEFERRED with
+# R6b/R6c. Python-only this increment (no on-device reveal touched). Value-neutrality
+# binds with EXTRA FORCE here: the construct predicts intolerance/force, so neither pole
+# is ever ranked (§20.4).
+R6A_RELIABILITY_FLOOR = 0.50   # objectivism split-half reliability lower 95% CI (§20.2) — the HIGHER bar
+R6_MIN_ITEMS = 3               # per-claim-type item floor for a scorable read (§1.5 N=1)
+R6_CLAIM_TYPES = ("moral", "taste")
+# R6d is directional: lower 95% CI of mean_i (objectivism_moral_i − objectivism_taste_i) > 0 (§20.3).
+
+
+def _objectivism_response(r: dict) -> float | None:
+    """One metaethical-objectivism item response (§20.1): a Likert rating of how
+    OBJECTIVE a claim is (1 = purely a matter of opinion/preference … 7 = objectively
+    true or false, a fact independent of anyone's view). Returns None — the item is
+    DROPPED, never imputed — when absent or non-numeric (a declined item is MISSING
+    DATA, not a 0; §1.5). A bool is rejected (guards against True==1 coercion)."""
+    v = r.get("objectivism")
+    if not isinstance(v, (int, float)) or isinstance(v, bool):
+        return None
+    return float(v)
+
+
+def objectivism_items_by_user(
+    records: list[dict],
+    claim_type: str,
+    session_filter=None,
+) -> dict[str, list[float]]:
+    """Per user, the list of scorable objectivism ratings for ONE claim type (§20.1).
+    A record contributes only to its OWN claim_type — moral and taste items route to
+    DISJOINT sets and are never mixed (objectivism_i reads the MORAL items, not a
+    moral/taste blend; §13.5). A declined item is dropped (never imputed). Optional
+    session_filter(user, session) -> bool restricts to a session subset (the R6a
+    odd/even split). Keys `user` / `session` mirror the H10/H11/H12/R1 logs consumed
+    by _odd_even_sessions."""
+    by_user: dict[str, list[float]] = defaultdict(list)
+    for r in records:
+        user = r.get("user")
+        if user is None:
+            continue
+        if r.get("claim_type") != claim_type:
+            continue
+        if session_filter is not None and not session_filter(user, r.get("session")):
+            continue
+        v = _objectivism_response(r)
+        if v is not None:
+            by_user[user].append(v)
+    return by_user
+
+
+def objectivism_by_user(
+    records: list[dict],
+    claim_type: str,
+    session_filter=None,
+    min_items: int = R6_MIN_ITEMS,
+) -> dict[str, float]:
+    """objectivism_type_i = mean objectivism rating per user for ONE claim type
+    (§20.1), for users with ≥min_items scorable items of that type (the §1.5 floor —
+    a read below it is SUPPRESSED, absent from the result, never scored on too-few
+    items). objectivism_i (the reveal quantity) is the MORAL read; the taste read is
+    the cohort-anchor baseline (R6d). This never averages moral with taste into a
+    single scalar (§13.5), and — the R6 load-bearing discipline — never pools the
+    STATED objectivism probe with the (deferred, κ-gated) REVEALED tolerance/language
+    signatures."""
+    out: dict[str, float] = {}
+    for user, vals in objectivism_items_by_user(records, claim_type, session_filter).items():
+        if len(vals) >= min_items:
+            out[user] = sum(vals) / len(vals)
+    return out
+
+
+def compute_r6a_reliability(records: list[dict]) -> dict[str, Any] | None:
+    """R6a (§20.2): split each user's sessions odd/even, recompute the MORAL-claim
+    objectivism read on each half, correlate across users. Supported iff the lower
+    95% bootstrap CI of the correlation ≥ R6A_RELIABILITY_FLOOR (0.50 — a HIGHER bar
+    than the exploratory branches' 0.40, because metaethical objectivism is a stable,
+    reliable individual difference; Goodwin & Darley 2008, Skitka 2010). Anchored on
+    the moral read (the metaethical stance toward moral claims). Orthogonal to the
+    cohort ordering (that anchor is R6d), the discriminant (R6b, deferred), and the
+    stated–revealed meta-gap (R6c, deferred — κ-gated). Seed BOOTSTRAP_SEED+23."""
+    odd, even = _odd_even_sessions(records)
+    o_odd = objectivism_by_user(records, "moral", lambda u, s: s in odd.get(u, set()))
+    o_even = objectivism_by_user(records, "moral", lambda u, s: s in even.get(u, set()))
+    shared = sorted(set(o_odd) & set(o_even))
+    if len(shared) < 3:
+        return None
+    xs = [o_odd[u] for u in shared]
+    ys = [o_even[u] for u in shared]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 23)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_low != ci_low else bool(ci_low >= R6A_RELIABILITY_FLOOR)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n": len(shared),
+        "threshold_low": R6A_RELIABILITY_FLOOR, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_r6d_moral_objectivism_anchor(
+    records: list[dict], min_items: int = R6_MIN_ITEMS
+) -> dict[str, Any] | None:
+    """R6d (§20.3, moral > taste objectivism anchor, directional): per user with BOTH
+    a moral and a taste read,
+        d_i = objectivism_moral_i − objectivism_taste_i      (same objectivism scale —
+                                                              a within-scale contrast,
+                                                              not cross-scale pooling)
+    Supported iff the lower 95% CI of mean_i d_i > 0 (one-sided): on average people
+    treat moral claims as MORE objective (fact-like) than matters of taste (Goodwin &
+    Darley 2008, the canonical objectivism gradient). A COHORT-level construct-validity
+    anchor (does the established ordering replicate), NOT a per-person verdict: an
+    individual with d_i < 0 is described, never ranked (§20.4). Labelled R6d (not the
+    spec's R6c) to avoid colliding with R6c the stated–revealed meta-gap — the deferred
+    distinctive extension. Seed BOOTSTRAP_SEED+24."""
+    moral = objectivism_by_user(records, "moral", None, min_items)
+    taste = objectivism_by_user(records, "taste", None, min_items)
+    shared = sorted(set(moral) & set(taste))
+    deltas = [moral[u] - taste[u] for u in shared]
+    if len(deltas) < 3:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 24)
+    ci_low, ci_high = _bootstrap_ci_mean(deltas, rng)
+    met = None if ci_low != ci_low else bool(ci_low > 0.0)
+    return {
+        "mean_delta": sum(deltas) / len(deltas),
+        "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(deltas),
+        "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -2680,6 +2827,68 @@ def render_r1_result(
     return "\n".join(lines)
 
 
+def render_r6_result(
+    r6a: dict[str, Any] | None,
+    r6d: dict[str, Any] | None,
+    profile_n: int,
+    mean_moral_objectivism: float,
+    mean_taste_objectivism: float,
+) -> str:
+    """R6 moral conviction / metaethical objectivism (scoring.md §20). The STATED
+    objectivism probe read (Goodwin & Darley 2008): how objective a person treats
+    moral claims (a fact for everyone) vs. matters of taste (their own). Reported as a
+    standalone STATED quantity — NEVER pooled with the (deferred, κ-gated) REVEALED
+    tolerance/compromise/language signatures (§13.5, the load-bearing discipline here),
+    and the moral read is never blended with the taste read. Value-neutral with EXTRA
+    FORCE (the branch is charged — conviction predicts intolerance/force): neither pole
+    is better — objectivism can be moral clarity OR rigid intolerance of dissent,
+    subjectivism tolerant pluralism OR a relativism that won't stand for anything; the
+    reveal names where you sit, never ranks (§20.4)."""
+    if r6a is None and r6d is None and profile_n == 0:
+        return (
+            "(R6: insufficient data — supply --objectivism-log with per-item "
+            "metaethical-objectivism ratings across moral + taste claim types)"
+        )
+    lines = ["R6 (metaethical objectivism — stated probe, value-neutral under extra force):"]
+    lines.append(
+        f"  Objectivism profile (mean rating, 1=opinion … 7=objective fact): moral claims {mean_moral_objectivism:+.3f}, "
+        f"taste/preference {mean_taste_objectivism:+.3f} over {profile_n} participant(s) with both reads scored."
+    )
+    lines.append("  -- the STATED probe is never pooled with the (deferred) revealed tolerance/language signatures (§13.5) --")
+    if r6a is not None:
+        lines.append(
+            f"  R6a objectivism reliability (split-half odd/even, corr of the moral read)  r = {r6a['r']:+.3f}, "
+            f"95% CI {_ci_str(r6a)}, n = {r6a['n']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {r6a['threshold_low']:.2f}, the higher bar): "
+            f"{_met_glyph(r6a['pre_registered_threshold_met'])}"
+        )
+    else:
+        lines.append("  R6a objectivism reliability: insufficient data (need ≥3 users scorable in both odd & even session halves)")
+    if r6d is not None:
+        lines.append(
+            f"  R6d moral > taste objectivism (mean_i of the within-scale delta, cohort anchor)  "
+            f"mean = {r6d['mean_delta']:+.3f}, 95% CI {_ci_str(r6d)}, n = {r6d['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI > {r6d['threshold']:.1f}, one-sided, directional): "
+            f"{_met_glyph(r6d['pre_registered_threshold_met'])}  "
+            f"(moral claims treated as more fact-like than matters of taste — Goodwin & Darley 2008)"
+        )
+    else:
+        lines.append("  R6d moral > taste objectivism: insufficient data (need ≥3 users with both a moral and a taste read)")
+    lines.append(
+        "  Value-neutral (extra force — the branch is charged): holding morals as objective facts is NOT scored as "
+        "better or worse than holding them as your own (objectivism = moral clarity OR rigid intolerance; subjectivism "
+        "= tolerant pluralism OR standing for nothing — each pole dual-read, §20.4); the stance is described, never ranked. "
+        "R6d is a cohort construct-validity anchor, not a per-person verdict. R6b (discriminant vs R2 sacredness / R1 "
+        "centrality / value-content) and R6c (the stated–revealed meta-gap — the revealed tolerance/compromise + "
+        "objectivist-language signatures) are deferred (cohort-coupled / κ-gated); see build-and-validate.md."
+    )
+    return "\n".join(lines)
+
+
 def render_test_retest_result(
     name: str, threshold_text: str, results: dict[str, dict[str, Any]]
 ) -> str:
@@ -2851,6 +3060,12 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional moral-identity-centrality log (per-item internalization + symbolization responses) for R1 (§19).",
+    )
+    parser.add_argument(
+        "--objectivism-log",
+        type=Path,
+        default=None,
+        help="Optional metaethical-objectivism log (per-item objectivism ratings, moral + taste claim types) for R6 (§20).",
     )
     parser.add_argument(
         "--min-items",
@@ -3206,6 +3421,36 @@ def main() -> int:
         r1a_result = compute_r1a_reliability(identity_records)
         r1c_result = compute_r1c_internalization_anchor(identity_records)
 
+    # --- R6 moral conviction / metaethical objectivism: the STATED objectivism probe
+    # read (§20). The stated probe is NEVER pooled with the (deferred, κ-gated) revealed
+    # tolerance/compromise/language signatures (§13.5, load-bearing here); R6b (discriminant
+    # vs R2/R1/content) and R6c (the stated–revealed meta-gap) are cohort-coupled / κ-gated
+    # and DEFERRED. Python-only, parity stays green — no on-device reveal this increment.
+    r6a_result: dict[str, Any] | None = None
+    r6d_result: dict[str, Any] | None = None
+    r6_profile_n = 0
+    r6_mean_moral = 0.0
+    r6_mean_taste = 0.0
+    if args.objectivism_log:
+        try:
+            with args.objectivism_log.open() as f:
+                objectivism_records = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading objectivism log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(objectivism_records, list):
+            print("ERROR: objectivism log must be a JSON array", file=sys.stderr)
+            return 2
+        _r6_moral = objectivism_by_user(objectivism_records, "moral")
+        _r6_taste = objectivism_by_user(objectivism_records, "taste")
+        _r6_both = sorted(set(_r6_moral) & set(_r6_taste))
+        r6_profile_n = len(_r6_both)
+        if _r6_both:
+            r6_mean_moral = sum(_r6_moral[u] for u in _r6_both) / len(_r6_both)
+            r6_mean_taste = sum(_r6_taste[u] for u in _r6_both) / len(_r6_both)
+        r6a_result = compute_r6a_reliability(objectivism_records)
+        r6d_result = compute_r6d_moral_objectivism_anchor(objectivism_records)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -3391,6 +3636,20 @@ def main() -> int:
             r1_block["mean_symbolization"] = _nan_to_none(r1_mean_symbolization)
             hypotheses["R1"] = r1_block
 
+        r6_block: dict[str, Any] = {}
+        if r6a_result is not None:
+            r6_block["R6a"] = _h9_json(r6a_result)
+        if r6d_result is not None:
+            r6_block["R6d"] = _h9_json(r6d_result)
+        if r6_block or r6_profile_n:
+            r6_block["profile_n"] = r6_profile_n
+            # STATED probe only — moral and taste reads exposed SEPARATELY; no pooled
+            # "objectivism_score"/"conviction" key, and never fused with the (deferred)
+            # revealed tolerance/compromise/language signatures (§13.5, load-bearing).
+            r6_block["mean_moral_objectivism"] = _nan_to_none(r6_mean_moral)
+            r6_block["mean_taste_objectivism"] = _nan_to_none(r6_mean_taste)
+            hypotheses["R6"] = r6_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -3486,6 +3745,12 @@ def main() -> int:
             print(render_r1_result(
                 r1a_result, r1c_result, r1_profile_n,
                 r1_mean_internalization, r1_mean_symbolization,
+            ))
+        if r6a_result is not None or r6d_result is not None or r6_profile_n:
+            print()
+            print(render_r6_result(
+                r6a_result, r6d_result, r6_profile_n,
+                r6_mean_moral, r6_mean_taste,
             ))
 
     return 0

@@ -13,6 +13,99 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 24 — 2026-06-30 — R6 · Moral conviction / metaethical objectivism (stated probe, no-pool)
+
+`build-and-validate.md` item 7, the next cheapest-clean buildable branch: **R6** (`scoring.md §20`). The 15th
+pre-reg branch — buildable now because its **stated** leg reuses the within-person-mean + split-half +
+directional-anchor machinery whole (no κ-gated language channel, no new axis, no corpus rewrite); the charged
+revealed leg is deferred. The construct: a **meta-level** read of the values scored elsewhere — does a person hold
+their moral claims as **objective facts** (true or false independent of anyone's opinion) or as **personal
+commitments** (deeply held, but their own stance)? *Metaethical objectivism* (Goodwin & Darley 2008), the cousin
+of *moral conviction* (Skitka 2010) — the metaphysics of how a value is held, orthogonal to *which* value it is.
+Its defining structure is a **two-part split held strictly apart** (§13.5, the load-bearing discipline here): the
+**stated objectivism probe** (built) and the **revealed** tolerance/compromise + language signatures (deferred,
+κ-gated) — **NEVER pooled** into one "conviction score," because they dissociate. **Not** an excluded paradigm
+(Goodwin & Darley + Skitka are well-replicated); built with **EXTRA value-neutral force** because the branch is
+charged.
+
+- **What shipped (`scripts/analyze.py`, `--objectivism-log`).** The §20.1 primitive — `_objectivism_response`
+  (the per-item Likert guard: None/str/bool → None) → `objectivism_items_by_user` → `objectivism_by_user` = the
+  per-claim-type within-person mean over ≥ 3 scorable items on a 1–7 objectivism Likert (1 = pure
+  opinion/preference … 7 = objective fact), computed **separately** for `moral` (the reveal quantity) and `taste`
+  (the cohort baseline); **R6a** objectivism reliability (split-half odd/even sessions of the **moral** read,
+  `corr(objectivism_moral_i^odd, objectivism_moral_i^even)` supported iff lower bootstrap-CI ≥ **0.50** — the
+  **higher** bar, objectivism being a stable individual difference, seed +23, mirrors H10a/H11a/H12a/R1a via
+  `_odd_even_sessions` + `_pearson_r` + `_bootstrap_ci_r`); **R6d** the moral > taste objectivism directional
+  anchor (`mean_i(objectivism_moral_i − objectivism_taste_i)` supported iff lower-CI > 0, one-sided, seed +24 —
+  the Goodwin & Darley gradient where moral claims are treated as more fact-like than tastes, as a **cohort
+  validity check**, *not* a per-person verdict; labeled **R6d** not R6c to avoid colliding with the spec's R6c
+  meta-gap). The JSON `R6` block exposes `mean_moral_objectivism` and `mean_taste_objectivism` as **separate keys
+  — no pooled "objectivism"/"conviction" key**. Gated in `check_analyzer_thresholds.py` (R6 expectations +
+  `check_r6` rejecting any pooled `conviction`/`objectivism_score` key and requiring the two separate reads + a
+  `check_r6_no_pool()` unit-regression) on a self-contained fixture
+  (`analysis/fixtures/sample-objectivism-log.json`, 12 participants × 4 sessions × (2 moral + 2 taste) items +
+  one declined item + one counter-case, known ground truth: `R6a` r=1.000 CI-low 1.000 met (noiseless-by-
+  construction so the gate checks the analyzer *recovers* r=1.0 and clears the **0.50** floor); `R6d`
+  mean_delta=+2.167 CI-low +1.333 CI-high +2.917 met, n=12; `profile_n`=12 reveal-eligible;
+  mean_moral_objectivism 5.833 / mean_taste_objectivism 3.667 carried separately).
+- **Disciplines honored.** *No-pool lock* (§20.1 — the load-bearing one here, the R6 analog of the §13.2
+  censoring lock): the **STATED probe is never pooled** with the (deferred) **REVEALED** signatures into one
+  conviction score; the **moral and taste reads are DISJOINT item sets scored separately** — never blended into
+  (M+T)/2 — a **declined item** (None/non-numeric/bool) is **DROPPED from its claim type, never imputed to 0**,
+  and a claim type with **< 3 scorable items is SUPPRESSED**; asserted directly against the code in
+  `check_r6_no_pool()` (valid → float; None/str/bool → None; moral 6.0 & taste 2.0 never pooled to 4.0; declined
+  item drops so 3 scorable not 4; below-floor claim type absent — 10 assertions, all green). *No composite /
+  never-pool* (§13.5): the objectivism reads are never summed with each other or with a gap, calibration index,
+  variability index, circle radius, protected set, CoV price, self–other asymmetry, or identity facet, never
+  pooled across branches. *Value-neutral, EXTRA force* (the branch is charged): objectivism = **moral clarity OR
+  rigid intolerance** (objectivists are less tolerant of moral disagreement); subjectivism = **tolerant pluralism
+  OR standing for nothing** — each pole **dual-read, never ranked**, and the branch **takes no side** on the
+  metaethics (objectivism neither more correct nor healthier). The fixture's u12 (moral 4 < taste 5, a negative
+  delta — treats tastes as more objective than morals) exercises the preserved counter-case. This is why **R6d is
+  walled off as a cohort anchor, not an individual verdict.** *N=1* — `objectivism_moral_i` is a within-person
+  mean over that user's ≥ 3 moral items, reveal-eligible with no cohort norms. *Censoring* (§13.2) attaches to
+  the **deferred** revealed leg — a refusal to compromise stays right-censored, never finitized (the |8.0|
+  pattern). *Cheap-talk* — these are *self-reported* ratings of how fact-like a claim is, not behavior under
+  disagreement; the reads are **stated** objectivism, behavioral validation is the R6c meta-gap / Phase-2.
+  *Fraud/replication* — no excluded paradigms (Goodwin & Darley + Skitka are well-replicated).
+- **Scope (same pattern as H9/H10/H11/R2/H12/R1).** Two within-scale claim-type reads reusing the bootstrap +
+  split-half machinery whole; **no new axis, no on-device reveal touched** → Python-only → **parity trivially
+  green** (poc-projection.js untouched, 9/9). **Deferred (documented):** (a) **R6b** — the **discriminant** (R² of
+  `objectivism_moral_i` on `[R2 sacredness, R1 centrality, value-importance]` < 0.50); couples to the R2 + R1
+  cohort pipelines like the H9b/H10b/H11b/R2c/H12b/R1b discriminants. (b) **R6c** — the headline
+  **stated–revealed meta-gap** (does stated objectivism match the revealed tolerance/compromise +
+  objectivist-language behavior?) — **κ-gated** (needs the human-rater language-coding pipeline). (c) The
+  **on-device objectivism reveal** in `poc-projection.js` + its parity lock. (d) The objectivism log's **real
+  collection + exact phrasing** (the Goodwin & Darley probe stems) — design-gated (surfaced under "Needs Dave /
+  external").
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §25 — R6 pre-registration.* Two **disjoint**
+  claim-type reads (moral, taste), each a within-person mean of its own ≥ 3 items on a common 1–7 objectivism
+  Likert, read off a new light `--objectivism-log` data-contract (one response per item, each carrying its
+  `claim_type ∈ {moral, taste}`); the **stated probe never pooled** with the (deferred) revealed signatures, nor
+  the moral read with the taste read, into any conviction score (§13.5, load-bearing). R6a floor **0.50** (the
+  higher bar) on the split-half (odd/even sessions) reliability of the **moral** read (seed 20260510+23). R6d
+  directional, `mean_i(objectivism_moral_i − objectivism_taste_i)` lower-CI > 0 (seed +24) — a **cohort validity
+  anchor** (recovers the established moral > taste direction), explicitly **not** a per-person verdict. No-pool /
+  missing-data lock: a declined item drops from its claim type (never imputed 0), a below-floor claim type is
+  suppressed. Value-neutrality with **extra force** (neither metaethical pole ranked; each dual-read; the branch
+  takes no side) is load-bearing. The reads labelled **stated** objectivism pending the R6c meta-gap leg /
+  Phase-2. R6b discriminant + R6c meta-gap thresholds proposed but not built. If this reads right, say "lock §25"
+  and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, H10, H11, R2, H12,
+  R1, **R6**, probe-ceiling, h9-censoring, h10-suppression, h11-suppression, r2-censoring, h12-pairing, r1-nopool,
+  **r6-nopool**) + JS↔Python parity 9/9. Commit on `poc` main.
+
+**Buildable-without-Dave work remains, but the machinery-reusing tail is now essentially spent.** The Python-only
+template (within-person index + split-half reliability + directional cohort anchor + a discipline lock) has now
+been applied to **seven** branches — H9, H10, H11, R2, H12, R1, R6 — and every remaining branch leans on a
+Dave-gated channel: the A3/R3/R4/R5 language-derived branches are all **κ≥0.70-gated** (build the coder +
+synthetic parity now, real κ needs human raters); the deferred discriminant/moderation halves (every *b*/*c* leg)
+couple to the **cohort pipeline** (real n≈200 data); the revealed legs of the charged branches (R6c meta-gap,
+protected-value real stakes) need **language coding + real offers**. What's left is build-the-scaffold-now,
+validate-for-real-later — flagged for Dave, not silently stubbed. Loop continues into that Dave-gated tail.
+
+---
+
 ## Iteration 23 — 2026-06-30 — R1 · Moral identity centrality (two-facet, no-pool)
 
 `build-and-validate.md` item 6, the next cheapest-clean buildable branch: **R1** (`scoring.md §19`). The 14th
