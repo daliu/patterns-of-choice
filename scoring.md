@@ -642,6 +642,65 @@ Seed `20260510 + 16`. `circle_radius` scores only — no cross-channel pooling. 
 
 ---
 
+## 17. R2 — sacred / protected values (PROPOSED — pending DECISIONS §22 lock)
+
+Design source: [`r2-sacred-protected-values.md`](r2-sacred-protected-values.md). R2 asks which values a person **refuses to price at any stake** — protected/sacred values (Baron & Spranca 1997; Tetlock 2000 *taboo trade-offs*; Fiske & Tetlock 1997 *incommensurability*), where the resistance to trade-off is quantity-insensitive (Bartels & Medin 2007) and load-bearing in conflict (Ginges et al. 2007). It is a **pure re-read** of the cost-of-virtue channel (§4, §13.2): the **right-censored `never` tail** — the values a person won't sell at any rung in range — **is** their protected set. **No new break-point math**; the censoring discipline was already storing this construct.
+
+**Status.** R2a + R2b + the per-person `P_i` reveal quantity are BUILT (`analyze.py --protected-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-protected-values-log.json`, Python-only so parity stays green). R2c and the on-device protected-set reveal are DEFERRED (§17.4, §17.6). The `taboo` marker (§17.5) is a **new light data-contract field** scored here on synthetic fixtures; real collection + its exact phrasing are runtime/design-gated (surfaced to Dave). This re-reads the CoV break-point **primitive** (already parity-locked; the runtime emits per-slot `no_break_point` at `poc-projection.js:212`) **without changing it**.
+
+### 17.1 Measurement primitive (§1.1 of the design doc)
+
+For person `i`, the **professed protected set** is the set of value slots they mark `never` on the cost-of-virtue ladder:
+
+    P_i = { v : response(i, v) is a censored `never` }     # categorical set membership, keyed by value_slot
+
+A `never` is read **categorically** — it inherits §13.2 verbatim: right-censored (price above the ladder top), **NEVER finitized into a number**. `P_i` holds value-slot **strings**, never prices; it is a **set + a marker**, never summed into a "sacredness score" (§13.5 — §4 rejected exactly that scalar). A light companion marker rides each CoV probe:
+
+    taboo_i(v) ∈ {0, 1}   # "was even being ASKED to price this wrong?" — a one-tap after the probe (§3 A1)
+
+### 17.2 R2a — set reliability (BUILT)
+
+Protected-value *set* membership must be stable across occasions. For each participant present in ≥2 waves, take the set-agreement (Jaccard) of their protected sets across the first and last wave:
+
+    jaccard_i = | P_i^{w1} ∩ P_i^{w2} | / | P_i^{w1} ∪ P_i^{w2} |
+    R2a supported  ⇔  lower 95% bootstrap CI of  mean_i jaccard_i  ≥ 0.40
+
+Bootstrap: percentile method, pre-committed seed `20260510 + 17`. A participant whose protected union is **empty in both waves** (protects nothing either time) has an **undefined** Jaccard and is **EXCLUDED** — reported as `n_excluded_empty`, **never scored as perfect agreement** (which would spuriously inflate reliability from the majority who protect nothing).
+
+### 17.3 R2b — protected ≠ EXPENSIVE (BUILT, directional — load-bearing)
+
+The distinctness that makes protected values a real construct rather than a relabeling of "very expensive": among never-responders, being *asked* to price a genuinely protected value draws outrage (taboo) that pricing a merely high-but-finite value does not. Per participant with both a protected and a finite response carrying markers:
+
+    contrast_i = mean( taboo_i(v) | v is a `never` )  −  mean( taboo_i(v) | v has a finite price )
+    R2b supported  ⇔  lower 95% CI of  mean_i contrast_i  > 0   (one-sided)
+
+Seed `20260510 + 18`. Without R2b a `never` is just "off the top of the ladder"; the taboo contrast is what separates a **sacred** value from a **very expensive** one. (The complementary *quantity-insensitivity* leg — a flat refusal that doesn't soften as the offer climbs — needs per-rung acceptance trajectories the single-break-point contract doesn't carry; bounded/deferred per §17.5 and design-doc §6 Q3. The taboo contrast is the primary distinctness test.)
+
+### 17.4 R2c — discriminant validity (DEFERRED — cohort-coupled)
+
+Protectedness must not be a proxy for how *important* a value is on the stated inventory (a merely top-ranked value):
+
+    regress P_i-membership on [ inventory rank_v,  log-price_v ]
+    R2c (discriminant) supported  ⇔  upper 95% CI of  R²  < 0.50
+
+**DEFERRED** because it couples to the cohort inventory-rank + log-price pipeline, exactly as the H9b/H10b/H11b discriminant halves do — the current increment stays isolated on its own fixture.
+
+### 17.5 Taboo marker, cheap-talk, N=1, value-neutrality (§1.5 of the design doc)
+
+- **The `taboo` marker (§3 A1).** A new light data-contract field (0/1), a one-tap after a CoV probe. Scored here on synthetic fixtures; **real collection and its exact phrasing (Q1 — avoid a leading "was this offensive?") are runtime/design-gated** and surfaced to Dave (see build-and-validate.md "Needs Dave / external").
+- **Cheap-talk caveat (load-bearing).** A hypothetical `never` is **costless** — anyone can *say* a value is sacred. `P_i` is therefore labelled **PROFESSED** protected values; the reveal never claims they'd survive a real offer. Real-stakes validation (which `never`s hold when the price is actual) rides **H-A2 → Phase-2** (IRB-gated; surfaced to Dave).
+- **N=1 interpretability.** `P_i` is a within-person set on the fixed value slots — reveal-eligible for a single user with no cohort standardization ("honesty and loyalty are non-negotiable *for you*; generosity has a price"), contrast the cohort-only R2a/R2b statistics.
+- **Value-neutrality (load-bearing).** A **large protected set is not scored as better** — many `never`s can be **integrity** OR rigid **dogmatism** (a value-monist who won't trade off anything is not more moral, just less flexible). The reveal **names the set** and **never ranks** it by size.
+
+### 17.6 What §17 deliberately does not compute
+
+- **No sacredness score / no pooling.** `P_i` is a set and `taboo` a marker; neither is summed with a gap, calibration index, variability index, circle radius, or CoV price into one scalar (§13.5), nor pooled across branches.
+- **No finitized `never`.** The protected read **never** assigns a price to a `never` — it stays the right-censored categorical tail (§13.2), asserted directly against the code by `check_r2_censoring()` (the R2 analog of the §14.1 CoV-ceiling / |8.0| lock).
+- **No real-stakes claim.** `P_i` is professed; the reveal carries the cheap-talk caveat and never asserts a value would survive a real offer (that is H-A2, Phase-2).
+- **No on-device projection yet.** The `P_i` reveal is NOT in `poc-projection.js` this increment (Python-only, parity stays green); when added it changes **both** scorers under the §13.5/parity locks.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.

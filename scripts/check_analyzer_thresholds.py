@@ -42,6 +42,15 @@ Expected outcomes on the current synthetic fixtures:
   §13.2 CENSORING + §1.5 SUPPRESSION regression (check_h11_suppression): a
   flat circle's R_i stays censored — NEVER made finite — and a user below
   the ≥4-populated-bin floor (or a bin below the ≥2-item floor) is omitted.
+- R2 (sacred / protected values): R2a protected-set test-retest reliability
+  (Jaccard over waves, lower CI ≥ 0.40) and R2b protected ≠ EXPENSIVE (the
+  taboo|never − taboo|finite contrast's lower CI > 0, directional) both met =
+  True on the fixtures, with ≥1 participant holding a non-empty protected set
+  P_i, ≥1 who protects nothing (the empty-set case), and R2a's undefined-
+  Jaccard exclusion exercised. Plus the §13.2 CATEGORICAL-`never` regression
+  (check_r2_censoring): a protected `never` enters P_i as a value_slot string
+  and is NEVER finitized into a price (scores the right-censored sentinel),
+  and an empty-in-both-waves user is excluded from R2a, never scored 1.0.
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -71,6 +80,7 @@ EXPECTATIONS = {
     "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9c": True}},
     "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True}},
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11c": True}},
+    "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
 }
 
 
@@ -90,6 +100,7 @@ def run_analyzer() -> dict:
         "--predictions-window-b", str(FIXTURES / "sample-predictions-window-b.json"),
         "--context-log", str(FIXTURES / "sample-context-log.json"),
         "--circle-log", str(FIXTURES / "sample-circle-log.json"),
+        "--protected-log", str(FIXTURES / "sample-protected-values-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -238,6 +249,45 @@ def check_h11(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 
+def check_r2(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
+    """R2 sacred / protected values. Assert each present sub-hypothesis (R2a
+    protected-set test-retest reliability, R2b protected ≠ expensive) hit its
+    pre-registered outcome, and that the reveal quantities are populated — at
+    least one participant with a non-empty protected set P_i AND at least one who
+    protects nothing (the empty-set / all-priced case exercised), plus R2a's
+    undefined-Jaccard exclusion (empty union in both waves) counted, never scored
+    as perfect agreement. The §13.2 categorical-`never` lock is asserted directly
+    against the code in check_r2_censoring() below."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    parts = []
+    for sub, expected in sub_met.items():
+        block = payload.get(sub)
+        if block is None:
+            return False, f"{hid}: sub-hypothesis {sub} missing"
+        met = block.get("pre_registered_threshold_met")
+        if met != expected:
+            return False, f"{hid}.{sub}: threshold_met = {met!r}, expected {expected!r}"
+        if block.get("n", block.get("n_participants", 0)) < 3:
+            return False, f"{hid}.{sub}: n too small ({block})"
+        parts.append(f"{sub}={met}")
+    if payload.get("protected_set_n", 0) < 1:
+        return False, f"{hid}: no reveal-eligible P_i (protected_set_n={payload.get('protected_set_n')})"
+    if payload.get("protected_none_n", 0) < 1:
+        return False, (
+            f"{hid}: no all-priced participant — the empty protected-set case must be "
+            f"exercised (protected_none_n={payload.get('protected_none_n')})"
+        )
+    r2a = payload.get("R2a", {})
+    if r2a.get("n_excluded_empty", 0) < 1:
+        return False, (
+            f"{hid}: R2a undefined-Jaccard exclusion not exercised "
+            f"(n_excluded_empty={r2a.get('n_excluded_empty')})"
+        )
+    parts.append(f"P_i×{payload['protected_set_n']}, none={payload['protected_none_n']}, r2a_excl={r2a['n_excluded_empty']}")
+    return True, f"{hid}: ✓ {', '.join(parts)}"
+
+
 def check_h9_censoring() -> tuple[bool, list[str]]:
     """Unit regression for the §14.1 CENSORING LOCK (the H9 analog of the |8.0|
     ceiling lock): calibration_cov_records must NEVER emit a finite e_price when
@@ -375,6 +425,62 @@ def check_h11_suppression() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_r2_censoring() -> tuple[bool, list[str]]:
+    """Unit regression for the R2 §13.2 CATEGORICAL-`never` LOCK (the R2 analog of
+    the |8.0| ceiling / H9 censoring locks): a protected `never` response enters
+    P_i as a value_slot STRING (categorical set membership) and is NEVER finitized
+    into a price. Asserted directly against the code so a regression that starts
+    pricing a protected value — or drops it from P_i — is caught even if a fixture
+    is later changed:
+      (i)   a `never` response is protected; a finite-price response is not;
+      (ii)  a protected `never` scores the RIGHT-CENSORED sentinel (the probe's
+            ladder ceiling + 1), never a finite break-point (§4 / §13.2);
+      (iii) protected_value_sets holds the value_slot STRING, no price attached;
+      (iv)  R2a EXCLUDES a user whose protected union is empty in both waves
+            (undefined Jaccard), never scoring it as perfect agreement."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    inv = A.load_probe_inversion_map()
+    cm = A.load_probe_ceiling_map()
+    never_resp = {"user_id": "n1", "probe_id": "cov-truth-001", "value_slot": "honesty",
+                  "first_accept_rung": "never", "first_accept_stake": None,
+                  "no_break_point": True, "wave": "w1"}
+    fin_resp = {"user_id": "n1", "probe_id": "cov-truth-001", "value_slot": "honesty",
+                "first_accept_rung": "r3", "first_accept_stake": 5000,
+                "no_break_point": False, "wave": "w1"}
+    never_score = A.probe_break_point_score(never_resp, inv, cm)
+    ceil_top = cm.get("cov-truth-001", 4.0)
+    sets, _ = A.protected_value_sets([never_resp])
+    pset = sets.get(("n1", "w1"), set())
+    # (iv) one empty-in-both-waves user (excluded) + three stable protected users (scored).
+    two_wave = [
+        {"user_id": "e1", "value_slot": "honesty", "first_accept_rung": "r3",
+         "first_accept_stake": 5000, "no_break_point": False, "wave": w}
+        for w in ("w1", "w2")
+    ] + [
+        {"user_id": f"g{i}", "value_slot": v, "first_accept_rung": "never",
+         "first_accept_stake": None, "no_break_point": True, "wave": w}
+        for i, v in enumerate(["honesty", "loyalty", "fairness"])
+        for w in ("w1", "w2")
+    ]
+    r2a_empty = A.compute_r2a_reliability(two_wave)
+    checks = [
+        ("a `never` response is protected; a finite-price response is not",
+         A._cov_response_is_protected(never_resp) is True and A._cov_response_is_protected(fin_resp) is False),
+        ("a protected `never` scores the RIGHT-CENSORED sentinel (ceiling+1), never a finite price",
+         never_score is not None and abs(never_score[0] - (ceil_top + 1.0)) < 1e-9),
+        ("P_i holds the value_slot STRING, no price attached (categorical membership)",
+         pset == {"honesty"} and all(isinstance(v, str) for v in pset)),
+        ("R2a EXCLUDES an empty-in-both-waves user (undefined Jaccard), never scores it 1.0",
+         r2a_empty is not None and r2a_empty["n_excluded_empty"] == 1 and r2a_empty["n_participants"] == 3),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r2-censoring: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -422,6 +528,8 @@ def main() -> int:
             ok, msg = check_h10(hid, payload, spec["sub_met"])
         elif spec["kind"] == "h11":
             ok, msg = check_h11(hid, payload, spec["sub_met"])
+        elif spec["kind"] == "r2":
+            ok, msg = check_r2(hid, payload, spec["sub_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -450,6 +558,12 @@ def main() -> int:
     for m in h11sup_msgs:
         print(m)
     if not h11sup_ok:
+        all_pass = False
+
+    r2cens_ok, r2cens_msgs = check_r2_censoring()
+    for m in r2cens_msgs:
+        print(m)
+    if not r2cens_ok:
         all_pass = False
 
     if all_pass:

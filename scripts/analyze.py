@@ -79,6 +79,19 @@ Implemented here:
   is deferred — cohort-coupled, like H9b/H10b. Value-neutral (§1.5): a wider
   circle is never scored as better; β_i/R_i are reported as facets, never
   summed (§13.5) and never pooled with the primary or CoV channels.
+- R2a/R2b sacred / protected values (§17 of scoring.md, 12th pre-reg branch).
+  When --protected-log is supplied (cost-of-virtue responses carrying
+  value_slot + wave, and a light taboo 0/1 marker): P_i = the SET of
+  value_slots a person marks `never` — the right-censored CoV tail (§4,
+  §13.2) re-read as their PROFESSED protected set, categorical and never
+  finitized into a price. R2a set reliability (protected-set test-retest
+  Jaccard across waves, lower CI ≥ 0.40) and R2b protected ≠ EXPENSIVE (the
+  load-bearing distinctness: taboo higher on protected than on high-but-finite
+  values, lower CI of the contrast > 0, directional). Value-neutral (§17.5):
+  a large protected set is integrity OR dogmatism, never ranked; cheap-talk
+  caveat — professed, real-stakes validation (H-A2) is Phase-2. R2c
+  discriminant (vs importance rank) deferred — cohort-coupled. P_i is a SET +
+  a marker, never summed into a sacredness score (§13.5).
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -1847,6 +1860,161 @@ def compute_h11c_gradient(records: list[dict[str, Any]]) -> dict[str, Any] | Non
     }
 
 
+# R2 — sacred / protected values (scoring.md §17, r2-sacred-protected-values.md).
+# A pure RE-READ of the cost-of-virtue channel's right-censored `never` tail (§4,
+# §13.2): the values a person refuses to price at ANY stake in range ARE their
+# protected set. P_i = { v : response(i,v) is a censored `never` } — categorical
+# set membership, keyed by value_slot, NEVER finitized into a price (the §13.2
+# lock, load-bearing here). This adds NO new break-point math; it names the tail
+# the censoring discipline was already storing. Two within-person reads (§17.1):
+#   R2a — set reliability: test-retest Jaccard of P_i across two waves (§17.2).
+#   R2b — protected ≠ EXPENSIVE (§17.3, load-bearing distinctness): among
+#         never-responders, the `taboo` marker ("was being asked to price this
+#         wrong?") is higher on protected values than on merely high-but-finite
+#         ones — a distinct construct, not just "very expensive."
+# `taboo` is a NEW light data-contract field (§3 A1), a one-tap after a cov probe,
+# scored here on synthetic fixtures; real collection + its exact phrasing are
+# runtime/design-gated (Q1) and surfaced to Dave. Value-neutral (§17.5): a large
+# protected set can be integrity OR rigid dogmatism — the reveal NAMES the set,
+# never ranks it. Cheap-talk caveat (load-bearing): a hypothetical `never` is
+# costless, so P_i is labelled PROFESSED protected values; real-stakes validation
+# (which `never`s survive a real price) rides H-A2 → Phase-2 (IRB-gated, to Dave).
+# No composite (§13.5): P_i is a set, taboo a marker — never summed into a
+# "sacredness score" (§4 rejected exactly that). R2c (discriminant vs importance
+# rank) is DEFERRED — cohort-coupled, needs the inventory-rank + log-price
+# pipeline (like the H9b/H11b deferred halves). Python-only: this re-reads the
+# cov break-point PRIMITIVE (already parity-locked; the runtime emits per-slot
+# no_break_point at poc-projection.js:212) without changing it, so the on-device
+# protected-set reveal is deferred and parity stays green.
+# ----------------------------------------------------------------------------
+
+R2A_RELIABILITY_FLOOR = 0.40   # protected-set test-retest Jaccard lower 95% CI (§17.2)
+# R2b is directional: lower 95% CI of the mean (taboo|never − taboo|finite) > 0 (§17.3).
+
+
+def _cov_response_is_protected(r: dict) -> bool:
+    """A protected (`never`) cost-of-virtue response per §13.2: refused at every
+    rung in range. This is the SAME predicate probe_break_point_score censors on
+    (line ~427) — a protected value is exactly the right-censored tail, read here
+    categorically as set membership and NEVER finitized into a price (the §17
+    censoring lock). Pole-agnostic: a `never` on an inverted probe is still a
+    `never`."""
+    return r.get("no_break_point") is True or r.get("first_accept_rung") == "never"
+
+
+def protected_value_sets(
+    responses: list[dict],
+    wave_of=lambda r: r.get("wave"),
+) -> tuple[dict[tuple[str, str], set[str]], dict[str, set[str]]]:
+    """P_i per (user, wave) (§17.1): the SET of value_slots the user marked
+    `never`. Returns (sets, waves_seen) where sets[(user, wave)] = {value_slot,…}
+    and waves_seen[user] = {wave,…} (every wave the user was asked in, so R2a can
+    find users present in ≥2 waves even when a wave's protected set is empty).
+    Membership is categorical — the set holds value_slot STRINGS, never prices
+    (§13.2). `wave_of(response)` → a hashable wave key, or None to drop."""
+    sets: dict[tuple[str, str], set[str]] = defaultdict(set)
+    waves_seen: dict[str, set[str]] = defaultdict(set)
+    for r in responses:
+        w = wave_of(r)
+        if w is None:
+            continue
+        user = r.get("user_id")
+        if user is None:
+            continue
+        waves_seen[user].add(w)
+        slot = r.get("value_slot")
+        if slot and _cov_response_is_protected(r):
+            sets[(user, w)].add(slot)
+    return sets, waves_seen
+
+
+def compute_r2a_reliability(
+    responses: list[dict],
+    wave_of=lambda r: r.get("wave"),
+) -> dict[str, Any] | None:
+    """R2a (§17.2): protected-set test-retest. For each user present in ≥2 waves,
+        jaccard_i = |P_i^w1 ∩ P_i^w2| / |P_i^w1 ∪ P_i^w2|   (first vs last wave)
+    the set-agreement of their protected values across occasions. Supported iff
+    the lower 95% bootstrap CI of mean_i jaccard_i ≥ R2A_RELIABILITY_FLOOR. Users
+    whose union is empty in BOTH waves (protect nothing either time) have an
+    undefined Jaccard and are EXCLUDED — reported as n_excluded_empty, not scored
+    as perfect agreement. Seed BOOTSTRAP_SEED+17."""
+    sets, waves_seen = protected_value_sets(responses, wave_of)
+    jaccards: list[float] = []
+    n_excluded_empty = 0
+    for user in sorted(waves_seen):
+        ws = sorted(waves_seen[user])
+        if len(ws) < 2:
+            continue
+        p1 = sets.get((user, ws[0]), set())
+        p2 = sets.get((user, ws[-1]), set())
+        union = p1 | p2
+        if not union:
+            n_excluded_empty += 1
+            continue
+        jaccards.append(len(p1 & p2) / len(union))
+    if len(jaccards) < 3:
+        return None
+    mean_j = sum(jaccards) / len(jaccards)
+    rng = random.Random(BOOTSTRAP_SEED + 17)
+    ci_low, ci_high = _bootstrap_ci_mean(jaccards, rng)
+    met = None if ci_low != ci_low else bool(ci_low >= R2A_RELIABILITY_FLOOR)
+    return {
+        "mean_jaccard": mean_j, "ci_low": ci_low, "ci_high": ci_high,
+        "n_participants": len(jaccards), "n_excluded_empty": n_excluded_empty,
+        "threshold_low": R2A_RELIABILITY_FLOOR, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_r2b_distinctness(responses: list[dict]) -> dict[str, Any] | None:
+    """R2b (§17.3, protected ≠ expensive — load-bearing distinctness): among
+    never-responders, per user
+        contrast_i = mean(taboo | protected `never`) − mean(taboo | finite price)
+    where taboo ∈ {0,1} marks "was even being ASKED to price this wrong?". A user
+    contributes only with BOTH a never-cell AND a finite-cell carrying taboo
+    markers. Supported iff the lower 95% CI of mean_i contrast_i > 0 (one-sided,
+    directional): pricing a protected value draws outrage that pricing a merely
+    high-but-finite value does not — so a `never` is NOT just "very expensive."
+    Seed BOOTSTRAP_SEED+18. (The quantity-insensitivity leg needs per-rung
+    trajectories the single-break-point contract doesn't carry — bounded/deferred,
+    §17.5 / §6 Q3; the taboo contrast is the primary distinctness test, §2.)"""
+    by_user: dict[str, dict[str, list[float]]] = defaultdict(
+        lambda: {"never": [], "finite": []}
+    )
+    for r in responses:
+        taboo = r.get("taboo")
+        if isinstance(taboo, bool):
+            taboo = int(taboo)
+        if not isinstance(taboo, (int, float)):
+            continue
+        user = r.get("user_id")
+        if user is None:
+            continue
+        if _cov_response_is_protected(r):
+            by_user[user]["never"].append(float(taboo))
+        else:
+            stake = r.get("first_accept_stake")
+            if isinstance(stake, (int, float)) and not isinstance(stake, bool):
+                by_user[user]["finite"].append(float(taboo))
+    contrasts: list[float] = []
+    for user in sorted(by_user):
+        cells = by_user[user]
+        if cells["never"] and cells["finite"]:
+            m_never = sum(cells["never"]) / len(cells["never"])
+            m_finite = sum(cells["finite"]) / len(cells["finite"])
+            contrasts.append(m_never - m_finite)
+    if len(contrasts) < 3:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 18)
+    ci_low, ci_high = _bootstrap_ci_mean(contrasts, rng)
+    met = None if ci_low != ci_low else bool(ci_low > 0.0)
+    return {
+        "mean_contrast": sum(contrasts) / len(contrasts),
+        "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(contrasts),
+        "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -2057,6 +2225,62 @@ def render_h11_result(
     return "\n".join(lines)
 
 
+def render_r2_result(
+    r2a: dict[str, Any] | None,
+    r2b: dict[str, Any] | None,
+    protected_set_n: int,
+    protected_none_n: int,
+    protected_set_sizes: list[int],
+) -> str:
+    """R2 sacred / protected values (scoring.md §17). Value-neutral: P_i names the
+    values a person won't price (professed) — integrity OR dogmatism, never ranked
+    (§17.5). The `never` tail is read categorically, never finitized (§13.2)."""
+    if r2a is None and r2b is None and protected_set_n == 0 and protected_none_n == 0:
+        return (
+            "(R2: insufficient data — supply --protected-log with cost-of-virtue "
+            "responses carrying value_slot + wave (+ taboo) to read the protected set)"
+        )
+    lines = ["R2 (sacred / protected values — the values a person won't price, value-neutral):"]
+    mean_size = (sum(protected_set_sizes) / len(protected_set_sizes)) if protected_set_sizes else 0.0
+    lines.append(
+        f"  Professed protected sets P_i: {protected_set_n} participant(s) with ≥1 protected "
+        f"value (mean set size {mean_size:.2f}); {protected_none_n} protect nothing "
+        f"(all values priced). A `never` is read categorically — right-censored, never "
+        f"finitized into a price (§13.2)."
+    )
+    lines.append("  -- cost-of-virtue `never` tail re-read as the protected set (§17.1); a SET + a marker, never summed (§13.5) --")
+    if r2a is not None:
+        lines.append(
+            f"  R2a set reliability (protected-set test-retest, Jaccard over waves)  "
+            f"mean = {r2a['mean_jaccard']:.3f}, 95% CI {_ci_str(r2a)}, n = {r2a['n_participants']}"
+            + (f" ({r2a['n_excluded_empty']} excluded: empty in both waves)" if r2a['n_excluded_empty'] else "")
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {r2a['threshold_low']:.2f}): "
+            f"{_met_glyph(r2a['pre_registered_threshold_met'])}"
+        )
+    else:
+        lines.append("  R2a set reliability: insufficient data (need ≥3 users with a non-empty protected set across ≥2 waves)")
+    if r2b is not None:
+        lines.append(
+            f"  R2b protected ≠ expensive (taboo|never − taboo|finite)  mean = {r2b['mean_contrast']:+.3f}, "
+            f"95% CI {_ci_str(r2b)}, n = {r2b['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI > {r2b['threshold']:.1f}, one-sided, directional): "
+            f"{_met_glyph(r2b['pre_registered_threshold_met'])}  "
+            f"(being asked to price a protected value draws outrage a merely-expensive one does not)"
+        )
+    else:
+        lines.append("  R2b protected ≠ expensive: insufficient data (need ≥3 users with both a taboo-marked `never` and finite response)")
+    lines.append(
+        "  Value-neutral: a large protected set is not scored as better (integrity vs rigid "
+        "dogmatism, §17.5). Cheap-talk: these are PROFESSED protected values — real-stakes "
+        "validation (H-A2) is Phase-2. R2c discriminant (vs importance rank) deferred; see build-and-validate.md."
+    )
+    return "\n".join(lines)
+
+
 def render_test_retest_result(
     name: str, threshold_text: str, results: dict[str, dict[str, Any]]
 ) -> str:
@@ -2210,6 +2434,12 @@ def main() -> int:
         type=Path,
         default=DEFAULT_DISTANCE_MAP,
         help="Counterparty→distance-bin ordering map for H11 (default: analysis/counterparty_distance_map_v0.1.csv).",
+    )
+    parser.add_argument(
+        "--protected-log",
+        type=Path,
+        default=None,
+        help="Optional cost-of-virtue log (value_slot + wave + taboo) for R2 sacred/protected values (§17).",
     )
     parser.add_argument(
         "--min-items",
@@ -2478,6 +2708,39 @@ def main() -> int:
         h11a_result = compute_h11a_reliability(h11_records)
         h11c_result = compute_h11c_gradient(h11_records)
 
+    # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
+    # value_slot + wave (+ taboo) is supplied. Pure re-read of the `never` tail as
+    # the protected set P_i (§13.2 censoring, categorical, never finitized).
+    # Python-only this increment — the on-device protected-set reveal is deferred
+    # (same scope pattern as H9/H10/H11), so parity stays green.
+    r2a_result: dict[str, Any] | None = None
+    r2b_result: dict[str, Any] | None = None
+    r2_protected_set_n = 0
+    r2_protected_none_n = 0
+    r2_protected_set_sizes: list[int] = []
+    if args.protected_log:
+        try:
+            with args.protected_log.open() as f:
+                protected_responses = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading protected-values log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(protected_responses, list):
+            print("ERROR: protected-values log must be a JSON array", file=sys.stderr)
+            return 2
+        # First-wave protected-set census (per participant) for the reveal count.
+        _psets, _pwaves = protected_value_sets(protected_responses)
+        for _user in sorted(_pwaves):
+            first_wave = sorted(_pwaves[_user])[0]
+            size = len(_psets.get((_user, first_wave), set()))
+            if size > 0:
+                r2_protected_set_n += 1
+                r2_protected_set_sizes.append(size)
+            else:
+                r2_protected_none_n += 1
+        r2a_result = compute_r2a_reliability(protected_responses)
+        r2b_result = compute_r2b_distinctness(protected_responses)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -2630,6 +2893,17 @@ def main() -> int:
             h11_block["radius_censored"] = h11_radius_censored
             hypotheses["H11"] = h11_block
 
+        r2_block: dict[str, Any] = {}
+        if r2a_result is not None:
+            r2_block["R2a"] = _h9_json(r2a_result)
+        if r2b_result is not None:
+            r2_block["R2b"] = _h9_json(r2b_result)
+        if r2_block or r2_protected_set_n or r2_protected_none_n:
+            r2_block["protected_set_n"] = r2_protected_set_n
+            r2_block["protected_none_n"] = r2_protected_none_n
+            r2_block["protected_set_sizes"] = r2_protected_set_sizes
+            hypotheses["R2"] = r2_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -2708,6 +2982,12 @@ def main() -> int:
             print(render_h11_result(
                 h11a_result, h11c_result, h11_person_shape_n,
                 h11_radius_finite, h11_radius_censored,
+            ))
+        if r2a_result is not None or r2b_result is not None or r2_protected_set_n or r2_protected_none_n:
+            print()
+            print(render_r2_result(
+                r2a_result, r2b_result, r2_protected_set_n,
+                r2_protected_none_n, r2_protected_set_sizes,
             ))
 
     return 0

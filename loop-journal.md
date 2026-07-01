@@ -13,6 +13,71 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 21 — 2026-06-30 — R2 · Sacred / protected values
+
+`build-and-validate.md` item 4, the next cheapest-clean buildable branch: **R2** (`scoring.md §17`, design doc
+`r2-sacred-protected-values.md`). The cheapest branch left because it builds **no new elicitation and no new
+break-point math** — it is a pure **re-read** of the cost-of-virtue channel's **right-censored `never` tail**
+(§4, §13.2). The values a person refuses to price at *any* stake in range **are** their protected set; the
+censoring discipline (never finitize a `never`) was quietly storing this construct all along. Grounded in
+Baron & Spranca 1997 (protected values), Tetlock 2000 / Fiske & Tetlock 1997 (taboo trade-offs,
+incommensurability), Bartels & Medin 2007 (quantity-insensitivity), Ginges et al. 2007 (sacred values in
+conflict).
+
+- **What shipped (`scripts/analyze.py`, `--protected-log`).** The §17.1 primitive — `protected_value_sets`
+  → `P_i` = the SET of value slots a person marks `never` (keyed by `value_slot`, categorical, holding value
+  **strings** and never a price); **R2a** set reliability (per participant present in ≥2 waves,
+  `jaccard_i = |P_i^{w1} ∩ P_i^{w2}| / |P_i^{w1} ∪ P_i^{w2}|`, supported iff `mean_i jaccard_i` lower
+  bootstrap-CI ≥ 0.40, seed +17 — a user whose protected union is empty in *both* waves has an undefined
+  Jaccard and is **excluded**, never scored as perfect agreement); **R2b** the load-bearing distinctness
+  *protected ≠ EXPENSIVE* (per never-responder, `contrast_i = mean(taboo|never) − mean(taboo|finite)`,
+  supported iff `mean_i contrast_i` lower-CI > 0, one-sided, directional, seed +18 — being *asked* to price a
+  protected value draws outrage a merely-expensive one does not). Introduces the light `taboo` (0/1) marker as
+  a new data-contract field. Gated in `check_analyzer_thresholds.py` (R2 expectations + a
+  `check_r2_censoring()` unit-regression) on a self-contained fixture
+  (`analysis/fixtures/sample-protected-values-log.json`, 12 participants × 2 waves × 6 CoV values, known
+  ground truth: `mean Jaccard`=0.924 CI-low 0.818 with 1 empty-union exclusion, `mean taboo-contrast`=+0.945
+  CI-low 0.891, 11 participants with a non-empty `P_i` / 1 who prices everything).
+- **Disciplines honored.** *Censoring* (§13.2 — the load-bearing one here, verbatim): a `never` is read
+  **categorically** — right-censored, **NEVER finitized into a price** — the R2 analog of the
+  `never`-on-$10M `|8.0|` lock; asserted directly against the code in `check_r2_censoring()` (a `never` is
+  protected, a finite response is not; the `never` scores the ceiling+1 sentinel not a finite break-point;
+  `P_i` holds the value-slot string; the empty-in-both-waves user is excluded from R2a — 4 assertions, all
+  green). *No composite / never-pool* (§13.5): `P_i` is a **set** and `taboo` a **marker**, never summed into
+  a "sacredness score" (§4 rejected exactly that scalar), never pooled across branches. *Value-neutral*
+  (load-bearing): a **large protected set is NOT scored as better** — many `never`s can be **integrity** OR
+  rigid **dogmatism**; the reveal names the set and never ranks it by size. *N=1* — `P_i` is a within-person
+  set on the fixed value slots, reveal-eligible for one user with no cohort norms. *Cheap-talk* (load-bearing)
+  — a hypothetical `never` is costless, so `P_i` is labelled **PROFESSED** protected values; real-stakes
+  validation rides H-A2 → Phase-2. *Fraud/replication* — no excluded paradigms (Baron/Tetlock/Ginges clean).
+- **Scope (same pattern as H9/H10/H11).** A pure re-read of the CoV break-point **primitive** (already
+  parity-locked; the runtime emits per-slot `no_break_point` at `poc-projection.js:212`) **without changing
+  it** → Python-only → **parity trivially green** (poc-projection.js untouched, 9/9). **Deferred
+  (documented):** (a) **R2c-discriminant** — R² of `P_i`-membership on `[inventory rank, log-price]` < 0.50;
+  couples to the cohort inventory pipeline like the H9b/H10b/H11b discriminants. (b) The **on-device `P_i`
+  reveal** in `poc-projection.js` + its parity lock. (c) The `taboo` marker's **real collection + exact
+  phrasing** (Q1, design-gated) and the **cheap-talk / real-stakes validation** via **H-A2 → Phase-2** (both
+  surfaced under "Needs Dave / external"). (d) The **quantity-insensitivity leg** of R2b — a flat refusal that
+  doesn't soften as the offer climbs — needs per-rung acceptance trajectories the single-break-point contract
+  doesn't carry (§17.5, design-doc §6 Q3); the taboo contrast is the primary distinctness test.
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §22 — R2 pre-registration.* `P_i` = the set of
+  `value_slot`s marked `never` on the CoV ladder, read categorically off the §13.2 right-censored tail, never
+  finitized. R2a floor 0.40 on `mean_i Jaccard(P_i^{w1}, P_i^{w2})` (test–retest across waves, seed
+  20260510+17; empty-union users excluded, not scored 1.0). R2b directional, `mean_i(taboo|never −
+  taboo|finite)` lower-CI > 0 (seed +18) — protected ≠ merely-expensive. `taboo` is a new 0/1
+  data-contract field. `P_i` labelled **professed** (cheap-talk caveat) pending H-A2 real-stakes. Value-
+  neutrality (integrity↔dogmatism, no ranking by set size) is load-bearing. R2c threshold (R² < 0.50) proposed
+  but not built. The `taboo` phrasing is proposed pending Dave's runtime/UX call. If this reads right, say
+  "lock §22" and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, H10, H11,
+  **R2**, probe-ceiling, h9-censoring, h10-suppression, h11-suppression, **r2-censoring**) + JS↔Python parity
+  9/9. Commit on `poc` main.
+
+**Buildable-without-Dave work remains** (`build-and-validate.md` items 5+): H12 hypocrisy (self–other delta,
+needs light corpus authoring), R1 identity centrality, R6 conviction/objectivism. Loop continues.
+
+---
+
 ## Iteration 20 — 2026-06-30 — H11 · Moral-circle radius
 
 `build-and-validate.md` item 3, the next cheapest-clean buildable branch: **H11** (`scoring.md §16`,
