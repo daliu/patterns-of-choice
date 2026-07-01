@@ -13,6 +13,85 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 23 — 2026-06-30 — R1 · Moral identity centrality (two-facet, no-pool)
+
+`build-and-validate.md` item 6, the next cheapest-clean buildable branch: **R1** (`scoring.md §19`). The 14th
+pre-reg branch, and the cheapest left because it reuses the within-person-mean + split-half + directional-anchor
+machinery whole — no κ-gated language channel (that's R3–R6), no new axis, no corpus rewrite. The construct:
+how **central a moral identity is to who a person is** — the *self-importance of moral identity* (Aquino & Reed
+2002, the canonical, well-replicated instrument). Its defining structure is **two disjoint facets**:
+**internalization** (private — how core moral traits are to one's self-concept) and **symbolization** (public —
+outward display of a moral identity). The two dissociate and are **kept strictly separate, NEVER pooled** into
+one "moral-identity score" (§13.5, the load-bearing discipline for this branch). Each facet is a within-person
+mean of its own 1–7 Likert items. **Not** an excluded paradigm (Aquino & Reed is well-replicated; contrast the
+excluded Macbeth/cleansing priming work).
+
+- **What shipped (`scripts/analyze.py`, `--identity-log`).** The §19.1 primitive — `_centrality_response` (the
+  per-item Likert guard: None/str/bool → None) → `centrality_items_by_user` → `centrality_facet_by_user` = the
+  per-facet within-person mean over ≥ 3 scorable items, computed **separately** for `internalization` and
+  `symbolization`; **R1a** internalization-facet reliability (split-half odd/even sessions,
+  `corr(internalization_i^odd, internalization_i^even)` supported iff lower bootstrap-CI ≥ 0.40, seed +21 —
+  mirrors H10a/H11a/H12a exactly via `_odd_even_sessions` + `_pearson_r` + `_bootstrap_ci_r`); **R1c** the
+  internalization > symbolization directional anchor (`mean_i(internalization_i − symbolization_i)` supported
+  iff lower-CI > 0, one-sided, seed +22 — the private-exceeds-public signature as a **cohort validity check**,
+  *not* a per-person verdict). The JSON `R1` block exposes `mean_internalization` and `mean_symbolization` as
+  **separate keys — no pooled "centrality" key**. Gated in `check_analyzer_thresholds.py` (R1 expectations +
+  `check_r1` rejecting any pooled `centrality`/`moral_identity` key and requiring the two separate facet keys +
+  a `check_r1_no_pool()` unit-regression) on a self-contained fixture
+  (`analysis/fixtures/sample-identity-centrality-log.json`, 12 participants × 4 sessions × (2 internalization +
+  2 symbolization) items + one declined item + one counter-case, known ground truth: `R1a` r=1.000 CI-low 1.000
+  met (noiseless-by-construction so the gate checks the analyzer *recovers* r=1.0 and clears the 0.40 floor);
+  `R1c` mean_delta=+1.500 CI-low +0.917 CI-high +2.083 met, n=12; `profile_n`=12 reveal-eligible;
+  mean_internalization 5.833 / mean_symbolization 4.333 carried separately).
+- **Disciplines honored.** *Facet-separation / no-pool lock* (§19.1 — the load-bearing one here, the R1 analog
+  of the §13.2 censoring lock): the two facets are **DISJOINT item sets scored separately** — never averaged
+  into (I+S)/2 — a **declined item** (None/non-numeric/bool) is **DROPPED from its facet, never imputed to 0**,
+  and a facet with **< 3 scorable items is SUPPRESSED**, never scored on thin data; asserted directly against
+  the code in `check_r1_no_pool()` (valid → float; None/str/bool → None; internalization 6.0 & symbolization 2.0
+  never pooled to 4.0; declined item drops so 3 scorable not 4; below-floor facet absent — 10 assertions, all
+  green). *No composite / never-pool* (§13.5): the two facets are never summed with each other, nor with a gap,
+  calibration index, variability index, circle radius, protected set, CoV price, or self–other asymmetry, never
+  pooled across branches. *Value-neutral* (load-bearing): high centrality = integrity OR rigid self-righteousness
+  (the documented **dark side** — licensing, out-group derogation), **never ranked**; internalizing not ranked
+  above symbolizing; the fixture's u12 (internalizes 4 < symbolizes 5, a negative delta) exercises the preserved
+  counter-case. This is why **R1c is walled off as a cohort anchor, not an individual verdict.** *N=1* — each
+  facet mean is a within-person mean over that user's ≥ 3 items, reveal-eligible with no cohort norms.
+  *Cheap-talk* — these are *self-reported* endorsements, not behavior under stakes; the facet means are
+  **stated** centrality, behavioral validation is the R1b moderation leg / Phase-2. *Fraud/replication* — no
+  excluded paradigms (Aquino & Reed is canonical + well-replicated; no priming/depletion/cleansing).
+- **Scope (same pattern as H9/H10/H11/R2/H12).** Two-facet within-scale reads reusing the bootstrap + split-half
+  machinery whole; **no new axis, no on-device reveal touched** → Python-only → **parity trivially green**
+  (poc-projection.js untouched, 9/9). **Deferred (documented):** (a) **R1b** — R1's headline **meta-moderation**
+  role (internalization moderating the §6 stated–revealed gap + H10–H12, a negative moderation coefficient);
+  couples to the cohort gap + H10–H12 pipelines like the H9b/H10b/H11b/R2c/H12b discriminants. (b) The
+  **on-device facet reveal** in `poc-projection.js` + its parity lock. (c) **Symbolization-facet reliability**
+  (R1a is anchored on internalization, the more trait-stable facet). (d) The centrality log's **real collection
+  + exact phrasing** (the Aquino & Reed item stems) — design-gated (surfaced under "Needs Dave / external").
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §24 — R1 pre-registration.* Two **disjoint**
+  facets, each a within-person mean of its own ≥ 3 items on a common 1–7 Likert, read off a new light
+  `--identity-log` data-contract (one response per item, each carrying its `facet ∈ {internalization,
+  symbolization}`); **never pooled** into a single moral-identity score (§13.5, load-bearing). R1a floor 0.40 on
+  the split-half (odd/even sessions) reliability of the **internalization** facet (seed 20260510+21). R1c
+  directional, `mean_i(internalization_i − symbolization_i)` lower-CI > 0 (seed +22) — a **cohort validity
+  anchor** (recovers the established private > public direction), explicitly **not** a per-person verdict.
+  Facet-separation lock: a declined item drops from its facet (never imputed 0), a below-floor facet is
+  suppressed. Value-neutrality (high centrality not ranked as better; internalizing not ranked above
+  symbolizing; the dark-side reading held open) is load-bearing. The facet means labelled **stated** centrality
+  pending the R1b moderation leg / Phase-2. R1b moderation threshold proposed but not built. If this reads
+  right, say "lock §24" and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, H10, H11, R2, H12,
+  **R1**, probe-ceiling, h9-censoring, h10-suppression, h11-suppression, r2-censoring, h12-pairing, **r1-nopool**)
+  + JS↔Python parity 9/9. Commit on `poc` main.
+
+**Buildable-without-Dave work remains** (`build-and-validate.md` items 6+, now thinning): R6 conviction/
+objectivism (the charged stated–revealed meta-gap, leans on the κ-gated language channel — needs Dave); the
+A3/R3/R4/R5 language-derived branches are all κ≥0.70-gated (build the coder + synthetic parity now, real κ needs
+human raters). The Python-only, machinery-reusing tail (within-person index + reliability + directional anchor)
+is now largely spent — H9/H10/H11/R2/H12/R1 all shipped on that exact template; what's left leans increasingly
+on Dave-gated channels (language κ, real stakes, cohort pipelines). Loop continues, thinning toward that tail.
+
+---
+
 ## Iteration 22 — 2026-06-30 — H12 · Moral hypocrisy / self–other judgment asymmetry
 
 `build-and-validate.md` item 5, the next cheapest-clean buildable branch: **H12** (`scoring.md §18`). The 13th

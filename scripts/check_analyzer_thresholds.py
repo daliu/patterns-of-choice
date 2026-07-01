@@ -58,6 +58,13 @@ Expected outcomes on the current synthetic fixtures:
   regression (check_h12_pairing_lock): a declined judgment drops the pair —
   never imputed to 0 — and the signed delta (other − self) is preserved so a
   harsher-on-self record stays NEGATIVE, never clamped (the value-neutral lock).
+- R1 (moral identity centrality): R1a internalization-facet reliability (split-
+  half odd/even, lower CI ≥ 0.40) and R1c the internalization > symbolization
+  anchor (mean_i of the within-scale delta > 0, directional) both met = True on
+  the fixtures, with ≥1 complete two-facet profile. Plus the §13.5 NO-POOL
+  regression (check_r1_no_pool): the two facets are DISJOINT item sets scored
+  separately — never averaged into one moral-identity score — a declined item
+  drops (never imputed to 0), and a facet below the item floor is suppressed.
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -89,6 +96,7 @@ EXPECTATIONS = {
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True}},
+    "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
 }
 
 
@@ -110,6 +118,7 @@ def run_analyzer() -> dict:
         "--circle-log", str(FIXTURES / "sample-circle-log.json"),
         "--protected-log", str(FIXTURES / "sample-protected-values-log.json"),
         "--hypocrisy-log", str(FIXTURES / "sample-hypocrisy-log.json"),
+        "--identity-log", str(FIXTURES / "sample-identity-centrality-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -324,6 +333,51 @@ def check_h12(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             f"(person_asymmetry_n={payload.get('person_asymmetry_n')})"
         )
     parts.append(f"H_i×{payload['person_asymmetry_n']}")
+    return True, f"{hid}: ✓ {', '.join(parts)}"
+
+
+def check_r1(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
+    """R1 moral identity centrality. Assert each present sub-hypothesis (R1a the
+    internalization-facet split-half reliability, R1c the internalization >
+    symbolization directional anchor) hit its pre-registered outcome, and that ≥1
+    participant has a complete two-facet profile. Crucially, assert the §13.5
+    NO-POOL discipline is honored in the shape of the payload itself: the block
+    must expose the two facets SEPARATELY (mean_internalization / mean_symbolization)
+    and must NOT carry any pooled 'centrality'/'moral-identity' scalar. The facet-
+    separation / missing-data lock is asserted directly against the code in
+    check_r1_no_pool() below."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    pooled_keys = {"centrality", "centrality_score", "moral_identity",
+                   "moral_identity_score", "mean_centrality"}
+    present_pooled = pooled_keys & set(payload)
+    if present_pooled:
+        return False, (
+            f"{hid}: pooled moral-identity key(s) present {sorted(present_pooled)} "
+            f"— the two facets must never be averaged into one score (§13.5)"
+        )
+    parts = []
+    for sub, expected in sub_met.items():
+        block = payload.get(sub)
+        if block is None:
+            return False, f"{hid}: sub-hypothesis {sub} missing"
+        met = block.get("pre_registered_threshold_met")
+        if met != expected:
+            return False, f"{hid}.{sub}: threshold_met = {met!r}, expected {expected!r}"
+        if block.get("n", block.get("n_participants", 0)) < 3:
+            return False, f"{hid}.{sub}: n too small ({block})"
+        parts.append(f"{sub}={met}")
+    if "mean_internalization" not in payload or "mean_symbolization" not in payload:
+        return False, (
+            f"{hid}: the two facets must be exposed separately "
+            f"(mean_internalization / mean_symbolization), got keys {sorted(payload)}"
+        )
+    if payload.get("profile_n", 0) < 1:
+        return False, (
+            f"{hid}: no complete two-facet profile "
+            f"(profile_n={payload.get('profile_n')})"
+        )
+    parts.append(f"profile×{payload['profile_n']}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 
@@ -573,6 +627,78 @@ def check_h12_pairing_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_r1_no_pool() -> tuple[bool, list[str]]:
+    """The R1 analog of the §13.2 censoring / §18.1 pairing lock: the §13.5
+    FACET-SEPARATION discipline (§19.1). The two moral-identity facets —
+    internalization (private) and symbolization (public) — are DISJOINT item sets
+    scored SEPARATELY; they are never averaged into one (I+S)/2 'moral-identity
+    score'. A declined item (response None / non-numeric / bool) DROPS from its
+    facet — never imputed to 0 — and a facet below the item floor is SUPPRESSED,
+    never scored on thin data. Asserted directly against the code so a regression
+    that starts pooling, imputing declines, or scoring a one-item facet is caught
+    even if the fixture is later changed:
+      (i)   a valid Likert response scores; None / str / bool → None (droppable);
+      (ii)  the two facets route to DISJOINT means — internalization 6.0 and
+            symbolization 2.0 stay separate, neither becomes the pooled 4.0;
+      (iii) a declined item drops from its facet (3 scorable, not 4 with a 0);
+      (iv)  a facet below the ≥3-item floor is SUPPRESSED (absent), not scored."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    # (ii) disjoint routing: user with 3 internalization @6.0 and 3 symbolization @2.0.
+    recs = [
+        {"user": "q1", "session": "q1-s1", "item_id": "int-1", "facet": "internalization", "response": 6.0},
+        {"user": "q1", "session": "q1-s1", "item_id": "int-2", "facet": "internalization", "response": 6.0},
+        {"user": "q1", "session": "q1-s2", "item_id": "int-3", "facet": "internalization", "response": 6.0},
+        {"user": "q1", "session": "q1-s1", "item_id": "sym-1", "facet": "symbolization", "response": 2.0},
+        {"user": "q1", "session": "q1-s1", "item_id": "sym-2", "facet": "symbolization", "response": 2.0},
+        {"user": "q1", "session": "q1-s2", "item_id": "sym-3", "facet": "symbolization", "response": 2.0},
+    ]
+    intern = A.centrality_facet_by_user(recs, "internalization")
+    symbol = A.centrality_facet_by_user(recs, "symbolization")
+    # (iii) declined item drops: q2 has 3 valid internalization items + 1 declined.
+    recs_declined = [
+        {"user": "q2", "session": "q2-s1", "item_id": "int-1", "facet": "internalization", "response": 5.0},
+        {"user": "q2", "session": "q2-s1", "item_id": "int-2", "facet": "internalization", "response": 5.0},
+        {"user": "q2", "session": "q2-s2", "item_id": "int-3", "facet": "internalization", "response": 5.0},
+        {"user": "q2", "session": "q2-s2", "item_id": "int-4", "facet": "internalization", "response": None},
+    ]
+    items_q2 = A.centrality_items_by_user(recs_declined, "internalization")["q2"]
+    facet_q2 = A.centrality_facet_by_user(recs_declined, "internalization")
+    # (iv) below-floor suppression: q3 has only 2 internalization items (floor is 3).
+    recs_thin = [
+        {"user": "q3", "session": "q3-s1", "item_id": "int-1", "facet": "internalization", "response": 6.0},
+        {"user": "q3", "session": "q3-s1", "item_id": "int-2", "facet": "internalization", "response": 6.0},
+    ]
+    thin = A.centrality_facet_by_user(recs_thin, "internalization")
+    checks = [
+        ("a valid Likert response scores (float)",
+         A._centrality_response({"response": 4}) == 4.0),
+        ("a declined item (None) → None, droppable not 0",
+         A._centrality_response({"response": None}) is None),
+        ("a non-numeric response (str) → None",
+         A._centrality_response({"response": "5"}) is None),
+        ("a bool response → None (guards against True==1 coercion)",
+         A._centrality_response({"response": True}) is None),
+        ("internalization facet scores its own items (6.0), not pooled",
+         abs(intern["q1"] - 6.0) < 1e-9),
+        ("symbolization facet scores its own items (2.0), not pooled",
+         abs(symbol["q1"] - 2.0) < 1e-9),
+        ("the two facets are DISJOINT — neither equals the pooled (I+S)/2 = 4.0",
+         abs(intern["q1"] - 4.0) > 1e-9 and abs(symbol["q1"] - 4.0) > 1e-9),
+        ("a declined item DROPS from its facet (3 scorable, not 4 with a 0)",
+         len(items_q2) == 3 and all(v == 5.0 for v in items_q2)),
+        ("the facet mean ignores the declined item (stays 5.0)",
+         abs(facet_q2["q2"] - 5.0) < 1e-9),
+        ("a facet below the ≥3-item floor is SUPPRESSED (absent, not scored)",
+         "q3" not in thin),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r1-nopool: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -624,6 +750,8 @@ def main() -> int:
             ok, msg = check_r2(hid, payload, spec["sub_met"])
         elif spec["kind"] == "h12":
             ok, msg = check_h12(hid, payload, spec["sub_met"])
+        elif spec["kind"] == "r1":
+            ok, msg = check_r1(hid, payload, spec["sub_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -664,6 +792,12 @@ def main() -> int:
     for m in h12lock_msgs:
         print(m)
     if not h12lock_ok:
+        all_pass = False
+
+    r1pool_ok, r1pool_msgs = check_r1_no_pool()
+    for m in r1pool_msgs:
+        print(m)
+    if not r1pool_ok:
         all_pass = False
 
     if all_pass:

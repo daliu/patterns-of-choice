@@ -103,6 +103,18 @@ Implemented here:
   harsher-on-self are both described, never ranked. A declined judgment drops the
   pair, never imputed to 0 (the pairing lock). H12b discriminant (vs gap /
   calibration) deferred — cohort-coupled. Signed facet, never summed (§13.5).
+- R1a/R1c moral identity centrality (§19 of scoring.md, 14th pre-reg branch). When
+  --identity-log is supplied (per-item internalization + symbolization centrality
+  responses, Aquino & Reed 2002): the two DISJOINT facets are read SEPARATELY and
+  NEVER pooled into one moral-identity score (§13.5, load-bearing here). R1a
+  reliability (split-half odd/even correlation of the internalization facet, lower
+  CI ≥ 0.40) and R1c the internalization > symbolization anchor (mean_i of the
+  within-scale delta > 0, directional — the private dimension endorsed more than the
+  public). Value-neutral (§19.4): high centrality is not scored as better than low
+  (integrity OR rigid self-righteousness), and internalizing is not ranked above
+  symbolizing. A declined item drops, never imputed; a facet below the item floor is
+  suppressed. R1b — whether centrality MODERATES the §6 gap / H10–H12 — deferred,
+  cohort-coupled (like the H9b/H10b/H11b/R2c discriminant halves).
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -2154,6 +2166,142 @@ def compute_h12c_self_serving(
     }
 
 
+# ----------------------------------------------------------------------------
+# R1 — moral identity centrality: how self-defining moral traits are (scoring.md §19).
+# The Aquino & Reed 2002 "Self-Importance of Moral Identity" construct, read as TWO
+# DISJOINT facets kept strictly separate — INTERNALIZATION (private: "being a moral
+# person is core to who I am") and SYMBOLIZATION (public: outward display of moral
+# identity). Per §13.5 the two facets are NEVER pooled into one "moral-identity
+# score" (that no-composite discipline is load-bearing for a centrality read and is
+# asserted against the code by check_r1_no_pool()). R1 is the meta-MODERATOR — it
+# moderates the §6 gap / H10–H12 — but the moderation legs couple to the cohort gap
+# pipeline and are DEFERRED (R1b), exactly like the H9b/H10b/H11b/R2c discriminant
+# halves; this increment ships the self-contained centrality read + its reliability
+# (R1a) + the internalization>symbolization construct anchor (R1c). Python-only (no
+# on-device reveal this increment) so parity stays green. A declined item is DROPPED,
+# never imputed to 0 (the §1.5 missing-data discipline), and a facet below the item
+# floor is SUPPRESSED, never scored on too-few items.
+# ----------------------------------------------------------------------------
+
+R1A_RELIABILITY_FLOOR = 0.40   # internalization-centrality split-half reliability lower 95% CI (§19.2)
+R1_MIN_ITEMS = 3               # per-facet item floor for a scorable facet (§1.5 N=1)
+R1_FACETS = ("internalization", "symbolization")
+# R1c is directional: lower 95% CI of mean_i (internalization_i − symbolization_i) > 0 (§19.3).
+
+
+def _centrality_response(r: dict) -> float | None:
+    """One centrality-item Likert response (§19.1). Returns None — the item is
+    DROPPED, never imputed — when absent or non-numeric: a declined "prefer not to
+    say" item is MISSING DATA, not a 0 (the §1.5 missing-data discipline). A bool is
+    rejected (guards against True==1 coercion)."""
+    v = r.get("response")
+    if not isinstance(v, (int, float)) or isinstance(v, bool):
+        return None
+    return float(v)
+
+
+def centrality_items_by_user(
+    records: list[dict],
+    facet: str,
+    session_filter=None,
+) -> dict[str, list[float]]:
+    """Per user, the list of scorable Likert responses for ONE facet (§19.1). A
+    record contributes only to its OWN facet — internalization and symbolization are
+    routed to DISJOINT item sets and never mixed (§13.5). A declined item is dropped
+    (never imputed). Optional session_filter(user, session) -> bool restricts to a
+    session subset (the R1a odd/even split). Keys `user` / `session` mirror the
+    H10/H11/H12 logs consumed by _odd_even_sessions."""
+    by_user: dict[str, list[float]] = defaultdict(list)
+    for r in records:
+        user = r.get("user")
+        if user is None:
+            continue
+        if r.get("facet") != facet:
+            continue
+        if session_filter is not None and not session_filter(user, r.get("session")):
+            continue
+        v = _centrality_response(r)
+        if v is not None:
+            by_user[user].append(v)
+    return by_user
+
+
+def centrality_facet_by_user(
+    records: list[dict],
+    facet: str,
+    session_filter=None,
+    min_items: int = R1_MIN_ITEMS,
+) -> dict[str, float]:
+    """C^facet_i = mean item response per user for ONE facet (§19.1), for users with
+    ≥min_items scorable items in that facet (the §1.5 floor — a facet below it is
+    SUPPRESSED, absent from the result, never scored on too-few items). The two
+    facets are kept SEPARATE; this never averages internalization with symbolization
+    into a single centrality scalar (§13.5)."""
+    out: dict[str, float] = {}
+    for user, vals in centrality_items_by_user(records, facet, session_filter).items():
+        if len(vals) >= min_items:
+            out[user] = sum(vals) / len(vals)
+    return out
+
+
+def compute_r1a_reliability(records: list[dict]) -> dict[str, Any] | None:
+    """R1a (§19.2): split each user's sessions odd/even, recompute the
+    INTERNALIZATION centrality facet on each half, correlate across users. Supported
+    iff the lower 95% bootstrap CI of the correlation ≥ R1A_RELIABILITY_FLOOR.
+    Internalization is the primary (private, more-predictive) dimension (Aquino &
+    Reed 2002); its stability is the trait-reliability leg — orthogonal to the
+    cohort ordering (that anchor is R1c) and to whether centrality moderates the gap
+    (the R1b moderation leg, deferred). Seed BOOTSTRAP_SEED+21."""
+    odd, even = _odd_even_sessions(records)
+    c_odd = centrality_facet_by_user(records, "internalization", lambda u, s: s in odd.get(u, set()))
+    c_even = centrality_facet_by_user(records, "internalization", lambda u, s: s in even.get(u, set()))
+    shared = sorted(set(c_odd) & set(c_even))
+    if len(shared) < 3:
+        return None
+    xs = [c_odd[u] for u in shared]
+    ys = [c_even[u] for u in shared]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 21)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_low != ci_low else bool(ci_low >= R1A_RELIABILITY_FLOOR)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n": len(shared),
+        "threshold_low": R1A_RELIABILITY_FLOOR, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_r1c_internalization_anchor(
+    records: list[dict], min_items: int = R1_MIN_ITEMS
+) -> dict[str, Any] | None:
+    """R1c (§19.3, internalization > symbolization anchor, directional): per user
+    with BOTH facets scored,
+        d_i = internalization_i − symbolization_i        (same Likert scale — a
+                                                           within-construct contrast,
+                                                           not cross-scale pooling)
+    Supported iff the lower 95% CI of mean_i d_i > 0 (one-sided): on average the
+    private/internalized dimension is endorsed more strongly than the public/
+    symbolization one (Aquino & Reed 2002). A COHORT-level construct-validity anchor
+    (does the established ordering replicate), NOT a per-person verdict and NOT a
+    per-person composite: the person-level reveal keeps the two facets SEPARATE and
+    value-neutral (§19.4). Seed BOOTSTRAP_SEED+22."""
+    intern = centrality_facet_by_user(records, "internalization", None, min_items)
+    symbol = centrality_facet_by_user(records, "symbolization", None, min_items)
+    shared = sorted(set(intern) & set(symbol))
+    deltas = [intern[u] - symbol[u] for u in shared]
+    if len(deltas) < 3:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 22)
+    ci_low, ci_high = _bootstrap_ci_mean(deltas, rng)
+    met = None if ci_low != ci_low else bool(ci_low > 0.0)
+    return {
+        "mean_delta": sum(deltas) / len(deltas),
+        "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(deltas),
+        "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -2475,6 +2623,63 @@ def render_h12_result(
     return "\n".join(lines)
 
 
+def render_r1_result(
+    r1a: dict[str, Any] | None,
+    r1c: dict[str, Any] | None,
+    profile_n: int,
+    mean_internalization: float,
+    mean_symbolization: float,
+) -> str:
+    """R1 moral identity centrality (scoring.md §19). Two DISJOINT facets reported
+    SEPARATELY — internalization (private) and symbolization (public) — never pooled
+    into one "moral-identity score" (§13.5, load-bearing here). Value-neutral: high
+    centrality is NOT scored as better than low (a self-defining moral identity can
+    be integrity OR rigid self-righteousness — the dark side of moral identity), and
+    internalizing is not ranked above symbolizing; the reveal describes the profile,
+    never a verdict (§19.4)."""
+    if r1a is None and r1c is None and profile_n == 0:
+        return (
+            "(R1: insufficient data — supply --identity-log with per-item "
+            "internalization + symbolization centrality responses)"
+        )
+    lines = ["R1 (moral identity centrality — two facets, kept separate & value-neutral):"]
+    lines.append(
+        f"  Centrality profile (mean item response, 1–7): internalization {mean_internalization:+.3f}, "
+        f"symbolization {mean_symbolization:+.3f} over {profile_n} participant(s) with both facets scored."
+    )
+    lines.append("  -- the two facets are DISJOINT item sets; never averaged into one centrality score (§13.5) --")
+    if r1a is not None:
+        lines.append(
+            f"  R1a centrality reliability (split-half odd/even, corr of internalization)  r = {r1a['r']:+.3f}, "
+            f"95% CI {_ci_str(r1a)}, n = {r1a['n']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {r1a['threshold_low']:.2f}): "
+            f"{_met_glyph(r1a['pre_registered_threshold_met'])}"
+        )
+    else:
+        lines.append("  R1a centrality reliability: insufficient data (need ≥3 users scorable in both odd & even session halves)")
+    if r1c is not None:
+        lines.append(
+            f"  R1c internalization > symbolization (mean_i of the within-scale delta, cohort anchor)  "
+            f"mean = {r1c['mean_delta']:+.3f}, 95% CI {_ci_str(r1c)}, n = {r1c['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI > {r1c['threshold']:.1f}, one-sided, directional): "
+            f"{_met_glyph(r1c['pre_registered_threshold_met'])}  "
+            f"(the private/internalized dimension is endorsed more than the public/symbolic — Aquino & Reed 2002)"
+        )
+    else:
+        lines.append("  R1c internalization > symbolization: insufficient data (need ≥3 users with both facets scored)")
+    lines.append(
+        "  Value-neutral: a highly self-defining moral identity is NOT scored as better than a peripheral one "
+        "(centrality can be integrity OR rigid self-righteousness, §19.4); the facets are described, never ranked. "
+        "R1c is a cohort construct-validity anchor, not a per-person verdict. R1b — whether centrality MODERATES "
+        "the stated–revealed gap / H10–H12 — is deferred (cohort-coupled); see build-and-validate.md."
+    )
+    return "\n".join(lines)
+
+
 def render_test_retest_result(
     name: str, threshold_text: str, results: dict[str, dict[str, Any]]
 ) -> str:
@@ -2640,6 +2845,12 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional self–other judgment log (severity_self + severity_other per matched act) for H12 moral hypocrisy (§18).",
+    )
+    parser.add_argument(
+        "--identity-log",
+        type=Path,
+        default=None,
+        help="Optional moral-identity-centrality log (per-item internalization + symbolization responses) for R1 (§19).",
     )
     parser.add_argument(
         "--min-items",
@@ -2966,6 +3177,35 @@ def main() -> int:
         h12a_result = compute_h12a_reliability(hypocrisy_records)
         h12c_result = compute_h12c_self_serving(hypocrisy_records)
 
+    # --- R1 moral identity centrality: the two-facet centrality read (§19). The
+    # two facets are kept SEPARATE (never pooled, §13.5); the moderation legs (R1b —
+    # centrality × the §6 gap / H10–H12) are cohort-coupled and DEFERRED. Python-only,
+    # parity stays green — no on-device reveal this increment.
+    r1a_result: dict[str, Any] | None = None
+    r1c_result: dict[str, Any] | None = None
+    r1_profile_n = 0
+    r1_mean_internalization = 0.0
+    r1_mean_symbolization = 0.0
+    if args.identity_log:
+        try:
+            with args.identity_log.open() as f:
+                identity_records = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading identity log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(identity_records, list):
+            print("ERROR: identity log must be a JSON array", file=sys.stderr)
+            return 2
+        _r1_intern = centrality_facet_by_user(identity_records, "internalization")
+        _r1_symbol = centrality_facet_by_user(identity_records, "symbolization")
+        _r1_both = sorted(set(_r1_intern) & set(_r1_symbol))
+        r1_profile_n = len(_r1_both)
+        if _r1_both:
+            r1_mean_internalization = sum(_r1_intern[u] for u in _r1_both) / len(_r1_both)
+            r1_mean_symbolization = sum(_r1_symbol[u] for u in _r1_both) / len(_r1_both)
+        r1a_result = compute_r1a_reliability(identity_records)
+        r1c_result = compute_r1c_internalization_anchor(identity_records)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -3139,6 +3379,18 @@ def main() -> int:
             h12_block["mean_asymmetry"] = _nan_to_none(h12_mean_asymmetry)
             hypotheses["H12"] = h12_block
 
+        r1_block: dict[str, Any] = {}
+        if r1a_result is not None:
+            r1_block["R1a"] = _h9_json(r1a_result)
+        if r1c_result is not None:
+            r1_block["R1c"] = _h9_json(r1c_result)
+        if r1_block or r1_profile_n:
+            r1_block["profile_n"] = r1_profile_n
+            # Two facets exposed SEPARATELY — no pooled "centrality" key (§13.5).
+            r1_block["mean_internalization"] = _nan_to_none(r1_mean_internalization)
+            r1_block["mean_symbolization"] = _nan_to_none(r1_mean_symbolization)
+            hypotheses["R1"] = r1_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -3228,6 +3480,12 @@ def main() -> int:
             print()
             print(render_h12_result(
                 h12a_result, h12c_result, h12_person_asymmetry_n, h12_mean_asymmetry,
+            ))
+        if r1a_result is not None or r1c_result is not None or r1_profile_n:
+            print()
+            print(render_r1_result(
+                r1a_result, r1c_result, r1_profile_n,
+                r1_mean_internalization, r1_mean_symbolization,
             ))
 
     return 0

@@ -761,6 +761,68 @@ The self–other asymmetry must not be a proxy for a person's stated–revealed 
 
 ---
 
+## 19. R1 — moral identity centrality (PROPOSED — pending DECISIONS §24 lock)
+
+R1 asks how **central a moral identity is to who a person is** — the *self-importance of moral identity*. Grounding: Aquino & Reed 2002 (*The Self-Importance of Moral Identity*), the canonical, well-replicated instrument. Its defining structure is **two disjoint facets**: **internalization** (private — how core moral traits like caring, fair, honest are to one's self-concept) and **symbolization** (public — the outward display of a moral identity through action and appearance). The two are **kept strictly separate and NEVER pooled** into one "moral-identity score" (§13.5 — the load-bearing discipline for this branch), because they dissociate: a person can internalize deeply while symbolizing little, and vice versa. Each facet is a **within-person mean of its own Likert items** (1–7). **Deliberately avoided:** any excluded paradigm — Aquino & Reed is not a fraud/non-replication case (see build-and-validate.md exclusions); no priming (contrast the excluded Macbeth/cleansing work).
+
+**Status.** R1a + R1c + the two per-person facet means (`mean_internalization`, `mean_symbolization`) are BUILT (`analyze.py --identity-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-identity-centrality-log.json`, Python-only so parity stays green). R1b (the meta-moderation leg — R1 moderating the §6 stated–revealed gap and H10–H12) and the on-device facet reveal are DEFERRED (§19.5, §19.6). The moral-identity-centrality log is a **new light data-contract** (one Likert response per item, each carrying its `facet`); real collection + exact item phrasing (the Aquino & Reed stem "It would make me feel good to be a person who has these characteristics…") are runtime/design-gated and surfaced to Dave.
+
+### 19.1 Measurement primitive
+
+For person `i`, over their centrality items partitioned by facet, each facet is scored as its **own** within-person mean — the two facets are DISJOINT item sets, never combined:
+
+    internalization_i = mean over i's internalization items    (≥ 3 scorable items, §1.5 N=1)
+    symbolization_i   = mean over i's symbolization items      (≥ 3 scorable items, §1.5 N=1)
+    # NO pooled (internalization_i + symbolization_i)/2 is ever formed (§13.5)
+
+Both are **separate facets**, each never summed with the other — nor with a gap, calibration index, variability index, circle radius, protected set, CoV price, or self–other asymmetry into one scalar (§13.5), nor pooled across branches. The JSON `R1` block deliberately exposes `mean_internalization` and `mean_symbolization` as **separate keys with no pooled "centrality" key**.
+
+**Facet-separation / missing-data lock (the R1 analog of the §13.2 censoring lock).** A **declined item** — response missing, non-numeric, or boolean — makes `_centrality_response` return `None`, so the item is **DROPPED** from its facet, never imputed to 0 (which would deflate the facet mean). A facet with **fewer than 3 scorable items** is **SUPPRESSED** (absent), never scored on thin data. And the two facets route to **disjoint** means — internalization never absorbs a symbolization response and vice versa. Asserted directly against the code by `check_r1_no_pool()`.
+
+### 19.2 R1a — internalization-facet reliability (BUILT)
+
+Moral-identity centrality must be a stable trait, not occasion noise. Split each person's sessions odd/even, compute the **internalization** facet mean on each half, and correlate across participants present in both halves:
+
+    r = pearson_i( internalization_i^{odd}, internalization_i^{even} )    over shared participants (≥ 3)
+    R1a supported  ⇔  lower 95% bootstrap CI of  r  ≥ 0.40
+
+Bootstrap: percentile method over paired `(internalization_i^{odd}, internalization_i^{even})`, pre-committed seed `20260510 + 21`. This mirrors the H10a / H11a / H12a split-half reliability construction exactly (`_odd_even_sessions` + `_pearson_r` + `_bootstrap_ci_r`). Reliability is anchored on the **internalization** facet — the private, self-definitional dimension Aquino & Reed find the more trait-stable of the two; symbolization reliability is a natural R1-extension deferred with R1b.
+
+### 19.3 R1c — internalization > symbolization directional anchor (BUILT, directional — cohort validity check)
+
+The construct's defining prediction is directional: on average people endorse the **private** dimension of a moral identity **more** than its **public display** — the internalization-exceeds-symbolization signature Aquino & Reed 2002 report across samples:
+
+    delta_i = internalization_i − symbolization_i     # within-scale (same 1–7 Likert), per person with BOTH facets
+    R1c supported  ⇔  lower 95% CI of  mean_i delta_i  > 0   (one-sided)
+
+Seed `20260510 + 22`. `delta_i` is a **within-scale within-subject contrast** (both facets on the identical 1–7 Likert), legitimate exactly as H12's `severity_other − severity_self` and H10c's `public − anonymous` — **NOT** cross-scale pooling. This is a **cohort validity anchor** (does the instrument recover the established direction?), **NOT a per-person verdict** — an individual with `delta_i < 0` symbolizes more than they internalize, described as such and never scored as more or less moral (§19.4).
+
+### 19.4 Facet-separation lock, N=1, value-neutrality
+
+- **Facet-separation lock (load-bearing).** Per §19.1: the two facets are disjoint item sets scored separately, never pooled into (I+S)/2; a declined item drops (never imputed 0); a below-floor facet is suppressed. `check_r1_no_pool()` asserts this against the code so a regression that starts pooling, imputing declines, or scoring a one-item facet is caught even if the fixture changes.
+- **N=1 interpretability.** `internalization_i` and `symbolization_i` are within-person means over that person's ≥ 3 items each — reveal-eligible for a single user with no cohort standardization ("moral traits are highly core to how you see yourself; you place less weight on outwardly displaying them"), contrast the cohort-only R1a / R1c statistics.
+- **Value-neutrality (load-bearing).** High centrality is **not** scored as better than low, and internalizing is **not** ranked above symbolizing. A strongly-internalized moral identity is integrity **or** rigid self-righteousness (the documented *dark side* of moral identity — moral licensing, out-group derogation); the reveal describes where a person sits on each facet and stops there. Neither facet is a virtue score, and the two are never collapsed to imply one number "how moral you are."
+- **Cheap-talk / self-report caveat.** These are *self-reported* endorsements of how central moral traits are, not behavior under stakes. The facet means measure **stated** identity centrality; the reveal never claims the person would *act* on it. Behavioral validation (does high internalization predict a smaller stated–revealed gap?) is the R1b moderation leg — Phase-2 / cohort-gated and surfaced to Dave.
+
+### 19.5 R1b — meta-moderation (DEFERRED — cohort-coupled)
+
+R1's headline role is as a **meta-moderator**: internalization should predict a **smaller** §6 stated–revealed gap and dampen the H10–H12 asymmetries (a more internalized moral identity → less hypocrisy, less context-drift):
+
+    regress  gap_i  (and H10–H12 indices)  on  internalization_i
+    R1b supported  ⇔  internalization_i carries a significant negative moderation coefficient
+
+**DEFERRED** because it couples to the cohort gap + H10–H12 pipelines, exactly as the H9b / H10b / H11b / R2c discriminant halves do — the current increment stays isolated on its own fixture.
+
+### 19.6 What §19 deliberately does not compute
+
+- **No moral-identity score / no pooling.** The two facets are scored separately; no `(internalization + symbolization)/2` and no pooled "centrality" scalar is ever formed (§13.5). The JSON block carries `mean_internalization` and `mean_symbolization` as separate keys and no pooled key — asserted by `check_r1` (rejects `centrality`/`moral_identity` keys) and `check_r1_no_pool`.
+- **No imputed declines.** A declined item is **dropped**, never scored 0; a below-floor facet is suppressed — asserted directly against the code by `check_r1_no_pool()` (the R1 analog of the §14.1 CoV-ceiling / |8.0| lock and `check_r2_censoring`).
+- **No per-person moral ranking.** Neither high centrality nor internalizing-over-symbolizing is scored as better; R1c is a cohort validity anchor, not an individual verdict (§19.4). The dark-side reading (self-righteousness, licensing) is held open.
+- **No moderation claim yet.** R1's headline meta-moderator role (R1b) is DEFERRED; this increment ships only the facet reads + reliability + directional anchor, isolated on their own fixture.
+- **No on-device projection yet.** The facet reveal is NOT in `poc-projection.js` this increment (Python-only, parity stays green); when added it changes **both** scorers under the §13.5/parity locks.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.

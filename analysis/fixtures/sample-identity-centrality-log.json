@@ -1,0 +1,1353 @@
+[
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u01",
+    "session": "r1-u01-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u02",
+    "session": "r1-u02-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u03",
+    "session": "r1-u03-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u04",
+    "session": "r1-u04-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u05",
+    "session": "r1-u05-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u06",
+    "session": "r1-u06-s1",
+    "item_id": "int-3",
+    "facet": "internalization",
+    "response": null
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u07",
+    "session": "r1-u07-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 3.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u08",
+    "session": "r1-u08-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 7.0
+  },
+  {
+    "user": "r1-u09",
+    "session": "r1-u09-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u10",
+    "session": "r1-u10-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 6.0
+  },
+  {
+    "user": "r1-u11",
+    "session": "r1-u11-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s1",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s1",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s1",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s1",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s2",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s2",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s2",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s2",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s3",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s3",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s3",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s3",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s4",
+    "item_id": "int-1",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s4",
+    "item_id": "sym-1",
+    "facet": "symbolization",
+    "response": 5.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s4",
+    "item_id": "int-2",
+    "facet": "internalization",
+    "response": 4.0
+  },
+  {
+    "user": "r1-u12",
+    "session": "r1-u12-s4",
+    "item_id": "sym-2",
+    "facet": "symbolization",
+    "response": 5.0
+  }
+]
