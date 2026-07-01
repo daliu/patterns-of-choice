@@ -13,6 +13,44 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 30 — 2026-07-01 — H12 · Moral-hypocrisy DISCRIMINANT (H12b leg; cohort-level) → H12 complete
+
+`build-and-validate.md` item 5. H12's `H_i` primitive + **H12a** (asymmetry split-half reliability) + **H12c** (the self-serving directional
+anchor) shipped 2026-06-30, but — exactly as with H9b — the design defines the branch as **reliability ∧ anchor ∧ discriminant**: a reliable,
+on-average-self-serving asymmetry is not enough; the self–other double standard `H_i` must also be **discriminable from how much a person over-claims
+and how poorly they know themselves**. That discriminant half, **H12b**, was the sole H12 gap remaining. This iteration builds it, completing H12.
+H12b asks: is a person's self–other severity asymmetry `H_i = mean_act(severity_other − severity_self)` just a proxy for their aspirational **gap**
+(over-claiming, §6) plus their **calibration error** `cal_error_i` (a general "knows-self-poorly" factor, §14.2), or does the double standard carry
+its own variance? A genuine moral-hypocrisy axis is dissociable from both.
+
+- **What shipped (`scripts/analyze.py`, `--h12b-log`).** `compute_h12b_discriminant` regresses `H_i` on **two** predictors — the over-claim `gap_i`
+  and the self-prediction error magnitude `cal_error_i` — and calls the asymmetry discriminable iff the **upper 95% bootstrap CI of the model
+  R² < 0.50** (`H12B_R2_CEILING`; seed `20260510 + 29`; ≥ `H12B_MIN_PARTICIPANTS = 8` shared users). It reuses last iteration's `_h9b_person_predictors`
+  (the real §3/§6 gap sub-pipeline) verbatim for `gap_i` and `calibration_person_indices(calibration_axis_records(...))` for `cal_error_i`, then draws
+  the outcome from `hypocrisy_asymmetry_by_user` — so the two predictor channels are shared with H9b and the outcome is the independent H12 severity
+  channel. Consumes a combined `{session, card_sort, predictions, hypocrisy}` cohort bundle, keeping H12b isolated from the main H2–H7 cohort. Descriptive
+  companions `h_gap_r` / `h_cal_error_r` localize any leakage without pooling per person. JSON `H12.H12b_discriminant` + a value-neutral render line.
+
+- **The lock (`check_h12b_discriminant_lock`, 7 assertions, all green) — and the deliberate honesty call.** Two-sided on real-pipeline corpora:
+  INDEPENDENT (`H_i ⊥ [gap, cal_error]`) → SUPPORTED; REDUCIBLE (`H_i = f([gap, cal_error]) + noise`) → NOT. **Unlike H9b and H11b, I did NOT
+  manufacture a mechanical-trap identity** — and that is the point. H9b needed the `|e|`-magnitude workaround because a signed `cal_bias = stated −
+  revealed` echo is exact-affine in `[gap, z_rev]` (R² ≡ 1 by construction); H11b had the circle-mean identity. H12b's `H_i` rides a genuinely
+  **independent measurement channel** (paired self/other severity judgments), so no such identity exists to trap. The lock proves that *absence*: it
+  builds ONE base corpus (fixed `gap`, `cal_error`), attaches two different severity channels, and shows the verdict flips **True→False on identical
+  predictors** — had a hidden identity existed, even the ⊥ draw would pin R² ≡ 1, yet it lands ~0. Fabricating a trap here would have been dishonest.
+
+- **Disciplines honored.** No-composite / never-pool (§13.5 — `H_i`, `gap_i`, `cal_error_i` stay separate facets, the R² is cohort-level, never a
+  per-person scalar); value-neutral reveal (harsher-on-others and harsher-on-self both just described, never ranked, §18.4); the §18.1 pairing lock
+  (a declined judgment drops the pair, unchanged). Synthetic fixtures only (`/tmp/gen_h12b.py` self-checks against the real analyzer path, writes
+  `sample-h12b-log.json` = 36 users, R² ≈ 0.0005, upper CI ≈ 0.22; the generator is never committed). **Cohort-level, no on-device reveal → Python-only,
+  `poc-projection.js` untouched, parity stays 9/9.** `make check` green (validate + threshold gate + JS↔Python parity).
+
+- **Surfaced to Dave (unchanged, still gated).** The on-device `H_i` reveal in `poc-projection.js` (H12b is cohort-level so there is nothing to port
+  yet); the self–other judgment log's real collection + phrasing (avoid a leading "aren't others worse?"); the behavioral validation (does a large
+  `H_i` predict real double standards) — Phase-2 / IRB-gated. Pre-registration values (`H12B_R2_CEILING = 0.50`, seed offset 29) are **proposed**, not locked.
+
+---
+
 ## Iteration 29 — 2026-07-01 — H9 · Self-calibration DISCRIMINANT (H9b leg; cohort-level) → H9b core complete
 
 `build-and-validate.md` item 1. H9's person indices + **H9a** (self-enhancement) + **H9b-stability** (split-window `cal_error` test–retest) + **H9c**

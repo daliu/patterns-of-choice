@@ -2301,6 +2301,20 @@ H12A_RELIABILITY_FLOOR = 0.40   # self–other asymmetry split-half reliability 
 H12_MIN_PAIRS = 3               # per-person scorable-pair floor for a reveal-eligible H_i (§1.5 N=1)
 # H12c is directional: lower 95% CI of the mean self–other asymmetry mean_i H_i > 0 (§18.3).
 
+# H12b DISCRIMINANT half (§18.5) — the deferred sibling of the reliability (H12a) and
+# self-serving-anchor (H12c) halves above. Regress the self–other severity asymmetry H_i
+# (§18.1) on [ gap_i, cal_error_i ] (the aspirational stated−revealed over-claim from §6
+# and the self-prediction error MAGNITUDE from §14.2). Moral hypocrisy is a DISTINCT
+# construct — NOT reducible to "how much you over-claim" + "how poorly you know yourself"
+# — iff the UPPER 95% bootstrap CI of the model R² < H12B_R2_CEILING (the paired self/other
+# severity channel carries variance those two predictors do not). Unlike the H9b / H11b
+# discriminants there is NO algebraic trap: H_i rides an INDEPENDENT measurement channel,
+# not an affine echo of the predictors, so the lock is honestly two-sided. PROPOSED locks
+# (DECISIONS §19); the analyzer reports met/not-met, never gates.
+H12B_R2_CEILING = 0.50          # discriminant: UPPER 95% CI of H_i~[gap,cal_error] R² must clear this
+H12B_MIN_PARTICIPANTS = 8       # ≥8 users with gap + cal_error + H_i before a 2-predictor R² is stable
+H12B_SEED_OFFSET = 29           # bootstrap seed band for the R² CI (H11B 27, H9B 28; next free)
+
 
 def _hypocrisy_pair_delta(r: dict) -> float | None:
     """The self–other asymmetry for ONE matched item (§18.1): severity_other −
@@ -2407,6 +2421,71 @@ def compute_h12c_self_serving(
         "mean_asymmetry": sum(asymmetries) / len(asymmetries),
         "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(asymmetries),
         "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_h12b_discriminant(
+    session_entries: list[dict],
+    card_sort_responses: list[dict],
+    predictions: list[dict],
+    hypocrisy_records: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> dict[str, Any] | None:
+    """H12b — the moral-hypocrisy DISCRIMINANT (§18.5), the deferred sibling of the H12a
+    reliability and H12c self-serving-anchor halves. Regress the self–other severity
+    asymmetry H_i (§18.1, mean_act severity_other − severity_self) on [ gap_i, cal_error_i ]
+    (the aspirational stated−revealed over-claim from §6 and the self-prediction error
+    MAGNITUDE from §14.2); moral hypocrisy is a DISTINCT construct — NOT reducible to how
+    much a person over-claims plus how poorly they know themselves — iff the UPPER 95%
+    bootstrap CI of the model R² < H12B_R2_CEILING (the paired self/other severity channel
+    carries variance neither the over-claim gap nor the self-insight magnitude explains;
+    Batson's moral-hypocrisy line dissociates the self-favoring double standard from both
+    self-idealization and self-knowledge). Completes H12 = reliability ∧ anchor ∧ discriminant.
+
+    NO algebraic trap here — and by design. H_i is measured on an INDEPENDENT channel (paired
+    self/other severity judgments, §18.1), NOT an affine echo of gap or cal_error the way the
+    H9b signed-cal_bias or H11b circle-mean outcomes were, so the discriminant cannot be
+    manufactured true or false by construction: the lock is honestly two-sided — SUPPORTED
+    when the asymmetry channel carries its own variance, NOT-supported when H_i is linearly
+    reducible to over-claiming + self-insight. check_h12b_discriminant_lock exercises both
+    directions on real-pipeline corpora (no hand-built identity). COHORT-level statistic,
+    NEVER a per-person reveal: H_i, gap_i and cal_error_i stay separate facets, never pooled
+    (§13.5). Seed BOOTSTRAP_SEED+29."""
+    predictors_by_user = _h9b_person_predictors(session_entries, card_sort_responses, tag_map)
+    cal = calibration_person_indices(calibration_axis_records(predictions, tag_map))
+    asymmetry = hypocrisy_asymmetry_by_user(hypocrisy_records)
+    rows: list[tuple[float, float, float]] = []
+    for user in sorted(set(predictors_by_user) & set(cal) & set(asymmetry)):
+        gap = predictors_by_user[user]["gap"]
+        cal_error = cal[user]["cal_error"]
+        h = asymmetry[user]
+        if gap != gap or cal_error != cal_error or h != h:
+            continue
+        rows.append((gap, cal_error, h))   # predictors = [gap, cal_error]; y = H_i
+    if len(rows) < H12B_MIN_PARTICIPANTS:
+        return None
+    predictors = [[r[0] for r in rows], [r[1] for r in rows]]
+    y = [r[2] for r in rows]
+    r2 = _ols_r_squared(predictors, y)
+    if r2 is None:
+        return None
+    ci_low, ci_high = _bootstrap_ci_r2(rows, random.Random(BOOTSTRAP_SEED + H12B_SEED_OFFSET))
+    supported = None if ci_high != ci_high else bool(ci_high < H12B_R2_CEILING)
+    # Descriptive companions (reported, NOT the gate): H_i's bare correlation with each
+    # predictor alone, so a reader sees WHICH predictor (if any) carries leakage — without
+    # pooling anything per person.
+    h_gap_r = _pearson_r([r[0] for r in rows], y)
+    h_cal_error_r = _pearson_r([r[1] for r in rows], y)
+    return {
+        "r2": r2,
+        "r2_ci_low": ci_low,
+        "r2_ci_high": ci_high,
+        "ceiling": H12B_R2_CEILING,
+        "h_gap_r": h_gap_r,
+        "h_cal_error_r": h_cal_error_r,
+        "n_participants": len(rows),
+        "supported": supported,
+        "pre_registered_threshold_met": supported,
     }
 
 
@@ -3672,6 +3751,7 @@ def render_h12_result(
     h12c: dict[str, Any] | None,
     person_asymmetry_n: int,
     mean_asymmetry_census: float,
+    h12b_disc: dict[str, Any] | None = None,
 ) -> str:
     """H12 moral hypocrisy / self–other judgment asymmetry (scoring.md §18).
     Value-neutral: H_i names the direction and size of a person's self–other gap —
@@ -3679,7 +3759,7 @@ def render_h12_result(
     described, never ranked (§18.4). "Hypocrisy" is the construct's name in the
     literature; the reveal states the asymmetry descriptively, never as a verdict.
     A declined judgment drops the pair, never imputed to 0 (§18.1 pairing lock)."""
-    if h12a is None and h12c is None and person_asymmetry_n == 0:
+    if h12a is None and h12c is None and person_asymmetry_n == 0 and h12b_disc is None:
         return (
             "(H12: insufficient data — supply --hypocrisy-log with matched "
             "severity_self + severity_other judgments of the same acts)"
@@ -3714,10 +3794,21 @@ def render_h12_result(
         )
     else:
         lines.append("  H12c self-serving asymmetry: insufficient data (need ≥3 users with ≥3 matched pairs)")
+    if h12b_disc is not None:
+        lines.append(
+            f"  H12b DISCRIMINANT (H_i asymmetry ~ [aspirational gap, self-prediction error])  "
+            f"R² = {h12b_disc['r2']:.3f}, upper 95% CI {_f3(h12b_disc['r2_ci_high'])}, n = {h12b_disc['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {h12b_disc['ceiling']:.2f} — the self–other double standard NOT reducible "
+            f"to over-claiming + self-insight, §18.5): {_met_glyph(h12b_disc['pre_registered_threshold_met'])}  "
+            f"(H·gap r = {_f3(h12b_disc['h_gap_r'])}, H·cal_error r = {_f3(h12b_disc['h_cal_error_r'])}, cohort/no-pool)"
+        )
     lines.append(
         "  Value-neutral: harsher-on-others (self-serving) and harsher-on-self (self-critical/scrupulous) "
         "are both just described — neither is scored as better (§18.4). H12c is a cohort validity anchor, "
-        "not a per-person verdict. H12b discriminant (vs gap / calibration) deferred; see build-and-validate.md."
+        "not a per-person verdict. H12b is the discriminant — the asymmetry channel vs the aspirational gap "
+        "+ self-prediction error (§18.5)."
     )
     return "\n".join(lines)
 
@@ -4168,6 +4259,15 @@ def main() -> int:
              "tests whether cal_error_i is reducible to the aspirational gap + revealed level.",
     )
     parser.add_argument(
+        "--h12b-log",
+        type=Path,
+        default=None,
+        help="Optional combined session + card-sort + predictions + hypocrisy log (object with session/"
+             "card_sort/predictions/hypocrisy arrays for a SHARED cohort) for the H12b moral-hypocrisy "
+             "DISCRIMINANT (§18.5): tests whether the self–other asymmetry H_i is reducible to the "
+             "aspirational gap + self-prediction error.",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -4483,6 +4583,25 @@ def main() -> int:
             h9b_bundle.get("session", []),
             h9b_bundle.get("card_sort", []),
             h9b_bundle.get("predictions", []),
+            tag_map,
+        )
+
+    h12b_discriminant_result: dict[str, Any] | None = None
+    if args.h12b_log:
+        try:
+            with args.h12b_log.open() as f:
+                h12b_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading H12b log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(h12b_bundle, dict):
+            print("ERROR: H12b log must be a JSON object with session/card_sort/predictions/hypocrisy arrays", file=sys.stderr)
+            return 2
+        h12b_discriminant_result = compute_h12b_discriminant(
+            h12b_bundle.get("session", []),
+            h12b_bundle.get("card_sort", []),
+            h12b_bundle.get("predictions", []),
+            h12b_bundle.get("hypocrisy", []),
             tag_map,
         )
 
@@ -4873,6 +4992,21 @@ def main() -> int:
             h12_block["H12a"] = _h9_json(h12a_result)
         if h12c_result is not None:
             h12_block["H12c"] = _h9_json(h12c_result)
+        if h12b_discriminant_result is not None:
+            # H12b DISCRIMINANT half — COHORT-level R² (§18.5). NO pooled per-person scalar:
+            # H_i, gap_i and cal_error_i stay separate facets (§13.5). supported is EXACTLY
+            # (r2 upper-CI < ceiling); the gate re-derives it (check_h12b_discriminant_lock).
+            h12_block["H12b_discriminant"] = {
+                "r2": h12b_discriminant_result["r2"],
+                "r2_ci_low": _nan_to_none(h12b_discriminant_result["r2_ci_low"]),
+                "r2_ci_high": _nan_to_none(h12b_discriminant_result["r2_ci_high"]),
+                "ceiling": h12b_discriminant_result["ceiling"],
+                "h_gap_r": h12b_discriminant_result["h_gap_r"],
+                "h_cal_error_r": h12b_discriminant_result["h_cal_error_r"],
+                "n_participants": h12b_discriminant_result["n_participants"],
+                "supported": h12b_discriminant_result["supported"],
+                "pre_registered_threshold_met": h12b_discriminant_result["pre_registered_threshold_met"],
+            }
         if h12_block or h12_person_asymmetry_n:
             h12_block["person_asymmetry_n"] = h12_person_asymmetry_n
             h12_block["mean_asymmetry"] = _nan_to_none(h12_mean_asymmetry)
@@ -5047,10 +5181,12 @@ def main() -> int:
                 r2a_result, r2b_result, r2_protected_set_n,
                 r2_protected_none_n, r2_protected_set_sizes,
             ))
-        if h12a_result is not None or h12c_result is not None or h12_person_asymmetry_n:
+        if (h12a_result is not None or h12c_result is not None or h12_person_asymmetry_n
+                or h12b_discriminant_result is not None):
             print()
             print(render_h12_result(
                 h12a_result, h12c_result, h12_person_asymmetry_n, h12_mean_asymmetry,
+                h12b_discriminant_result,
             ))
         if r1a_result is not None or r1c_result is not None or r1_profile_n:
             print()

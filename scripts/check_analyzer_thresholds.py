@@ -135,7 +135,7 @@ EXPECTATIONS = {
     "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True}},
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
-    "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True}},
+    "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True, "H12b_discriminant": True}},
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True}},
     "A3": {"kind": "a3", "kappa_met": True},
@@ -169,6 +169,7 @@ def run_analyzer() -> dict:
         "--h8-log", str(FIXTURES / "sample-h8-log.json"),
         "--h11b-log", str(FIXTURES / "sample-h11b-log.json"),
         "--h9b-log", str(FIXTURES / "sample-h9b-log.json"),
+        "--h12b-log", str(FIXTURES / "sample-h12b-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -1672,6 +1673,183 @@ def check_h9b_discriminant_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_h12b_discriminant_lock() -> tuple[bool, list[str]]:
+    """The H12b moral-hypocrisy DISCRIMINANT discipline (§18.5), asserted directly against the code.
+    H12b regresses the self–other severity asymmetry H_i (§18.1, mean_act severity_other − severity_self)
+    on [ gap_i, cal_error_i ] — the aspirational over-claim (§6) and the self-prediction error magnitude
+    (§14.2) — and calls moral hypocrisy DISCRIMINABLE from those two iff the UPPER 95% bootstrap CI of the
+    model R² < H12B_R2_CEILING. This lock proves, on synthetic corpora with KNOWN ground truth built
+    through the REAL §3/§6/§14 pipeline:
+      (i)   INDEPENDENT (H_i drawn ⊥ [gap, cal_error]): R² ~ 0, upper CI clears the 0.50 ceiling,
+            SUPPORTED True — a genuinely dissociable double-standard axis is detected;
+      (ii)  REDUCIBLE (H_i made a noisy linear function of [gap, cal_error]): R² high, upper CI ≥ ceiling,
+            SUPPORTED False — an asymmetry that IS its predictors is correctly NOT supported;
+      (iii) SUPPORTED is EXACTLY (upper-CI < ceiling) on both corpora — the CI gate cannot be bypassed;
+      (iv)  NO ALGEBRAIC TRAP — and this is the point of difference from H9b/H11b. Both corpora share the
+            IDENTICAL predictors (same session/card-sort/predictions → same gap_i, cal_error_i); ONLY the
+            paired-severity channel differs, and the verdict flips True→False. Because H_i rides an
+            INDEPENDENT measurement channel (not an affine echo of the predictors the way H9b's signed
+            cal_bias = stated − revealed or H11b's circle-mean identity were), there is no construction that
+            forces the R²: had such an identity existed, even the ⊥ draw would pin R² ≡ 1, yet here it is ~0.
+            The gate tracks the DATA, not a manufactured identity — so no trap is fabricated to make it pass;
+      (v)   the descriptive companion localizes leakage — |H·gap r|,|H·cal_error r| small when independent,
+            strongly signed when reducible — WITHOUT pooling anything per person;
+      (vi)  the inclusion floor holds — < H12B_MIN_PARTICIPANTS joined users returns None (never a bare scalar);
+      (vii) the reveal is COHORT-level and value-neutral — harsher-on-others / harsher-on-self never ranked.
+    This is the H12 analog of the H9b calibration-discriminant lock / the §14.1 censoring lock."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    tag_map = A.load_tag_axis_map(A.DEFAULT_TAG_MAP)
+    DOMAINS = ["truth-telling", "resource-allocation", "reciprocity-cooperation"]
+    VBD = {d: [v for v, dd in A.load_values_deck_domains().items() if dd == d] for d in DOMAINS}
+    NIT, KP, RT = 6, 6, 5000   # session items per user×domain, axis probes per user, response_time_ms
+    SEV_BASE, OFFS = 4.0, (-0.30, -0.10, 0.10, 0.30)   # exact-mean self/other severity pairs (Σoff = 0)
+
+    def tw(d, t):
+        return A.item_score({"domain": d, "tags": [t]}, tag_map)[0]
+
+    REVEAL = {
+        "truth-telling": ["truth:commission", "truth:state", "truth:partial", "truth:implicit",
+                          "lie:protective", "lie:omission", "lie:commission"],
+        "resource-allocation": ["generosity", "need_sensitivity", "fairness",
+                                "self_reliance:projected", "self_reliance"],
+        "reciprocity-cooperation": ["trust", "forgiveness", "trust:asymmetric", "trust:institutional",
+                                    "vigilance:mild", "vigilance"],
+    }
+    ROPT = {d: [(tw(d, t), t) for t in REVEAL[d]] for d in DOMAINS}
+    PAIRS = [("truth:commission", "truth:commission"), ("truth:state", "truth:partial"),
+             ("truth:commission", "truth:state"), ("truth:state", "truth:implicit"),
+             ("truth:commission", "truth:partial"), ("truth:implicit", "discretion"),
+             ("truth:partial", "discretion"), ("transparency", "discretion"),
+             ("transparency", "lie:protective")]
+    PMENU = [(abs(tw("truth-telling", p) - tw("truth-telling", r)), p, r) for p, r in PAIRS]
+    POPT = [e for e, _, _ in PMENU]
+    E2P = {round(e, 6): (p, r) for e, p, r in PMENU}
+
+    def greedy(opts, K, t):
+        chosen, s = [], 0.0
+        for j in range(K):
+            b = min(opts, key=lambda o: abs((s + o) / (j + 1) - t))
+            chosen.append(b)
+            s += b
+        return chosen
+
+    def grid(lo, hi, n, seed):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def build_sess_cs(n, seed):
+        sess, cs, rt, sk = [], [], {}, {}
+        for di, d in enumerate(DOMAINS):
+            rg = grid(-0.80, 0.80, n, seed + 10 + di)
+            kg = grid(1.0, 5.0, n, seed + 40 + di)
+            for i in range(n):
+                rt[(i, d)] = rg[i]
+                sk[(i, d)] = max(1, min(5, round(kg[i])))
+        for i in range(n):
+            u = f"u{i:02d}"
+            sel: list = []
+            for d in DOMAINS:
+                wtag = {w: t for w, t in ROPT[d]}
+                for j, w in enumerate(greedy([w for w, _ in ROPT[d]], NIT, rt[(i, d)])):
+                    sess.append({"session_id": f"{u}-{d}", "user_id": u, "timestamp_iso": "2026-07-01T00:00:00Z",
+                                 "scenario_id": f"lock-{d}", "scenario_type": "quick-fire-round", "domain": d,
+                                 "item_id": f"{u}-{d}-{j}", "option_id": "a", "tags": [wtag[w]],
+                                 "response_time_ms": RT, "presented_position": j + 1, "was_timeout": False})
+                sel.extend(VBD[d][: sk[(i, d)]])
+            cs.append({"user_id": u, "layer": "aspirational_self", "selected_value_ids": sel})
+        return sess, cs
+
+    def realize_pred(n, targets):
+        preds = []
+        for i in range(n):
+            u = f"u{i:02d}"
+            for j, e in enumerate(greedy(POPT, KP, targets[i])):
+                p, r = E2P[round(e, 6)]
+                preds.append({"user_id": u, "session_id": f"{u}-p", "probe_id": f"{u}-c{j}",
+                              "domain": "truth-telling", "channel": "axis", "stakes_pool": None,
+                              "predicted_tags": [p], "realized_tags": [r]})
+        return preds
+
+    def realize_hyp(n, targets):
+        # H_i EXACTLY == targets[i]: severity_self fixed, severity_other = base + target + symmetric offset.
+        recs = []
+        for i in range(n):
+            u = f"u{i:02d}"
+            for j, off in enumerate(OFFS):
+                recs.append({"user": u, "session": f"{u}-h{j // 2}", "act_id": f"{u}-a{j}",
+                             "severity_self": SEV_BASE, "severity_other": SEV_BASE + targets[i] + off})
+        return recs
+
+    def base_corpus(n, seed):
+        # Fixed session/card-sort/predictions → fixed gap_i, cal_error_i (the two PREDICTORS).
+        sess, cs = build_sess_cs(n, seed)
+        pby = A._h9b_person_predictors(sess, cs, tag_map)
+        gaps = [pby[f"u{i:02d}"]["gap"] for i in range(n)]
+        preds = realize_pred(n, grid(0.15, 1.15, n, seed + 700))
+        cidx = A.calibration_person_indices(A.calibration_axis_records(preds, tag_map))
+        cerr = [cidx[f"u{i:02d}"]["cal_error"] for i in range(n)]
+        return sess, cs, preds, gaps, cerr
+
+    def indep_targets(n, seed, gaps, cerr):
+        hseed = seed + 900
+        for cand in range(seed + 900, seed + 13000):
+            tv = grid(-1.20, 1.20, n, cand)
+            if abs(A._pearson_r(tv, gaps)) < 0.05 and abs(A._pearson_r(tv, cerr)) < 0.05:
+                hseed = cand
+                break
+        return grid(-1.20, 1.20, n, hseed)
+
+    def reducible_targets(n, seed, gaps, cerr):
+        # H_i made a NOISY linear function of the predictors — a statistical reducibility, not an
+        # algebraic identity (small noise keeps R² < 1, underscoring the "no trap" point).
+        noise = grid(-0.30, 0.30, n, seed + 1300)
+        return [1.2 * gaps[i] + 1.5 * (cerr[i] - 0.65) + noise[i] for i in range(n)]
+
+    # ONE base corpus → the SAME predictors feed both verdicts; only the severity channel changes.
+    sess, cs, preds, gaps, cerr = base_corpus(40, 810000)
+    ind = A.compute_h12b_discriminant(sess, cs, preds, realize_hyp(40, indep_targets(40, 810000, gaps, cerr)), tag_map)
+    red = A.compute_h12b_discriminant(sess, cs, preds, realize_hyp(40, reducible_targets(40, 810000, gaps, cerr)), tag_map)
+    tsess, tcs, tpreds, tg, tc = base_corpus(6, 810000)    # < 8-participant floor
+    tiny = A.compute_h12b_discriminant(tsess, tcs, tpreds, realize_hyp(6, grid(-1.20, 1.20, 6, 810900)), tag_map)
+
+    render = A.render_h12_result(None, None, 0, 0.0, ind)
+    ceil = A.H12B_R2_CEILING
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["r2_ci_high"] == r["r2_ci_high"] and r["r2_ci_high"] < ceil)
+
+    checks = [
+        ("INDEPENDENT (H_i ⊥ [gap, cal_error]): SUPPORTED True, R² ~ 0, upper CI clears the ceiling",
+         ind is not None and ind["supported"] is True and ind["r2"] < 0.10
+         and ind["r2_ci_high"] == ind["r2_ci_high"] and ind["r2_ci_high"] < ceil and ind["n_participants"] == 40),
+        ("REDUCIBLE (H_i = f([gap, cal_error]) + noise): SUPPORTED False, R² high, upper CI ≥ ceiling",
+         red is not None and red["supported"] is False and red["r2"] > ceil and red["r2_ci_high"] >= ceil),
+        ("SUPPORTED is EXACTLY (upper-CI < ceiling) on both corpora — the CI gate cannot be bypassed",
+         exact(ind) and exact(red)),
+        ("NO ALGEBRAIC TRAP: identical predictors, verdict flips True→False via the independent H_i channel alone",
+         ind is not None and red is not None and ind["n_participants"] == red["n_participants"] == 40
+         and ind["supported"] is True and red["supported"] is False),
+        ("descriptive companion localizes leakage: |H·gap r| small when independent, strongly signed when reducible",
+         ind is not None and red is not None and abs(ind["h_gap_r"]) < 0.20
+         and abs(ind["h_cal_error_r"]) < 0.20 and abs(red["h_gap_r"]) > 0.50),
+        ("inclusion floor: < H12B_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — NOT reducible to over-claiming+self-insight, cohort/no-pool",
+         "NOT reducible to over-claiming + self-insight" in render
+         and "cohort/no-pool" in render and "H·gap r" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h12b-discriminant: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -1815,6 +1993,12 @@ def main() -> int:
     for m in h9block_msgs:
         print(m)
     if not h9block_ok:
+        all_pass = False
+
+    h12block_ok, h12block_msgs = check_h12b_discriminant_lock()
+    for m in h12block_msgs:
+        print(m)
+    if not h12block_ok:
         all_pass = False
 
     if all_pass:
