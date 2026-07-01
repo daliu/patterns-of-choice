@@ -13,6 +13,57 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 33 — 2026-07-01 — A4 · Decision-conflict DISCRIMINANT (A4b leg; WITHIN-PERSON/fixed-effects, cohort-level) → A4 discriminant complete
+
+`build-and-validate.md` item 9. A4's conflict primitive + **A4a** (per-domain effort-reliability) shipped 2026-06-30 — but the design defines A4's
+validity as **reliability ∧ discriminant**. A *reliable* per-domain effort cell is not enough: decision-conflict must also be **discriminable from
+*what* was chosen** (the choice level `z_revealed`) and **how far from the stated ideal** (the aspirational `|gap|`) — otherwise "conflict" collapses
+into "extreme or near-ideal choices just take longer," and the hesitation/ambivalence construct adds nothing beyond the choice channels already
+scored. That discriminant half, **A4b**, was the sole remaining A4 *core* gap (short of the runtime-gated revision capture + the deferred on-device
+reveal). Uniquely among the branch discriminants, A4b is **WITHIN-PERSON (fixed-effects)** — it person-centers **both** sides before pooling, and
+that centering is the load-bearing move that makes the gate honest.
+
+- **What shipped (`scripts/analyze.py`, `--a4b-log`).** `compute_a4b_discriminant` takes a `{process, session, card_sort}` bundle for a **shared**
+  cohort (process `user` must equal session `user_id` so the `(user, domain)` keys align), builds each cell's conflict via the real
+  `conflict_by_user_domain` pipeline and its choice level `z_revealed` + aspirational `|gap|` via `compute_gaps`, **person-centers all three** within
+  each user, pools the deviations, and regresses `R²([Δlevel, Δ|gap|] → Δconflict)`. **Conflict is a DISTINCT channel iff the upper 95% bootstrap CI
+  of that R² < `A4B_R2_CEILING = 0.50`** (seed `BOOTSTRAP_SEED + 33`; ≥ `A4B_MIN_PARTICIPANTS = 8`, ≥ `A4B_MIN_CELLS = 12`, ≥ `A4B_MIN_DOMAINS = 2`
+  cells/user). Descriptive within-person companions `conflict·level r` / `conflict·|gap| r` localize any leakage without pooling. Reuses
+  `_ols_r_squared` + `_bootstrap_ci_r2` verbatim. JSON `A4.A4b` + a value-neutral render ("is conflict a DISTINCT channel, or a shadow of the
+  choice?"); `render_a4_result` gained the `a4b` arg and now early-returns only when both A4a and A4b are absent.
+
+- **Why person-centering is load-bearing (the two-sidedness fix).** Conflict is a within-person z — under the per-person sum constraint it carries
+  **~zero between-person variance** — while `z_revealed`/`|gap|` carry mostly *between*-person variance. A raw-score regression would therefore cap R²
+  far below the ceiling **for structural reasons**, rubber-stamping "distinct" for free (a one-sided gate). Centering both sides strips the between-
+  person axis from the predictors too, so the fit sees only the within-person covariation that could actually make conflict reducible — the gate can
+  now fail. Confirmed empirically by the lock's REDUCIBLE cohort (R² = 0.77, upper CI 0.83 ≥ ceiling → NOT supported).
+
+- **The lock (`check_a4b_discriminant_lock`, 7 assertions, all green) — two-sided + no-manufactured-trap.** Two real-pipeline cohorts share an
+  **identical** session/card-sort corpus (so the choice predictors are byte-for-byte fixed); only the **separate RT channel** differs. **INDEPENDENT**
+  (effort drawn ⊥ the choice profile, pinned seed `20263710`) → R² ≈ 0.002, upper CI 0.072 < 0.50 → SUPPORTED; **REDUCIBLE** (effort built as
+  `1.0·Δlevel + 0.6·Δ|gap|`) → R² = 0.77 → NOT supported. Because the verdict flips on identical predictors **through the RT channel alone**, there is
+  no manufactured trap — conflict rides the independent `response_time_ms` residual, never an affine echo of the choice columns (the H12b/R6b honesty
+  property, here in fixed-effects form). Plus: gate-agrees-with-own-arithmetic, companion localization (`|ind level r|`/`|ind gap r|` < 0.20,
+  `|red level r|` > 0.50), inclusion floor (a 6-user cohort → `None`, not a false verdict), and a value-neutral render check (asserts "DISTINCT",
+  "cohort/no-pool", "no participant ranked", "never a moral-framework label", "Value-neutral" all present; the `_scan` rejects any
+  `deontological`/`utilitarian`/`framework` payload key).
+
+- **Disciplines honored.** §13.5 no-pool (a single cohort-level R² over person-centered deviations — no pooled "conflict score", which `check_a4`
+  already rejects; A4b ranks no one). §13.2 censoring untouched (A4b reads only axis means + RT-derived effort). **Value-neutral with EXTRA force** —
+  conflict is EFFORT/ambivalence, never a utilitarian-vs-deontological read (Bago & De Neys 2019); high conflict is not a deficit (effortful virtue ≥
+  easy virtue). N=1 unchanged (the discriminant is cohort-level; the reveal quantity `conflict(i, domain)` stays per-person). **Pseudo-replication
+  caveat documented** — the bootstrap resamples cells, understating repeated-user dependence, but a *ceiling* claim only gets harder under understated
+  width (conservative). Cohort-level, **no on-device reveal → `poc-projection.js` untouched, parity stays 9/9.**
+
+- **Shipped.** `make check` green — 66 validate scenarios + arcs + the analyzer threshold gate (`A4: ✓ A4a reliability … ; ✓ A4b conflict DISTINCT
+  (R²=0.002, upper CI 0.072 vs ceiling 0.50, within-person/no-pool)`, all 7 `a4b-discriminant: ✓`) + 9/9 parity. `analyze.py` +
+  `check_analyzer_thresholds.py` (`check_a4b_discriminant_lock` + wiring, `a4b_supported` sub-expectation, `--a4b-log` in `run_analyzer`) +
+  `analysis/fixtures/sample-a4b-log.json` (40 participants; 600 process / 720 session / 40 card-sort = 1360 records; self-checked generator; the
+  SUPPORTED/independent cohort, R² ≈ 0.002) + `scoring.md` §22.4/§22.5 status + `build-and-validate.md` item 9. **A4 discriminant complete;** only the
+  runtime-gated answer-revision capture + the on-device `conflict(i, domain)` reveal remain deferred. Generator stayed in `/tmp` (never committed).
+
+---
+
 ## Iteration 32 — 2026-07-01 — H10 · Cross-situational-consistency DISCRIMINANT (H10b leg; TWO-legged, cohort-level) → H10 complete
 
 `build-and-validate.md` item 2. H10's `sd_i(c)`/`V_i` primitive + **H10a** (variability-trait split-half reliability) + **H10c** (the observer-effect

@@ -3229,6 +3229,11 @@ def foundation_profile_by_user(
 A4A_RELIABILITY_FLOOR = 0.40   # conflict split-half reliability lower 95% CI (§1.2) — the exploratory bar
 A4_MIN_ITEMS = 4               # per-user scorable-item floor for a within-person residualized RT fit (intercept + 2 predictors + slack)
 A4A_SEED_OFFSET = 25           # bootstrap seed band BOOTSTRAP_SEED+25 (+ per-domain i, via _domain_test_retest_r); A3 consumed none, R6d used +24
+A4B_R2_CEILING = 0.50          # conflict(i,d) ~ [choice level, |aspirational gap|] upper 95% CI must clear this to be a distinct channel (§22.4)
+A4B_MIN_PARTICIPANTS = 8       # cohort participant floor (matches H9B/H10B/H11B/H12B/R6B)
+A4B_MIN_DOMAINS = 2            # per-user (user × domain) cell floor — the within-person centering needs ≥2 cells to carry any signal
+A4B_MIN_CELLS = 12             # pooled (user × domain) cell floor for a stable within-person R² fit
+A4B_SEED_OFFSET = 33           # bootstrap seed band BOOTSTRAP_SEED+33 for the R² CI (A4A 25, H10B main 31, H10B de-confound 32; next free)
 
 
 def _a4_user(r: dict) -> str | None:
@@ -3473,6 +3478,113 @@ def compute_a4a_conflict_reliability(records: list[dict]) -> dict[str, Any] | No
         "n_domains_met": n_met,
         "threshold_low": A4A_RELIABILITY_FLOOR,
         "any_met": bool(n_met > 0),
+    }
+
+
+def compute_a4b_discriminant(
+    process_records: list[dict],
+    session_entries: list[dict],
+    card_sort_responses: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> dict[str, Any] | None:
+    """A4b — does DECISION CONFLICT add information beyond the CHOICE? (§22.4, the process-channel
+    DISCRIMINANT of the §22 conflict adjunct.) A person's effort on a domain (A4's conflict(i, d) —
+    the RT-derived within-person z, §1.1) could be nothing but a shadow of WHAT they chose: harder
+    when they land far from their stated ideal, or at the extremes of their own behaviour. A4b asks
+    whether conflict carries variance those two do NOT, by regressing conflict on the SAME §3/§6
+    quantities the reveal already reports:
+        conflict(i, d) ~ [ z_revealed(i, d) , |gap(i, d)| ]
+    where z_revealed is the choice LEVEL (§3.2, per-domain standardized) and |gap| is the departure
+    magnitude from the stated-aspirational ideal (§6). Conflict is a distinct channel iff the UPPER
+    95% bootstrap CI of the model R² < A4B_R2_CEILING (0.50) — most of its variance is unexplained.
+
+    WITHIN-PERSON (fixed-effects) by construction, and that is LOAD-BEARING (the A4b analog of the
+    H11b external-generosity / H9b magnitude-channel choice). conflict is a within-person z (the
+    per-person sum constraint leaves it ~zero between-person variance), while the predictors carry
+    mostly BETWEEN-person variance (z_revealed is standardized per-domain ACROSS users; |gap| rides
+    it). A raw-score pooled regression would therefore cap R² at the predictors' small within-person
+    share — a genuinely reducible cohort could NEVER reach the ceiling and the gate would be a
+    one-sided rubber stamp. So we PERSON-CENTER conflict AND both predictors within each user before
+    pooling: dc, dlev, dgp are each cell-minus-person-mean. The R² then measures purely how much of
+    a person's cell-to-cell conflict PROFILE their cell-to-cell choice profile explains — a two-sided
+    question the lock can flip.
+
+    NO MANUFACTURED TRAP (the H12b/R6b property, deliberately): conflict rides the INDEPENDENT RT
+    channel (response_time_ms residualized on reading-load + order, §1.1), NOT an affine echo of the
+    choice columns. So on a FIXED session/card-sort corpus (→ fixed dlev, dgp) the verdict flips
+    True→False through the RT channel ALONE: an RT profile drawn ⊥ the choice profile → R² ~ 0 →
+    distinct; an RT profile built to track [dlev, dgp] → R² high → not distinct. Had an algebraic
+    identity existed (as in H9b's signed cal_bias or H11b's circle-mean), even the ⊥ draw would pin
+    R² ≡ 1 — here it is ~0, so the gate tracks the DATA, not a fabricated identity.
+
+    Descriptive companions (bare within-person Pearson r) localize any leakage WITHOUT pooling a
+    scalar: conflict·level r and conflict·|gap| r are small when conflict is its own channel, signed
+    and large when it is a shadow of the choice. CAVEAT (as the H10b de-confound leg): the bootstrap
+    resamples (user × domain) CELLS, so its CI understates dependence from repeated users
+    (pseudo-replication) — the gate stays deliberately conservative (a distinctness claim must clear
+    a CEILING, so understated width only makes "distinct" HARDER to earn). VALUE-NEUTRAL, COHORT-level
+    (§3/§1.4): effort is never graded and no participant is ranked; the reveal reports only whether the
+    channel is separable. Returns None below the participant/cell floors (never a bare scalar)."""
+    conflict = conflict_by_user_domain(process_records)
+    revealed_means = user_domain_means(session_means(session_aggregates(session_entries, tag_map)))
+    cs_scores = card_sort_scores(card_sort_responses, load_values_deck_domains())
+    stated_layer = {
+        (user, domain): score
+        for (user, domain, layer), score in cs_scores.items()
+        if layer == "aspirational_self"
+    }
+    gaps = compute_gaps(revealed_means, stated_layer, stated_source="card_sort")
+
+    # Join conflict (process channel) to the choice predictors on the (user, domain) cell.
+    by_user: dict[str, list[tuple[float, float, float]]] = defaultdict(list)
+    for (user, domain), g in gaps.items():
+        c = conflict.get((user, domain))
+        if c is None:
+            continue
+        lev = g["z_revealed"]
+        gp = abs(g["gap"])
+        if c != c or lev != lev or gp != gp:  # drop any NaN cell
+            continue
+        by_user[user].append((c, lev, gp))
+
+    # Person-center each channel within the user, then pool cells (fixed-effects design).
+    rows: list[tuple[float, float, float]] = []
+    n_users = 0
+    for cells in by_user.values():
+        if len(cells) < A4B_MIN_DOMAINS:
+            continue
+        n = len(cells)
+        cbar = sum(c for c, _, _ in cells) / n
+        lbar = sum(l for _, l, _ in cells) / n
+        gbar = sum(g for _, _, g in cells) / n
+        n_users += 1
+        for c, l, g in cells:
+            rows.append((l - lbar, g - gbar, c - cbar))   # (dlev, dgp, dc) — outcome dc last
+
+    if n_users < A4B_MIN_PARTICIPANTS or len(rows) < A4B_MIN_CELLS:
+        return None
+
+    dlev = [r[0] for r in rows]
+    dgp = [r[1] for r in rows]
+    dc = [r[2] for r in rows]
+    r2 = _ols_r_squared([dlev, dgp], dc)
+    if r2 is None:
+        return None
+    ci_low, ci_high = _bootstrap_ci_r2(rows, random.Random(BOOTSTRAP_SEED + A4B_SEED_OFFSET))
+    supported = None if ci_high != ci_high else bool(ci_high < A4B_R2_CEILING)
+    conflict_level_r = _pearson_r(dlev, dc)
+    conflict_gap_r = _pearson_r(dgp, dc)
+    return {
+        "r2": r2,
+        "r2_ci_low": ci_low,
+        "r2_ci_high": ci_high,
+        "ceiling": A4B_R2_CEILING,
+        "conflict_level_r": conflict_level_r,
+        "conflict_gap_r": conflict_gap_r,
+        "n_participants": n_users,
+        "n_cells": len(rows),
+        "supported": supported,
+        "pre_registered_threshold_met": supported,
     }
 
 
@@ -4281,42 +4393,80 @@ def render_a3_result(
     return "\n".join(lines)
 
 
-def render_a4_result(a4a: dict[str, Any] | None, n_users: int, n_cells: int) -> str:
+def render_a4_result(
+    a4a: dict[str, Any] | None,
+    n_users: int,
+    n_cells: int,
+    a4b: dict[str, Any] | None = None,
+) -> str:
     """A4 decision conflict — the PROCESS channel (scoring.md §22). RT-derived EFFORT /
     ambivalence, confound-guarded (residualized on reading-load + order, timeouts + the timed set
     excluded, z within-person). NEVER a framework read (slow ≠ deontological; Bago & De Neys 2019)
     and value-neutral (high conflict is not worse — effortful virtue is arguably the stronger
     signal). Exploratory, RT-only (revisions Dave-gated, §4 Q1), NO public card (§1.4)."""
-    if a4a is None:
+    if a4a is None and a4b is None:
         return (
             "A4 (decision conflict — process channel): insufficient data — supply --process-log "
             "with per-item response_time_ms + prompt_chars + presented_position across ≥2 "
             "sessions/user (untimed, non-timeout items; ≥3 users scorable per domain in both halves)."
         )
     lines = ["A4 (decision conflict — RT-derived effort/ambivalence, value-neutral, exploratory):"]
-    lines.append(
-        f"  conflict(i, domain) = within-person z of response time, residualized on reading-load "
-        f"+ presented position; timeouts + the timed quick-fire set excluded (CV-1). "
-        f"{n_cells} (user × domain) cell(s) over {n_users} participant(s)."
-    )
-    lines.append(
-        f"  A4a conflict reliability (split-half odd/even, per-domain test–retest): "
-        f"{a4a['n_domains_met']}/{a4a['n_domains']} domain(s) clear the lower-CI ≥ "
-        f"{a4a['threshold_low']:.2f} bar  {_met_glyph(a4a['any_met'])}"
-    )
-    for dom in sorted(a4a["per_domain"]):
-        res = a4a["per_domain"][dom]
+    if a4a is not None:
         lines.append(
-            f"     {dom}: r = {res['r']:+.3f}, 95% CI {_ci_str(res)}, n = {res['n']}  "
-            f"{_met_glyph(res.get('pre_registered_threshold_met'))}"
+            f"  conflict(i, domain) = within-person z of response time, residualized on reading-load "
+            f"+ presented position; timeouts + the timed quick-fire set excluded (CV-1). "
+            f"{n_cells} (user × domain) cell(s) over {n_users} participant(s)."
         )
+        lines.append(
+            f"  A4a conflict reliability (split-half odd/even, per-domain test–retest): "
+            f"{a4a['n_domains_met']}/{a4a['n_domains']} domain(s) clear the lower-CI ≥ "
+            f"{a4a['threshold_low']:.2f} bar  {_met_glyph(a4a['any_met'])}"
+        )
+        for dom in sorted(a4a["per_domain"]):
+            res = a4a["per_domain"][dom]
+            lines.append(
+                f"     {dom}: r = {res['r']:+.3f}, 95% CI {_ci_str(res)}, n = {res['n']}  "
+                f"{_met_glyph(res.get('pre_registered_threshold_met'))}"
+            )
+    if a4b is not None:
+        ci_hi = a4b["r2_ci_high"]
+        ci_lo = a4b["r2_ci_low"]
+        ci_txt = (
+            "nan" if ci_hi is None or ci_hi != ci_hi
+            else f"[{ci_lo:+.3f}, {ci_hi:+.3f}]"
+        )
+        lines.append(
+            f"  A4b — is conflict a DISTINCT channel, or a shadow of the choice? "
+            f"conflict(i, d) ~ [z_revealed, |gap|], within-person (cohort/no-pool): "
+            f"R² = {a4b['r2']:.3f}, upper 95% CI {ci_txt} vs ceiling {a4b['ceiling']:.2f}  "
+            f"{_met_glyph(a4b['supported'])}"
+        )
+        lev_r = a4b["conflict_level_r"]
+        gap_r = a4b["conflict_gap_r"]
+        lev_txt = "n/a" if lev_r is None else f"{lev_r:+.3f}"
+        gap_txt = "n/a" if gap_r is None else f"{gap_r:+.3f}"
+        lines.append(
+            f"     within-person descriptive companions: conflict·level r = {lev_txt}, "
+            f"conflict·|gap| r = {gap_txt} "
+            f"({a4b['n_cells']} cell(s) over {a4b['n_participants']} participant(s))."
+        )
+        lines.append(
+            "     Read: DISTINCT means effort carries information the choice level + aspirational "
+            "gap do NOT — NOT reducible to how far from the ideal or how extreme the choice was; "
+            "cohort-level, no participant ranked. Cell-bootstrap CI understates repeated-user "
+            "dependence, so the distinctness bar stays conservative."
+        )
+    a4b_note = (
+        "A4b (does conflict add information beyond the choice) reported above."
+        if a4b is not None
+        else "A4b (does conflict add information beyond the choice) is cohort-coupled and DEFERRED."
+    )
     lines.append(
         "  Read: EFFORT/ambivalence, never a moral-framework label (slow ≠ deontological, fast ≠ "
         "utilitarian; Bago & De Neys 2019). Value-neutral: high conflict is not worse than low — "
         "finding virtue effortful is arguably the STRONGER character signal (effortful virtue). "
         "Exploratory, RT-only (answer-revision capture deferred, §4 Q1); an analysis adjunct with "
-        "NO public card — context for the reveal, never a headline. A4b (does conflict add "
-        "information beyond the choice) is cohort-coupled and DEFERRED."
+        f"NO public card — context for the reveal, never a headline. {a4b_note}"
     )
     return "\n".join(lines)
 
@@ -4565,6 +4715,15 @@ def main() -> int:
              "session/card_sort/predictions arrays for a SHARED cohort) for the H10b cross-situational-"
              "consistency DISCRIMINANT (§15.3): tests whether the person variability index V_i is reducible "
              "to level + aspirational gap + self-prediction error, and de-confounds sd_i(c) vs |mbar_i(c)|.",
+    )
+    parser.add_argument(
+        "--a4b-log",
+        type=Path,
+        default=None,
+        help="Optional combined process + session + card-sort log (object with process/session/card_sort "
+             "arrays for a SHARED cohort — process `user` must equal session `user_id`) for the A4b "
+             "decision-conflict DISCRIMINANT (§22.4): tests whether within-person conflict(i, d) is a "
+             "distinct channel or reducible to the choice level + aspirational-gap magnitude.",
     )
     parser.add_argument(
         "--min-items",
@@ -4938,6 +5097,24 @@ def main() -> int:
             h10b_bundle.get("session", []),
             h10b_bundle.get("card_sort", []),
             h10b_bundle.get("predictions", []),
+            tag_map,
+        )
+
+    a4b_discriminant_result: dict[str, Any] | None = None
+    if args.a4b_log:
+        try:
+            with args.a4b_log.open() as f:
+                a4b_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading A4b log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(a4b_bundle, dict):
+            print("ERROR: A4b log must be a JSON object with process/session/card_sort arrays", file=sys.stderr)
+            return 2
+        a4b_discriminant_result = compute_a4b_discriminant(
+            a4b_bundle.get("process", []),
+            a4b_bundle.get("session", []),
+            a4b_bundle.get("card_sort", []),
             tag_map,
         )
 
@@ -5434,21 +5611,38 @@ def main() -> int:
         if a3_block:
             hypotheses["A3"] = a3_block
 
+        a4_block: dict[str, Any] = {}
         if a4a_result is not None:
             # Per-domain reliability only — NO pooled "conflict_score" scalar and NO framework
             # label (deliberative/utilitarian/deontological): conflict is EFFORT, value-neutral
             # (§1.1/§1.4, Bago & De Neys 2019). No public card (§1.4).
-            hypotheses["A4"] = {
-                "A4a": {
-                    "per_domain": _per_domain_json(a4a_result["per_domain"]),
-                    "n_domains": a4a_result["n_domains"],
-                    "n_domains_met": a4a_result["n_domains_met"],
-                    "threshold_low": a4a_result["threshold_low"],
-                    "any_met": a4a_result["any_met"],
-                },
-                "n_conflict_cells": a4_n_cells,
-                "n_participants": a4_n_users,
+            a4_block["A4a"] = {
+                "per_domain": _per_domain_json(a4a_result["per_domain"]),
+                "n_domains": a4a_result["n_domains"],
+                "n_domains_met": a4a_result["n_domains_met"],
+                "threshold_low": a4a_result["threshold_low"],
+                "any_met": a4a_result["any_met"],
             }
+            a4_block["n_conflict_cells"] = a4_n_cells
+            a4_block["n_participants"] = a4_n_users
+        if a4b_discriminant_result is not None:
+            # A4b discriminant (§22.4): is conflict a DISTINCT channel or a shadow of the choice?
+            # Cohort-level R² gate + within-person descriptive companions. supported ⇔ upper 95% CI
+            # of R² < ceiling. Value-neutral, no per-person reveal (§3/§1.4).
+            a4_block["A4b"] = {
+                "r2": a4b_discriminant_result["r2"],
+                "r2_ci_low": _nan_to_none(a4b_discriminant_result["r2_ci_low"]),
+                "r2_ci_high": _nan_to_none(a4b_discriminant_result["r2_ci_high"]),
+                "ceiling": a4b_discriminant_result["ceiling"],
+                "conflict_level_r": a4b_discriminant_result["conflict_level_r"],
+                "conflict_gap_r": a4b_discriminant_result["conflict_gap_r"],
+                "n_participants": a4b_discriminant_result["n_participants"],
+                "n_cells": a4b_discriminant_result["n_cells"],
+                "supported": a4b_discriminant_result["supported"],
+                "pre_registered_threshold_met": a4b_discriminant_result["pre_registered_threshold_met"],
+            }
+        if a4_block:
+            hypotheses["A4"] = a4_block
 
         if h8a_result is not None:
             # H8a debiasing — COHORT secondary (§9.2). NO pooled narrative/immersion/transportation
@@ -5584,9 +5778,9 @@ def main() -> int:
         if a3_kappa_result is not None or a3_profile:
             print()
             print(render_a3_result(a3_kappa_result, a3_profile))
-        if a4a_result is not None or a4_n_cells:
+        if a4a_result is not None or a4_n_cells or a4b_discriminant_result is not None:
             print()
-            print(render_a4_result(a4a_result, a4_n_users, a4_n_cells))
+            print(render_a4_result(a4a_result, a4_n_users, a4_n_cells, a4b_discriminant_result))
         if h8a_result is not None:
             print()
             print(render_h8_result(h8a_result))

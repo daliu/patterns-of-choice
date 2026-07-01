@@ -139,7 +139,7 @@ EXPECTATIONS = {
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True, "R6b_discriminant": True}},
     "A3": {"kind": "a3", "kappa_met": True},
-    "A4": {"kind": "a4", "any_met": True},
+    "A4": {"kind": "a4", "any_met": True, "a4b_supported": True},
     "H8": {"kind": "a8a", "supported": True},
 }
 
@@ -172,6 +172,7 @@ def run_analyzer() -> dict:
         "--h12b-log", str(FIXTURES / "sample-h12b-log.json"),
         "--r6b-log", str(FIXTURES / "sample-r6b-log.json"),
         "--h10b-log", str(FIXTURES / "sample-h10b-log.json"),
+        "--a4b-log", str(FIXTURES / "sample-a4b-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -549,7 +550,7 @@ def check_a3(hid: str, payload: dict, kappa_met: bool) -> tuple[bool, str]:
     )
 
 
-def check_a4(hid: str, payload: dict, any_met: bool) -> tuple[bool, str]:
+def check_a4(hid: str, payload: dict, any_met: bool, a4b_supported: bool | None = None) -> tuple[bool, str]:
     """A4 decision-conflict channel — the RT-derived EFFORT signal + the A4a reliability
     gate (§22). Assert the split-half per-domain test–retest hit its expected outcome AND
     that the value-neutral / no-pool discipline holds in the SHAPE of the payload: conflict
@@ -626,11 +627,41 @@ def check_a4(hid: str, payload: dict, any_met: bool) -> tuple[bool, str]:
     cells = payload.get("n_conflict_cells")
     if not isinstance(cells, int) or cells < 1:
         return False, f"{hid}: no conflict cells (n_conflict_cells={cells!r})"
+    a4b_note = ""
+    if a4b_supported is not None:
+        # A4b discriminant (§22.4): is conflict a DISTINCT channel or reducible to the choice?
+        a4b = payload.get("A4b")
+        if not isinstance(a4b, dict):
+            return False, f"{hid}: missing the A4b discriminant block"
+        a4b_bad = _scan(a4b, "A4b")   # still EFFORT, never a graded score or framework label
+        if a4b_bad:
+            return False, a4b_bad
+        for key in ("r2", "r2_ci_high", "ceiling", "conflict_level_r", "conflict_gap_r",
+                    "n_participants", "n_cells", "supported", "pre_registered_threshold_met"):
+            if key not in a4b:
+                return False, f"{hid}: A4b block missing '{key}'"
+        sup, ci_hi, ceiling = a4b["supported"], a4b["r2_ci_high"], a4b["ceiling"]
+        if sup != a4b_supported:
+            return False, f"{hid}: A4b supported = {sup!r}, expected {a4b_supported!r}"
+        # The gate must agree with its own arithmetic: distinct iff the upper CI clears the ceiling.
+        expect = (isinstance(ci_hi, (int, float)) and ci_hi < ceiling)
+        if sup != expect:
+            return False, (
+                f"{hid}: A4b supported={sup!r} disagrees with upper CI {ci_hi!r} vs ceiling {ceiling!r}"
+            )
+        if a4b["pre_registered_threshold_met"] != sup:
+            return False, f"{hid}: A4b pre_registered_threshold_met disagrees with supported"
+        glyph_b = "✓" if a4b_supported else "✗"
+        a4b_note = (
+            f"; {glyph_b} A4b conflict {'DISTINCT' if sup else 'reducible'} "
+            f"(R²={a4b['r2']:.3f}, upper CI {ci_hi if not isinstance(ci_hi, float) else f'{ci_hi:.3f}'} "
+            f"vs ceiling {ceiling:.2f}, within-person/no-pool)"
+        )
     glyph = "✓" if any_met else "✗"
     return True, (
         f"{hid}: {glyph} A4a reliability {n_met}/{len(per_domain)} domain(s) clear "
         f"lower-CI ≥ 0.40 (effort, no pool, no framework label), "
-        f"{cells} conflict cell(s)×{payload.get('n_participants')} participant(s)"
+        f"{cells} conflict cell(s)×{payload.get('n_participants')} participant(s){a4b_note}"
     )
 
 
@@ -2296,6 +2327,185 @@ def check_h10b_discriminant_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_a4b_discriminant_lock() -> tuple[bool, list[str]]:
+    """The A4b decision-conflict DISCRIMINANT discipline (§22.4), asserted directly against the code.
+    A4b asks whether a person's DECISION CONFLICT — A4's within-person RT-derived EFFORT (§1.1) — is a
+    channel of its own or merely a shadow of WHAT they chose. It regresses conflict(i, d) on the choice
+    LEVEL z_revealed (§3.2) and the aspirational-departure magnitude |gap| (§6), WITHIN-PERSON (each of
+    conflict, level, |gap| person-centered before pooling), and calls conflict DISTINCT iff the UPPER
+    95% bootstrap CI of the model R² < A4B_R2_CEILING (0.50). This lock proves, on synthetic corpora
+    with KNOWN ground truth built through the REAL §3/§6 + §1.1 pipeline:
+      (i)   INDEPENDENT (RT/effort drawn ⊥ the choice profile): R² ~ 0, upper CI clears the 0.50 ceiling,
+            DISTINCT True — conflict carries variance the choice level + gap do not;
+      (ii)  REDUCIBLE (effort built to TRACK within-person [level, |gap|]): R² high, upper CI ≥ ceiling,
+            DISTINCT False — a conflict signal that IS its predictors is correctly NOT distinct;
+      (iii) DISTINCT is EXACTLY (upper-CI < ceiling) on both corpora — the CI gate cannot be bypassed;
+      (iv)  NO MANUFACTURED TRAP — the point of difference from H9b/H11b. Both corpora share the IDENTICAL
+            session + card-sort corpus (→ identical z_revealed, |gap|); ONLY the SEPARATE process-log RT
+            channel differs, and the verdict flips True→False. Because conflict rides an INDEPENDENT
+            measurement channel (residualized response_time_ms, not an affine echo of the choice columns
+            the way H9b's signed cal_bias or H11b's circle-mean were), no construction forces R²: had
+            such an identity existed even the ⊥ draw would pin R² ≡ 1, yet here it is ~0. The gate tracks
+            the DATA, not a fabricated identity;
+      (v)   the WITHIN-PERSON descriptive companion localizes leakage — |conflict·level r| small when
+            independent, strongly signed when reducible — WITHOUT pooling anything per person;
+      (vi)  the inclusion floor holds — < A4B_MIN_PARTICIPANTS joined users returns None (never a scalar);
+      (vii) the reveal is COHORT-level and value-neutral — effort is never graded, no participant ranked,
+            and no moral-framework label is attached (slow ≠ deontological; Bago & De Neys 2019).
+    This is the A4 analog of the H12b hypocrisy-discriminant lock / the §14.1 censoring lock. The pinned
+    IND_SEED is the orthogonal effort draw /tmp/gen_a4b.py located (that generator emits the committed
+    sample-a4b-log.json from the SAME construction; the REDUCIBLE + tiny corpora here are not committed)."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    tag_map = A.load_tag_axis_map(A.DEFAULT_TAG_MAP)
+    DOMAINS = ["truth-telling", "resource-allocation", "reciprocity-cooperation"]
+    DV = A.load_values_deck_domains()
+    VBD = {d: [v for v, dd in DV.items() if dd == d] for d in DOMAINS}
+    NIT, NPROC, RT_SESS = 6, 5, 5000        # session items/cell, process items/cell, session RT (> INATTENTIVE)
+    BASE, BL, BP, SCALE = 2000.0, 12.0, 80.0, 700.0   # rt = BASE + BL*chars + BP*pos + SCALE*effort + noise
+    CHARS_BY_J = [340, 560, 420, 610, 300]  # non-monotonic in j so [chars,pos] is not collinear
+    NOISE_AMP = 25.0
+    BASE_SEED, N = 20260701, 40
+    IND_SEED = 20263710                     # the ⊥ effort draw gen_a4b.py found (deterministic rebuild)
+    ceil = A.A4B_R2_CEILING
+
+    REVEAL = {
+        "truth-telling": ["truth:commission", "truth:state", "truth:partial", "truth:implicit",
+                          "lie:protective", "lie:omission", "lie:commission"],
+        "resource-allocation": ["generosity", "need_sensitivity", "fairness",
+                                "self_reliance:projected", "self_reliance"],
+        "reciprocity-cooperation": ["trust", "forgiveness", "trust:asymmetric", "trust:institutional",
+                                    "vigilance:mild", "vigilance"],
+    }
+
+    def tw(d, t):
+        return A.item_score({"domain": d, "tags": [t]}, tag_map)[0]
+
+    ROPT = {d: [(tw(d, t), t) for t in REVEAL[d]] for d in DOMAINS}
+    USERS = [f"a4b-u{i:02d}" for i in range(N)]
+
+    def greedy(opts, K, t):
+        chosen, s = [], 0.0
+        for j in range(K):
+            b = min(opts, key=lambda o: abs((s + o) / (j + 1) - t))
+            chosen.append(b)
+            s += b
+        return chosen
+
+    def grid(lo, hi, n, seed):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def build_sess_cs(users, seed):
+        rt, sk = {}, {}
+        for di, d in enumerate(DOMAINS):
+            rg = grid(-0.80, 0.80, len(users), seed + 100 + di)
+            kg = grid(1.0, 5.0, len(users), seed + 200 + di)
+            for i in range(len(users)):
+                rt[(i, d)] = rg[i]
+                sk[(i, d)] = max(1, min(5, round(kg[i])))
+        sess, cs = [], []
+        for i, u in enumerate(users):
+            sel: list = []
+            for d in DOMAINS:
+                wtag = {w: t for w, t in ROPT[d]}
+                for j, w in enumerate(greedy([w for w, _ in ROPT[d]], NIT, rt[(i, d)])):
+                    sess.append({"session_id": f"{u}-{d}-s1", "user_id": u, "timestamp_iso": "2026-07-01T00:00:00Z",
+                                 "scenario_id": f"a4b-{d}", "scenario_type": "quick-fire-round", "domain": d,
+                                 "item_id": f"{u}-{d}-{j}", "option_id": "a", "tags": [wtag[w]],
+                                 "response_time_ms": RT_SESS, "presented_position": j + 1, "was_timeout": False})
+                sel.extend(VBD[d][: sk[(i, d)]])
+            cs.append({"user_id": u, "layer": "aspirational_self", "selected_value_ids": sel})
+        return sess, cs
+
+    def pred_centered(sess, cs, users):
+        # The FIXED, person-centered predictors both corpora share (dlev = z_revealed, dgp = |gap|).
+        revealed = A.user_domain_means(A.session_means(A.session_aggregates(sess, tag_map)))
+        css = A.card_sort_scores(cs, DV)
+        stated = {(u, d): s for (u, d, layer), s in css.items() if layer == "aspirational_self"}
+        gaps = A.compute_gaps(revealed, stated, stated_source="card_sort")
+        out = {}
+        for u in users:
+            cells = [(d, gaps[(u, d)]["z_revealed"], abs(gaps[(u, d)]["gap"])) for d in DOMAINS if (u, d) in gaps]
+            if not cells:
+                continue
+            lbar = sum(l for _, l, _ in cells) / len(cells)
+            gbar = sum(g for _, _, g in cells) / len(cells)
+            for d, l, g in cells:
+                out[(u, d)] = (l - lbar, g - gbar)
+        return out
+
+    def build_process(effort, users, seed):
+        rng = random.Random(seed)
+        recs = []
+        for u in users:
+            for d in DOMAINS:
+                eff = effort[(u, d)]
+                for j in range(NPROC):
+                    chars, pos = CHARS_BY_J[j], j + 1
+                    rtv = BASE + BL * chars + BP * pos + SCALE * eff + rng.uniform(-NOISE_AMP, NOISE_AMP)
+                    recs.append({"user": u, "session": f"{u}-proc-s{j % 2}", "item": f"{u}-{d}-p{j}",
+                                 "domain": d, "scenario_type": "deliberation-round",
+                                 "response_time_ms": rtv, "prompt_chars": chars,
+                                 "presented_position": pos, "was_timeout": False})
+        return recs
+
+    sess, cs = build_sess_cs(USERS, BASE_SEED)
+    predc = pred_centered(sess, cs, USERS)
+
+    # ONE base corpus → the SAME predictors feed both verdicts; only the process/RT channel changes.
+    ind_eff = {}
+    for di, d in enumerate(DOMAINS):
+        g = grid(-1.10, 1.10, N, IND_SEED + 17 * di)
+        for i, u in enumerate(USERS):
+            ind_eff[(u, d)] = g[i]
+    ind = A.compute_a4b_discriminant(build_process(ind_eff, USERS, IND_SEED + 999), sess, cs, tag_map)
+
+    red_eff = {(u, d): 1.0 * predc[(u, d)][0] + 0.6 * predc[(u, d)][1] for u in USERS for d in DOMAINS}
+    red = A.compute_a4b_discriminant(build_process(red_eff, USERS, BASE_SEED + 77), sess, cs, tag_map)
+
+    tu = USERS[:6]      # < 8-participant floor
+    tiny = A.compute_a4b_discriminant(
+        build_process({k: ind_eff[k] for k in ind_eff if k[0] in tu}, tu, IND_SEED + 999),
+        [r for r in sess if r["user_id"] in tu], [r for r in cs if r["user_id"] in tu], tag_map)
+
+    render = A.render_a4_result(None, 0, 0, ind)
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["r2_ci_high"] == r["r2_ci_high"] and r["r2_ci_high"] < ceil)
+
+    checks = [
+        ("INDEPENDENT (conflict ⊥ [level, |gap|]): DISTINCT True, R² ~ 0, upper CI clears the ceiling",
+         ind is not None and ind["supported"] is True and ind["r2"] < 0.10
+         and ind["r2_ci_high"] == ind["r2_ci_high"] and ind["r2_ci_high"] < ceil and ind["n_participants"] == N),
+        ("REDUCIBLE (conflict built to TRACK [level, |gap|]): DISTINCT False, R² high, upper CI ≥ ceiling",
+         red is not None and red["supported"] is False and red["r2"] > ceil and red["r2_ci_high"] >= ceil),
+        ("DISTINCT is EXACTLY (upper-CI < ceiling) on both corpora — the CI gate cannot be bypassed",
+         exact(ind) and exact(red)),
+        ("NO MANUFACTURED TRAP: identical predictors, verdict flips True→False via the independent RT channel alone",
+         ind is not None and red is not None and ind["n_participants"] == red["n_participants"] == N
+         and ind["n_cells"] == red["n_cells"] and ind["supported"] is True and red["supported"] is False),
+        ("within-person descriptive companion localizes leakage: |conflict·level r| small when independent, strongly signed when reducible",
+         ind is not None and red is not None and abs(ind["conflict_level_r"]) < 0.20
+         and abs(ind["conflict_gap_r"]) < 0.20 and abs(red["conflict_level_r"]) > 0.50),
+        ("inclusion floor: < A4B_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — DISTINCT/no-pool, effort-only, no framework label",
+         "DISTINCT" in render and "cohort/no-pool" in render and "conflict·level r" in render
+         and "no participant ranked" in render and "never a moral-framework label" in render
+         and "Value-neutral" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  a4b-discriminant: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -2354,7 +2564,7 @@ def main() -> int:
         elif spec["kind"] == "a3":
             ok, msg = check_a3(hid, payload, spec["kappa_met"])
         elif spec["kind"] == "a4":
-            ok, msg = check_a4(hid, payload, spec["any_met"])
+            ok, msg = check_a4(hid, payload, spec["any_met"], spec.get("a4b_supported"))
         elif spec["kind"] == "a8a":
             ok, msg = check_h8a(hid, payload, spec["supported"])
         else:
@@ -2457,6 +2667,12 @@ def main() -> int:
     for m in h10block_msgs:
         print(m)
     if not h10block_ok:
+        all_pass = False
+
+    a4block_ok, a4block_msgs = check_a4b_discriminant_lock()
+    for m in a4block_msgs:
+        print(m)
+    if not a4block_ok:
         all_pass = False
 
     if all_pass:
