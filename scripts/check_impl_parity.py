@@ -213,6 +213,67 @@ else:
             ok(all_c, f"centralityFacets: JS == Python on all {len(id_users)} participants "
                       f"(facet means + item counts + ≥3-floor suppression)")
 
+    # --- objectivism claim-type reveal parity (R6 §20.1): the N=1 on-device reveal ------
+    # The runtime's objectivismReads() (per person, on-device) must equal the analyzer's
+    # objectivism_by_user for EVERY participant — same two claim-type means, same scorable-
+    # item counts, same ≥3-item-floor suppression, same declined-item drop. Reuses the R6
+    # fixture, plus a synthetic below-floor user so the SUPPRESSED (null) path is exercised
+    # on both sides. The two reads stay SEPARATE (§13.5); the charged branch, value-neutral.
+    if node and proj_js.exists():
+        ob_recs = [r for r in json.loads(
+            (REPO_ROOT / "analysis" / "fixtures" / "sample-objectivism-log.json").read_text())
+            if isinstance(r, dict)]
+        # a synthetic user with only 2 moral items (below the ≥3 floor) and 0 taste items:
+        # analyzer suppresses (absent) ⇔ runtime returns null.
+        ob_recs = ob_recs + [
+            {"user": "zz-below-floor", "session": "zz-s1", "item_id": "mor-a", "claim_type": "moral", "objectivism": 5.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "item_id": "mor-b", "claim_type": "moral", "objectivism": 5.0},
+        ]
+        ob_users = sorted({r.get("user") for r in ob_recs if r.get("user") is not None})
+        py_moral = A.objectivism_by_user(ob_recs, "moral")
+        py_taste = A.objectivism_by_user(ob_recs, "taste")
+        py_moral_items = A.objectivism_items_by_user(ob_recs, "moral")
+        py_taste_items = A.objectivism_items_by_user(ob_recs, "taste")
+        py_reads = {u: {"moral": py_moral.get(u), "taste": py_taste.get(u),
+                        "n_moral": len(py_moral_items.get(u, [])),
+                        "n_taste": len(py_taste_items.get(u, []))} for u in ob_users}
+        ob_script = (
+            "const P = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const out = {};\n"
+            "for (const u of users) {\n"
+            "  const f = P.objectivismReads(recs.filter(r => r.user === u));\n"
+            "  out[u] = { moral: f.moral, taste: f.taste,\n"
+            "             n_moral: f.n_moral, n_taste: f.n_taste };\n"
+            "}\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)),)
+        oproc = subprocess.run([node, "-e", ob_script, json.dumps(ob_recs), json.dumps(ob_users)],
+                               capture_output=True, text=True)
+        if oproc.returncode != 0:
+            ok(False, "node objectivismReads run", oproc.stderr.strip()[:300])
+        else:
+            js_reads = json.loads(oproc.stdout)
+
+            def _close_o(a, b):
+                if a is None or b is None:
+                    return a is None and b is None
+                return abs(a - b) < 1e-9
+
+            all_o = True
+            for u in ob_users:
+                p, j = py_reads[u], js_reads.get(u, {})
+                m = (_close_o(p["moral"], j.get("moral"))
+                     and _close_o(p["taste"], j.get("taste"))
+                     and p["n_moral"] == j.get("n_moral")
+                     and p["n_taste"] == j.get("n_taste"))
+                all_o = all_o and m
+                if not m:
+                    ok(False, f"objectivismReads parity user {u}", f"py={p} js={j}")
+            ok(all_o, f"objectivismReads: JS == Python on all {len(ob_users)} participants "
+                      f"(claim-type means + item counts + ≥3-floor suppression)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

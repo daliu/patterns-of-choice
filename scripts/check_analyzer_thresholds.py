@@ -512,6 +512,26 @@ def check_r6(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             f"{hid}: the moral and taste reads must be exposed separately "
             f"(mean_moral_objectivism / mean_taste_objectivism), got keys {sorted(payload)}"
         )
+    # The N=1 on-device reveal (§20.1) must honor the same disciplines as the cohort
+    # read: the two claim-type reads SEPARATE per person (no pooled per-entry key), and
+    # the ≥3-item floor — a read below it is SUPPRESSED (None), one at/above it is scored.
+    # The runtime-vs-analyzer equality of this block is locked in check_impl_parity.py.
+    reveal = payload.get("objectivism_claim_reveal")
+    if reveal is not None:
+        if not isinstance(reveal, list) or not reveal:
+            return False, f"{hid}: objectivism_claim_reveal must be a non-empty list"
+        for e in reveal:
+            if "moral" not in e or "taste" not in e:
+                return False, f"{hid}: reveal entry missing a claim-type key ({e})"
+            if pooled_keys & set(e):
+                return False, f"{hid}: reveal entry carries a pooled objectivism/conviction key ({e})"
+            for claim, nkey in (("moral", "n_moral"), ("taste", "n_taste")):
+                n, v = e.get(nkey, 0), e.get(claim)
+                if n < 3 and v is not None:
+                    return False, f"{hid}: reveal scored a below-floor {claim} read ({e})"
+                if n >= 3 and not isinstance(v, (int, float)):
+                    return False, f"{hid}: reveal suppressed an at/above-floor {claim} read ({e})"
+        parts.append(f"reveal×{len(reveal)}")
     if payload.get("profile_n", 0) < 1:
         return False, (
             f"{hid}: no both-scored objectivism profile "

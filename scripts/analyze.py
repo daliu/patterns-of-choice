@@ -5349,6 +5349,7 @@ def main() -> int:
     r6_profile_n = 0
     r6_mean_moral = 0.0
     r6_mean_taste = 0.0
+    r6_claim_reveal: list[dict[str, Any]] = []   # per-person N=1 claim-type reveal (§20.1), no-pool
     if args.objectivism_log:
         try:
             with args.objectivism_log.open() as f:
@@ -5368,6 +5369,22 @@ def main() -> int:
             r6_mean_taste = sum(_r6_taste[u] for u in _r6_both) / len(_r6_both)
         r6a_result = compute_r6a_reliability(objectivism_records)
         r6d_result = compute_r6d_moral_objectivism_anchor(objectivism_records)
+        # The N=1 on-device reveal (§20.1): each person's two claim-type reads, exposed
+        # SEPARATELY (never pooled into one objectivism/conviction scalar, §13.5) — None ⇔
+        # that read is below the ≥3-item floor (SUPPRESSED, §1.5). The two reads are shown
+        # side by side WITHOUT a per-person moral>taste verdict (that gradient is the
+        # cohort-only R6d). Mirrors the runtime's poc-projection.js objectivismReads, whose
+        # equality is locked in check_impl_parity.py (JS↔Python). Reuses the facet dicts.
+        _r6_moral_items = objectivism_items_by_user(objectivism_records, "moral")
+        _r6_taste_items = objectivism_items_by_user(objectivism_records, "taste")
+        for _u in sorted(set(_r6_moral_items) | set(_r6_taste_items)):
+            r6_claim_reveal.append({
+                "user": _u,
+                "moral": _r6_moral.get(_u),   # None ⇔ claim type below the ≥3-item floor
+                "taste": _r6_taste.get(_u),
+                "n_moral": len(_r6_moral_items.get(_u, [])),
+                "n_taste": len(_r6_taste_items.get(_u, [])),
+            })
 
     # --- A3 moral-language channel: the coder + the κ gate (§21). Builds the buildable
     # KEYSTONE — a deterministic MFD-style foundation coder, Cohen's κ inter-rater
@@ -5742,6 +5759,12 @@ def main() -> int:
             # revealed tolerance/compromise/language signatures (§13.5, load-bearing).
             r6_block["mean_moral_objectivism"] = _nan_to_none(r6_mean_moral)
             r6_block["mean_taste_objectivism"] = _nan_to_none(r6_mean_taste)
+            if r6_claim_reveal:
+                # N=1 on-device reveal (§20.1) — per-person claim-type reads, moral and
+                # taste SEPARATE, None ⇔ below the ≥3-item floor. Parity-locked against
+                # poc-projection.js objectivismReads (check_impl_parity.py). No pool, and
+                # no per-person moral>taste verdict (that gradient is the cohort-only R6d).
+                r6_block["objectivism_claim_reveal"] = r6_claim_reveal
             hypotheses["R6"] = r6_block
 
         a3_block: dict[str, Any] = {}
