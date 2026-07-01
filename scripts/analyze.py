@@ -1726,6 +1726,9 @@ H11_ITEMS_PER_BIN_MIN = 2       # ≥2 informative items per distance bin (§1.5
 H11_BINS_MIN = 4                # ≥4 populated ordered bins before β_i / R_i form (§1.5)
 H11A_RELIABILITY_FLOOR = 0.40   # split-window shape reliability lower 95% CI (§1.2)
 H11_AXIS_FLOOR = -1.0           # circle_radius axis minimum (boundaries pole) — the R_i midpoint anchor
+H11B_R2_CEILING = 0.50          # discriminant (§1.3): UPPER 95% CI of the shape~[near,generosity] R² must clear this
+H11B_MIN_PARTICIPANTS = 8       # ≥8 shapes with a generosity read before a 2-predictor R² is stable
+H11B_SEED_OFFSET = 27           # bootstrap seed band for the R² CI (A4A used 25, H8A 26; +17..24 taken)
 # H11c is directional: lower 95% CI of the mean near−far concern gradient > 0 (§1.4).
 
 
@@ -1935,6 +1938,83 @@ def compute_h11c_gradient(records: list[dict[str, Any]]) -> dict[str, Any] | Non
         "mean_gradient": sum(gaps) / len(gaps),
         "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(gaps),
         "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
+def _resource_allocation_generosity(
+    entries: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+    domain: str = "resource-allocation",
+) -> dict[str, float]:
+    """Per-user EXTERNAL generosity level for the H11b discriminant (§3.2): the §3.1
+    revealed-mean pipeline (session_aggregates → session_means → average the per-session
+    means) restricted to the resource-allocation domain, scored on its `generosity`
+    primary axis by the SAME item_score every channel uses (so the §10 inattentive drop
+    and the ≥3-items-per-session floor apply identically). This is a SEPARATE revealed
+    measure, NOT the circle mean — see compute_h11b_discriminant for why that distinction
+    is load-bearing."""
+    means = session_means(session_aggregates(entries, tag_map))
+    per_user: dict[str, list[float]] = defaultdict(list)
+    for (user, _session, dom), m in means.items():
+        if dom == domain:
+            per_user[user].append(m)
+    return {u: sum(v) / len(v) for u, v in per_user.items()}
+
+
+def compute_h11b_discriminant(
+    entries: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+    dist_map: dict[str, int],
+) -> dict[str, Any] | None:
+    """H11b — the moral-circle SHAPE DISCRIMINANT (§1.3). Regress the shape slope β_i
+    (parochialism steepness) on [ near-bin concern_i, a SEPARATE resource-allocation
+    generosity level_i (§3.2) ]; the circle shape is DISCRIMINABLE from generosity iff
+    the UPPER 95% bootstrap CI of the model R² < H11B_R2_CEILING — i.e. at least half the
+    shape variance is NOT explained by how generous a person is ("reach is not height": a
+    person can be lavish to kin then drop off a cliff — narrow — or modest but flat — wide;
+    Crimston et al. 2016, the moral-expansiveness shape is dissociable from generosity).
+    Completes H11 = H11a ∧ H11b.
+
+    Generosity is the EXTERNAL revealed measure, NOT the circle mean: were it the circle
+    mean, β_i (an OLS slope over the same bins) would be a MECHANICAL function of the
+    predictors and R²→1, so the discriminant would falsely FAIL — check_h11b_discriminant_lock
+    demonstrates exactly this. COHORT-level statistic, NEVER a per-person reveal: no pooled
+    circle score is emitted; β_i and generosity_i stay separate facets (§13.5). Seed
+    BOOTSTRAP_SEED+27."""
+    shapes = circle_shape_by_user(circle_item_records(entries, tag_map, dist_map))
+    generosity = _resource_allocation_generosity(entries, tag_map)
+    rows: list[tuple[float, float, float]] = []
+    for user in sorted(set(shapes) & set(generosity)):
+        beta = shapes[user]["beta"]
+        near = shapes[user]["near_concern"]
+        gen = generosity[user]
+        if beta != beta or near != near or gen != gen:
+            continue
+        rows.append((near, gen, beta))   # predictors = [near, generosity]; y = beta
+    if len(rows) < H11B_MIN_PARTICIPANTS:
+        return None
+    predictors = [[r[0] for r in rows], [r[1] for r in rows]]
+    y = [r[2] for r in rows]
+    r2 = _ols_r_squared(predictors, y)
+    if r2 is None:
+        return None
+    ci_low, ci_high = _bootstrap_ci_r2(rows, random.Random(BOOTSTRAP_SEED + H11B_SEED_OFFSET))
+    supported = None if ci_high != ci_high else bool(ci_high < H11B_R2_CEILING)
+    # Descriptive companions (reported, NOT the gate): β's bare correlations with each
+    # predictor alone, so a reader sees WHICH predictor (if any) carries the leakage —
+    # without pooling anything per person.
+    beta_generosity_r = _pearson_r([r[1] for r in rows], y)
+    beta_near_r = _pearson_r([r[0] for r in rows], y)
+    return {
+        "r2": r2,
+        "r2_ci_low": ci_low,
+        "r2_ci_high": ci_high,
+        "ceiling": H11B_R2_CEILING,
+        "beta_generosity_r": beta_generosity_r,
+        "beta_near_r": beta_near_r,
+        "n_participants": len(rows),
+        "supported": supported,
+        "pre_registered_threshold_met": supported,
     }
 
 
@@ -2801,6 +2881,59 @@ def _ols_residuals(predictors: list[list[float]], y: list[float]) -> list[float]
     return resid
 
 
+def _ols_r_squared(predictors: list[list[float]], y: list[float]) -> float | None:
+    """Coefficient of determination R² of the OLS fit y ~ [intercept] + predictors,
+    via _ols_residuals (R² = 1 − SS_res/SS_tot). Returns None when the design is
+    underdetermined/rank-deficient (residuals None) or y has no variance (SS_tot = 0),
+    so the caller never divides by zero. Used by the H11b shape discriminant (§1.3):
+    y = β_i (shape slope), predictors = [near-bin concern, resource-allocation
+    generosity]; a HIGH R² means the shape is reducible to those, a LOW one means the
+    circle's shape carries variance generosity does not ("reach is not height")."""
+    resid = _ols_residuals(predictors, y)
+    if resid is None:
+        return None
+    n = len(y)
+    mean_y = sum(y) / n
+    ss_tot = sum((v - mean_y) ** 2 for v in y)
+    if ss_tot == 0.0:
+        return None
+    ss_res = sum(r * r for r in resid)
+    return 1.0 - ss_res / ss_tot
+
+
+def _bootstrap_ci_r2(
+    rows: list[tuple[float, ...]],
+    rng: random.Random,
+    n_iter: int = BOOTSTRAP_N,
+    ci: float = BOOTSTRAP_CI,
+) -> tuple[float, float]:
+    """Percentile bootstrap CI for the multiple-regression R² (scoring.md §8). Each
+    `row` is (x1, …, xk, y); we resample rows with replacement, refit, recompute R²,
+    and take percentiles. The discriminant gate reads the UPPER bound (a small R²
+    whose upper CI clears the ceiling = the predictors genuinely fail to explain the
+    outcome). Deterministic per the pre-committed seed in the caller. Returns
+    (nan, nan) if underdetermined."""
+    n = len(rows)
+    if n < 4:
+        return (float("nan"), float("nan"))
+    vals: list[float] = []
+    for _ in range(n_iter):
+        idx = [rng.randrange(n) for _ in range(n)]
+        sample = [rows[i] for i in idx]
+        preds = [[r[c] for r in sample] for c in range(len(rows[0]) - 1)]
+        yy = [r[-1] for r in sample]
+        r2 = _ols_r_squared(preds, yy)
+        if r2 is not None and r2 == r2:
+            vals.append(r2)
+    if len(vals) < 10:
+        return (float("nan"), float("nan"))
+    vals.sort()
+    alpha = (1 - ci) / 2
+    lower_idx = int(len(vals) * alpha)
+    upper_idx = int(len(vals) * (1 - alpha))
+    return (vals[lower_idx], vals[min(upper_idx, len(vals) - 1)])
+
+
 def conflict_scores_by_item(records: list[dict]) -> dict[tuple[str, str], float]:
     """rt_z(i, item) (§1.1): the within-person z-score of RESIDUALIZED response_time_ms —
     residualized on [prompt_chars, presented_position] to strip reading-load + order effects, with
@@ -3170,6 +3303,11 @@ def _met_glyph(met: bool | None) -> str:
     return "✓" if met is True else ("✗" if met is False else "—")
 
 
+def _f3(v: Any) -> str:
+    """Format a float to 3dp, or 'nan' for None/NaN (shared by the discriminant renders)."""
+    return "nan" if (v is None or v != v) else f"{v:+.3f}"
+
+
 def _ci_str(res: dict[str, Any]) -> str:
     return (
         "nan" if res["ci_low"] != res["ci_low"]
@@ -3295,6 +3433,7 @@ def render_h11_result(
     person_shape_n: int,
     radius_finite: int,
     radius_censored: int,
+    h11b: dict[str, Any] | None = None,
 ) -> str:
     """H11 moral-circle radius (scoring.md §16). Value-neutral: β_i (parochialism
     steepness) and R_i (the reach of concern) name the SHAPE of a person's circle;
@@ -3336,6 +3475,16 @@ def render_h11_result(
         )
     else:
         lines.append("  H11c parochial gradient: insufficient data (need ≥3 users with ≥4 populated bins)")
+    if h11b is not None:
+        lines.append(
+            f"  H11b shape DISCRIMINANT (β_i ~ [near concern, resource-allocation generosity])  "
+            f"R² = {h11b['r2']:.3f}, upper 95% CI {_f3(h11b['r2_ci_high'])}, n = {h11b['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {h11b['ceiling']:.2f} — shape NOT reducible to generosity, "
+            f"§1.3): {_met_glyph(h11b['pre_registered_threshold_met'])}  "
+            f"(\"reach is not height\"; β·generosity r = {_f3(h11b['beta_generosity_r'])}, cohort/no-pool)"
+        )
     lines.append(
         "  Value-neutral: a wider circle is not scored as better (Singer's impartialism vs "
         "Williams/MacIntyre partialism, §1.5) — the reveal names the shape, never ranks it."
@@ -3884,6 +4033,14 @@ def main() -> int:
         help="Paired-probe manifest (pair_id→domain/stakes/refs) for H8 (default: scenarios/h8-probe-pairs.json).",
     )
     parser.add_argument(
+        "--h11b-log",
+        type=Path,
+        default=None,
+        help="Optional combined circle + resource-allocation session log for the H11b moral-circle SHAPE "
+             "DISCRIMINANT (§16.3): tests whether the circle shape β_i is reducible to near-bin concern + "
+             "generosity level. Uses the same --distance-map as --circle-log.",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -4149,6 +4306,32 @@ def main() -> int:
         h11_radius_censored = sum(1 for s in h11_shapes.values() if s["censored"])
         h11a_result = compute_h11a_reliability(h11_records)
         h11c_result = compute_h11c_gradient(h11_records)
+
+    # --- H11b moral-circle SHAPE DISCRIMINANT (§16.3): is the circle shape (β_i)
+    # reducible to near-bin concern + a SEPARATE resource-allocation generosity level?
+    # Discriminant-supported iff the UPPER 95% CI of the regression R² < H11B_R2_CEILING
+    # — at least half the shape variance is NOT explained by generosity ("reach is not
+    # height", Crimston 2016). Completes H11 = H11a ∧ H11b. Reads a combined log carrying
+    # BOTH the in-group circle items and the resource-allocation items for the same
+    # cohort, via the same --distance-map. Cohort-level statistic, NO per-person reveal →
+    # Python-only, parity stays green (same scope pattern as H9b/H10b/R2c deferred halves).
+    h11b_result: dict[str, Any] | None = None
+    if args.h11b_log:
+        try:
+            with args.h11b_log.open() as f:
+                h11b_entries = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading H11b log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(h11b_entries, list):
+            print("ERROR: H11b log must be a JSON array", file=sys.stderr)
+            return 2
+        try:
+            h11b_dist_map, _ = load_counterparty_distance_map(args.distance_map)
+        except FileNotFoundError:
+            print(f"ERROR: distance map not found at {args.distance_map}", file=sys.stderr)
+            return 2
+        h11b_result = compute_h11b_discriminant(h11b_entries, tag_map, h11b_dist_map)
 
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
     # value_slot + wave (+ taboo) is supplied. Pure re-read of the `never` tail as
@@ -4485,6 +4668,21 @@ def main() -> int:
             h11_block["H11a"] = _h9_json(h11a_result)
         if h11c_result is not None:
             h11_block["H11c"] = _h9_json(h11c_result)
+        if h11b_result is not None:
+            # H11b SHAPE DISCRIMINANT — COHORT-level R² (§16.3). NO pooled per-person
+            # circle scalar: β_i and generosity_i stay separate facets (§13.5). supported
+            # is EXACTLY (r2 upper-CI < ceiling); the gate re-derives it (check_h11).
+            h11_block["H11b"] = {
+                "r2": h11b_result["r2"],
+                "r2_ci_low": _nan_to_none(h11b_result["r2_ci_low"]),
+                "r2_ci_high": _nan_to_none(h11b_result["r2_ci_high"]),
+                "ceiling": h11b_result["ceiling"],
+                "beta_generosity_r": h11b_result["beta_generosity_r"],
+                "beta_near_r": h11b_result["beta_near_r"],
+                "n_participants": h11b_result["n_participants"],
+                "supported": h11b_result["supported"],
+                "pre_registered_threshold_met": h11b_result["pre_registered_threshold_met"],
+            }
         if h11_block or h11_person_shape_n:
             h11_block["person_shape_n"] = h11_person_shape_n
             h11_block["radius_finite"] = h11_radius_finite
@@ -4671,7 +4869,7 @@ def main() -> int:
             print()
             print(render_h11_result(
                 h11a_result, h11c_result, h11_person_shape_n,
-                h11_radius_finite, h11_radius_censored,
+                h11_radius_finite, h11_radius_censored, h11b_result,
             ))
         if r2a_result is not None or r2b_result is not None or r2_protected_set_n or r2_protected_none_n:
             print()

@@ -133,7 +133,7 @@ EXPECTATIONS = {
     "H7": {"kind": "single", "threshold_met": True},
     "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9c": True}},
     "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True}},
-    "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11c": True}},
+    "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True}},
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
@@ -167,6 +167,7 @@ def run_analyzer() -> dict:
         "--language-log", str(FIXTURES / "sample-language-log.json"),
         "--process-log", str(FIXTURES / "sample-process-log.json"),
         "--h8-log", str(FIXTURES / "sample-h8-log.json"),
+        "--h11b-log", str(FIXTURES / "sample-h11b-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -1361,6 +1362,134 @@ def check_h8a_decoupling_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_h11b_discriminant_lock() -> tuple[bool, list[str]]:
+    """The H11b moral-circle SHAPE-DISCRIMINANT discipline (§1.3), asserted directly against the
+    code so a regression survives any fixture change. H11b regresses the shape slope β_i
+    (parochialism steepness) on [ near-bin concern_i, a SEPARATE resource-allocation generosity_i ]
+    and calls the shape DISCRIMINABLE from generosity iff the UPPER 95% bootstrap CI of the model
+    R² < H11B_R2_CEILING ("reach is not height" — at least half the shape variance is NOT explained
+    by how generous a person is). This lock proves, on synthetic corpora with KNOWN ground truth:
+      (i)   INDEPENDENT (β drawn ⊥ [near, generosity]): R² ~ 0, upper CI clears the 0.50 ceiling,
+            SUPPORTED True — a genuinely dissociable circle shape is detected;
+      (ii)  REDUCIBLE (β made a deterministic function of the EXTERNAL generosity): R² high, upper
+            CI ≥ ceiling, SUPPORTED False — a shape that IS its generosity is correctly NOT supported;
+      (iii) SUPPORTED is EXACTLY (upper-CI < ceiling) on both corpora — no bypass of the CI gate;
+      (iv)  the MECHANICAL TRAP is real and is WHY external generosity is load-bearing: substitute the
+            circle-derived mean (a_i + 2.5·β_i over bins 0..5) for generosity and β becomes an EXACT
+            linear combo of [near, circle-mean] → R² ≡ 1 → the discriminant would ALWAYS FAIL. The code
+            avoids this by using a SEPARATE revealed measure, so the INDEPENDENT corpus still supports;
+      (v)   the descriptive companion localizes leakage — β·generosity r ≈ 0 when independent, strongly
+            signed when reducible — WITHOUT pooling anything per person;
+      (vi)  the inclusion floor holds — < H11B_MIN_PARTICIPANTS qualifying shapes returns None (never a
+            bare scalar);
+      (vii) the reveal is COHORT-level and value-neutral — a wider circle is never ranked as better.
+    This is the H11 analog of the H8a de-coupling lock / the §14.1 censoring lock."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    tag_map = A.load_tag_axis_map(A.DEFAULT_TAG_MAP)
+    dist_map, _ = A.load_counterparty_distance_map(A.DEFAULT_DISTANCE_MAP)
+    BIN_TAG = {0: "close", 1: "peer", 2: "community", 3: "peer-distant", 4: "stranger", 5: "out-group-new"}
+    N_BINS, K, RA, RT = 6, 20, 6, 5000     # K=20 → fine per-bin realization, so quantization ≪ signal
+
+    def clip(x):
+        return max(-0.98, min(0.98, x))
+
+    def emit_circle(recs, u, d, mean, pos):
+        p = (clip(mean) + 1.0) / 2.0
+        n_h = max(0, min(K, round(p * K)))
+        for j in range(K):
+            recs.append({"session_id": f"{u}-cs", "user_id": u, "timestamp_iso": "2026-07-01T00:00:00Z",
+                         "scenario_id": f"lock-ingroup-bin{d}", "scenario_type": "quick-fire-round",
+                         "domain": "in-group-out-group", "item_id": f"{u}-bin{d}-{j}", "option_id": "a",
+                         "tags": ["hospitality" if j < n_h else "boundaries", f"counterparty:{BIN_TAG[d]}"],
+                         "response_time_ms": RT, "presented_position": pos + j, "was_timeout": False})
+
+    def emit_ra(recs, u, gen):
+        p = (clip(gen) + 1.0) / 2.0
+        n_g = max(0, min(RA, round(p * RA)))
+        for j in range(RA):
+            recs.append({"session_id": f"{u}-ra", "user_id": u, "timestamp_iso": "2026-07-01T00:00:00Z",
+                         "scenario_id": "lock-allocation", "scenario_type": "quick-fire-round",
+                         "domain": "resource-allocation", "item_id": f"{u}-ra-{j}", "option_id": "a",
+                         "tags": ["generosity" if j < n_g else "self_reliance"],
+                         "response_time_ms": RT, "presented_position": j + 1, "was_timeout": False})
+
+    def grids(n, seed):
+        r = random.Random(seed)
+        def g(lo, hi):
+            v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+            r.shuffle(v)
+            return v
+        return g(0.10, 0.45), g(-0.10, 0.10), g(-0.70, 0.70)   # near a, slope b, generosity g
+
+    def ortho_seed(n, base):
+        for s in range(base, base + 5000):
+            near, slope, gen = grids(n, s)
+            if max(abs(A._pearson_r(near, slope)), abs(A._pearson_r(gen, slope)),
+                   abs(A._pearson_r(near, gen))) < 0.04:
+                return s
+        return base
+
+    def corpus(mode, n, seed):
+        near, slope, gen = grids(n, seed)
+        recs: list[dict] = []
+        for i in range(n):
+            u = f"u{i:02d}"
+            a, b, g = near[i], slope[i], gen[i]
+            if mode == "reducible":
+                b = -0.15 * g            # steepness IS the generosity → [near, gen] explain β → R² high
+            for d in range(N_BINS):
+                emit_circle(recs, u, d, a + b * d, pos=1 + d * K)
+            emit_ra(recs, u, g)
+        return recs
+
+    s_ind = ortho_seed(40, 700000)
+    ind = A.compute_h11b_discriminant(corpus("independent", 40, s_ind), tag_map, dist_map)
+    red = A.compute_h11b_discriminant(corpus("reducible", 40, 700333), tag_map, dist_map)
+    tiny = A.compute_h11b_discriminant(corpus("independent", 6, s_ind), tag_map, dist_map)  # < 8-participant floor
+
+    # (iv) MECHANICAL TRAP as an EXACT identity: with concern linear in bin, the circle mean equals
+    # near + 2.5·β (bins 0..5), so β = (mean − near)/2.5 is an exact linear combo of [near, mean] and
+    # _ols_r_squared MUST report 1.0. This is why generosity must be an EXTERNAL measure, not the mean.
+    a_syn = [0.10, 0.42, 0.18, 0.55, 0.30, 0.05, 0.48, 0.22, 0.37, 0.15, 0.60, 0.27]
+    b_syn = [-0.12, 0.03, -0.05, 0.10, -0.02, 0.07, -0.09, 0.14, -0.15, 0.01, -0.07, 0.05]
+    cmean_syn = [a_syn[k] + 2.5 * b_syn[k] for k in range(len(a_syn))]
+    trap_r2 = A._ols_r_squared([a_syn, cmean_syn], b_syn)
+
+    render = A.render_h11_result(None, None, 1, 1, 0, ind)
+    ceil = A.H11B_R2_CEILING
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["r2_ci_high"] == r["r2_ci_high"] and r["r2_ci_high"] < ceil)
+
+    checks = [
+        ("INDEPENDENT (β ⊥ [near, generosity]): SUPPORTED True, upper CI clears the ceiling",
+         ind is not None and ind["supported"] is True and ind["r2_ci_high"] == ind["r2_ci_high"]
+         and ind["r2_ci_high"] < ceil and ind["n_participants"] == 40),
+        ("REDUCIBLE (β = f(external generosity)): SUPPORTED False, R² high, upper CI ≥ ceiling",
+         red is not None and red["supported"] is False and red["r2"] > ceil and red["r2_ci_high"] >= ceil),
+        ("SUPPORTED is EXACTLY (upper-CI < ceiling) on both corpora — the CI gate cannot be bypassed",
+         exact(ind) and exact(red)),
+        ("MECHANICAL TRAP: generosity==circle mean ⇒ β exactly linear in [near, mean] ⇒ R² ≡ 1 (why external)",
+         trap_r2 is not None and abs(trap_r2 - 1.0) < 1e-9),
+        ("descriptive companion localizes leakage: |β·gen r| small when independent, strongly signed when reducible",
+         ind is not None and red is not None and abs(ind["beta_generosity_r"]) < 0.30
+         and red["beta_generosity_r"] < -0.70),
+        ("inclusion floor: < H11B_MIN_PARTICIPANTS qualifying shapes returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — 'reach is not height', cohort/no-pool, never ranked",
+         "reach is not height" in render and "cohort/no-pool" in render
+         and "NOT reducible to generosity" in render and "never ranks it" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h11b-discriminant: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -1492,6 +1621,12 @@ def main() -> int:
     for m in h8lock_msgs:
         print(m)
     if not h8lock_ok:
+        all_pass = False
+
+    h11block_ok, h11block_msgs = check_h11b_discriminant_lock()
+    for m in h11block_msgs:
+        print(m)
+    if not h11block_ok:
         all_pass = False
 
     if all_pass:

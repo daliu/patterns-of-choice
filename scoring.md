@@ -594,7 +594,7 @@ Seed `20260510 + 14`. Axis scores only — no cross-channel pooling.
 
 Design source: [`h11-moral-circle-radius.md`](h11-moral-circle-radius.md). H11 asks how far a person's **concern reaches across recipient social/moral distance** — Singer's *expanding circle* made behavioral and within-person (Crimston et al. 2016 Moral Expansiveness Scale; Waytz et al. 2019 on the *shape* of the ideological circle; Cikara & Bruneau on parochial empathy). It reuses the **`circle_radius` secondary axis** already scored for the in-group domain (§2.3, hospitality **+1** / boundaries **−1**) — **no new elicitation** — and bins each item by its `counterparty:*` metadata tag through a **versioned distance-ordering map** (`analysis/counterparty_distance_map_v0.1.csv`, §16.5).
 
-**Status.** H11a + H11c + the per-person `β_i` / `R_i` reveal quantities are BUILT (`analyze.py --circle-log --distance-map`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-circle-log.json`, Python-only so parity stays green). H11b and the on-device reveal are DEFERRED (§16.3, §16.6). The scorer reads `circle_radius` **separately** from the primary `item_score`, so the parity secondary-axis-exclusion lock (hospitality **out** of the revealed score) is untouched.
+**Status.** H11a + H11b + H11c + the per-person `β_i` / `R_i` reveal quantities are BUILT — so **H11 = H11a ∧ H11b is now complete** (reliable shape *and* discriminable from generosity). H11a/H11c on `analyze.py --circle-log --distance-map`; H11b (the shape discriminant) on `analyze.py --h11b-log`, gated in `check_analyzer_thresholds.py` (H11 sub-expectation `H11b` + a two-sided `check_h11b_discriminant_lock()`) on `analysis/fixtures/sample-h11b-log.json`. All Python-only (H11b is a cohort-level R², no on-device reveal) so parity stays green. Only the **on-device `β_i`/`R_i` reveal** remains DEFERRED (§16.6). The scorer reads `circle_radius` **separately** from the primary `item_score`, so the parity secondary-axis-exclusion lock (hospitality **out** of the revealed score) is untouched.
 
 ### 16.1 Measurement primitive (§1.1 of the design doc)
 
@@ -614,14 +614,16 @@ Split each participant's sessions into odd/even halves (1-indexed sorted order),
 
 `β_i` (not `R_i`) carries the reliability precisely because it is always finite, whereas `R_i` right-censors whenever a participant's circle is flat (§6 Q3 of the design doc: the slope is the robust shape read when many participants are impartial). Bootstrap: percentile method, pre-committed seed `20260510 + 15`. This is the reliability of the **shape itself** — the de-confound from generosity level is H11b.
 
-### 16.3 H11b — discriminant validity (DEFERRED — cohort-coupled)
+### 16.3 H11b — discriminant validity (BUILT, cohort-level)
 
-The circle shape must not be a proxy for how generous the person is at the near bin, nor for their overall generosity level:
+The circle **shape** must not be a proxy for how generous the person is — "reach is not height" (a person can be lavish to kin then drop off a cliff — narrow — or modest but flat — wide; Crimston et al. 2016, the moral-expansiveness shape is dissociable from generosity level). Regress the shape slope on the near-bin concern **and a separate revealed generosity level**:
 
-    regress shape (β_i, R_i) on [ near-bin concern_i,  generosity level_i ]
-    H11b (discriminant) supported  ⇔  upper 95% CI of R²  < 0.50
+    regress β_i on [ near-bin concern_i,  resource-allocation generosity_i ]
+    H11b (discriminant) supported  ⇔  upper 95% bootstrap CI of model R²  < 0.50
 
-**DEFERRED** because it couples to the cohort pipeline (a person-level generosity level), exactly as the H9b- and H10b-discriminant halves do — the current increment stays isolated on its own fixtures.
+i.e. **at least half the circle-shape variance is NOT explained by how generous a person is**. Seed `20260510 + 27`; `compute_h11b_discriminant`, `--h11b-log`, `H11B_MIN_PARTICIPANTS = 8`. **H11 = H11a ∧ H11b** (reliable shape *and* dissociable from generosity) is now complete.
+
+**Generosity is an EXTERNAL revealed measure, not the circle mean — load-bearing.** `generosity_i` is the §3.1 revealed-mean pipeline restricted to the **resource-allocation** domain (its `generosity` primary axis; `_resource_allocation_generosity`), scored by the SAME `item_score` + §10 inattentive drop + ≥3-items/session floor as every channel. Were generosity instead the *circle mean*, `β_i` (an OLS slope over the same bins) would be a **mechanical** function of the predictors: with concern linear in bin, `circle_mean = near + 2.5·β` (bins 0–5), so `β = (mean − near)/2.5` is an **exact** linear combo of `[near, mean]` and R² ≡ 1 — the discriminant would **always FAIL** regardless of the truth. Using a *separate* revealed axis decorrelates β from the predictors, so a genuinely dissociable shape scores R² ≈ 0 and clears the ceiling. `check_h11b_discriminant_lock()` proves both arms on synthetic corpora with known ground truth: β ⊥ [near, generosity] → SUPPORTED; β made a deterministic function of external generosity → NOT supported; and the R² ≡ 1 mechanical-trap identity that motivates the external-measure choice. **Cohort-level statistic** (an R² across participants), **never a per-person reveal**: no pooled circle score is emitted, and `β_i` / generosity_i stay separate facets (§13.5).
 
 ### 16.4 H11c — parochial-gradient anchor (BUILT, directional)
 

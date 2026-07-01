@@ -13,6 +13,50 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 28 — 2026-07-01 — H11 · Moral-circle SHAPE discriminant (H11b leg; cohort-level) → H11 core complete
+
+`build-and-validate.md` item 3. H11's measurement primitive + **H11a** (β_i split-window shape reliability) + **H11c** (parochial-gradient
+anchor) shipped 2026-06-30, but the design defines **H11 = H11a ∧ H11b** (design line 53): a reliable circle shape is not enough — the shape
+must also be **discriminable from how generous the person is**. That discriminant half, **H11b**, was the deferred piece. This iteration builds
+it, completing H11's core validity claim. H11b asks: is a person's **parochialism steepness** (`β_i`, how fast concern falls with social
+distance) just a proxy for their overall generosity, or does the *shape* of the circle carry variance generosity does not? "**Reach is not
+height**" (Crimston et al. 2016): a person can be lavish to kin then drop off a cliff (narrow), or modest but flat (wide) — shape ⊥ level.
+
+- **What shipped (`scripts/analyze.py`, `--h11b-log`).** `compute_h11b_discriminant` regresses the shape slope `β_i` on **two** predictors —
+  the near-bin concern `near_i` and a **SEPARATE resource-allocation generosity level** `generosity_i` — and calls the shape discriminable iff
+  the **upper 95% bootstrap CI of the model R² < 0.50** (`H11B_R2_CEILING`; seed `20260510 + 27`; ≥ `H11B_MIN_PARTICIPANTS = 8` shapes-with-
+  generosity). `generosity_i` (`_resource_allocation_generosity`) is the §3.1 revealed-mean pipeline (`session_aggregates → session_means →
+  per-user average`) restricted to the **resource-allocation** domain on its `generosity` primary axis — the SAME `item_score` + §10 inattentive
+  drop + ≥3-items/session floor as every channel. The JSON `H11.H11b` block carries `{r2, r2_ci_low, r2_ci_high, ceiling, beta_generosity_r,
+  beta_near_r, n_participants, supported, pre_registered_threshold_met}` — **no** pooled scalar. Added helpers `_ols_r_squared` (R² = 1 −
+  SS_res/SS_tot via `_ols_residuals`) and `_bootstrap_ci_r2` (percentile CI of a refit multiple-regression R²). Rendered as a value-neutral
+  cohort line in `render_h11_result`.
+- **The load-bearing discipline — the R² ≡ 1 mechanical trap, and why generosity is EXTERNAL (§16.3).** The obvious operationalization —
+  generosity = the person's *circle mean* — is a **trap**: with concern linear in bin, `circle_mean = near + 2.5·β` (bins 0–5), so
+  `β = (mean − near)/2.5` is an **exact linear combination** of `[near, circle_mean]` → R² ≡ 1 → the discriminant would **always FAIL**, no
+  matter the truth. The fix (load-bearing): use a **separate revealed measure** — resource-allocation generosity — which decorrelates from β,
+  so a genuinely dissociable shape scores R² ≈ 0 and clears the ceiling. Clean channel separation was verified: circle items (in-group domain,
+  loyalty primary axis) are invisible to the generosity extraction, and resource-allocation items carry no `counterparty:*` circle tags, so one
+  combined fixture cleanly yields both β_i and generosity_i per user with no cross-contamination.
+- **The two-sided lock (`check_h11b_discriminant_lock()`, 7 assertions all green).** On synthetic corpora with known ground truth: (i)
+  **INDEPENDENT** (β drawn ⊥ [near, generosity]) → R² ≈ 0, upper CI clears the ceiling, **SUPPORTED**; (ii) **REDUCIBLE** (β made a deterministic
+  function of the external generosity) → R² high, upper CI ≥ ceiling, **NOT supported** — a shape that *is* its generosity is correctly rejected;
+  (iii) `supported` is **exactly** `upper-CI < ceiling` on both (no bypass); (iv) the **mechanical-trap identity** — substitute the circle mean
+  for generosity and `_ols_r_squared` returns **1.0** exactly, demonstrating *why* the external measure is required; (v) the descriptive
+  companion localizes leakage (β·generosity r ≈ 0 independent, strongly signed reducible) without per-person pooling; (vi) the < 8-participant
+  inclusion floor returns **None** (never a bare scalar); (vii) the reveal is cohort-level and value-neutral. Fixture:
+  `analysis/fixtures/sample-h11b-log.json` (32 participants; seed-searched for orthogonal draws so R² ≈ 0.006, upper CI ≈ 0.27, **SUPPORTED**).
+- **What it honors.** Value-neutral (a wider circle is **never** scored as better — Singer impartialism ↔ Williams/MacIntyre partialism); no
+  composite / no cross-branch pooling (β_i and generosity_i stay **separate facets**, §13.5); cohort-level statistic, **never a per-person
+  reveal**; inclusion floor (< 8 → None). **Cohort-level R² with no on-device reveal → Python-only; `poc-projection.js` untouched, parity stays
+  green (9/9).** `make check` green (validate 66 + analyzer gate incl. the new lock + parity 9/9).
+- **Surfaced to Dave (PROPOSE, not auto-locked).** (a) The **operationalization** "generosity level = mean resource-allocation primary-axis
+  revealed score" is a modeling choice worth a DECISIONS-§ pre-registration lock before any real run — flagging it rather than locking it. (b)
+  Still deferred for H11: the **on-device `β_i`/`R_i` reveal** + its parity lock, the **real-corpus `counterparty:*` ordering** + REL-2 inter-rater
+  validity (human-gated), and the **MVP-2 far-beings bin**. **H11 core (H11a ∧ H11b) is now complete.**
+
+---
+
 ## Iteration 27 — 2026-07-01 — H8 · Narrative-immersion debiasing (H8a leg; secondary, cohort-level)
 
 `build-and-validate.md` item 10. After nine consecutive branch-outs into *new* channels (H9–R6, A3, A4), this iteration circles back to
