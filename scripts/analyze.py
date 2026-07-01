@@ -92,6 +92,17 @@ Implemented here:
   caveat — professed, real-stakes validation (H-A2) is Phase-2. R2c
   discriminant (vs importance rank) deferred — cohort-coupled. P_i is a SET +
   a marker, never summed into a sacredness score (§13.5).
+- H12a/H12c moral hypocrisy / self–other judgment asymmetry (§18 of
+  scoring.md, 13th pre-reg branch). When --hypocrisy-log is supplied (matched
+  severity_self + severity_other judgments of the SAME acts): H_i =
+  mean(severity_other − severity_self) is the person's self–other asymmetry, a
+  paired within-person contrast on a common scale. H12a reliability (split-half
+  odd/even correlation of H_i, lower CI ≥ 0.40) and H12c the self-serving anchor
+  (mean_i H_i > 0, directional — others judged more harshly than self; Tappin &
+  McKay 2017, Epley & Dunning 2000). Value-neutral (§18.4): harsher-on-others and
+  harsher-on-self are both described, never ranked. A declined judgment drops the
+  pair, never imputed to 0 (the pairing lock). H12b discriminant (vs gap /
+  calibration) deferred — cohort-coupled. Signed facet, never summed (§13.5).
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -2015,6 +2026,134 @@ def compute_r2b_distinctness(responses: list[dict]) -> dict[str, Any] | None:
     }
 
 
+# ----------------------------------------------------------------------------
+# H12 — moral hypocrisy: the self–other judgment asymmetry (scoring.md §18).
+# A paired within-person contrast on a COMMON severity scale — the SAME act is
+# judged as one's own and as another's, and H_i = mean(severity_other −
+# severity_self) is the person's self–other asymmetry. Grounded in the moral-
+# superiority / holier-than-thou findings (Tappin & McKay 2017; Epley & Dunning
+# 2000; the actor–observer asymmetry) — NOT the excluded paradigms. Python-only:
+# a paired contrast reusing the reliability/bootstrap machinery, with NO on-device
+# H_i reveal this increment (like the H9b/H10b/H11b/R2c deferred halves), so
+# parity stays green. The H12b discriminant (vs the §6 gap / calibration error) is
+# cohort-coupled and deferred. The pairing/missing-data lock (a declined judgment
+# drops the pair, never imputed to 0; sign preserved) is the H12 analog of the
+# §13.2 censoring lock — asserted against the code by check_h12_pairing_lock().
+# ----------------------------------------------------------------------------
+
+H12A_RELIABILITY_FLOOR = 0.40   # self–other asymmetry split-half reliability lower 95% CI (§18.2)
+H12_MIN_PAIRS = 3               # per-person scorable-pair floor for a reveal-eligible H_i (§1.5 N=1)
+# H12c is directional: lower 95% CI of the mean self–other asymmetry mean_i H_i > 0 (§18.3).
+
+
+def _hypocrisy_pair_delta(r: dict) -> float | None:
+    """The self–other asymmetry for ONE matched item (§18.1): severity_other −
+    severity_self, both rating the SAME act on a common severity scale. Returns
+    None — the pair is DROPPED, never imputed — when either judgment is absent or
+    non-numeric: a declined "can't say" judgment is MISSING DATA, not a 0 delta
+    (the H12 pairing lock, the analog of the §13.2 censoring `never` lock). Sign is
+    PRESERVED: positive = harsher on others than on self (the self-serving /
+    moral-superiority direction), negative = harsher on self (value-neutral)."""
+    so = r.get("severity_self")
+    oo = r.get("severity_other")
+    if not isinstance(so, (int, float)) or isinstance(so, bool):
+        return None
+    if not isinstance(oo, (int, float)) or isinstance(oo, bool):
+        return None
+    return float(oo) - float(so)
+
+
+def hypocrisy_deltas_by_user(
+    records: list[dict],
+    session_filter=None,
+) -> dict[str, list[float]]:
+    """Per user, the list of matched-item self–other deltas (§18.1). A record
+    contributes only if BOTH severities are present (the pairing lock: a declined
+    judgment drops that pair, never imputed to 0). Optional
+    session_filter(user, session) -> bool restricts to a session subset (the H12a
+    odd/even split). Keys `user` / `session` mirror the H10/H11 logs consumed by
+    _odd_even_sessions."""
+    by_user: dict[str, list[float]] = defaultdict(list)
+    for r in records:
+        user = r.get("user")
+        if user is None:
+            continue
+        if session_filter is not None and not session_filter(user, r.get("session")):
+            continue
+        d = _hypocrisy_pair_delta(r)
+        if d is not None:
+            by_user[user].append(d)
+    return by_user
+
+
+def hypocrisy_asymmetry_by_user(
+    records: list[dict],
+    session_filter=None,
+    min_pairs: int = H12_MIN_PAIRS,
+) -> dict[str, float]:
+    """H_i = mean matched-item delta per user (§18.1), for users with ≥min_pairs
+    scorable pairs (the §1.5 N=1 floor). Signed and value-neutral — a person
+    harsher on themselves keeps a NEGATIVE H_i, never clamped."""
+    out: dict[str, float] = {}
+    for user, deltas in hypocrisy_deltas_by_user(records, session_filter).items():
+        if len(deltas) >= min_pairs:
+            out[user] = sum(deltas) / len(deltas)
+    return out
+
+
+def compute_h12a_reliability(records: list[dict]) -> dict[str, Any] | None:
+    """H12a (§18.2): split each user's sessions odd/even, recompute the self–other
+    asymmetry H_i on each half, correlate across users. Supported iff the lower
+    95% bootstrap CI of the correlation ≥ H12A_RELIABILITY_FLOOR. Reliability of
+    the asymmetry TRAIT itself — orthogonal to whether the cohort is self-serving
+    on average (that anchor is H12c) and to the person's level (the H12b
+    discriminant, deferred). Seed BOOTSTRAP_SEED+19."""
+    odd, even = _odd_even_sessions(records)
+    h_odd = hypocrisy_asymmetry_by_user(records, lambda u, s: s in odd.get(u, set()))
+    h_even = hypocrisy_asymmetry_by_user(records, lambda u, s: s in even.get(u, set()))
+    shared = sorted(set(h_odd) & set(h_even))
+    if len(shared) < 3:
+        return None
+    xs = [h_odd[u] for u in shared]
+    ys = [h_even[u] for u in shared]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 19)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_low != ci_low else bool(ci_low >= H12A_RELIABILITY_FLOOR)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n": len(shared),
+        "threshold_low": H12A_RELIABILITY_FLOOR, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_h12c_self_serving(
+    records: list[dict], min_pairs: int = H12_MIN_PAIRS
+) -> dict[str, Any] | None:
+    """H12c (§18.3, self-serving asymmetry anchor, directional): per user,
+        H_i = mean matched-item (severity_other − severity_self)
+    Supported iff the lower 95% CI of mean_i H_i > 0 (one-sided): on average people
+    judge OTHERS' identical transgressions more harshly than their own — the
+    moral-superiority / holier-than-thou direction (Tappin & McKay 2017; Epley &
+    Dunning 2000). This is a COHORT-level validity anchor (does the self-serving
+    asymmetry replicate as theorized), NOT a per-person verdict: the person-level
+    H_i reveal stays signed and value-neutral (harsher-on-self is described, never
+    ranked, §18.4). Seed BOOTSTRAP_SEED+20."""
+    h_by_user = hypocrisy_asymmetry_by_user(records, None, min_pairs)
+    asymmetries = [h_by_user[u] for u in sorted(h_by_user)]
+    if len(asymmetries) < 3:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 20)
+    ci_low, ci_high = _bootstrap_ci_mean(asymmetries, rng)
+    met = None if ci_low != ci_low else bool(ci_low > 0.0)
+    return {
+        "mean_asymmetry": sum(asymmetries) / len(asymmetries),
+        "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(asymmetries),
+        "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -2281,6 +2420,61 @@ def render_r2_result(
     return "\n".join(lines)
 
 
+def render_h12_result(
+    h12a: dict[str, Any] | None,
+    h12c: dict[str, Any] | None,
+    person_asymmetry_n: int,
+    mean_asymmetry_census: float,
+) -> str:
+    """H12 moral hypocrisy / self–other judgment asymmetry (scoring.md §18).
+    Value-neutral: H_i names the direction and size of a person's self–other gap —
+    harsher-on-others (self-serving) and harsher-on-self (self-critical) are both
+    described, never ranked (§18.4). "Hypocrisy" is the construct's name in the
+    literature; the reveal states the asymmetry descriptively, never as a verdict.
+    A declined judgment drops the pair, never imputed to 0 (§18.1 pairing lock)."""
+    if h12a is None and h12c is None and person_asymmetry_n == 0:
+        return (
+            "(H12: insufficient data — supply --hypocrisy-log with matched "
+            "severity_self + severity_other judgments of the same acts)"
+        )
+    lines = ["H12 (moral hypocrisy — the self–other judgment asymmetry, signed & value-neutral):"]
+    lines.append(
+        f"  Person asymmetry H_i = mean(severity_other − severity_self) over matched acts: "
+        f"{person_asymmetry_n} participant(s) scored (mean H_i {mean_asymmetry_census:+.3f}). "
+        f"A declined judgment drops the pair — never imputed to 0 (§18.1 pairing lock)."
+    )
+    lines.append("  -- self & other rate the SAME act on a common scale; the signed delta is a facet, never summed (§13.5) --")
+    if h12a is not None:
+        lines.append(
+            f"  H12a asymmetry reliability (split-half odd/even, corr of H_i)  r = {h12a['r']:+.3f}, "
+            f"95% CI {_ci_str(h12a)}, n = {h12a['n']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {h12a['threshold_low']:.2f}): "
+            f"{_met_glyph(h12a['pre_registered_threshold_met'])}"
+        )
+    else:
+        lines.append("  H12a asymmetry reliability: insufficient data (need ≥3 users scorable in both odd & even session halves)")
+    if h12c is not None:
+        lines.append(
+            f"  H12c self-serving asymmetry (mean_i H_i, cohort anchor)  mean = {h12c['mean_asymmetry']:+.3f}, "
+            f"95% CI {_ci_str(h12c)}, n = {h12c['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI > {h12c['threshold']:.1f}, one-sided, directional): "
+            f"{_met_glyph(h12c['pre_registered_threshold_met'])}  "
+            f"(people judge others' identical acts more harshly than their own — Tappin & McKay 2017)"
+        )
+    else:
+        lines.append("  H12c self-serving asymmetry: insufficient data (need ≥3 users with ≥3 matched pairs)")
+    lines.append(
+        "  Value-neutral: harsher-on-others (self-serving) and harsher-on-self (self-critical/scrupulous) "
+        "are both just described — neither is scored as better (§18.4). H12c is a cohort validity anchor, "
+        "not a per-person verdict. H12b discriminant (vs gap / calibration) deferred; see build-and-validate.md."
+    )
+    return "\n".join(lines)
+
+
 def render_test_retest_result(
     name: str, threshold_text: str, results: dict[str, dict[str, Any]]
 ) -> str:
@@ -2440,6 +2634,12 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional cost-of-virtue log (value_slot + wave + taboo) for R2 sacred/protected values (§17).",
+    )
+    parser.add_argument(
+        "--hypocrisy-log",
+        type=Path,
+        default=None,
+        help="Optional self–other judgment log (severity_self + severity_other per matched act) for H12 moral hypocrisy (§18).",
     )
     parser.add_argument(
         "--min-items",
@@ -2741,6 +2941,31 @@ def main() -> int:
         r2a_result = compute_r2a_reliability(protected_responses)
         r2b_result = compute_r2b_distinctness(protected_responses)
 
+    # --- H12 moral hypocrisy: the self–other judgment asymmetry (§18). A paired
+    # within-person contrast on a COMMON severity scale, so this is Python-only
+    # and parity stays green — no on-device H_i reveal this increment (same scope
+    # pattern as the H9b/H10b/H11b/R2c deferred halves).
+    h12a_result: dict[str, Any] | None = None
+    h12c_result: dict[str, Any] | None = None
+    h12_person_asymmetry_n = 0
+    h12_mean_asymmetry = 0.0
+    if args.hypocrisy_log:
+        try:
+            with args.hypocrisy_log.open() as f:
+                hypocrisy_records = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading hypocrisy log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(hypocrisy_records, list):
+            print("ERROR: hypocrisy log must be a JSON array", file=sys.stderr)
+            return 2
+        _h12_census = hypocrisy_asymmetry_by_user(hypocrisy_records)
+        h12_person_asymmetry_n = len(_h12_census)
+        if _h12_census:
+            h12_mean_asymmetry = sum(_h12_census.values()) / len(_h12_census)
+        h12a_result = compute_h12a_reliability(hypocrisy_records)
+        h12c_result = compute_h12c_self_serving(hypocrisy_records)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -2904,6 +3129,16 @@ def main() -> int:
             r2_block["protected_set_sizes"] = r2_protected_set_sizes
             hypotheses["R2"] = r2_block
 
+        h12_block: dict[str, Any] = {}
+        if h12a_result is not None:
+            h12_block["H12a"] = _h9_json(h12a_result)
+        if h12c_result is not None:
+            h12_block["H12c"] = _h9_json(h12c_result)
+        if h12_block or h12_person_asymmetry_n:
+            h12_block["person_asymmetry_n"] = h12_person_asymmetry_n
+            h12_block["mean_asymmetry"] = _nan_to_none(h12_mean_asymmetry)
+            hypotheses["H12"] = h12_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -2988,6 +3223,11 @@ def main() -> int:
             print(render_r2_result(
                 r2a_result, r2b_result, r2_protected_set_n,
                 r2_protected_none_n, r2_protected_set_sizes,
+            ))
+        if h12a_result is not None or h12c_result is not None or h12_person_asymmetry_n:
+            print()
+            print(render_h12_result(
+                h12a_result, h12c_result, h12_person_asymmetry_n, h12_mean_asymmetry,
             ))
 
     return 0

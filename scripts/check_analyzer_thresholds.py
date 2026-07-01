@@ -51,6 +51,13 @@ Expected outcomes on the current synthetic fixtures:
   (check_r2_censoring): a protected `never` enters P_i as a value_slot string
   and is NEVER finitized into a price (scores the right-censored sentinel),
   and an empty-in-both-waves user is excluded from R2a, never scored 1.0.
+- H12 (moral hypocrisy — self–other judgment asymmetry): H12a asymmetry
+  reliability (split-half odd/even correlation of H_i, lower CI ≥ 0.40) and
+  H12c the self-serving anchor (mean_i H_i > 0, directional) both met = True on
+  the fixtures, with ≥1 reveal-eligible H_i. Plus the PAIRING/MISSING-DATA
+  regression (check_h12_pairing_lock): a declined judgment drops the pair —
+  never imputed to 0 — and the signed delta (other − self) is preserved so a
+  harsher-on-self record stays NEGATIVE, never clamped (the value-neutral lock).
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -81,6 +88,7 @@ EXPECTATIONS = {
     "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True}},
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
+    "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True}},
 }
 
 
@@ -101,6 +109,7 @@ def run_analyzer() -> dict:
         "--context-log", str(FIXTURES / "sample-context-log.json"),
         "--circle-log", str(FIXTURES / "sample-circle-log.json"),
         "--protected-log", str(FIXTURES / "sample-protected-values-log.json"),
+        "--hypocrisy-log", str(FIXTURES / "sample-hypocrisy-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -285,6 +294,36 @@ def check_r2(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             f"(n_excluded_empty={r2a.get('n_excluded_empty')})"
         )
     parts.append(f"P_i×{payload['protected_set_n']}, none={payload['protected_none_n']}, r2a_excl={r2a['n_excluded_empty']}")
+    return True, f"{hid}: ✓ {', '.join(parts)}"
+
+
+def check_h12(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
+    """H12 moral hypocrisy. Assert each present sub-hypothesis (H12a asymmetry
+    split-half reliability, H12c the self-serving directional anchor) hit its
+    pre-registered outcome, and that ≥1 participant is reveal-eligible (a scored
+    H_i). The pairing/missing-data lock (a declined judgment drops the pair,
+    never imputed to 0; the signed delta is preserved so harsher-on-self stays
+    negative) is asserted directly against the code in check_h12_pairing_lock()
+    below."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    parts = []
+    for sub, expected in sub_met.items():
+        block = payload.get(sub)
+        if block is None:
+            return False, f"{hid}: sub-hypothesis {sub} missing"
+        met = block.get("pre_registered_threshold_met")
+        if met != expected:
+            return False, f"{hid}.{sub}: threshold_met = {met!r}, expected {expected!r}"
+        if block.get("n", block.get("n_participants", 0)) < 3:
+            return False, f"{hid}.{sub}: n too small ({block})"
+        parts.append(f"{sub}={met}")
+    if payload.get("person_asymmetry_n", 0) < 1:
+        return False, (
+            f"{hid}: no reveal-eligible H_i "
+            f"(person_asymmetry_n={payload.get('person_asymmetry_n')})"
+        )
+    parts.append(f"H_i×{payload['person_asymmetry_n']}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 
@@ -481,6 +520,59 @@ def check_r2_censoring() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_h12_pairing_lock() -> tuple[bool, list[str]]:
+    """The H12 analog of the §13.2 censoring lock: the pairing / missing-data
+    discipline (§18.1). A self–other judgment pair is scored as the SIGNED delta
+    severity_other − severity_self; a declined judgment (either side missing or
+    non-numeric) DROPS the pair — it is never imputed to 0, which would fabricate
+    'no asymmetry' — and the sign is preserved so harsher-on-self stays NEGATIVE,
+    never clamped toward the self-serving direction. Asserted directly against the
+    code so a regression that starts imputing declines, or clamps the sign, is
+    caught even if the fixture is later changed:
+      (i)   a complete pair scores other − self, sign and magnitude preserved;
+      (ii)  harsher-on-self yields a NEGATIVE delta (value-neutral: not clamped);
+      (iii) a declined judgment (either side None / non-numeric / bool) → None,
+            so the pair is DROPPED from the person's deltas, never counted as 0;
+      (iv)  a person's H_i is the mean over ONLY the scorable pairs — dropping a
+            decline leaves the remaining count and mean unchanged."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    d_pos = A._hypocrisy_pair_delta({"severity_self": 4.0, "severity_other": 7.0})
+    d_neg = A._hypocrisy_pair_delta({"severity_self": 5.0, "severity_other": 2.0})
+    d_self_none = A._hypocrisy_pair_delta({"severity_self": None, "severity_other": 3.0})
+    d_other_none = A._hypocrisy_pair_delta({"severity_self": 3.0, "severity_other": None})
+    d_bool = A._hypocrisy_pair_delta({"severity_self": True, "severity_other": 3.0})
+    # (iv) two complete pairs (deltas +2.0, +2.0) plus one declined → mean stays 2.0, n stays 2.
+    recs = [
+        {"user": "p1", "session": "p1-s1", "severity_self": 4.0, "severity_other": 6.0},
+        {"user": "p1", "session": "p1-s2", "severity_self": 5.0, "severity_other": 7.0},
+        {"user": "p1", "session": "p1-s2", "severity_self": 5.0, "severity_other": None},
+    ]
+    deltas = A.hypocrisy_deltas_by_user(recs)["p1"]
+    h_by_user = A.hypocrisy_asymmetry_by_user(recs, None, min_pairs=1)
+    checks = [
+        ("a complete pair scores other − self, sign and magnitude preserved",
+         d_pos == 3.0),
+        ("harsher-on-self yields a NEGATIVE delta (value-neutral, not clamped)",
+         d_neg == -3.0),
+        ("a declined judgment (self None) → None, pair is droppable not 0",
+         d_self_none is None),
+        ("a declined judgment (other None) → None, pair is droppable not 0",
+         d_other_none is None),
+        ("a bool is not a valid severity → None (guards against True==1 coercion)",
+         d_bool is None),
+        ("declined pair DROPPED from deltas (2 scorable, not 3 with a 0)",
+         len(deltas) == 2 and all(d == 2.0 for d in deltas)),
+        ("H_i is the mean over ONLY scorable pairs (declined drop leaves it 2.0)",
+         abs(h_by_user["p1"] - 2.0) < 1e-9),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h12-pairing: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -530,6 +622,8 @@ def main() -> int:
             ok, msg = check_h11(hid, payload, spec["sub_met"])
         elif spec["kind"] == "r2":
             ok, msg = check_r2(hid, payload, spec["sub_met"])
+        elif spec["kind"] == "h12":
+            ok, msg = check_h12(hid, payload, spec["sub_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -564,6 +658,12 @@ def main() -> int:
     for m in r2cens_msgs:
         print(m)
     if not r2cens_ok:
+        all_pass = False
+
+    h12lock_ok, h12lock_msgs = check_h12_pairing_lock()
+    for m in h12lock_msgs:
+        print(m)
+    if not h12lock_ok:
         all_pass = False
 
     if all_pass:

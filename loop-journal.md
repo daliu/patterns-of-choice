@@ -13,6 +13,76 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 22 — 2026-06-30 — H12 · Moral hypocrisy / self–other judgment asymmetry
+
+`build-and-validate.md` item 5, the next cheapest-clean buildable branch: **H12** (`scoring.md §18`). The 13th
+pre-reg branch, and the cheapest left because it is a clean **paired within-person contrast** that reuses the
+gap/bootstrap/reliability machinery whole — no κ-gated language channel (that's R3–R6), no new axis, no corpus
+rewrite. The construct: does a person judge the **same act** more harshly when **another** commits it than when
+**they** do? For each matched act the person rates `severity_self` (how wrong when *I* do it) and
+`severity_other` (how wrong when *another* does it) on a common 0–10 scale; `H_i = mean_act(severity_other −
+severity_self)` is the self–other asymmetry. Grounded in Tappin & McKay 2017 (*The Illusion of Moral
+Superiority*), Epley & Dunning 2000 (*Feeling "holier than thou"*), the actor–observer asymmetry (Jones &
+Nisbett 1971; Malle 2006), with Batson's *moral hypocrisy* (1997/1999) as origin. **Deliberately avoided**
+Valdesolo & DeSteno (manipulation-based, an experimenter-staged asymmetry not a within-person read) and every
+excluded paradigm (no Stapel / Gino / Ariely-priming / ego-depletion).
+
+- **What shipped (`scripts/analyze.py`, `--hypocrisy-log`).** The §18.1 primitive — `_hypocrisy_pair_delta`
+  (the signed `severity_other − severity_self` per matched act) → `hypocrisy_asymmetry_by_user` → `H_i` = the
+  per-person mean over ≥ 3 scorable pairs; **H12a** asymmetry reliability (split-half odd/even sessions,
+  `corr(H_i^odd, H_i^even)` supported iff lower bootstrap-CI ≥ 0.40, seed +19 — mirrors H10a/H11a exactly via
+  `_odd_even_sessions` + `_pearson_r` + `_bootstrap_ci_r`); **H12c** the self-serving directional anchor
+  (`mean_i H_i` supported iff lower-CI > 0, one-sided, seed +20 — the "holier than thou" signature as a
+  **cohort validity check**, *not* a per-person verdict). Gated in `check_analyzer_thresholds.py` (H12
+  expectations + a `check_h12_pairing_lock()` unit-regression) on a self-contained fixture
+  (`analysis/fixtures/sample-hypocrisy-log.json`, 12 participants × 4 sessions × 3 matched probes + one
+  declined judgment, known ground truth: `H12a` r=1.000 CI-low 1.000 met (noiseless-by-construction design so
+  the gate checks the analyzer *recovers* r=1.0 and clears the 0.40 floor); `H12c` mean_asymmetry=+1.083
+  CI-low +0.667 CI-high +1.458 met, n=12; `person_asymmetry_n`=12 reveal-eligible).
+- **Disciplines honored.** *Pairing / missing-data lock* (§18.1 — the load-bearing one here, the H12 analog of
+  the §13.2 censoring lock): a **declined judgment** (either side missing/non-numeric) makes the delta
+  undefined, so the pair is **DROPPED — never imputed to 0** (which would fabricate "no asymmetry"), and the
+  delta is **signed** so harsher-on-self stays **NEGATIVE**, never clamped toward the self-serving direction;
+  asserted directly against the code in `check_h12_pairing_lock()` (complete pair → other−self sign+magnitude;
+  harsher-on-self → −3.0 not clamped; declined self/other/bool → None; declined pair dropped from deltas, H_i
+  is the mean over only scorable pairs — 7 assertions, all green). *No composite / never-pool* (§13.5): `H_i`
+  is a **signed facet**, never summed with a gap, calibration index, variability index, circle radius,
+  protected set, or CoV price, never pooled across branches. *Value-neutral* (load-bearing): harsher-on-others
+  AND harsher-on-self are both **described, never ranked** — a self-critical person (`H_i < 0`) is not "more
+  honest," a self-serving one is not "more confident"; the fixture's u12 (`H_i` = −0.5) exercises the
+  preserved negative sign. This is why **H12c is walled off as a cohort anchor, not an individual verdict.**
+  *N=1* — `H_i` is a within-person mean over that user's ≥ 3 pairs, reveal-eligible with no cohort norms.
+  *Cheap-talk* — these are judgments of *hypothetical* acts, not behavior under stakes; `H_i` is a **stated**
+  asymmetry, behavioral validation is Phase-2. *Fraud/replication* — no excluded paradigms (Tappin &
+  McKay / Epley & Dunning / actor–observer clean; V&D and the priming/depletion families deliberately avoided).
+- **Scope (same pattern as H9/H10/H11/R2).** A paired within-person contrast reusing the bootstrap + split-half
+  machinery whole; **no new axis, no on-device reveal touched** → Python-only → **parity trivially green**
+  (poc-projection.js untouched, 9/9). **Deferred (documented):** (a) **H12b-discriminant** — R² of `H_i` on
+  `[gap_i, cal_error_i]` < 0.50; couples to the cohort gap + calibration pipelines like the H9b/H10b/H11b/R2c
+  discriminants. (b) The **on-device `H_i` reveal** in `poc-projection.js` + its parity lock. (c) The self–other
+  judgment log's **real collection + exact phrasing** (avoid a leading "aren't others worse?") and the
+  **behavioral validation** — does a large `H_i` predict real self–other double standards — via Phase-2 (both
+  surfaced under "Needs Dave / external").
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §23 — H12 pre-registration.* `H_i` =
+  `mean_act(severity_other − severity_self)` over a person's ≥ 3 matched self–other judgment pairs on a common
+  0–10 severity scale, read off a new light `--hypocrisy-log` data-contract (`severity_self` + `severity_other`
+  per probe). H12a floor 0.40 on the split-half (odd/even sessions) reliability of `H_i` (seed 20260510+19).
+  H12c directional, `mean_i H_i` lower-CI > 0 (seed +20) — a **cohort validity anchor** (recovers the
+  established self-serving direction), explicitly **not** a per-person verdict. Pairing lock: a declined
+  judgment drops the pair (never imputed 0), signed delta preserved (harsher-on-self stays negative).
+  Value-neutrality (neither direction ranked) is load-bearing. `H_i` labelled a **stated** asymmetry
+  (hypothetical caveat) pending Phase-2 behavioral validation. H12b threshold (R² < 0.50) proposed but not
+  built. If this reads right, say "lock §23" and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, H10, H11, R2,
+  **H12**, probe-ceiling, h9-censoring, h10-suppression, h11-suppression, r2-censoring, **h12-pairing**) +
+  JS↔Python parity 9/9. Commit on `poc` main.
+
+**Buildable-without-Dave work remains** (`build-and-validate.md` items 6+): R1 identity centrality (a
+cohort-coupled meta-moderator), R6 conviction/objectivism (the charged stated–revealed meta-gap, leans on the
+κ-gated language channel — needs Dave). Loop continues, thinning toward the Dave-gated tail.
+
+---
+
 ## Iteration 21 — 2026-06-30 — R2 · Sacred / protected values
 
 `build-and-validate.md` item 4, the next cheapest-clean buildable branch: **R2** (`scoring.md §17`, design doc

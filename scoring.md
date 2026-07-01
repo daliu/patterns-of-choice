@@ -701,6 +701,66 @@ Protectedness must not be a proxy for how *important* a value is on the stated i
 
 ---
 
+## 18. H12 — moral hypocrisy / self–other judgment asymmetry (PROPOSED — pending DECISIONS §23 lock)
+
+H12 asks whether a person judges the **same act** more harshly when **another** commits it than when **they** do — the self–other asymmetry at the heart of moral hypocrisy. Grounding: Tappin & McKay 2017 (*The Illusion of Moral Superiority*); Epley & Dunning 2000 (*Feeling "holier than thou"*); the actor–observer asymmetry (Jones & Nisbett 1971; Malle 2006 meta-analysis); with Batson's *moral hypocrisy* (Batson et al. 1997, 1999) as the construct origin. It is a **paired within-person contrast on a common severity scale**: for each matched act, the person rates how wrong it is when *they* do it (`severity_self`) and when *another* does it (`severity_other`), both on the same 0–10 scale. **Deliberately avoided:** Valdesolo & DeSteno's manipulation-based induction (an experimenter-staged asymmetry, not a within-person read) and every excluded paradigm — no Stapel, Gino, Ariely-priming, or ego-depletion (see build-and-validate.md exclusions).
+
+**Status.** H12a + H12c + the per-person `H_i` reveal quantity are BUILT (`analyze.py --hypocrisy-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-hypocrisy-log.json`, Python-only so parity stays green). H12b (discriminant) and the on-device `H_i` reveal are DEFERRED (§18.5, §18.6). The self–other judgment log is a **new light data-contract** (a matched pair of severity ratings per probe); real collection + its exact phrasing (avoid a leading "aren't others worse?") are runtime/design-gated and surfaced to Dave.
+
+### 18.1 Measurement primitive
+
+For person `i`, over their matched self–other judgment pairs, the **self–other asymmetry** is the mean signed gap:
+
+    delta_i(act) = severity_other(i, act) − severity_self(i, act)     # signed, on a common 0–10 scale
+    H_i = mean_act delta_i(act)          over acts with BOTH ratings present, ≥ 3 scorable pairs (§1.5 N=1)
+
+`H_i > 0` = harsher on others than on self (the self-serving / moral-superiority direction); `H_i < 0` = harsher on self (self-critical). `H_i` is a **signed facet**, never summed with a gap, calibration index, variability index, circle radius, protected set, or CoV price into one scalar (§13.5), nor pooled across branches.
+
+**Pairing / missing-data lock (the H12 analog of the §13.2 censoring lock).** A **declined judgment** — either side missing or non-numeric — makes `delta_i(act)` **undefined**, so the pair is **DROPPED**, never imputed to 0 (which would fabricate "no asymmetry"). The delta is the **signed** difference: harsher-on-self stays **NEGATIVE**, never clamped toward the self-serving direction. Asserted directly against the code by `check_h12_pairing_lock()`.
+
+### 18.2 H12a — asymmetry reliability (BUILT)
+
+The self–other asymmetry must be a stable trait, not occasion noise. Split each person's sessions odd/even, compute `H_i` on each half, and correlate across participants present in both halves:
+
+    r = pearson_i( H_i^{odd}, H_i^{even} )    over shared participants (≥ 3)
+    H12a supported  ⇔  lower 95% bootstrap CI of  r  ≥ 0.40
+
+Bootstrap: percentile method over paired `(H_i^{odd}, H_i^{even})`, pre-committed seed `20260510 + 19`. This mirrors the H10a / H11a split-half reliability construction exactly (`_odd_even_sessions` + `_pearson_r` + `_bootstrap_ci_r`), not R2a's wave-Jaccard.
+
+### 18.3 H12c — self-serving directional anchor (BUILT, directional — cohort validity check)
+
+The construct's defining prediction is directional: on average the cohort tilts self-serving (harsher on others than on self), the "holier than thou" / illusion-of-moral-superiority signature:
+
+    H12c supported  ⇔  lower 95% CI of  mean_i H_i  > 0   (one-sided)
+
+Seed `20260510 + 20`. This is a **cohort validity anchor** (does the instrument recover the established direction?), **NOT a per-person verdict** — an individual with `H_i < 0` is harsher on themselves, described as such and never scored as more or less moral (§18.4).
+
+### 18.4 Pairing lock, N=1, value-neutrality
+
+- **Pairing lock (load-bearing).** Per §18.1: a declined judgment drops the pair (never imputed to 0); the sign is preserved. `check_h12_pairing_lock()` asserts this against the code so a regression that starts imputing declines, or clamps harsher-on-self toward 0, is caught even if the fixture changes.
+- **N=1 interpretability.** `H_i` is a within-person mean over that person's ≥ 3 matched pairs — reveal-eligible for a single user with no cohort standardization ("you judge these acts about 1 point more harshly in others than in yourself"), contrast the cohort-only H12a / H12c statistics.
+- **Value-neutrality (load-bearing).** Neither direction is scored as better. Harsher-on-others is **not** ranked above harsher-on-self, nor vice versa: a self-critical person (`H_i < 0`) is not "more honest," and a self-serving one is not "more confident" — both are **described, never ranked**. The reveal states the magnitude and direction of the asymmetry and stops there. (This is why H12c is walled off as a *cohort* anchor, not a per-person target.)
+- **Cheap-talk / hypothetical caveat.** These are *judgments of hypothetical acts*, not behavior under stakes. `H_i` measures a **stated** judgment asymmetry; the reveal never claims the person would *act* on it. Behavioral validation (does a large `H_i` predict real self–other double standards?) is Phase-2 / IRB-gated and surfaced to Dave.
+
+### 18.5 H12b — discriminant validity (DEFERRED — cohort-coupled)
+
+The self–other asymmetry must not be a proxy for a person's stated–revealed **gap** or their **calibration error** (a general "knows-self-poorly" factor):
+
+    regress H_i on [ gap_i,  cal_error_i ]
+    H12b (discriminant) supported  ⇔  upper 95% CI of  R²  < 0.50
+
+**DEFERRED** because it couples to the cohort gap + calibration pipelines, exactly as the H9b / H10b / H11b / R2c discriminant halves do — the current increment stays isolated on its own fixture.
+
+### 18.6 What §18 deliberately does not compute
+
+- **No hypocrisy score / no pooling.** `H_i` is a single signed asymmetry; it is not summed with a gap, calibration index, variability index, circle radius, protected set, or CoV price into one scalar (§13.5), nor pooled across branches.
+- **No imputed declines.** A declined judgment is **dropped**, never scored 0 — asserted directly against the code by `check_h12_pairing_lock()` (the H12 analog of the §14.1 CoV-ceiling / |8.0| lock and `check_r2_censoring`).
+- **No per-person moral ranking.** Neither harsher-on-others nor harsher-on-self is scored as better; H12c is a cohort validity anchor, not an individual verdict (§18.4).
+- **No behavioral claim.** `H_i` is a stated judgment asymmetry; the reveal carries the hypothetical caveat and never asserts the person would act on the double standard (that is Phase-2).
+- **No on-device projection yet.** The `H_i` reveal is NOT in `poc-projection.js` this increment (Python-only, parity stays green); when added it changes **both** scorers under the §13.5/parity locks.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.
