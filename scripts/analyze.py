@@ -127,6 +127,22 @@ Implemented here:
   own (moral clarity OR rigid intolerance; each pole dual-read). A declined item drops,
   never imputed; a read below the item floor is suppressed. R6b (discriminant) and R6c
   (the stated–revealed meta-gap) deferred — cohort-coupled / κ-gated.
+- A3 moral-language channel — the coder + the κ gate (§21 of scoring.md,
+  h-a3-moral-language.md; a THIRD channel on values, distinct from the elicited-stated
+  inventory and revealed behavior). When --language-log is supplied (free-text
+  utterances + gold_foundations reference codes): a DETERMINISTIC MFD-style foundation
+  coder (v0.1 DRAFT `word*`-wildcard lexicon — care/fairness/loyalty/authority/sanctity/
+  liberty), Cohen's κ inter-rater validation of the coder vs. gold, and the
+  foundation_i(f) invocation-rate profile. THE BINDING GATE: the whole channel is
+  DESCRIPTIVE/EXPLORATORY-ONLY until κ ≥ 0.70 vs. REAL human gold (~200 codes, 50/domain
+  × 2 raters — Dave/human-gated); synthetic κ certifies only the machinery (promotable is
+  always False). Value-neutral (§21.4): the coder assigns foundation LABELS, never ranks
+  them, never emits a scalar score; more moral language is not better; fluency ≠ virtue;
+  declining to moralize is a Dancy particularist move, not a deficient zero. κ is a
+  coder-PAIR reliability statistic, never a person score (§13.5). NOT parity-gated BY
+  DESIGN — LLM coding is non-deterministic, deliberately outside the poc-projection ↔
+  analyze.py parity contract (§1.5). The framing ratio, the third ordering L_i + the
+  three S/R/L concordances (extending §13.4), and H-A3a/b/c are cohort/κ-gated, DEFERRED.
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -2449,6 +2465,210 @@ def compute_r6d_moral_objectivism_anchor(
     }
 
 
+# --- A3: the moral-language channel — the coder + the κ gate (scoring.md §21,
+# h-a3-moral-language.md; branch A3 of measurement-avenues.md). A THIRD channel on
+# values: what a person spontaneously MORALIZES about, in what moral vocabulary —
+# distinct from the elicited-stated inventory and from revealed behavior. This
+# increment builds the buildable KEYSTONE: a deterministic MFD-style foundation coder,
+# Cohen's κ inter-rater validation, the κ ≥ 0.70 gate, and the foundation_i(f) profile.
+# THE BINDING DISCIPLINE (§21.2/§1.5): the ENTIRE channel is DESCRIPTIVE/EXPLORATORY-ONLY
+# until the coder clears κ ≥ 0.70 against REAL human gold-standard coding (~200 codes,
+# 50/domain × 2 raters — labor, Dave/human-gated). Synthetic κ proves the MACHINERY, it
+# does NOT lift the real gate. Value-neutral with force (§21.4): the coder assigns
+# foundation LABELS, never ranks them, never emits a scalar "moral-language score"; more
+# moral language is NOT better (engagement OR grandstanding); fluency ≠ virtue. κ is a
+# CODER-PAIR reliability statistic, NEVER a person score (§13.5). NOT parity-gated by
+# design: LLM/language coding is non-deterministic, so it is deliberately OUTSIDE the
+# poc-projection.js ↔ analyze.py parity contract (§1.5/§3) — the first such branch.
+A3_KAPPA_GATE = 0.70   # Cohen's κ vs. gold-standard manual coding (§21.2; validity-threats.md)
+MFD_FOUNDATIONS = ("care", "fairness", "loyalty", "authority", "sanctity", "liberty")
+# v0.1 DRAFT MFD-style lexicon — the MFD `word*` WILDCARD convention (prefix match on
+# tokens). A researcher-imposed DRAFT (surfaced to Dave, like the H11 counterparty
+# distance map): the production instrument is the validated MFD 2.0 / eMFD, coded by an
+# LLM pinned at temperature=0 and κ-validated against human gold. Its KNOWN over-matching
+# (e.g. the `care` stem catching "career") is exactly what the κ ≥ 0.70 gate exists to
+# catch — a feature of the honest ceiling, not a bug to hide (§21.1/§21.2).
+MFD_LEXICON_V0_1 = {
+    "care":      ("harm", "hurt", "suffer", "cruel", "care", "protect", "compassion", "victim", "kill", "abuse"),
+    "fairness":  ("fair", "unfair", "equal", "cheat", "justice", "rights", "deserv", "unjust", "bias"),
+    "loyalty":   ("loyal", "betray", "team", "traitor", "patriot", "solidarity", "belong", "desert"),
+    "authority": ("respect", "obey", "duty", "authorit", "defian", "tradition", "hierarch", "disobey"),
+    "sanctity":  ("pure", "sacred", "disgust", "degrad", "holy", "defile", "unclean", "sanctit"),
+    "liberty":   ("free", "freedom", "oppress", "coerce", "libert", "tyran", "autonom", "subjugat"),
+}
+
+
+def _tokenize(text: str) -> list[str]:
+    """Lowercase word tokens (maximal alphanumeric runs). Pure-stdlib, deterministic —
+    no regex, no external NLP — so the DRAFT coder is byte-reproducible for the synthetic
+    parity test. (The REAL coder is a non-deterministic LLM, κ-gated not parity-gated;
+    §21.1/§1.5.)"""
+    toks: list[str] = []
+    cur: list[str] = []
+    for ch in text.lower():
+        if ch.isalnum():
+            cur.append(ch)
+        elif cur:
+            toks.append("".join(cur))
+            cur = []
+    if cur:
+        toks.append("".join(cur))
+    return toks
+
+
+def code_foundations(text: str, lexicon: dict[str, tuple] = MFD_LEXICON_V0_1) -> set[str]:
+    """Deterministic MFD-style foundation coder (§21.1): a foundation is INVOKED iff any
+    token PREFIX-matches any of its lexicon stems (the MFD `word*` wildcard convention).
+    Returns the SET of invoked foundations — multi-label: a text may invoke several, or
+    NONE (declining to moralize, or speaking in concrete-relational terms, is a Dancy
+    particularist move — a legitimate style, not a deficient "zero"; §21.4). VALUE-NEUTRAL:
+    it assigns LABELS, never ranks the foundations, never emits a scalar score (§21.4).
+    A DRAFT stand-in (v0.1) whose known over-/under-matching is exactly what the κ ≥ 0.70
+    human-gold gate exists to catch (§21.2)."""
+    toks = _tokenize(text)
+    invoked: set[str] = set()
+    for foundation, stems in lexicon.items():
+        if any(tok.startswith(stem) for tok in toks for stem in stems):
+            invoked.add(foundation)
+    return invoked
+
+
+def cohens_kappa(
+    a_labels: list[set], b_labels: list[set], categories: tuple = MFD_FOUNDATIONS
+) -> float | None:
+    """Cohen's κ between two coders over a corpus (§21.2), computed on the binary
+    (utterance × foundation) present/absent judgments — the standard multi-label MFD
+    reliability operationalization. a_labels[i] / b_labels[i] are the SETS of foundations
+    coder A / coder B assigned to utterance i.  κ = (p_o − p_e) / (1 − p_e). Returns None
+    when undefined: mismatched/empty corpus, or p_e == 1 (no variance — every cell agrees
+    trivially, so there is nothing for chance-correction to correct). κ is a property of
+    the CODER PAIR (inter-rater reliability) — it is NEVER attached to a participant as a
+    person score (§21.4, §13.5)."""
+    if len(a_labels) != len(b_labels) or not a_labels:
+        return None
+    n = 0
+    a_present = b_present = agree = 0
+    for sa, sb in zip(a_labels, b_labels):
+        for c in categories:
+            ia = c in sa
+            ib = c in sb
+            n += 1
+            if ia:
+                a_present += 1
+            if ib:
+                b_present += 1
+            if ia == ib:
+                agree += 1
+    if n == 0:
+        return None
+    p_o = agree / n
+    pa1 = a_present / n
+    pb1 = b_present / n
+    p_e = pa1 * pb1 + (1.0 - pa1) * (1.0 - pb1)
+    if 1.0 - p_e == 0.0:
+        return None
+    return (p_o - p_e) / (1.0 - p_e)
+
+
+def _utterance_text(r: dict) -> str | None:
+    """The free-text of one utterance, or None if absent/blank. A blank/missing text is
+    MISSING DATA — dropped, never coded as a zero-foundation "declined" (§1.5). (Contrast:
+    a NON-blank text with no moral words IS a real zero-foundation particularist utterance
+    and counts in the profile denominator; §21.4.)"""
+    t = r.get("text")
+    if not isinstance(t, str):
+        return None
+    t = t.strip()
+    return t or None
+
+
+def code_corpus(
+    records: list[dict], lexicon: dict[str, tuple] = MFD_LEXICON_V0_1
+) -> tuple[list[set], list[set]]:
+    """Run the deterministic coder over every scorable utterance, returning parallel
+    (coder set, gold set) lists — the shared input to κ (validation) and the profile.
+    Gold = the `gold_foundations` field: the SYNTHETIC stand-in for ~200 human gold codes
+    (§21.2). Blank/missing-text records are dropped from BOTH lists together (§1.5)."""
+    coder: list[set] = []
+    gold: list[set] = []
+    for r in records:
+        text = _utterance_text(r)
+        if text is None:
+            continue
+        coder.append(code_foundations(text, lexicon))
+        g = r.get("gold_foundations")
+        gold.append(set(g) if isinstance(g, list) else set())
+    return coder, gold
+
+
+def compute_a3_coding_kappa(
+    records: list[dict], lexicon: dict[str, tuple] = MFD_LEXICON_V0_1
+) -> dict[str, Any] | None:
+    """A3 coding-reliability GATE (§21.2): Cohen's κ between the automated coder and the
+    gold-standard codes. The BINDING prerequisite — until κ ≥ A3_KAPPA_GATE (0.70) against
+    REAL human gold, the ENTIRE moral-language channel is descriptive/exploratory-only and
+    promotes to nothing primary (§21.5/§1.5). On SYNTHETIC gold this certifies the
+    MACHINERY; it does NOT lift the real gate (real κ needs ~200 human codes, 50/domain ×
+    2 raters — labor, not engineering). Returns κ + the 2×2 marginals (transparency — κ is
+    never a bare scalar), and the gate flags: `kappa_met_synthetic` (does the machinery
+    clear 0.70 on THIS fixture) vs. `promotable`, which is ALWAYS False here — real
+    promotion is Dave/human-gated (§21.2)."""
+    coder, gold = code_corpus(records, lexicon)
+    if not coder:
+        return None
+    k = cohens_kappa(coder, gold)
+    n_cells = len(coder) * len(MFD_FOUNDATIONS)
+    coder_present = sum(1 for s in coder for c in MFD_FOUNDATIONS if c in s)
+    gold_present = sum(1 for s in gold for c in MFD_FOUNDATIONS if c in s)
+    agree_cells = sum(
+        1 for sa, sb in zip(coder, gold) for c in MFD_FOUNDATIONS if (c in sa) == (c in sb)
+    )
+    met_synth = k is not None and k >= A3_KAPPA_GATE
+    return {
+        "kappa": k,
+        "kappa_gate": A3_KAPPA_GATE,
+        "n_utterances": len(coder),
+        "n_cells": n_cells,
+        "coder_present": coder_present,
+        "gold_present": gold_present,
+        "agree_cells": agree_cells,
+        "kappa_met_synthetic": met_synth,
+        # The WALL: real promotion needs κ ≥ 0.70 vs. HUMAN gold; synthetic κ never lifts it.
+        "promotable": False,
+        "descriptive_only": True,
+    }
+
+
+def foundation_profile_by_user(
+    records: list[dict], lexicon: dict[str, tuple] = MFD_LEXICON_V0_1
+) -> dict[str, dict[str, float]]:
+    """foundation_i(f) (§21.3): per user, the RATE at which each moral foundation is
+    invoked across their scorable utterances = (# utterances invoking f) / (# utterances).
+    A within-person DESCRIPTIVE profile — a rate vector over the six foundations, VALUE-
+    NEUTRAL: NEVER summed into a scalar "morality score", NEVER ranking the foundations
+    (§21.4). Volume-normalized (a rate, not a count) so verbal fluency / output volume is
+    not read as virtue (§21.4, the language≠value confound). A zero-foundation utterance
+    (non-blank text, no moral words) counts in the denominator — the particularist is
+    DESCRIBED as using less moral language, never scored deficient. Descriptive-only until
+    the κ gate is met against human gold (§21.2)."""
+    counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    totals: dict[str, int] = defaultdict(int)
+    for r in records:
+        user = r.get("user")
+        if user is None:
+            continue
+        text = _utterance_text(r)
+        if text is None:
+            continue
+        totals[user] += 1
+        for f in code_foundations(text, lexicon):
+            counts[user][f] += 1
+    out: dict[str, dict[str, float]] = {}
+    for user, total in totals.items():
+        out[user] = {f: counts[user][f] / total for f in MFD_FOUNDATIONS}
+    return out
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -2889,6 +3109,74 @@ def render_r6_result(
     return "\n".join(lines)
 
 
+def render_a3_result(
+    kappa: dict[str, Any] | None,
+    profile: dict[str, dict[str, float]],
+) -> str:
+    """A3 moral-language channel — the coder + the κ gate (scoring.md §21). A THIRD
+    channel on values (what a person spontaneously moralizes about, in what moral
+    vocabulary), distinct from the elicited-stated inventory and revealed behavior. The
+    reveal is DESCRIPTIVE and value-NEUTRAL: it names which foundations a person's
+    language invokes and at what rate — never ranks the foundations, never scores "more
+    moral language" as better (genuine engagement OR grandstanding), never reads fluency
+    as virtue (§21.4). The ENTIRE channel is walled DESCRIPTIVE/EXPLORATORY-ONLY until the
+    coder clears κ ≥ 0.70 against REAL human gold (§21.2) — the synthetic κ below certifies
+    only the machinery."""
+    if kappa is None and not profile:
+        return (
+            "(A3: insufficient data — supply --language-log with free-text utterances "
+            "carrying gold_foundations reference codes)"
+        )
+    lines = ["A3 (moral-language channel — the MFD coder + the κ gate, DESCRIPTIVE-ONLY until human κ):"]
+    if kappa is not None:
+        k = kappa["kappa"]
+        k_str = "undefined" if k is None else f"{k:+.3f}"
+        gate_glyph = "✓" if kappa["kappa_met_synthetic"] else "✗"
+        lines.append(
+            f"  Coding reliability κ (Cohen, coder vs. gold over {kappa['n_utterances']} utterance(s) "
+            f"× {len(MFD_FOUNDATIONS)} foundations = {kappa['n_cells']} binary cells): {k_str}"
+        )
+        lines.append(
+            f"     agreement {kappa['agree_cells']}/{kappa['n_cells']} cells; coder-present {kappa['coder_present']}, "
+            f"gold-present {kappa['gold_present']} (marginals shown — κ is never a bare scalar)"
+        )
+        lines.append(
+            f"     κ ≥ {kappa['kappa_gate']:.2f} gate on THIS synthetic fixture: {gate_glyph}  "
+            f"— certifies the MACHINERY only; promotable = {kappa['promotable']} "
+            f"(real κ needs ~200 HUMAN gold codes, 50/domain × 2 raters — Dave/human-gated)"
+        )
+    else:
+        lines.append("  Coding reliability κ: insufficient data (need ≥1 scorable utterance with gold codes)")
+    if profile:
+        # Cohort mean foundation rates, in CANONICAL MFD order — deliberately NOT sorted by
+        # rate (sorting would imply a ranking; foundations are value-neutral, §21.4).
+        n = len(profile)
+        means = {
+            f: sum(p.get(f, 0.0) for p in profile.values()) / n for f in MFD_FOUNDATIONS
+        }
+        rate_str = ", ".join(f"{f} {means[f]:.2f}" for f in MFD_FOUNDATIONS)
+        lines.append(
+            f"  foundation_i(f) profile — cohort mean invocation rate over {n} participant(s), "
+            f"canonical order (NOT ranked):"
+        )
+        lines.append(f"     {rate_str}")
+        lines.append(
+            "     (a volume-normalized RATE, never pooled into a scalar; a low rate = uses less "
+            "moral language, a Dancy particularist style, not a deficit — §21.4)"
+        )
+    lines.append(
+        "  Value-neutral / language ≠ value: more moral talk is NOT better (engagement OR "
+        "self-presentational grandstanding, Tosi & Warmke); verbal fluency must never read as "
+        "virtue; declining to moralize is a legitimate particularist move (§21.4). κ is a coder-"
+        "pair reliability statistic, NEVER a person score (§13.5). NOT parity-gated by design — "
+        "LLM coding is non-deterministic, deliberately outside the poc-projection parity contract "
+        "(§1.5). Deferred (cohort/κ-gated): the framing ratio, the third ordering L_i + the three "
+        "S/R/L concordances (extending §13.4), and H-A3a/b/c (reliability / distinctness / the "
+        "talk–walk grandstanding gap); see build-and-validate.md."
+    )
+    return "\n".join(lines)
+
+
 def render_test_retest_result(
     name: str, threshold_text: str, results: dict[str, dict[str, Any]]
 ) -> str:
@@ -3066,6 +3354,12 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional metaethical-objectivism log (per-item objectivism ratings, moral + taste claim types) for R6 (§20).",
+    )
+    parser.add_argument(
+        "--language-log",
+        type=Path,
+        default=None,
+        help="Optional moral-language log (free-text utterances + gold_foundations codes) for the A3 coder + κ gate (§21).",
     )
     parser.add_argument(
         "--min-items",
@@ -3451,6 +3745,29 @@ def main() -> int:
         r6a_result = compute_r6a_reliability(objectivism_records)
         r6d_result = compute_r6d_moral_objectivism_anchor(objectivism_records)
 
+    # --- A3 moral-language channel: the coder + the κ gate (§21). Builds the buildable
+    # KEYSTONE — a deterministic MFD-style foundation coder, Cohen's κ inter-rater
+    # validation, and the foundation_i(f) profile — all walled DESCRIPTIVE-ONLY until the
+    # coder clears κ ≥ 0.70 against REAL human gold (§21.2). NOT parity-gated BY DESIGN:
+    # LLM/language coding is non-deterministic, deliberately outside the poc-projection ↔
+    # analyze.py parity contract (§1.5/§3) — the first branch out of parity scope on
+    # purpose. The framing ratio, the third ordering L_i + the three concordances, and
+    # H-A3a/b/c are cohort/κ-gated and DEFERRED (see build-and-validate.md).
+    a3_kappa_result: dict[str, Any] | None = None
+    a3_profile: dict[str, dict[str, float]] = {}
+    if args.language_log:
+        try:
+            with args.language_log.open() as f:
+                language_records = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading language log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(language_records, list):
+            print("ERROR: language log must be a JSON array", file=sys.stderr)
+            return 2
+        a3_kappa_result = compute_a3_coding_kappa(language_records)
+        a3_profile = foundation_profile_by_user(language_records)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -3650,6 +3967,25 @@ def main() -> int:
             r6_block["mean_taste_objectivism"] = _nan_to_none(r6_mean_taste)
             hypotheses["R6"] = r6_block
 
+        a3_block: dict[str, Any] = {}
+        if a3_kappa_result is not None:
+            # The κ gate + 2×2 marginals + the descriptive-only wall (promotable=False).
+            a3_block["kappa"] = a3_kappa_result
+        if a3_profile:
+            n_a3 = len(a3_profile)
+            a3_block["foundation_profile"] = {
+                "profile_n": n_a3,
+                # Per-foundation cohort mean invocation RATE, exposed SEPARATELY in canonical
+                # MFD order — NO pooled "moral_language_score"/"foundation_score" scalar, and
+                # the foundations are never ranked (§21.4, value-neutral).
+                "cohort_mean_rates": {
+                    f: sum(p.get(f, 0.0) for p in a3_profile.values()) / n_a3
+                    for f in MFD_FOUNDATIONS
+                },
+            }
+        if a3_block:
+            hypotheses["A3"] = a3_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -3752,6 +4088,9 @@ def main() -> int:
                 r6a_result, r6d_result, r6_profile_n,
                 r6_mean_moral, r6_mean_taste,
             ))
+        if a3_kappa_result is not None or a3_profile:
+            print()
+            print(render_a3_result(a3_kappa_result, a3_profile))
 
     return 0
 

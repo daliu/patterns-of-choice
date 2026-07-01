@@ -1,0 +1,176 @@
+[
+  {
+    "user": "a3-u01",
+    "session": "a3-u01-s1",
+    "prompt_id": "p1",
+    "text": "Someone got hurt and no one showed compassion.",
+    "gold_foundations": [
+      "care"
+    ]
+  },
+  {
+    "user": "a3-u01",
+    "session": "a3-u01-s1",
+    "prompt_id": "p2",
+    "text": "That was completely unfair and a cheat.",
+    "gold_foundations": [
+      "fairness"
+    ]
+  },
+  {
+    "user": "a3-u01",
+    "session": "a3-u01-s1",
+    "prompt_id": "p3",
+    "text": "The cruel betrayal was deeply unfair.",
+    "gold_foundations": [
+      "care",
+      "loyalty",
+      "fairness"
+    ]
+  },
+  {
+    "user": "a3-u01",
+    "session": "a3-u01-s1",
+    "prompt_id": "p4",
+    "text": "We had lunch by the river at noon.",
+    "gold_foundations": []
+  },
+  {
+    "user": "a3-u02",
+    "session": "a3-u02-s1",
+    "prompt_id": "p1",
+    "text": "The cruel abuse left a victim behind.",
+    "gold_foundations": [
+      "care"
+    ]
+  },
+  {
+    "user": "a3-u02",
+    "session": "a3-u02-s1",
+    "prompt_id": "p2",
+    "text": "He betrayed his own team.",
+    "gold_foundations": [
+      "loyalty"
+    ]
+  },
+  {
+    "user": "a3-u02",
+    "session": "a3-u02-s1",
+    "prompt_id": "p3",
+    "text": "We must respect tradition and our duty.",
+    "gold_foundations": [
+      "authority"
+    ]
+  },
+  {
+    "user": "a3-u02",
+    "session": "a3-u02-s1",
+    "prompt_id": "p4",
+    "text": "She loved her career today.",
+    "gold_foundations": []
+  },
+  {
+    "user": "a3-u03",
+    "session": "a3-u03-s1",
+    "prompt_id": "p1",
+    "text": "Everyone has equal rights here.",
+    "gold_foundations": [
+      "fairness"
+    ]
+  },
+  {
+    "user": "a3-u03",
+    "session": "a3-u03-s1",
+    "prompt_id": "p2",
+    "text": "Real patriots never desert their own.",
+    "gold_foundations": [
+      "loyalty"
+    ]
+  },
+  {
+    "user": "a3-u03",
+    "session": "a3-u03-s1",
+    "prompt_id": "p3",
+    "text": "It felt sacred and pure.",
+    "gold_foundations": [
+      "sanctity"
+    ]
+  },
+  {
+    "user": "a3-u03",
+    "session": "a3-u03-s1",
+    "prompt_id": "p4",
+    "text": "The whistleblower exposed the cover up.",
+    "gold_foundations": [
+      "fairness"
+    ]
+  },
+  {
+    "user": "a3-u04",
+    "session": "a3-u04-s1",
+    "prompt_id": "p1",
+    "text": "Disobey the hierarchy and face defiance.",
+    "gold_foundations": [
+      "authority"
+    ]
+  },
+  {
+    "user": "a3-u04",
+    "session": "a3-u04-s1",
+    "prompt_id": "p2",
+    "text": "The holy rite must not be defiled.",
+    "gold_foundations": [
+      "sanctity"
+    ]
+  },
+  {
+    "user": "a3-u04",
+    "session": "a3-u04-s1",
+    "prompt_id": "p3",
+    "text": "People should be free from tyranny.",
+    "gold_foundations": [
+      "liberty"
+    ]
+  },
+  {
+    "user": "a3-u04",
+    "session": "a3-u04-s1",
+    "prompt_id": "p4",
+    "text": "They showed great kindness to a stranger.",
+    "gold_foundations": [
+      "care"
+    ]
+  },
+  {
+    "user": "a3-u05",
+    "session": "a3-u05-s1",
+    "prompt_id": "p1",
+    "text": "No one may coerce or subjugate them.",
+    "gold_foundations": [
+      "liberty"
+    ]
+  },
+  {
+    "user": "a3-u05",
+    "session": "a3-u05-s1",
+    "prompt_id": "p2",
+    "text": "Freedom means autonomy.",
+    "gold_foundations": [
+      "liberty"
+    ]
+  },
+  {
+    "user": "a3-u05",
+    "session": "a3-u05-s1",
+    "prompt_id": "p3",
+    "text": "The meeting is scheduled for Tuesday.",
+    "gold_foundations": []
+  },
+  {
+    "user": "a3-u05",
+    "session": "a3-u05-s1",
+    "prompt_id": "p4",
+    "text": "   ",
+    "gold_foundations": []
+  }
+]

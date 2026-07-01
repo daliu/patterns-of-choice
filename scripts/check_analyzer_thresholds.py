@@ -76,6 +76,20 @@ Expected outcomes on the current synthetic fixtures:
   signatures, moral and taste route to DISJOINT means (never a moral/taste blend), a
   declined item drops (never imputed to 0), and a claim-type below the item floor is
   suppressed.
+- A3 (moral-language channel — the coder + the κ gate): the deterministic MFD-style
+  foundation coder clears the Cohen's-κ ≥ 0.70 reliability gate against gold on the
+  synthetic fixture (kappa_met_synthetic = True, κ ≈ 0.90), certifying the MACHINERY —
+  while the descriptive-only WALL holds (promotable = False; real promotion needs κ vs.
+  ~200 HUMAN gold codes), and the foundation_i(f) profile exposes all six foundations
+  SEPARATELY as a value-neutral rate vector (no pooled 'moral-language score'). Plus the
+  coder/κ discipline regression (check_a3_kappa_lock): Cohen's κ is correct on hand 2×2
+  cases (perfect → 1.0, TP9/TN9/FP1/FN1 → 0.8, no-variance → None), the coder is
+  deterministic and value-neutral (the documented 'career'→care MFD-wildcard over-match
+  reproduces — the living reason the gate exists), the gate is TWO-SIDED (a low-agreement
+  corpus does NOT clear 0.70), and §1.5 holds (a blank text drops from κ and the profile
+  denominator; a non-blank zero-foundation utterance counts — the particularist is
+  described, never scored deficient). κ is a coder-pair statistic, never a person score.
+  NOT parity-gated by design (LLM coding is non-deterministic; §1.5).
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -109,6 +123,7 @@ EXPECTATIONS = {
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True}},
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True}},
+    "A3": {"kind": "a3", "kappa_met": True},
 }
 
 
@@ -132,6 +147,7 @@ def run_analyzer() -> dict:
         "--hypocrisy-log", str(FIXTURES / "sample-hypocrisy-log.json"),
         "--identity-log", str(FIXTURES / "sample-identity-centrality-log.json"),
         "--objectivism-log", str(FIXTURES / "sample-objectivism-log.json"),
+        "--language-log", str(FIXTURES / "sample-language-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -439,6 +455,72 @@ def check_r6(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
         )
     parts.append(f"profile×{payload['profile_n']}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
+
+
+def check_a3(hid: str, payload: dict, kappa_met: bool) -> tuple[bool, str]:
+    """A3 moral-language channel — the coder + the κ gate (§21). Assert the coding-
+    reliability κ hit its expected gate outcome AND that the descriptive-only WALL holds
+    in the shape of the payload: even when synthetic κ clears 0.70 (certifying the
+    MACHINERY), `promotable` must be False and `descriptive_only` True — real promotion
+    needs κ vs. ~200 HUMAN gold codes (§21.2). Assert the §21.4 value-neutrality
+    discipline structurally: NO pooled 'moral-language score' scalar anywhere, and the
+    foundation_i(f) profile exposes all six foundations SEPARATELY as a rate vector
+    (never one number, never ranked). κ carries its integer marginals (never a bare
+    scalar) and is a coder-PAIR statistic, never a person score (§13.5). The Cohen's-κ
+    math, coder determinism, the two-sided gate, and the §1.5 blank-drop are asserted
+    directly against the code in check_a3_kappa_lock()."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    pooled_keys = {"moral_language_score", "foundation_score", "mft_score",
+                   "language_score", "moralization_score", "a3_score"}
+    present_pooled = pooled_keys & set(payload)
+    if present_pooled:
+        return False, (
+            f"{hid}: pooled moral-language scalar(s) present {sorted(present_pooled)} "
+            f"— the coder assigns foundation LABELS, never a score; more moral language "
+            f"is not better (§21.4)"
+        )
+    kap = payload.get("kappa")
+    if not isinstance(kap, dict):
+        return False, f"{hid}: missing the coding-reliability κ block"
+    if kap.get("kappa_met_synthetic") != kappa_met:
+        return False, (
+            f"{hid}: kappa_met_synthetic = {kap.get('kappa_met_synthetic')!r}, "
+            f"expected {kappa_met!r}"
+        )
+    k = kap.get("kappa")
+    gate = kap.get("kappa_gate", 0.70)
+    if kappa_met and not (isinstance(k, (int, float)) and k >= gate):
+        return False, f"{hid}: κ = {k!r} does not clear the gate {gate!r}"
+    # THE WALL: synthetic κ certifies the machinery only — it never lifts the real gate.
+    if kap.get("promotable") is not False or kap.get("descriptive_only") is not True:
+        return False, (
+            f"{hid}: the descriptive-only wall must hold even when synthetic κ clears "
+            f"(promotable={kap.get('promotable')!r}, "
+            f"descriptive_only={kap.get('descriptive_only')!r}) — real promotion is "
+            f"human-κ-gated (§21.2)"
+        )
+    # κ must carry its integer marginals — never a bare scalar dressed up as reliability.
+    for m in ("n_utterances", "coder_present", "gold_present", "agree_cells"):
+        if m not in kap:
+            return False, f"{hid}: κ block missing marginal '{m}' (κ must not be a bare scalar)"
+    prof = payload.get("foundation_profile")
+    if not isinstance(prof, dict) or prof.get("profile_n", 0) < 1:
+        pn = prof.get("profile_n") if isinstance(prof, dict) else None
+        return False, f"{hid}: no foundation_i(f) profile (profile_n={pn})"
+    rates = prof.get("cohort_mean_rates")
+    expected_foundations = {"care", "fairness", "loyalty", "authority", "sanctity", "liberty"}
+    if not isinstance(rates, dict) or set(rates) != expected_foundations:
+        got = sorted(rates) if isinstance(rates, dict) else rates
+        return False, (
+            f"{hid}: the foundation profile must expose all six foundations SEPARATELY "
+            f"(got {got}) — never pooled, never ranked (§21.4)"
+        )
+    glyph = "✓" if kappa_met else "✗"
+    return True, (
+        f"{hid}: {glyph} κ={k:.3f} (gate {glyph}, promotable={kap.get('promotable')}, "
+        f"descriptive_only), foundation profile×{prof['profile_n']} (6 foundations separate)"
+    )
 
 
 def check_h9_censoring() -> tuple[bool, list[str]]:
@@ -832,6 +914,81 @@ def check_r6_no_pool() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_a3_kappa_lock() -> tuple[bool, list[str]]:
+    """The A3 coder + κ discipline (§21), asserted directly against the code so a
+    regression is caught even if the fixture is later changed:
+      (i)   Cohen's κ is correct on known 2×2 cases — perfect agreement → 1.0; a hand
+            TP9/TN9/FP1/FN1 → 0.8; TP8/TN8/FP2/FN2 → 0.6; a no-variance corpus → None
+            (κ is UNDEFINED when one rater never varies, not a fake 1.0);
+      (ii)  the coder is DETERMINISTIC and value-NEUTRAL — same text → same set (twice),
+            it returns a LABEL SET not a scalar, and the documented MFD-wildcard over-
+            match ('career' → care) reproduces (the living reason the human-κ gate exists);
+      (iii) the gate is TWO-SIDED — a high-agreement corpus clears 0.70, a low-agreement
+            one does NOT, and neither is ever `promotable` (real gold is human-gated);
+      (iv)  §1.5 missing-data — a blank/None text DROPS from the profile denominator,
+            while a NON-blank zero-foundation utterance COUNTS (the particularist who
+            writes but doesn't moralize is DESCRIBED, never scored deficient, §21.4);
+      (v)   foundation_i(f) is a RATE vector over all six foundations, never pooled."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    # (i) Cohen's κ on hand cases. k08/k06 use a single "care" category so the 2×2 is exact.
+    perfect = A.cohens_kappa([{"care"}, set(), {"care"}], [{"care"}, set(), {"care"}])
+    k08_a = [{"care"}] * 9 + [set()] * 9 + [{"care"}] * 1 + [set()] * 1
+    k08_b = [{"care"}] * 9 + [set()] * 9 + [set()] * 1 + [{"care"}] * 1
+    k08 = A.cohens_kappa(k08_a, k08_b, categories=("care",))
+    k06_a = [{"care"}] * 8 + [set()] * 8 + [{"care"}] * 2 + [set()] * 2
+    k06_b = [{"care"}] * 8 + [set()] * 8 + [set()] * 2 + [{"care"}] * 2
+    k06 = A.cohens_kappa(k06_a, k06_b, categories=("care",))
+    novar = A.cohens_kappa([set(), set()], [set(), set()], categories=("care",))
+    # (iii) two-sided gate on tiny corpora — hi: gold matches the coder; lo: gold is wrong.
+    hi = [{"user": "u", "text": "Someone got hurt.", "gold_foundations": ["care"]},
+          {"user": "u", "text": "That was unfair.", "gold_foundations": ["fairness"]},
+          {"user": "u", "text": "He betrayed his team.", "gold_foundations": ["loyalty"]}]
+    lo = [{"user": "u", "text": "Someone got hurt.", "gold_foundations": ["liberty"]},
+          {"user": "u", "text": "That was unfair.", "gold_foundations": ["sanctity"]},
+          {"user": "u", "text": "He betrayed his team.", "gold_foundations": ["authority"]}]
+    hi_k = A.compute_a3_coding_kappa(hi)
+    lo_k = A.compute_a3_coding_kappa(lo)
+    # (iv) §1.5 — isolate each behavior in its own corpus.
+    #   blank DROPS: 1 care-utterance + 1 blank → denominator 1, care rate 1.0 (0.5 if blank counted).
+    prof_blank = A.foundation_profile_by_user([
+        {"user": "zb", "text": "Someone got hurt.", "gold_foundations": ["care"]},
+        {"user": "zb", "text": "   ", "gold_foundations": []},
+    ])
+    #   non-blank zero COUNTS: 1 care-utterance + 1 zero-foundation → denominator 2, care rate 0.5 (1.0 if dropped).
+    prof_zero = A.foundation_profile_by_user([
+        {"user": "zz", "text": "Someone got hurt.", "gold_foundations": ["care"]},
+        {"user": "zz", "text": "We had lunch by the river.", "gold_foundations": []},
+    ])
+    checks = [
+        ("Cohen's κ: perfect agreement → 1.0", perfect == 1.0),
+        ("Cohen's κ: hand TP9/TN9/FP1/FN1 → 0.8", isinstance(k08, float) and abs(k08 - 0.8) < 1e-9),
+        ("Cohen's κ: hand TP8/TN8/FP2/FN2 → 0.6", isinstance(k06, float) and abs(k06 - 0.6) < 1e-9),
+        ("Cohen's κ: no-variance corpus → None (undefined, not a fake 1.0)", novar is None),
+        ("the coder is DETERMINISTIC (same text → same set twice)",
+         A.code_foundations("That was unfair and cruel.") == A.code_foundations("That was unfair and cruel.")),
+        ("the coder returns a LABEL SET, never a scalar (value-neutral)",
+         isinstance(A.code_foundations("That was unfair."), set)),
+        ("the documented MFD-wildcard over-match reproduces ('career' → care)",
+         A.code_foundations("She loved her career.") == {"care"}),
+        ("the gate CLEARS on a high-agreement corpus (κ ≥ 0.70)", hi_k["kappa_met_synthetic"] is True),
+        ("the gate HOLDS on a low-agreement corpus (κ < 0.70)", lo_k["kappa_met_synthetic"] is False),
+        ("neither corpus is ever promotable (real promotion is human-κ-gated)",
+         hi_k["promotable"] is False and lo_k["promotable"] is False),
+        ("§1.5: a blank text DROPS from the denominator (care rate 1.0, not 0.5)",
+         abs(prof_blank["zb"]["care"] - 1.0) < 1e-9),
+        ("a non-blank zero-foundation utterance COUNTS (care rate 0.5, not 1.0 — particularist described)",
+         abs(prof_zero["zz"]["care"] - 0.5) < 1e-9),
+        ("foundation_i(f) is a RATE vector over all six foundations, never pooled",
+         set(prof_zero["zz"]) == set(A.MFD_FOUNDATIONS)),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  a3-kappa: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -887,6 +1044,8 @@ def main() -> int:
             ok, msg = check_r1(hid, payload, spec["sub_met"])
         elif spec["kind"] == "r6":
             ok, msg = check_r6(hid, payload, spec["sub_met"])
+        elif spec["kind"] == "a3":
+            ok, msg = check_a3(hid, payload, spec["kappa_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -939,6 +1098,12 @@ def main() -> int:
     for m in r6pool_msgs:
         print(m)
     if not r6pool_ok:
+        all_pass = False
+
+    a3lock_ok, a3lock_msgs = check_a3_kappa_lock()
+    for m in a3lock_msgs:
+        print(m)
+    if not a3lock_ok:
         all_pass = False
 
     if all_pass:

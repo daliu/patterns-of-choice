@@ -882,6 +882,68 @@ Seed `20260510 + 24`. `delta_i` is a **within-scale within-subject contrast** (b
 
 ---
 
+## 21. A3 — the moral-language channel: the coder + the κ gate (PROPOSED — pending DECISIONS §26 lock)
+
+> **Numbering.** This is **sequential §21** in scoring.md (the running build order §14 H9 … §20 R6, §21 A3). The design doc `h-a3-moral-language.md` refers to a *notional* §20 for this channel; that collides with sequential §20 = R6, so A3 takes the next sequential slot. The DECISIONS lock is proposed as **§26** (R6 was §25).
+
+A3 opens a **third channel on values**, orthogonal to the two the instrument already reads. Channel one is the **elicited/stated** inventory (what a person says they value when asked — the probes, card-sort, R1/R6 self-reports). Channel two is the **revealed** signature (what their choices, prices, and censoring behavior show — the ladders, H10–H12, R2). A3 is the **spontaneous** channel: *what a person moralizes about unprompted, and in what moral vocabulary* — which of the six Moral Foundations (Haidt & Graham; care / fairness / loyalty / authority / sanctity / liberty) their free-text language actually invokes. It is **foundational infrastructure**: the deferred R3/R4/R5 branches all draw on this same coded corpus, so the coder + its reliability gate are built first.
+
+**The binding discipline is the κ gate (§21.2), not parity.** Language/LLM coding is **non-deterministic** by nature, so A3 is — **deliberately, as the first branch to do so** (`h-a3-moral-language.md` §1.5/§3/Q4) — placed **OUTSIDE** the `poc-projection.js` ↔ `analyze.py` parity contract. There is no on-device language reveal; A3 is Python-only and parity stays trivially green. In parity's place stands a stricter gate: **inter-rater reliability** (Cohen's κ) against gold-standard manual coding. The coder shipped this increment is a **byte-deterministic MFD-lexicon v0.1 DRAFT** stand-in (like H11's distance map): its *known* over- and under-matching is not a bug to hide but the honest **illustration of why the κ gate exists** — the real coder is an LLM pinned at temperature 0, and neither coder is trusted at scale until it clears κ ≥ 0.70 against **human** gold.
+
+### 21.1 Measurement primitive
+
+A **moral-language log**: each record is one free-text utterance `{user, session, prompt_id, text, gold_foundations}`. The coder reads `text` → a **set** of invoked foundations:
+
+    tokens        = _tokenize(text)                # pure-stdlib, lowercased alphanumeric runs, no regex
+    code(text)    = { f ∈ FOUNDATIONS : some token PREFIX-matches some stem of f }   # the MFD `word*` wildcard
+
+`code_foundations` is **multi-label** (an utterance may invoke zero, one, or several foundations) and **byte-deterministic** (same text → same set, always). `gold_foundations` is the **gold-standard reference coding** — in the fixture, a SYNTHETIC stand-in for the ~200 human manual codes the real κ needs (§21.2). `foundation_i(f)` is a per-user, volume-normalized **rate** (§21.3), never a count that rewards verbosity.
+
+**The κ operationalization.** Cohen's κ is computed over the binary **(utterance × 6-foundation)** present/absent cells:
+
+    p_o = agree_cells / n_cells
+    p_e = p_a1·p_b1 + (1 − p_a1)·(1 − p_b1)          # p_a1, p_b1 = coder/gold marginal present-rates
+    κ   = (p_o − p_e) / (1 − p_e)                     # None if 1 − p_e == 0 (a rater never varies — undefined, not a fake 1.0)
+
+This is the standard multi-label MFD reliability approach. `compute_a3_coding_kappa` carries κ **with its integer marginals** (`n_utterances`, `coder_present`, `gold_present`, `agree_cells`) so κ is never a bare scalar dressed up as reliability. `check_a3_kappa_lock()` pins the math against the code: perfect → 1.0, a hand TP9/TN9/FP1/FN1 → 0.8, TP8/TN8/FP2/FN2 → 0.6, a no-variance corpus → None.
+
+**Missing-data (§1.5).** `_utterance_text` maps blank / whitespace-only / `None` / absent text → `None` = **missing data, DROPPED** from both the κ corpus and the profile denominator. This is held strictly apart from a **non-blank zero-foundation** utterance — someone who *writes* but doesn't moralize — which **COUNTS** in the denominator: the particularist is described as using less moral language, never treated as missing and never scored deficient (§21.4).
+
+### 21.2 The binding κ gate — the descriptive-only WALL (BUILT: machinery only)
+
+    A3 machinery certified  ⇔  synthetic κ ≥ A3_KAPPA_GATE (0.70)     # kappa_met_synthetic
+    A3 channel promotable   ⇔  κ ≥ 0.70 vs. REAL HUMAN gold           # ALWAYS False this increment
+
+On the synthetic fixture the coder clears the gate (κ ≈ 0.90 ≥ 0.70), which certifies **the machinery only** — that the coder, the κ computation, the marginals, and the missing-data handling are correct. It does **not** promote the channel. `promotable` is **ALWAYS False** and `descriptive_only` is **ALWAYS True**, because real promotion requires κ ≥ 0.70 against **gold-standard manual coding by human raters** (~200 codes, 50/domain × 2 raters — the §12 open question, Dave/human-gated). **Until that human-κ is met, the entire A3 channel is descriptive / exploratory-only.** The gate is **two-sided** — `check_a3_kappa_lock()` asserts a high-agreement corpus clears 0.70 *and* a low-agreement one does not, and that neither is ever `promotable`. This wall is the A3 analog of the §13.2 censoring lock and the |8.0| pattern: a structural invariant asserted against the code, not a fixture convenience.
+
+### 21.3 foundation_i(f) — the value-neutral rate profile (BUILT)
+
+`foundation_profile_by_user` returns, per user, a **rate vector** over all six foundations — `rate_i(f) = (# of that user's utterances invoking f) / (that user's scorable utterances)` — plus a cohort mean-rate vector. It is exposed in the JSON `A3` block as six **separate** foundation keys under `foundation_profile.cohort_mean_rates`, **never** collapsed into a scalar and **never** sorted by rate (the renderer emits canonical MFD order deliberately, so no ranking is implied). `check_a3` rejects any pooled `moral_language_score` / `foundation_score` / `mft_score` / `moralization_score` key and requires all six foundations present separately.
+
+### 21.4 The κ-is-not-a-score wall, N=1, value-neutrality (EXTRA force)
+
+- **κ is a coder-PAIR statistic, NEVER a person score (§13.5).** κ measures whether two *coders* agree, not anything about a *participant*. It is structurally impossible to attach κ to a user — it lives only in the coding-validation block, never in `foundation_profile`. `check_a3` and `check_a3_kappa_lock` assert this.
+- **More moral language is NOT better.** Fluent moralizing is as consistent with **grandstanding** as with engagement (Tosi & Warmke, *Moral Grandstanding* 2016); moral-language **fluency ≠ virtue**. The coder assigns foundation **labels**, never ranks them, never emits a scalar "how moral" reading.
+- **Declining to moralize is a stance, not a deficit.** A person who writes in **concrete, relational, particular** terms without invoking abstract foundations is making a recognizable **Dancy particularist** move — not registering a deficient "zero." A non-blank zero-foundation utterance is counted and described as such (§21.1), never scored down.
+- **N=1 interpretability.** `foundation_i(f)` is reveal-eligible for a single user with no cohort standardization ("your written responses most often invoke *care* and *fairness* language") — but only descriptively, and only once the human-κ gate is met; the synthetic-certified machinery makes no person-level claim.
+
+### 21.5 DEFERRED — the cohort-coupled halves
+
+Built this increment: the coder + the κ gate + `foundation_i(f)` + the synthetic reliability fixture. **Deferred** (each couples to the cohort or awaits the human-κ gate, exactly as the H9b/H10b/H11b/R2c/R1b/R6b discriminant halves do):
+
+- **Framing ratio** (individualizing care+fairness vs. binding loyalty+authority+sanctity language balance) — a within-person contrast over `foundation_i`, cohort-anchored.
+- **The third ordering L_i + the S/R/L concordances** (§13.4 extension): a *language-derived* value ordering to sit beside the Stated and Revealed orderings, with three pairwise concordances (S↔R, S↔L, R↔L). Cohort-coupled and κ-gated.
+- **H-A3a** (language-coding reliability as a hypothesis), **H-A3b** (the language channel is distinct from stated + revealed — discriminant), **H-A3c** (grandstanding signature) — all cohort- and/or human-κ-gated.
+
+### 21.6 What §21 deliberately does not compute
+
+- **No moral-language score / no pooling.** The coder emits foundation **labels** and per-foundation **rates**; no `(care + fairness + …)` sum, no pooled "moral-language"/"moralization" scalar, and κ is never blended with the stated (§20/R1) or revealed (R2/H10–12) channels (§13.5). Asserted by `check_a3` (rejects pooled keys) and `check_a3_kappa_lock`.
+- **No promotion on synthetic κ.** Synthetic κ certifies the machinery; `promotable` stays False until human-gold κ ≥ 0.70. The channel is descriptive/exploratory-only until then — asserted two-sided against the code.
+- **No ranking of foundations, no fluency = virtue.** Foundations are labeled, never ordered by worth; more moral language is neither better nor worse (§21.4).
+- **Not parity-gated, by design.** LLM/language coding is non-deterministic, so A3 is deliberately the first branch **outside** the `poc-projection.js` ↔ `analyze.py` parity contract (`h-a3-moral-language.md` §1.5/§3/Q4). There is no on-device language reveal; the reliability gate (§21.2) stands in parity's place. The v0.1-DRAFT deterministic lexicon, the real-κ-needs-human-gold requirement, and the LLM-vs-deterministic coder choice are surfaced to Dave, not auto-locked.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.
