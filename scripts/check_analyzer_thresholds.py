@@ -23,6 +23,11 @@ Expected outcomes on the current synthetic fixtures:
   0.60] gap-real range. This is informative on synthetic data and
   documents the limitation.
 - H7 (Big-5 N discriminant): threshold met = True
+- H9 (self-prediction calibration): H9a self-enhancement, H9b-stability,
+  and H9c stakes-blindness all met = True on the fixtures (all e > 0;
+  cal_error a stable trait across windows; high-pool |e| > low-pool |e|
+  within-person). Plus the §14.1 CENSORING LOCK regression: no finite
+  e_price is ever produced across a 'never' cost-of-virtue endpoint.
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -49,6 +54,7 @@ EXPECTATIONS = {
     "H5": {"kind": "per_domain", "expected_domains": ["truth-telling"], "threshold_met": True},
     "H6": {"kind": "range", "in_range": False},
     "H7": {"kind": "single", "threshold_met": True},
+    "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9c": True}},
 }
 
 
@@ -64,6 +70,8 @@ def run_analyzer() -> dict:
         "--big5", str(FIXTURES / "sample-big5.json"),
         "--log-window-b", str(FIXTURES / "sample-session-log-window-b.json"),
         "--probes-window-b", str(FIXTURES / "sample-probe-responses-window-b.json"),
+        "--predictions", str(FIXTURES / "sample-predictions.json"),
+        "--predictions-window-b", str(FIXTURES / "sample-predictions-window-b.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -121,6 +129,77 @@ def check_range(hid: str, payload: dict, expected_in_range: bool) -> tuple[bool,
     return True, f"{hid}: ✓ in_range = {in_range} (r = {payload['r']:+.3f}, range [{payload['range_low']}, {payload['range_high']}])"
 
 
+def check_h9(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
+    """H9 self-prediction calibration. Assert each present sub-hypothesis
+    (H9a/H9b_stability/H9c) hit its pre-registered threshold outcome, and that
+    the cost-of-virtue channel is present with the censoring split (finite +
+    censored). The magnitude of the censoring lock (no finite e_price across a
+    'never' endpoint) is asserted directly against the code in
+    check_h9_censoring() below — here we just confirm the channel is reported."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    parts = []
+    for sub, expected in sub_met.items():
+        block = payload.get(sub)
+        if block is None:
+            return False, f"{hid}: sub-hypothesis {sub} missing"
+        met = block.get("pre_registered_threshold_met")
+        if met != expected:
+            return False, f"{hid}.{sub}: threshold_met = {met!r}, expected {expected!r}"
+        if block.get("n", block.get("n_participants", 0)) < 3:
+            return False, f"{hid}.{sub}: n too small ({block})"
+        parts.append(f"{sub}={met}")
+    cov = payload.get("cov_channel")
+    if not isinstance(cov, dict):
+        return False, f"{hid}: cov_channel missing"
+    if cov.get("n_censored", 0) < 1 or cov.get("n_finite", 0) < 1:
+        return False, f"{hid}: cov_channel must have both finite and censored pairs (got {cov})"
+    parts.append(f"cov[finite={cov['n_finite']},censored={cov['n_censored']}]")
+    return True, f"{hid}: ✓ {', '.join(parts)}"
+
+
+def check_h9_censoring() -> tuple[bool, list[str]]:
+    """Unit regression for the §14.1 CENSORING LOCK (the H9 analog of the |8.0|
+    ceiling lock): calibration_cov_records must NEVER emit a finite e_price when
+    either the predicted or the realized cost-of-virtue endpoint is 'never'. A
+    'never' is right-censored (price above the ladder top) and stays categorical.
+    Asserted directly against the code, not via the fixtures, so a regression that
+    starts pricing 'never' is caught even if a fixture is later changed."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    # Every combination touching a 'never' endpoint must land in `censored`, never `finite`.
+    probes = [
+        {"channel": "cov", "user_id": "u1", "domain": "truth-telling",
+         "predicted_rung": "never", "realized_rung": "1000", "inverted": False},
+        {"channel": "cov", "user_id": "u2", "domain": "truth-telling",
+         "predicted_rung": "1000", "realized_rung": "never", "inverted": False},
+        {"channel": "cov", "user_id": "u3", "domain": "truth-telling",
+         "predicted_rung": "never", "realized_rung": "never", "inverted": False},
+        {"channel": "cov", "user_id": "u4", "domain": "truth-telling",
+         "predicted_rung": "never", "realized_rung": "10000", "inverted": True},  # inverted too
+        {"channel": "cov", "user_id": "u5", "domain": "truth-telling",
+         "predicted_rung": "100000", "realized_rung": "1000", "inverted": False},  # the one finite control
+    ]
+    res = A.calibration_cov_records(probes)
+    finite_users = {f["user_id"] for f in res["finite"]}
+    checks = [
+        ("all four 'never'-touching pairs are censored, none finite", res["n_censored"] == 4),
+        ("no finite e_price produced for any 'never' endpoint", finite_users == {"u5"}),
+        ("the finite control (100000→1000) IS priced, e_price == +2.0",
+         len(res["finite"]) == 1 and abs(res["finite"][0]["e_price"] - 2.0) < 1e-9),
+        ("censored categories cover all three cases",
+         set(res["censored_categories"]) == {"predicted-never & acted-finite",
+                                              "predicted-finite & acted-never", "both-never"}),
+        ("inverted 'never'→finite is still censored (predicted-never & acted-finite == 2)",
+         res["censored_categories"].get("predicted-never & acted-finite") == 2),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h9-censoring: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -162,6 +241,8 @@ def main() -> int:
             ok, msg = check_per_domain(hid, payload, spec["expected_domains"], spec["threshold_met"])
         elif spec["kind"] == "range":
             ok, msg = check_range(hid, payload, spec["in_range"])
+        elif spec["kind"] == "h9":
+            ok, msg = check_h9(hid, payload, spec["sub_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -172,6 +253,12 @@ def main() -> int:
     for m in ceil_msgs:
         print(m)
     if not ceil_ok:
+        all_pass = False
+
+    h9cens_ok, h9cens_msgs = check_h9_censoring()
+    for m in h9cens_msgs:
+        print(m)
+    if not h9cens_ok:
         all_pass = False
 
     if all_pass:

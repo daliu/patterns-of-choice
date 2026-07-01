@@ -362,6 +362,59 @@ export interface ProbeResponse {
 }
 
 // =============================================================================
+// Self-prediction beat — runtime data (H9 self-calibration; scoring.md §14,
+// h9-self-calibration.md, DECISIONS §19)
+// =============================================================================
+//
+// Append-only, user-keyed, timestamped log of the "prediction beat": on a
+// designated calibration probe the participant records a NON-BINDING prediction
+// of their own choice BEFORE resolving it (h9-self-calibration.md §1.1). Each
+// entry captures only the prediction; the realized choice is joined afterward on
+// `target_scenario_id` (+ `item_id` for a quick-fire item) against the choice
+// log — SessionLogEntry for the axis channel, ProbeResponse for the cost-of-
+// virtue channel. The analyzer then forms e = pred − rev per §14.
+//
+// The two channels resolve on DIFFERENT scales and are NEVER pooled (§14.7):
+//   channel "axis" → predicted primary-axis choice (tags → [−1,+1], §2.2)
+//   channel "cov"  → predicted break-point rung (log-dollar, §4); a predicted
+//                    OR realized "never" is right-censored and is NEVER priced
+//                    (the §14.1 lock — reported categorically only).
+//
+// Not yet consumed by the on-device projection (poc-projection.js) — the H9
+// personal reveal is a later increment. Field shapes mirror SessionLogEntry
+// (denormalized `predicted_tags`, `response_time_ms`, `was_timeout`) and
+// ProbeResponse (`predicted_rung`) so the join is a straight scale-share.
+
+export type PredictionChannel = "axis" | "cov";
+
+export interface PredictionLogEntry {
+  user_id: UserId;
+  session_id: SessionId;
+  timestamp_iso: string;
+  target_scenario_id: ScenarioId; // the choice this predicts — the join key
+  item_id?: ItemId; // present when the target is a quick-fire item
+  domain: Domain;
+  channel: PredictionChannel;
+
+  // Axis channel: the option the participant predicts they will choose,
+  // with its tags denormalized at write-time exactly like SessionLogEntry.tags.
+  predicted_option_id?: OptionId;
+  predicted_tags?: Tag[];
+
+  // Cost-of-virtue channel: the break-point rung the participant predicts.
+  predicted_rung?: number | "never";
+
+  // Counterbalanced reactivity control (§14.6, DECISIONS §19 — mandatory, not
+  // optional): on control trials the prediction beat is WITHHELD so downstream
+  // scoring can net out the question–behavior effect of predicting. When true,
+  // this entry marks a control (no prediction elicited); defaults to false.
+  prediction_withheld?: boolean;
+
+  response_time_ms: number;
+  was_timeout: boolean;
+}
+
+// =============================================================================
 // Inventory responses — runtime data
 // =============================================================================
 

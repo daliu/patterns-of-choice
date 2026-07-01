@@ -40,6 +40,18 @@ Implemented here:
 - H5 cost-of-virtue probe test-retest (pre-registration.md,
   secondary): per-domain r ≥ 0.50 between the two windows of probe
   break-points. When --probes-window-b is supplied.
+- H9a/H9b/H9c self-prediction calibration (§14 of scoring.md, 9th
+  pre-reg hypothesis, DECISIONS §19). When --predictions is supplied
+  (and --predictions-window-b for the H9b test-retest split): the
+  per-person cal_bias / cal_error indices, H9a self-enhancement
+  (mean signed error > 0 over consensual-pole domains), H9b-stability
+  (split-window test-retest of cal_error), H9c stakes-blindness (the
+  load-bearing signature — self-prediction error larger under high
+  stakes), and the cost-of-virtue channel with the §14.1 censoring
+  lock. Axis and cost-of-virtue channels are NEVER pooled (§14.7).
+  The H9b DISCRIMINANT half (R² of cal_error on [gap, revealed_level])
+  is deferred — it couples to the H2-H7 cohort pipeline; see
+  build-and-validate.md.
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -64,12 +76,6 @@ Reserved for the future validation-cohort analyzer:
       reconcile-before-OSF-lock.
   With (b)-(c) settled this is a natural next analyzer addition with a
   check_analyzer_thresholds gate alongside H2-H7.
-- H9a/H9b/H9c self-prediction calibration (§14 of scoring.md, 9th
-  pre-reg hypothesis, DECISIONS §19). Stdlib-tractable (means + Pearson
-  correlations + bootstrap, all already present) but depends on a
-  `prediction` event type that does not yet exist in types.ts / the
-  runtime (PredictionLogEntry, DECISIONS §19 marks it pending) and on
-  the same narrative-scalar question (b) above.
 
 Usage:
     python scripts/analyze.py --log analysis/fixtures/sample-session-log.json
@@ -1092,6 +1098,299 @@ def compute_h4_informant_validity(
     )
 
 
+# ---------------------------------------------------------------------------
+# H9 — self-prediction calibration (scoring.md §14; h9-self-calibration.md;
+# DECISIONS §19). Measures how well a participant predicts their own revealed
+# choices. Introduces NO new scale: predictions resolve on the same primary
+# axis (§2.2, via item_score) and the same cost-of-virtue ladder (§4) as the
+# choices they forecast. Two channels, NEVER pooled (§14.7): the axis channel
+# (axis units) and the cost-of-virtue channel (log10-dollar units).
+# ---------------------------------------------------------------------------
+
+# Domains with a consensual desirable pole (§14.3). The in-group axis
+# (loyalty +, universalism −) is value-contested and excluded from the signed
+# H9a test (entered exploratory only; h9-self-calibration.md §1.1, §6 Q5).
+H9_CONSENSUAL_DOMAINS = {"truth-telling", "resource-allocation", "reciprocity-cooperation"}
+
+# Per-participant inclusion minima (§14.6).
+H9A_MIN_PROBES = 3   # ≥3 valid consensual-domain probes to enter H9a
+H9B_MIN_PROBES = 2   # cal_error computable in each window (≥2 valid probes)
+
+# Pre-registered thresholds (scoring.md §14.3–§14.5). PROPOSED — lock at OSF
+# filing (DECISIONS §19); the analyzer reports met/not-met, never gates on H9.
+H9A_BIAS_FLOOR = 0.10   # lower 95% CI of mean cal_bias ≥ this (axis units)
+H9B_STABILITY_FLOOR = 0.40  # lower 95% CI of test-retest r of cal_error ≥ this
+# H9c is directional: lower 95% CI of mean blind > 0 (no magnitude floor).
+
+
+def load_predictions(path: Path) -> list[dict]:
+    """
+    Load a predictions fixture. Accepts either a bare JSON array of prediction
+    records or an object with a top-level "predictions" array (the fixture form,
+    which also carries a documenting _comment/expected). Each record is a
+    RESOLVED calibration pair (the prediction beat joined to its realized choice
+    — in production the join is on probe_id between the prediction event log,
+    types.ts PredictionLogEntry, and the choice log; the fixtures pre-resolve it
+    so the §14 math is testable in isolation).
+    """
+    with path.open() as f:
+        data = json.load(f)
+    if isinstance(data, dict):
+        data = data.get("predictions", [])
+    return data if isinstance(data, list) else []
+
+
+def calibration_axis_records(
+    predictions: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> list[dict[str, Any]]:
+    """
+    Axis channel (§14.1). For each channel=='axis' prediction, score the
+    predicted option and the realized choice on the domain's primary axis with
+    the SAME item_score used everywhere else (so pred and rev share a scale and
+    the parity-locked scoring applies identically):
+
+        pred = item_score(predicted_tags)   rev = item_score(realized_tags)
+        e    = pred - rev                    # signed; e>0 = predicted more virtuous
+
+    A record is admitted only when BOTH the prediction and the choice contribute
+    ≥1 tag on the primary axis (else the item is NA-for-score-purposes, §2.2).
+    Returns a flat list of {user_id, domain, stakes_pool, pred, rev, e}.
+    """
+    out: list[dict[str, Any]] = []
+    for p in predictions:
+        if p.get("channel") != "axis":
+            continue
+        domain = p.get("domain", "")
+        pred_score, pn = item_score({"domain": domain, "tags": p.get("predicted_tags", [])}, tag_map)
+        rev_score, rn = item_score({"domain": domain, "tags": p.get("realized_tags", [])}, tag_map)
+        if pn == 0 or rn == 0:
+            continue  # NA — a channel with no primary-axis contribution
+        out.append({
+            "user_id": p.get("user_id"),
+            "domain": domain,
+            "stakes_pool": p.get("stakes_pool"),
+            "pred": pred_score,
+            "rev": rev_score,
+            "e": pred_score - rev_score,
+        })
+    return out
+
+
+def calibration_person_indices(records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """
+    Per-participant reveal-eligible indices (§14.2), over that participant's
+    completed axis-channel probes:
+
+        cal_bias  = mean_p e          # signed self-enhancement bias
+        cal_error = mean_p |e|        # magnitude; lower = better self-knowledge
+
+    N=1-interpretable (pred and rev share a pre-defined axis — no cross-scale or
+    cross-person standardization, contrast the §6 gap), hence eligible for the
+    personal reveal without cohort norms. Reported descriptively, never as a
+    score-out-of-N and never cross-person-ranked (§14.7).
+    """
+    by_user: dict[str, list[float]] = defaultdict(list)
+    for r in records:
+        by_user[r["user_id"]].append(r["e"])
+    out: dict[str, dict[str, Any]] = {}
+    for user in sorted(by_user):
+        es = by_user[user]
+        out[user] = {
+            "cal_bias": sum(es) / len(es),
+            "cal_error": sum(abs(x) for x in es) / len(es),
+            "n_probes": len(es),
+        }
+    return out
+
+
+def compute_h9a_self_enhancement(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """
+    H9a (§14.3): across participants, mean signed calibration error is positive
+    — people predict more value-aligned behavior than they reveal (Epley &
+    Dunning 2000). Restricted to the consensual-pole domains. Test statistic:
+    lower 95% bootstrap-CI bound of mean_i cal_bias_i ≥ 0.10 (axis units).
+    """
+    consensual = [r for r in records if r["domain"] in H9_CONSENSUAL_DOMAINS]
+    by_user: dict[str, list[float]] = defaultdict(list)
+    for r in consensual:
+        by_user[r["user_id"]].append(r["e"])
+    biases = [
+        sum(es) / len(es)
+        for es in by_user.values()
+        if len(es) >= H9A_MIN_PROBES
+    ]
+    if len(biases) < 3:
+        return None
+    mean_bias = sum(biases) / len(biases)
+    rng = random.Random(BOOTSTRAP_SEED + 10)
+    ci_low, ci_high = _bootstrap_ci_mean(biases, rng)
+    met = None if ci_low != ci_low else (ci_low >= H9A_BIAS_FLOOR)
+    return {
+        "mean_cal_bias": mean_bias,
+        "ci_low": ci_low,
+        "ci_high": ci_high,
+        "n_participants": len(biases),
+        "threshold_low": H9A_BIAS_FLOOR,
+        "pre_registered_threshold_met": met,
+    }
+
+
+def compute_h9b_stability(
+    records_a: list[dict[str, Any]],
+    records_b: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """
+    H9b, stability half (§14.4): split-window test-retest of cal_error_i
+    (first-half vs second-half sessions). Lower 95% CI ≥ 0.40 (deliberately
+    below H3's 0.60 — a second-order derived quantity is noisier).
+
+    NOTE — the discriminant half of H9b (regress cal_error on [gap,
+    revealed_level], R² upper CI < 0.50) is DEFERRED to the next increment: it
+    couples calibration to the H2–H7 cohort pipeline (per-user gap + revealed
+    level), whereas this increment keeps H9 isolated on its own fixtures. See
+    build-and-validate.md.
+    """
+    def err_by_user(records: list[dict[str, Any]]) -> dict[str, float]:
+        by_user: dict[str, list[float]] = defaultdict(list)
+        for r in records:
+            by_user[r["user_id"]].append(abs(r["e"]))
+        return {
+            u: sum(es) / len(es)
+            for u, es in by_user.items()
+            if len(es) >= H9B_MIN_PROBES
+        }
+
+    ea, eb = err_by_user(records_a), err_by_user(records_b)
+    shared = sorted(set(ea) & set(eb))
+    if len(shared) < 3:
+        return None
+    xs = [ea[u] for u in shared]
+    ys = [eb[u] for u in shared]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 11)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_low != ci_low else (ci_low >= H9B_STABILITY_FLOOR)
+    return {
+        "r": r,
+        "ci_low": ci_low,
+        "ci_high": ci_high,
+        "n": len(shared),
+        "threshold_low": H9B_STABILITY_FLOOR,
+        "pre_registered_threshold_met": met,
+    }
+
+
+def compute_h9c_stakes_blindness(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """
+    H9c (§14.5), the load-bearing one: self-prediction error is LARGER on
+    high-stakes probes than low-stakes probes — the behavioral fingerprint of
+    the hot–cold projection gap (Loewenstein) / EV-4 stakes discontinuity.
+
+        blind_i = mean|e| over the H8b high-stakes pool
+                - mean|e| over the H8a low-stakes pool
+
+    Axis channel only (unit consistency; the cost-of-virtue break-point
+    calibration is a SEPARATE convergent read in price units, never pooled —
+    §14.5, §14.7). A participant enters with ≥1 valid error in EACH pool. Test:
+    lower 95% bootstrap-CI bound of mean_i blind_i > 0 (one-sided, directional).
+    """
+    low_by_user: dict[str, list[float]] = defaultdict(list)
+    high_by_user: dict[str, list[float]] = defaultdict(list)
+    for r in records:
+        if r["stakes_pool"] == "low":
+            low_by_user[r["user_id"]].append(abs(r["e"]))
+        elif r["stakes_pool"] == "high":
+            high_by_user[r["user_id"]].append(abs(r["e"]))
+    blinds = []
+    for user in set(low_by_user) & set(high_by_user):
+        lo = low_by_user[user]
+        hi = high_by_user[user]
+        blinds.append(sum(hi) / len(hi) - sum(lo) / len(lo))
+    if len(blinds) < 3:
+        return None
+    mean_blind = sum(blinds) / len(blinds)
+    rng = random.Random(BOOTSTRAP_SEED + 12)
+    ci_low, ci_high = _bootstrap_ci_mean(blinds, rng)
+    met = None if ci_low != ci_low else (ci_low > 0.0)
+    return {
+        "mean_blind": mean_blind,
+        "ci_low": ci_low,
+        "ci_high": ci_high,
+        "n_participants": len(blinds),
+        "threshold": 0.0,
+        "pre_registered_threshold_met": met,
+    }
+
+
+def calibration_cov_records(predictions: list[dict]) -> dict[str, Any]:
+    """
+    Cost-of-virtue channel (§14.1), price units — reported convergently with
+    H9c, NEVER pooled into the axis-channel blind_i (mixing axis and log-dollar
+    units would manufacture a pseudo-quantity, §13.5/§14.7).
+
+        pred_price = log10(predicted_break_stake)   (negated if inverted, §4.2)
+        rev_price  = log10(first_accept_stake)       (same flip)
+        e_price    = pred_price - rev_price
+
+    CENSORING LOCK (§14.1, inherited from §13.2/§13.3, load-bearing). If EITHER
+    endpoint is 'never' (right-censored, price > ladder top), e_price is
+    SUPPRESSED — never made finite. The pair is reported only categorically.
+    This is the H9 analog of the |8.0| ceiling lock: 'never' stays 'never',
+    it is never priced.
+    """
+    finite: list[dict[str, Any]] = []
+    censored: list[dict[str, Any]] = []
+    cat_counts: dict[str, int] = defaultdict(int)
+
+    def price(rung: str, inverted: bool) -> float:
+        p = math.log10(float(rung))
+        return -p if inverted else p
+
+    for p in predictions:
+        if p.get("channel") != "cov":
+            continue
+        pred_rung = str(p.get("predicted_rung"))
+        rev_rung = str(p.get("realized_rung"))
+        inverted = bool(p.get("inverted", False))
+        pred_never = pred_rung.lower() == "never"
+        rev_never = rev_rung.lower() == "never"
+        if pred_never or rev_never:
+            if pred_never and rev_never:
+                category = "both-never"
+            elif pred_never:
+                category = "predicted-never & acted-finite"
+            else:
+                category = "predicted-finite & acted-never"
+            cat_counts[category] += 1
+            censored.append({
+                "user_id": p.get("user_id"),
+                "domain": p.get("domain"),
+                "category": category,
+            })
+            continue
+        pred_price = price(pred_rung, inverted)
+        rev_price = price(rev_rung, inverted)
+        finite.append({
+            "user_id": p.get("user_id"),
+            "domain": p.get("domain"),
+            "pred_price": pred_price,
+            "rev_price": rev_price,
+            "e_price": pred_price - rev_price,
+        })
+    finite_abs = [abs(f["e_price"]) for f in finite]
+    return {
+        "finite": finite,
+        "censored": censored,
+        "n_finite": len(finite),
+        "n_censored": len(censored),
+        "censored_categories": dict(cat_counts),
+        "finite_mean_abs_e_price": (sum(finite_abs) / len(finite_abs)) if finite_abs else None,
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -1123,6 +1422,82 @@ def render_h6_result(result: dict[str, Any] | None) -> str:
         f"  Pre-registered range [{result['range_low']:.2f}, {result['range_high']:.2f}]: {range_str}\n"
         f"  Reading: too-high r collapses the gap signal; too-low suggests measurement noise."
     )
+
+
+def _met_glyph(met: bool | None) -> str:
+    return "✓" if met is True else ("✗" if met is False else "—")
+
+
+def _ci_str(res: dict[str, Any]) -> str:
+    return (
+        "nan" if res["ci_low"] != res["ci_low"]
+        else f"[{res['ci_low']:+.3f}, {res['ci_high']:+.3f}]"
+    )
+
+
+def render_h9_result(
+    h9a: dict[str, Any] | None,
+    h9b: dict[str, Any] | None,
+    h9c: dict[str, Any] | None,
+    cov: dict[str, Any] | None,
+    person_indices_n: int,
+) -> str:
+    """H9 self-prediction calibration (scoring.md §14). Axis channel and cost-of-
+    virtue channel reported SEPARATELY — never pooled (§14.7)."""
+    if all(x is None for x in (h9a, h9b, h9c)) and cov is None:
+        return "(H9: insufficient data — supply --predictions to compute self-prediction calibration)"
+    lines = ["H9 (self-prediction calibration — self-knowledge vs self-deception):"]
+    lines.append(f"  Reveal-eligible person indices (cal_bias / cal_error): {person_indices_n} participant(s)")
+    lines.append("  -- Axis channel (axis units; never pooled with the cost-of-virtue channel) --")
+    if h9a is not None:
+        lines.append(
+            f"  H9a self-enhancement  mean cal_bias = {h9a['mean_cal_bias']:+.3f}, "
+            f"95% CI {_ci_str(h9a)}, n = {h9a['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {h9a['threshold_low']:.2f}, over consensual-pole domains): "
+            f"{_met_glyph(h9a['pre_registered_threshold_met'])}"
+        )
+    else:
+        lines.append("  H9a self-enhancement: insufficient data (need ≥3 participants, ≥3 consensual probes each)")
+    if h9b is not None:
+        lines.append(
+            f"  H9b stability (test-retest of cal_error)  r = {h9b['r']:+.3f}, "
+            f"95% CI {_ci_str(h9b)}, n = {h9b['n']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {h9b['threshold_low']:.2f}): "
+            f"{_met_glyph(h9b['pre_registered_threshold_met'])}  "
+            f"(discriminant half deferred — see build-and-validate.md)"
+        )
+    else:
+        lines.append("  H9b stability: insufficient data (need --predictions-window-b, ≥3 shared participants)")
+    if h9c is not None:
+        lines.append(
+            f"  H9c stakes-blindness (LOAD-BEARING)  mean blind = {h9c['mean_blind']:+.3f}, "
+            f"95% CI {_ci_str(h9c)}, n = {h9c['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI > {h9c['threshold']:.1f}, one-sided): "
+            f"{_met_glyph(h9c['pre_registered_threshold_met'])}  "
+            f"(high-stakes self-prediction error exceeds low-stakes)"
+        )
+    else:
+        lines.append("  H9c stakes-blindness: insufficient data (need ≥3 participants with both a low- and high-pool error)")
+    if cov is not None:
+        cats = ", ".join(f"{k}={v}" for k, v in sorted(cov["censored_categories"].items())) or "none"
+        mean_e = cov["finite_mean_abs_e_price"]
+        mean_e_str = "n/a" if mean_e is None else f"{mean_e:.3f}"
+        lines.append("  -- Cost-of-virtue channel (log10-dollar units; convergent, reported separately) --")
+        lines.append(
+            f"  finite pairs = {cov['n_finite']} (mean |e_price| = {mean_e_str}), "
+            f"censored = {cov['n_censored']} [{cats}]"
+        )
+        lines.append(
+            "     censoring lock (§14.1): a 'never' endpoint is NEVER priced — "
+            "reported categorically only."
+        )
+    return "\n".join(lines)
 
 
 def render_test_retest_result(
@@ -1248,6 +1623,18 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional second probe-responses JSON (weeks 3-4) for H5 test-retest.",
+    )
+    parser.add_argument(
+        "--predictions",
+        type=Path,
+        default=None,
+        help="Optional self-prediction calibration JSON (resolved prediction↔choice pairs) for H9.",
+    )
+    parser.add_argument(
+        "--predictions-window-b",
+        type=Path,
+        default=None,
+        help="Optional second predictions JSON (weeks 3-4) for the H9b test-retest split.",
     )
     parser.add_argument(
         "--min-items",
@@ -1429,6 +1816,34 @@ def main() -> int:
             revealed_for_h6, asp_filtered
         )
 
+    # H9 self-prediction calibration if predictions supplied. Self-contained on
+    # its own fixtures (scoring.md §14) — does NOT read the H2-H7 cohort pipeline
+    # above, so it never perturbs those results.
+    h9a_result: dict[str, Any] | None = None
+    h9b_result: dict[str, Any] | None = None
+    h9c_result: dict[str, Any] | None = None
+    h9_person_indices: dict[str, dict[str, Any]] = {}
+    h9_cov: dict[str, Any] | None = None
+    if args.predictions:
+        try:
+            predictions = load_predictions(args.predictions)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading predictions file: {e}", file=sys.stderr)
+            return 2
+        h9_axis_records = calibration_axis_records(predictions, tag_map)
+        h9_person_indices = calibration_person_indices(h9_axis_records)
+        h9a_result = compute_h9a_self_enhancement(h9_axis_records)
+        h9c_result = compute_h9c_stakes_blindness(h9_axis_records)
+        h9_cov = calibration_cov_records(predictions)
+        if args.predictions_window_b:
+            try:
+                predictions_b = load_predictions(args.predictions_window_b)
+            except (FileNotFoundError, json.JSONDecodeError) as e:
+                print(f"ERROR loading window-B predictions file: {e}", file=sys.stderr)
+                return 2
+            h9_axis_records_b = calibration_axis_records(predictions_b, tag_map)
+            h9b_result = compute_h9b_stability(h9_axis_records, h9_axis_records_b)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -1531,6 +1946,35 @@ def main() -> int:
             }
         if h7_result is not None:
             hypotheses["H7"] = _correlation_json(h7_result)
+
+        def _h9_json(r: dict[str, Any] | None) -> dict[str, Any] | None:
+            if r is None:
+                return None
+            out_r = dict(r)
+            for k in ("ci_low", "ci_high"):
+                if k in out_r:
+                    out_r[k] = _nan_to_none(out_r[k])
+            return out_r
+
+        h9_block: dict[str, Any] = {}
+        if h9a_result is not None:
+            h9_block["H9a"] = _h9_json(h9a_result)
+        if h9b_result is not None:
+            h9_block["H9b_stability"] = _h9_json(h9b_result)
+        if h9c_result is not None:
+            h9_block["H9c"] = _h9_json(h9c_result)
+        if h9_cov is not None:
+            h9_block["cov_channel"] = {
+                "n_finite": h9_cov["n_finite"],
+                "n_censored": h9_cov["n_censored"],
+                "censored_categories": h9_cov["censored_categories"],
+                "finite_mean_abs_e_price": h9_cov["finite_mean_abs_e_price"],
+            }
+        if h9_person_indices:
+            h9_block["person_indices_n"] = len(h9_person_indices)
+        if h9_block:
+            hypotheses["H9"] = h9_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -1594,6 +2038,11 @@ def main() -> int:
         if h6_result is not None:
             print()
             print(render_h6_result(h6_result))
+        if any(x is not None for x in (h9a_result, h9b_result, h9c_result)) or h9_cov is not None:
+            print()
+            print(render_h9_result(
+                h9a_result, h9b_result, h9c_result, h9_cov, len(h9_person_indices)
+            ))
 
     return 0
 

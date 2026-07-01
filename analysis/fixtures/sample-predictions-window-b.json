@@ -1,0 +1,1013 @@
+{
+  "_comment": "SYNTHETIC H9 self-prediction-calibration fixture (scoring.md \u00a714; h9-self-calibration.md). Resolved calibration pairs: each row is one prediction beat joined to its realized choice (in production the join is on probe_id between the prediction event log and the choice log; here the pair is pre-resolved so the H9 math is testable in isolation from the H2-H7 cohort fixtures). Axis channel: pred = item_score(predicted_tags), rev = item_score(realized_tags), e = pred - rev. All e > 0 (self-enhancement, H9a). e_high > e_low within each participant (stakes-blindness, H9c). CoV channel: 'never' endpoints stay CENSORED - reported categorically, never given a finite e_price (\u00a714.1 lock). Single-tag options => exact ground truth. NOT real data. (window B \u2014 weeks 3-4, for H9b stability split).",
+  "predictions": [
+    {
+      "user_id": "h9-u01",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-01b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u01",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-01b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "need_sensitivity"
+      ]
+    },
+    {
+      "user_id": "h9-u01",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-01b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "truth:implicit"
+      ]
+    },
+    {
+      "user_id": "h9-u01",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-01b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "trust:institutional"
+      ]
+    },
+    {
+      "user_id": "h9-u01",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-01b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u01",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-01b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u02",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-02b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u02",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-02b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "need_sensitivity"
+      ]
+    },
+    {
+      "user_id": "h9-u02",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-02b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "truth:implicit"
+      ]
+    },
+    {
+      "user_id": "h9-u02",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-02b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "trust:institutional"
+      ]
+    },
+    {
+      "user_id": "h9-u02",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-02b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u02",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-02b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u03",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-03b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u03",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-03b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "need_sensitivity"
+      ]
+    },
+    {
+      "user_id": "h9-u03",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-03b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "truth:implicit"
+      ]
+    },
+    {
+      "user_id": "h9-u03",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-03b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "trust:institutional"
+      ]
+    },
+    {
+      "user_id": "h9-u03",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-03b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u03",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-03b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u04",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-04b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u04",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-04b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "need_sensitivity"
+      ]
+    },
+    {
+      "user_id": "h9-u04",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-04b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "truth:implicit"
+      ]
+    },
+    {
+      "user_id": "h9-u04",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-04b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "trust:institutional"
+      ]
+    },
+    {
+      "user_id": "h9-u04",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-04b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u04",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-04b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust:asymmetric"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u05",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-05b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u05",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-05b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u05",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-05b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u05",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-05b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "trust:asymmetric"
+      ]
+    },
+    {
+      "user_id": "h9-u05",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-05b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u05",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-05b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u06",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-06b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u06",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-06b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "need_sensitivity"
+      ]
+    },
+    {
+      "user_id": "h9-u06",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-06b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u06",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-06b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "trust:asymmetric"
+      ]
+    },
+    {
+      "user_id": "h9-u06",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-06b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u06",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-06b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u07",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-07b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u07",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-07b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u07",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-07b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u07",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-07b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "trust:asymmetric"
+      ]
+    },
+    {
+      "user_id": "h9-u07",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-07b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u07",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-07b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u08",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-08b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u08",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-08b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "need_sensitivity"
+      ]
+    },
+    {
+      "user_id": "h9-u08",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-08b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "truth:partial"
+      ]
+    },
+    {
+      "user_id": "h9-u08",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-08b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "trust:asymmetric"
+      ]
+    },
+    {
+      "user_id": "h9-u08",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-08b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u08",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-08b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u09",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-09b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u09",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-09b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u09",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-09b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:implicit"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u09",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-09b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:institutional"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u09",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-09b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance"
+      ]
+    },
+    {
+      "user_id": "h9-u09",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-09b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance"
+      ]
+    },
+    {
+      "user_id": "h9-u10",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-10b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u10",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-10b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u10",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-10b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:implicit"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u10",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-10b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:institutional"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u10",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-10b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance"
+      ]
+    },
+    {
+      "user_id": "h9-u10",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-10b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance"
+      ]
+    },
+    {
+      "user_id": "h9-u11",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-11b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:commission"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u11",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-11b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u11",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-11b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:implicit"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u11",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-11b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:institutional"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u11",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-11b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance"
+      ]
+    },
+    {
+      "user_id": "h9-u11",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-11b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance"
+      ]
+    },
+    {
+      "user_id": "h9-u12",
+      "session_id": "s2",
+      "probe_id": "cal-qf-tru-12b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "truth:partial"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u12",
+      "session_id": "s2",
+      "probe_id": "cal-qf-res-12b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": null,
+      "predicted_tags": [
+        "need_sensitivity"
+      ],
+      "realized_tags": [
+        "self_reliance:projected"
+      ]
+    },
+    {
+      "user_id": "h9-u12",
+      "session_id": "s2",
+      "probe_id": "cal-lo-tru-12b",
+      "domain": "truth-telling",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "truth:implicit"
+      ],
+      "realized_tags": [
+        "lie:omission"
+      ]
+    },
+    {
+      "user_id": "h9-u12",
+      "session_id": "s2",
+      "probe_id": "cal-lo-rec-12b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "low",
+      "predicted_tags": [
+        "trust:institutional"
+      ],
+      "realized_tags": [
+        "vigilance:mild"
+      ]
+    },
+    {
+      "user_id": "h9-u12",
+      "session_id": "s2",
+      "probe_id": "cal-hi-res-12b",
+      "domain": "resource-allocation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "generosity"
+      ],
+      "realized_tags": [
+        "self_reliance"
+      ]
+    },
+    {
+      "user_id": "h9-u12",
+      "session_id": "s2",
+      "probe_id": "cal-hi-rec-12b",
+      "domain": "reciprocity-cooperation",
+      "channel": "axis",
+      "stakes_pool": "high",
+      "predicted_tags": [
+        "trust"
+      ],
+      "realized_tags": [
+        "vigilance"
+      ]
+    }
+  ]
+}

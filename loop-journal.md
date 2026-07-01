@@ -13,6 +13,51 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 18 — 2026-06-30 — H9 · Self-prediction calibration (FIRST build-and-validate increment)
+
+The pivot's first *code* increment: the build loop stops designing branches and starts closing
+the spec→implementation gap. Target per `build-and-validate.md` item 1: **H9 self-calibration**
+(`scoring.md §14`) — not the *size* of your stated↔revealed gap (already measured) but your
+*awareness* of it: how well you predict your own revealed choices (self-knowledge vs self-deception;
+Epley & Dunning 2000, Loewenstein hot–cold, Tetlock calibration).
+
+- **What shipped (`scripts/analyze.py`, `--predictions` / `--predictions-window-b`).**
+  Per-person reveal-eligible indices `cal_bias_i = mean e`, `cal_error_i = mean |e|` (e = pred − rev,
+  both scored by the SAME parity-locked `item_score` on the same primary axis — no new scale, so
+  N=1-interpretable per §1.5); **H9a** self-enhancement (lower-CI of mean `cal_bias` ≥ 0.10 over the
+  three consensual-pole domains; in-group EXCLUDED as value-contested); **H9b-stability** (split-window
+  test–retest of `cal_error`, lower-CI ≥ 0.40); **H9c** stakes-blindness (the load-bearing one:
+  `blind_i` = high-pool |e| − low-pool |e|, lower-CI > 0 one-sided — the behavioral fingerprint of the
+  EV-4 stakes discontinuity); and the **cost-of-virtue channel** in log-dollar units, reported
+  convergently and **never pooled** into the axis-unit `blind_i` (§14.7).
+- **Disciplines honored.** *Never-pool* (§13.5/§14.7): axis and CoV channels kept on separate scales,
+  each reported in its own units. *Censoring* (§14.1 — the H9 analog of the `|8.0|` lock): a `never`
+  cost-of-virtue endpoint (predicted OR realized) is **never** priced — `e_price` is suppressed and the
+  pair reported categorically only ({both-never}, {predicted-never & acted-finite}, {predicted-finite &
+  acted-never}). *No composite* — the facets stand apart, never summed. *Value-neutral* — descriptive,
+  both poles dual-read (well-calibrated vs blindsided; neither ranked). *N=1* — pred and rev share a
+  pre-defined axis, so the reveal is defensible for one user without cohort norms. *Fraud/replication* —
+  no excluded paradigms touched.
+- **Gates.** New synthetic fixtures `analysis/fixtures/sample-predictions{,-window-b}.json` (12 synthetic
+  participants in 3 miscalibration clusters, single-tag options → exact hand-verifiable ground truth).
+  Threshold gate extended: H9 expectations (H9a/H9b-stability/H9c all met=True on the fixtures) **plus a
+  `check_h9_censoring()` unit-regression** that asserts directly against the code that no finite `e_price`
+  is ever produced across a `never` endpoint (inversion-agnostic; caught even if a fixture later changes).
+  Ground truth verified: cohort mean `cal_bias` = 1.111, `cal_error` r(A,B) = 0.968, mean `blind` = 1.067.
+- **`types.ts`.** Added `PredictionLogEntry` (append-only, user-keyed, timestamped; axis + cov channels;
+  the mandatory §14.6 counterbalanced-reactivity `prediction_withheld` flag) — completes the **DECISIONS
+  §19 pending contract** (H9-in-MVP-1 was locked by Dave 2026-06-08; this is a specified downstream, not a
+  new lock).
+- **Scope kept tight (parity stays trivially green).** Deferred, documented in `build-and-validate.md`:
+  (a) **H9b-discriminant** (R² of `cal_error` on `[gap, revealed_level]` < 0.50) — the only part that
+  couples to the H2–H7 cohort pipeline; (b) the **on-device JS reveal** in `poc-projection.js` + parity
+  lock; (c) the **reactivity-netting** subset design. So this increment is **Python-only** → no
+  `poc-projection.js` / `daliu.github.io` change, and `check_impl_parity.py` stays green (9/9) untouched.
+- **`make check` = GREEN** (66 scenarios; H2–H7 **unchanged** = zero regression + H9 met; probe-ceiling +
+  h9-censoring locks; JS↔Python parity 9/9). Shipped: poc **main** only (no runtime change this increment).
+
+---
+
 ## Checkpoint — 2026-06-28 (after iteration 17): design phase CLOSED → pivot to build-and-validate
 
 R6 shipped (iteration 17, below) — the design phase's last branch, per Dave's redirect
