@@ -2663,6 +2663,20 @@ R1A_RELIABILITY_FLOOR = 0.40   # internalization-centrality split-half reliabili
 R1_MIN_ITEMS = 3               # per-facet item floor for a scorable facet (§1.5 N=1)
 R1_FACETS = ("internalization", "symbolization")
 # R1c is directional: lower 95% CI of mean_i (internalization_i − symbolization_i) > 0 (§19.3).
+# R1b (§19.4/§19.5) is the moral-identity META-MODERATOR leg (the gap leg): regress the
+# §6 over-claim gap_i on internalization_i across the cohort; supported iff the UPPER 95%
+# CI of corr(internalization_i, gap_i) < R1B_MODERATION_CEILING (0.0) — i.e. a more
+# internalized moral identity predicts a SIGNIFICANTLY smaller (more negative) stated–
+# revealed over-claim, the Aquino & Reed 2002 identity→behavior-congruence prediction.
+# DIRECTIONAL (a signed slope test, not an R²-ceiling discriminant) and COHORT-level: the
+# two channels are INDEPENDENT (internalization from the identity log; gap from session +
+# card_sort), so there is no algebraic identity, and the reveal describes a cohort
+# relationship, NEVER a per-person verdict (a very negative gap is modesty, not "better").
+# The H10–H12 dampening legs (does internalization also blunt the framing/anchor/decoy
+# effects) are a DEFERRED R1b extension — they need two more cohort channels. Seed +34.
+R1B_MIN_PARTICIPANTS = 8       # cohort floor for the moderation regression (§19.5)
+R1B_MODERATION_CEILING = 0.0   # upper 95% CI of corr(internalization, over-claim gap) must clear this (be < 0)
+R1B_SEED_OFFSET = 34           # BOOTSTRAP_SEED offset registry: next free slot after A4b (+33)
 
 
 def _centrality_response(r: dict) -> float | None:
@@ -2775,6 +2789,59 @@ def compute_r1c_internalization_anchor(
         "mean_delta": sum(deltas) / len(deltas),
         "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(deltas),
         "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_r1b_moderation(
+    session_entries: list[dict],
+    card_sort_responses: list[dict],
+    identity_records: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> dict[str, Any] | None:
+    """R1b (§19.4/§19.5): moral identity as the META-MODERATOR of the stated–revealed
+    gap — its headline role. Regress each person's §6 OVER-CLAIM gap on their
+    INTERNALIZATION centrality across the cohort:
+
+        internalization_i  = centrality_facet_by_user(identity, "internalization")   (§19.1)
+        gap_i              = _h9b_person_predictors(session, card_sort)[i]["gap"]     (§6, signed over-claim)
+        r                  = corr(internalization_i, gap_i)   (= the STANDARDIZED moderation slope)
+
+    Supported iff the UPPER 95% bootstrap CI of r < R1B_MODERATION_CEILING (0.0), one-
+    sided: a more internalized moral identity predicts a SIGNIFICANTLY smaller (more
+    negative) over-claim — the Aquino & Reed 2002 identity→behavior-congruence
+    prediction. This is DIRECTIONAL (a signed-slope test), not an R²-ceiling
+    discriminant.
+
+    The two channels are INDEPENDENT — internalization rides the identity log; the gap
+    rides session + card_sort through the SAME parity-locked §3/§6 primitives H9b/H12b
+    use — so there is no algebraic identity linking them (the two-sidedness the R1b lock
+    exploits). COHORT-level construct validity, never a per-person verdict: a very
+    negative gap is MODESTY (revealing more virtue than one states), not scored as
+    "better", and neither internalization pole is ranked (§19.4). The H10–H12 dampening
+    legs are a DEFERRED extension. Seed BOOTSTRAP_SEED+R1B_SEED_OFFSET (+34)."""
+    intern = centrality_facet_by_user(identity_records, "internalization")
+    preds = _h9b_person_predictors(session_entries, card_sort_responses, tag_map)
+    rows: list[tuple[float, float]] = []
+    for user in sorted(set(intern) & set(preds)):
+        iv = intern[user]
+        gv = preds[user]["gap"]
+        if iv != iv or gv != gv:   # drop NaN on either channel — never imputed (§1.5)
+            continue
+        rows.append((iv, gv))
+    if len(rows) < R1B_MIN_PARTICIPANTS:
+        return None
+    xs = [row[0] for row in rows]
+    ys = [row[1] for row in rows]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + R1B_SEED_OFFSET)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_high != ci_high else bool(ci_high < R1B_MODERATION_CEILING)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(rows),
+        "ceiling": R1B_MODERATION_CEILING, "supported": met,
+        "pre_registered_threshold_met": met,
     }
 
 
@@ -4200,6 +4267,7 @@ def render_r1_result(
     profile_n: int,
     mean_internalization: float,
     mean_symbolization: float,
+    r1b: dict[str, Any] | None = None,
 ) -> str:
     """R1 moral identity centrality (scoring.md §19). Two DISJOINT facets reported
     SEPARATELY — internalization (private) and symbolization (public) — never pooled
@@ -4208,7 +4276,7 @@ def render_r1_result(
     be integrity OR rigid self-righteousness — the dark side of moral identity), and
     internalizing is not ranked above symbolizing; the reveal describes the profile,
     never a verdict (§19.4)."""
-    if r1a is None and r1c is None and profile_n == 0:
+    if r1a is None and r1c is None and profile_n == 0 and r1b is None:
         return (
             "(R1: insufficient data — supply --identity-log with per-item "
             "internalization + symbolization centrality responses)"
@@ -4242,11 +4310,28 @@ def render_r1_result(
         )
     else:
         lines.append("  R1c internalization > symbolization: insufficient data (need ≥3 users with both facets scored)")
+    if r1b is not None:
+        lines.append(
+            f"  R1b MODERATION (over-claim gap ~ internalization, standardized slope = corr)  "
+            f"r = {r1b['r']:+.3f}, 95% CI {_ci_str(r1b)}, n = {r1b['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {r1b['ceiling']:.1f}, one-sided): "
+            f"{_met_glyph(r1b['pre_registered_threshold_met'])}  "
+            f"(a more internalized moral identity predicts LESS over-claiming — Aquino & Reed 2002; §19.5)"
+        )
+    else:
+        lines.append(
+            "  R1b moderation (does internalization predict a smaller over-claim gap?): "
+            "insufficient data (need the {session, card_sort, identity} bundle via --r1b-log, "
+            f"≥{R1B_MIN_PARTICIPANTS} joined participants)"
+        )
     lines.append(
         "  Value-neutral: a highly self-defining moral identity is NOT scored as better than a peripheral one "
         "(centrality can be integrity OR rigid self-righteousness, §19.4); the facets are described, never ranked. "
-        "R1c is a cohort construct-validity anchor, not a per-person verdict. R1b — whether centrality MODERATES "
-        "the stated–revealed gap / H10–H12 — is deferred (cohort-coupled); see build-and-validate.md."
+        "R1c is a cohort construct-validity anchor, not a per-person verdict. R1b is a COHORT-level moderation "
+        "read — never a per-person verdict, and a very negative gap is modesty, not scored better; the H10–H12 "
+        "dampening legs remain deferred (cohort-coupled), see build-and-validate.md."
     )
     return "\n".join(lines)
 
@@ -4726,6 +4811,16 @@ def main() -> int:
              "distinct channel or reducible to the choice level + aspirational-gap magnitude.",
     )
     parser.add_argument(
+        "--r1b-log",
+        type=Path,
+        default=None,
+        help="Optional combined session + card-sort + identity log (object with session/card_sort/identity "
+             "arrays for a SHARED cohort — identity `user` must equal session `user_id`) for the R1b moral-"
+             "identity META-MODERATION leg (§19.5): regresses the §6 over-claim gap_i on internalization_i; "
+             "supported iff the upper 95%% CI of corr(internalization, gap) < 0 (higher internalization → "
+             "smaller over-claim).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -5115,6 +5210,29 @@ def main() -> int:
             a4b_bundle.get("process", []),
             a4b_bundle.get("session", []),
             a4b_bundle.get("card_sort", []),
+            tag_map,
+        )
+
+    # R1b moral-identity META-MODERATION leg (scoring.md §19.5) if a combined
+    # {session, card_sort, identity} bundle for a SHARED cohort is supplied. Regresses
+    # the §6 over-claim gap_i on internalization_i; supported iff the upper 95% CI of
+    # corr(internalization, gap) < 0. Cohort-level, Python-only (no on-device reveal) so
+    # parity stays green. Independent channels ⇒ no algebraic identity (the R1b lock).
+    r1b_moderation_result: dict[str, Any] | None = None
+    if args.r1b_log:
+        try:
+            with args.r1b_log.open() as f:
+                r1b_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading R1b log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(r1b_bundle, dict):
+            print("ERROR: R1b log must be a JSON object with session/card_sort/identity arrays", file=sys.stderr)
+            return 2
+        r1b_moderation_result = compute_r1b_moderation(
+            r1b_bundle.get("session", []),
+            r1b_bundle.get("card_sort", []),
+            r1b_bundle.get("identity", []),
             tag_map,
         )
 
@@ -5554,6 +5672,19 @@ def main() -> int:
             r1_block["R1a"] = _h9_json(r1a_result)
         if r1c_result is not None:
             r1_block["R1c"] = _h9_json(r1c_result)
+        if r1b_moderation_result is not None:
+            # R1b MODERATION leg — COHORT-level directional slope (§19.5). supported is
+            # EXACTLY (corr upper-CI < ceiling 0.0); the gate re-derives it
+            # (check_r1b_moderation_lock). Independent channels ⇒ no pooled scalar.
+            r1_block["R1b_moderation"] = {
+                "r": r1b_moderation_result["r"],
+                "ci_low": _nan_to_none(r1b_moderation_result["ci_low"]),
+                "ci_high": _nan_to_none(r1b_moderation_result["ci_high"]),
+                "ceiling": r1b_moderation_result["ceiling"],
+                "n_participants": r1b_moderation_result["n_participants"],
+                "supported": r1b_moderation_result["supported"],
+                "pre_registered_threshold_met": r1b_moderation_result["pre_registered_threshold_met"],
+            }
         if r1_block or r1_profile_n:
             r1_block["profile_n"] = r1_profile_n
             # Two facets exposed SEPARATELY — no pooled "centrality" key (§13.5).
@@ -5761,11 +5892,13 @@ def main() -> int:
                 h12a_result, h12c_result, h12_person_asymmetry_n, h12_mean_asymmetry,
                 h12b_discriminant_result,
             ))
-        if r1a_result is not None or r1c_result is not None or r1_profile_n:
+        if (r1a_result is not None or r1c_result is not None or r1_profile_n
+                or r1b_moderation_result is not None):
             print()
             print(render_r1_result(
                 r1a_result, r1c_result, r1_profile_n,
                 r1_mean_internalization, r1_mean_symbolization,
+                r1b_moderation_result,
             ))
         if (r6a_result is not None or r6d_result is not None or r6_profile_n
                 or r6b_discriminant_result is not None):
