@@ -1241,6 +1241,17 @@ H9A_BIAS_FLOOR = 0.10   # lower 95% CI of mean cal_bias ≥ this (axis units)
 H9B_STABILITY_FLOOR = 0.40  # lower 95% CI of test-retest r of cal_error ≥ this
 # H9c is directional: lower 95% CI of mean blind > 0 (no magnitude floor).
 
+# H9b DISCRIMINANT half (§14.4) — the deferred sibling of the stability half above.
+# Regress the self-prediction error MAGNITUDE cal_error_i on [ gap_i, revealed_level_i ]
+# (the aspirational stated−revealed gap and the revealed behavioral level, both from the
+# §6/§3 cohort pipeline). Self-knowledge is a DISTINCT construct — NOT reducible to "how
+# much you over-claim" + "how virtuous you are" — iff the UPPER 95% bootstrap CI of the
+# model R² < H9B_R2_CEILING (the calibration axis carries variance those two predictors
+# do not). PROPOSED locks (DECISIONS §19); the analyzer reports met/not-met, never gates.
+H9B_R2_CEILING = 0.50          # discriminant: UPPER 95% CI of cal_error~[gap,revealed_level] R² must clear this
+H9B_MIN_PARTICIPANTS = 8       # ≥8 users with gap + revealed_level + cal_error before a 2-predictor R² is stable
+H9B_SEED_OFFSET = 28           # bootstrap seed band for the R² CI (A4A 25, H8A 26, H11B 27; next free)
+
 
 def load_predictions(path: Path) -> list[dict]:
     """
@@ -1364,11 +1375,11 @@ def compute_h9b_stability(
     (first-half vs second-half sessions). Lower 95% CI ≥ 0.40 (deliberately
     below H3's 0.60 — a second-order derived quantity is noisier).
 
-    NOTE — the discriminant half of H9b (regress cal_error on [gap,
-    revealed_level], R² upper CI < 0.50) is DEFERRED to the next increment: it
-    couples calibration to the H2–H7 cohort pipeline (per-user gap + revealed
-    level), whereas this increment keeps H9 isolated on its own fixtures. See
-    build-and-validate.md.
+    NOTE — the DISCRIMINANT half of H9b (regress cal_error on [gap,
+    revealed_level], R² upper CI < 0.50) is compute_h9b_discriminant below: it
+    couples calibration to the §3/§6 cohort pipeline (per-user gap + revealed
+    level), so it reads a combined --h9b-log rather than the isolated
+    --predictions fixture this stability half uses.
     """
     def err_by_user(records: list[dict[str, Any]]) -> dict[str, float]:
         by_user: dict[str, list[float]] = defaultdict(list)
@@ -1399,6 +1410,104 @@ def compute_h9b_stability(
         "n": len(shared),
         "threshold_low": H9B_STABILITY_FLOOR,
         "pre_registered_threshold_met": met,
+    }
+
+
+def _h9b_person_predictors(
+    session_entries: list[dict],
+    card_sort_responses: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> dict[str, dict[str, float]]:
+    """The [gap_i, revealed_level_i] predictor pair for the H9b discriminant (§14.4),
+    built from the SAME §3/§6 cohort primitives the main analyzer uses — so the parity-
+    locked item_score, the §10 inattentive drop and the ≥3-items-per-session floor apply
+    identically:
+
+        revealed_means = user_domain_means(session_means(session_aggregates(...)))   (§3)
+        stated_layer   = card_sort_scores(...)[aspirational_self]                      (§5.1)
+        gaps           = compute_gaps(revealed_means, stated_layer)                    (§6)
+        gap_i            = mean_d gap(i, d)          (how much a person OVER-CLAIMS)
+        revealed_level_i = mean_d z_revealed(i, d)   (their revealed behavioral LEVEL)
+
+    Both predictors ride the per-domain z-scores compute_gaps already emits, so gap and
+    revealed_level share the cohort-standardized scale. Returns {user: {gap, revealed}}."""
+    revealed_means = user_domain_means(session_means(session_aggregates(session_entries, tag_map)))
+    value_domain = load_values_deck_domains()
+    cs_scores = card_sort_scores(card_sort_responses, value_domain)
+    stated_layer = {
+        (u, d): s for (u, d, layer), s in cs_scores.items() if layer == "aspirational_self"
+    }
+    gaps = compute_gaps(revealed_means, stated_layer, stated_source="card_sort")
+    by_gap: dict[str, list[float]] = defaultdict(list)
+    by_rev: dict[str, list[float]] = defaultdict(list)
+    for (user, _domain), r in gaps.items():
+        by_gap[user].append(r["gap"])
+        by_rev[user].append(r["z_revealed"])
+    return {
+        user: {
+            "gap": sum(by_gap[user]) / len(by_gap[user]),
+            "revealed": sum(by_rev[user]) / len(by_rev[user]),
+        }
+        for user in by_gap
+    }
+
+
+def compute_h9b_discriminant(
+    session_entries: list[dict],
+    card_sort_responses: list[dict],
+    predictions: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> dict[str, Any] | None:
+    """H9b — the self-CALIBRATION DISCRIMINANT (§14.4), the deferred sibling of the H9b
+    stability half. Regress the self-prediction error MAGNITUDE cal_error_i (mean_p |pred−rev|
+    over a person's axis-channel probes, §14.2) on [ gap_i, revealed_level_i ] (their
+    aspirational over-claim and their revealed behavioral level, §6/§3); self-knowledge is
+    a DISTINCT construct — NOT reducible to how much a person over-claims plus how virtuous
+    they are — iff the UPPER 95% bootstrap CI of the model R² < H9B_R2_CEILING (the calibration
+    axis carries variance those two predictors do not; Dunning 2005 — self-insight dissociates
+    from both self-idealization and trait level). Completes H9b = stability ∧ discriminant.
+
+    cal_error is the MAGNITUDE from the SEPARATE prediction channel, NOT a signed echo of
+    stated−revealed: were the outcome the signed cal_bias_i under predictions that merely
+    parrot the card-sort aspiration (pred≈stated, rev≈revealed), cal_bias would be an EXACT
+    affine function of [gap, revealed_level] (within-domain z is affine) → R² ≡ 1 → the
+    discriminant would falsely FAIL. check_h9b_discriminant_lock demonstrates exactly that
+    trap. COHORT-level statistic, NEVER a per-person reveal: cal_error_i, gap_i and
+    revealed_level_i stay separate facets, never pooled (§13.5). Seed BOOTSTRAP_SEED+28."""
+    predictors_by_user = _h9b_person_predictors(session_entries, card_sort_responses, tag_map)
+    cal = calibration_person_indices(calibration_axis_records(predictions, tag_map))
+    rows: list[tuple[float, float, float]] = []
+    for user in sorted(set(predictors_by_user) & set(cal)):
+        gap = predictors_by_user[user]["gap"]
+        rev = predictors_by_user[user]["revealed"]
+        cal_error = cal[user]["cal_error"]
+        if gap != gap or rev != rev or cal_error != cal_error:
+            continue
+        rows.append((gap, rev, cal_error))   # predictors = [gap, revealed_level]; y = cal_error
+    if len(rows) < H9B_MIN_PARTICIPANTS:
+        return None
+    predictors = [[r[0] for r in rows], [r[1] for r in rows]]
+    y = [r[2] for r in rows]
+    r2 = _ols_r_squared(predictors, y)
+    if r2 is None:
+        return None
+    ci_low, ci_high = _bootstrap_ci_r2(rows, random.Random(BOOTSTRAP_SEED + H9B_SEED_OFFSET))
+    supported = None if ci_high != ci_high else bool(ci_high < H9B_R2_CEILING)
+    # Descriptive companions (reported, NOT the gate): cal_error's bare correlation with each
+    # predictor alone, so a reader sees WHICH predictor (if any) carries the leakage — without
+    # pooling anything per person.
+    cal_gap_r = _pearson_r([r[0] for r in rows], y)
+    cal_revealed_r = _pearson_r([r[1] for r in rows], y)
+    return {
+        "r2": r2,
+        "r2_ci_low": ci_low,
+        "r2_ci_high": ci_high,
+        "ceiling": H9B_R2_CEILING,
+        "cal_gap_r": cal_gap_r,
+        "cal_revealed_r": cal_revealed_r,
+        "n_participants": len(rows),
+        "supported": supported,
+        "pre_registered_threshold_met": supported,
     }
 
 
@@ -3321,10 +3430,11 @@ def render_h9_result(
     h9c: dict[str, Any] | None,
     cov: dict[str, Any] | None,
     person_indices_n: int,
+    h9b_disc: dict[str, Any] | None = None,
 ) -> str:
     """H9 self-prediction calibration (scoring.md §14). Axis channel and cost-of-
     virtue channel reported SEPARATELY — never pooled (§14.7)."""
-    if all(x is None for x in (h9a, h9b, h9c)) and cov is None:
+    if all(x is None for x in (h9a, h9b, h9c, h9b_disc)) and cov is None:
         return "(H9: insufficient data — supply --predictions to compute self-prediction calibration)"
     lines = ["H9 (self-prediction calibration — self-knowledge vs self-deception):"]
     lines.append(f"  Reveal-eligible person indices (cal_bias / cal_error): {person_indices_n} participant(s)")
@@ -3347,11 +3457,20 @@ def render_h9_result(
         )
         lines.append(
             f"     threshold (lower CI ≥ {h9b['threshold_low']:.2f}): "
-            f"{_met_glyph(h9b['pre_registered_threshold_met'])}  "
-            f"(discriminant half deferred — see build-and-validate.md)"
+            f"{_met_glyph(h9b['pre_registered_threshold_met'])}"
         )
     else:
         lines.append("  H9b stability: insufficient data (need --predictions-window-b, ≥3 shared participants)")
+    if h9b_disc is not None:
+        lines.append(
+            f"  H9b DISCRIMINANT (cal_error ~ [aspirational gap, revealed level])  "
+            f"R² = {h9b_disc['r2']:.3f}, upper 95% CI {_f3(h9b_disc['r2_ci_high'])}, n = {h9b_disc['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {h9b_disc['ceiling']:.2f} — self-knowledge NOT reducible to "
+            f"over-claiming + virtue level, §14.4): {_met_glyph(h9b_disc['pre_registered_threshold_met'])}  "
+            f"(cal·gap r = {_f3(h9b_disc['cal_gap_r'])}, cal·revealed r = {_f3(h9b_disc['cal_revealed_r'])}, cohort/no-pool)"
+        )
     if h9c is not None:
         lines.append(
             f"  H9c stakes-blindness (LOAD-BEARING)  mean blind = {h9c['mean_blind']:+.3f}, "
@@ -4041,6 +4160,14 @@ def main() -> int:
              "generosity level. Uses the same --distance-map as --circle-log.",
     )
     parser.add_argument(
+        "--h9b-log",
+        type=Path,
+        default=None,
+        help="Optional combined session + card-sort + predictions log (object with session/card_sort/"
+             "predictions arrays for a SHARED cohort) for the H9b self-CALIBRATION DISCRIMINANT (§14.4): "
+             "tests whether cal_error_i is reducible to the aspirational gap + revealed level.",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -4332,6 +4459,32 @@ def main() -> int:
             print(f"ERROR: distance map not found at {args.distance_map}", file=sys.stderr)
             return 2
         h11b_result = compute_h11b_discriminant(h11b_entries, tag_map, h11b_dist_map)
+
+    # --- H9b self-CALIBRATION DISCRIMINANT (§14.4): is the self-prediction error magnitude
+    # cal_error_i reducible to the aspirational gap_i + revealed level_i? Discriminant-supported
+    # iff the UPPER 95% CI of the regression R² < H9B_R2_CEILING — the calibration axis carries
+    # variance those two predictors do not. Completes H9b = stability ∧ discriminant. Reads a
+    # combined log carrying session + card-sort + predictions for ONE shared cohort (the
+    # discriminant couples calibration to the §3/§6 pipeline, so it can't ride the isolated
+    # --predictions fixture). Cohort-level statistic, NO per-person reveal → Python-only, parity
+    # stays green (same scope pattern as H10b/R2c deferred halves).
+    h9b_discriminant_result: dict[str, Any] | None = None
+    if args.h9b_log:
+        try:
+            with args.h9b_log.open() as f:
+                h9b_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading H9b log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(h9b_bundle, dict):
+            print("ERROR: H9b log must be a JSON object with session/card_sort/predictions arrays", file=sys.stderr)
+            return 2
+        h9b_discriminant_result = compute_h9b_discriminant(
+            h9b_bundle.get("session", []),
+            h9b_bundle.get("card_sort", []),
+            h9b_bundle.get("predictions", []),
+            tag_map,
+        )
 
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
     # value_slot + wave (+ taboo) is supplied. Pure re-read of the `never` tail as
@@ -4639,6 +4792,21 @@ def main() -> int:
             h9_block["H9a"] = _h9_json(h9a_result)
         if h9b_result is not None:
             h9_block["H9b_stability"] = _h9_json(h9b_result)
+        if h9b_discriminant_result is not None:
+            # H9b DISCRIMINANT half — COHORT-level R² (§14.4). NO pooled per-person scalar:
+            # cal_error_i, gap_i and revealed_level_i stay separate facets (§13.5). supported
+            # is EXACTLY (r2 upper-CI < ceiling); the gate re-derives it (check_h9).
+            h9_block["H9b_discriminant"] = {
+                "r2": h9b_discriminant_result["r2"],
+                "r2_ci_low": _nan_to_none(h9b_discriminant_result["r2_ci_low"]),
+                "r2_ci_high": _nan_to_none(h9b_discriminant_result["r2_ci_high"]),
+                "ceiling": h9b_discriminant_result["ceiling"],
+                "cal_gap_r": h9b_discriminant_result["cal_gap_r"],
+                "cal_revealed_r": h9b_discriminant_result["cal_revealed_r"],
+                "n_participants": h9b_discriminant_result["n_participants"],
+                "supported": h9b_discriminant_result["supported"],
+                "pre_registered_threshold_met": h9b_discriminant_result["pre_registered_threshold_met"],
+            }
         if h9c_result is not None:
             h9_block["H9c"] = _h9_json(h9c_result)
         if h9_cov is not None:
@@ -4855,10 +5023,12 @@ def main() -> int:
         if h6_result is not None:
             print()
             print(render_h6_result(h6_result))
-        if any(x is not None for x in (h9a_result, h9b_result, h9c_result)) or h9_cov is not None:
+        if (any(x is not None for x in (h9a_result, h9b_result, h9c_result, h9b_discriminant_result))
+                or h9_cov is not None):
             print()
             print(render_h9_result(
-                h9a_result, h9b_result, h9c_result, h9_cov, len(h9_person_indices)
+                h9a_result, h9b_result, h9c_result, h9_cov, len(h9_person_indices),
+                h9b_discriminant_result,
             ))
         if h10a_result is not None or h10c_result is not None or h10_construct_sd_n:
             print()

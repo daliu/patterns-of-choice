@@ -13,6 +13,54 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 29 — 2026-07-01 — H9 · Self-calibration DISCRIMINANT (H9b leg; cohort-level) → H9b core complete
+
+`build-and-validate.md` item 1. H9's person indices + **H9a** (self-enhancement) + **H9b-stability** (split-window `cal_error` test–retest) + **H9c**
+(stakes-blindness) + the cost-of-virtue channel shipped 2026-06-30, but the design defines **H9b = stability ∧ discriminant**: a reliable
+self-knowledge signal is not enough — the calibration error must also be **discriminable from how much a person over-claims and how virtuous they
+act**. That discriminant half, **H9b-discriminant**, was the deferred piece (the sole H9 gap remaining after the stability leg). This iteration
+builds it, completing H9b's core validity claim. H9b-discriminant asks: is a person's self-prediction error `cal_error_i` just a proxy for their
+aspirational **gap** (how much they over-claim, §6) plus their **revealed level** (how virtuous they act, §3), or does self-knowledge carry
+variance those two miss? A genuine calibration axis is dissociable from both — you can act well *and* over-claim *and still* know yourself accurately.
+
+- **What shipped (`scripts/analyze.py`, `--h9b-log`).** `compute_h9b_discriminant` regresses the self-prediction error magnitude `cal_error_i`
+  (`mean_p |pred − rev|` over axis probes) on **two** predictors — the aspirational over-claim `gap_i` and the revealed behavioral level
+  `revealed_level_i` — and calls self-knowledge discriminable iff the **upper 95% bootstrap CI of the model R² < 0.50** (`H9B_R2_CEILING`; seed
+  `20260510 + 28`; ≥ `H9B_MIN_PARTICIPANTS = 8` shared users). The predictors come from a new helper `_h9b_person_predictors`, which runs the
+  **real §3/§6 sub-pipeline** (`session_aggregates → session_means → user_domain_means`; `card_sort_scores[aspirational_self]`; `compute_gaps`)
+  over a single combined `{session, card_sort, predictions}` corpus for one shared cohort — so H9b exercises the genuine gap + revealed-level
+  machinery while staying **isolated** from the main H2–H7 pipeline. The JSON `H9.H9b_discriminant` block carries `{r2, r2_ci_low, r2_ci_high,
+  ceiling, cal_gap_r, cal_revealed_r, n_participants, supported, pre_registered_threshold_met}` — **no** pooled scalar. Reuses `_ols_r_squared` /
+  `_bootstrap_ci_r2` from H11b. Rendered as a value-neutral cohort line in `render_h9_result` (new `h9b_disc` arg).
+- **The load-bearing discipline — the R² ≡ 1 mechanical trap, and why `cal_error` is the |e| MAGNITUDE from a SEPARATE channel (§14.4).** The
+  obvious operationalization — the *signed* `cal_bias` under predictions that merely parrot the card-sort aspiration (`pred ≡ stated`,
+  `rev ≡ revealed`) — is a **trap**: since within-domain z is affine, `cal_bias = stated − revealed = (μ_s − μ_r) + σ_s·gap + (σ_s − σ_r)·z_rev`
+  is an **exact affine combination** of `[gap, revealed_level]` → R² ≡ 1 → the discriminant would **always FAIL**, no matter the truth (the H9
+  analog of H11b's `β = (mean − near)/2.5` circle-mean identity). The fix (load-bearing): score the **|e| magnitude** from the **independent
+  prediction beat** (§14.3), not a signed echo of `stated − revealed` — which decorrelates `cal_error` from the predictors, so a genuinely
+  dissociable self-knowledge axis scores R² ≈ 0 and clears the ceiling.
+- **The two-sided lock (`check_h9b_discriminant_lock()`, 7 assertions all green).** On synthetic corpora built through the real pipeline with
+  known ground truth: (i) **INDEPENDENT** (`cal_error` drawn ⊥ [gap, revealed]) → R² ≈ 0, upper CI clears the ceiling, **SUPPORTED**; (ii)
+  **REDUCIBLE** (`cal_error` made a linear function of [gap, revealed]) → R² high, upper CI ≥ ceiling, **NOT supported** — an error that *is* its
+  predictors is correctly rejected; (iii) `supported` is **exactly** `upper-CI < ceiling` on both (no bypass); (iv) the **mechanical-trap
+  identity** — feed the signed `cal_bias` (pred ≡ stated) into `_ols_r_squared([gap, z_rev], ·)` and it returns **1.0** exactly, demonstrating
+  *why* the magnitude/separate-channel design is required; (v) the descriptive companion localizes leakage (`cal·gap r` and `cal·revealed r` ≈ 0
+  independent, strongly signed reducible) without per-person pooling; (vi) the < 8-participant inclusion floor returns **None** (never a bare
+  scalar); (vii) the reveal is cohort-level and value-neutral. Fixture: `analysis/fixtures/sample-h9b-log.json` (36 participants over 3 domains,
+  900 records; seed-searched cal_error draw orthogonal to both predictors so R² ≈ 0.004, upper CI ≈ 0.20, **SUPPORTED**).
+- **What it honors.** Value-neutral (accurate self-knowledge is **described, never ranked** as better; miscalibration in either direction is not a
+  deficit); no composite / no cross-branch pooling (`cal_error_i`, `gap_i`, `revealed_level_i` stay **separate facets**, §13.5); the axis and
+  cost-of-virtue channels remain unpooled (§14.7); cohort-level statistic, **never a per-person reveal**; inclusion floor (< 8 → None). **Cohort-
+  level R² with no on-device reveal → Python-only; `poc-projection.js` untouched, parity stays green (9/9).** `make check` green (validate 66 +
+  analyzer gate incl. the new lock + parity 9/9).
+- **Surfaced to Dave (PROPOSE, not auto-locked).** (a) The **operationalization** of the two predictors — `gap_i = mean_d (z(stated) − z(revealed))`
+  as the over-claim, `revealed_level_i = mean_d z(revealed)` as the virtue level — is a modeling choice worth a DECISIONS-§ pre-registration lock
+  before any real run; flagging it rather than locking it. (b) Still deferred for H9: the **reactivity-netting** counterbalanced no-prediction
+  subset (§14.6, needs the counterbalancing-schedule design; `prediction_withheld` is typed but unused), and the broader §14 **on-device reveal**
+  work (H9b itself is cohort-level, so it adds no reveal to port). **H9b core (stability ∧ discriminant) is now complete.**
+
+---
+
 ## Iteration 28 — 2026-07-01 — H11 · Moral-circle SHAPE discriminant (H11b leg; cohort-level) → H11 core complete
 
 `build-and-validate.md` item 3. H11's measurement primitive + **H11a** (β_i split-window shape reliability) + **H11c** (parochial-gradient

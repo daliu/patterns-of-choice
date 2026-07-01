@@ -131,7 +131,7 @@ EXPECTATIONS = {
     "H5": {"kind": "per_domain", "expected_domains": ["truth-telling"], "threshold_met": True},
     "H6": {"kind": "range", "in_range": False},
     "H7": {"kind": "single", "threshold_met": True},
-    "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9c": True}},
+    "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9b_discriminant": True, "H9c": True}},
     "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True}},
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
@@ -168,6 +168,7 @@ def run_analyzer() -> dict:
         "--process-log", str(FIXTURES / "sample-process-log.json"),
         "--h8-log", str(FIXTURES / "sample-h8-log.json"),
         "--h11b-log", str(FIXTURES / "sample-h11b-log.json"),
+        "--h9b-log", str(FIXTURES / "sample-h9b-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -227,11 +228,13 @@ def check_range(hid: str, payload: dict, expected_in_range: bool) -> tuple[bool,
 
 def check_h9(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     """H9 self-prediction calibration. Assert each present sub-hypothesis
-    (H9a/H9b_stability/H9c) hit its pre-registered threshold outcome, and that
-    the cost-of-virtue channel is present with the censoring split (finite +
-    censored). The magnitude of the censoring lock (no finite e_price across a
-    'never' endpoint) is asserted directly against the code in
-    check_h9_censoring() below — here we just confirm the channel is reported."""
+    (H9a/H9b_stability/H9b_discriminant/H9c) hit its pre-registered threshold
+    outcome, and that the cost-of-virtue channel is present with the censoring
+    split (finite + censored). The magnitude of the censoring lock (no finite
+    e_price across a 'never' endpoint) is asserted directly against the code in
+    check_h9_censoring() below — here we just confirm the channel is reported.
+    The H9b DISCRIMINANT two-sided machinery is proven in
+    check_h9b_discriminant_lock() below (independent→SUPPORTED, reducible→NOT)."""
     if not isinstance(payload, dict):
         return False, f"{hid}: missing or not a dict"
     parts = []
@@ -1490,6 +1493,185 @@ def check_h11b_discriminant_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_h9b_discriminant_lock() -> tuple[bool, list[str]]:
+    """The H9b self-CALIBRATION DISCRIMINANT discipline (§14.4), asserted directly against the code
+    so a regression survives any fixture change. H9b regresses the self-prediction error MAGNITUDE
+    cal_error_i (mean_p |pred − rev| over axis probes) on [ gap_i, revealed_level_i ] — the aspirational
+    over-claim (§6) and the revealed behavioral level (§3) — and calls self-knowledge DISCRIMINABLE from
+    those two iff the UPPER 95% bootstrap CI of the model R² < H9B_R2_CEILING (self-knowledge is a real
+    axis, not an artifact of over-claiming + how virtuous you are). This lock proves, on synthetic
+    corpora with KNOWN ground truth built through the REAL §3/§6 pipeline:
+      (i)   INDEPENDENT (cal_error drawn ⊥ [gap, revealed]): R² ~ 0, upper CI clears the 0.50 ceiling,
+            SUPPORTED True — a genuinely dissociable calibration axis is detected;
+      (ii)  REDUCIBLE (cal_error made a linear function of [gap, revealed]): R² high, upper CI ≥ ceiling,
+            SUPPORTED False — an error that IS its predictors is correctly NOT supported;
+      (iii) SUPPORTED is EXACTLY (upper-CI < ceiling) on both corpora — the CI gate cannot be bypassed;
+      (iv)  the MECHANICAL TRAP is real and is WHY the |e| MAGNITUDE from a SEPARATE prediction channel is
+            load-bearing: if the outcome were instead the SIGNED cal_bias under predictions that merely
+            parrot the card-sort aspiration (pred ≡ stated, rev ≡ revealed), then cal_bias = stated − rev
+            = const + σ_s·gap + (σ_s − σ_r)·z_rev is an EXACT affine function of [gap, revealed_level]
+            (within-domain z is affine) → R² ≡ 1 → the discriminant would ALWAYS FAIL. The code avoids this
+            by scoring the |e| magnitude from the independent prediction channel, so INDEPENDENT still supports;
+      (v)   the descriptive companion localizes leakage — |cal·gap r|,|cal·revealed r| small when
+            independent, strongly signed when reducible — WITHOUT pooling anything per person;
+      (vi)  the inclusion floor holds — < H9B_MIN_PARTICIPANTS joined users returns None (never a bare scalar);
+      (vii) the reveal is COHORT-level and value-neutral — cal_error is never ranked as better/worse.
+    This is the H9 analog of the H11b shape-discriminant lock / the §14.1 censoring lock."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    tag_map = A.load_tag_axis_map(A.DEFAULT_TAG_MAP)
+    DOMAINS = ["truth-telling", "resource-allocation", "reciprocity-cooperation"]
+    VBD = {d: [v for v, dd in A.load_values_deck_domains().items() if dd == d] for d in DOMAINS}
+    NIT, KP, RT = 6, 6, 5000   # session items per user×domain, axis probes per user, response_time_ms
+
+    def tw(d, t):
+        return A.item_score({"domain": d, "tags": [t]}, tag_map)[0]
+
+    # Per-domain revealed menu (tags on the primary axis) and the truth-telling prediction |e| menu.
+    REVEAL = {
+        "truth-telling": ["truth:commission", "truth:state", "truth:partial", "truth:implicit",
+                          "lie:protective", "lie:omission", "lie:commission"],
+        "resource-allocation": ["generosity", "need_sensitivity", "fairness",
+                                "self_reliance:projected", "self_reliance"],
+        "reciprocity-cooperation": ["trust", "forgiveness", "trust:asymmetric", "trust:institutional",
+                                    "vigilance:mild", "vigilance"],
+    }
+    ROPT = {d: [(tw(d, t), t) for t in REVEAL[d]] for d in DOMAINS}
+    PAIRS = [("truth:commission", "truth:commission"), ("truth:state", "truth:partial"),
+             ("truth:commission", "truth:state"), ("truth:state", "truth:implicit"),
+             ("truth:commission", "truth:partial"), ("truth:implicit", "discretion"),
+             ("truth:partial", "discretion"), ("transparency", "discretion"),
+             ("transparency", "lie:protective")]
+    PMENU = [(abs(tw("truth-telling", p) - tw("truth-telling", r)), p, r) for p, r in PAIRS]
+    POPT = [e for e, _, _ in PMENU]
+    E2P = {round(e, 6): (p, r) for e, p, r in PMENU}
+
+    def greedy(opts, K, t):
+        chosen, s = [], 0.0
+        for j in range(K):
+            b = min(opts, key=lambda o: abs((s + o) / (j + 1) - t))
+            chosen.append(b)
+            s += b
+        return chosen
+
+    def grid(lo, hi, n, seed):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def build_sess_cs(n, seed):
+        sess, cs, rt, sk = [], [], {}, {}
+        for di, d in enumerate(DOMAINS):
+            rg = grid(-0.80, 0.80, n, seed + 10 + di)
+            kg = grid(1.0, 5.0, n, seed + 40 + di)
+            for i in range(n):
+                rt[(i, d)] = rg[i]
+                sk[(i, d)] = max(1, min(5, round(kg[i])))
+        for i in range(n):
+            u = f"u{i:02d}"
+            sel: list = []
+            for d in DOMAINS:
+                wtag = {w: t for w, t in ROPT[d]}
+                for j, w in enumerate(greedy([w for w, _ in ROPT[d]], NIT, rt[(i, d)])):
+                    sess.append({"session_id": f"{u}-{d}", "user_id": u, "timestamp_iso": "2026-07-01T00:00:00Z",
+                                 "scenario_id": f"lock-{d}", "scenario_type": "quick-fire-round", "domain": d,
+                                 "item_id": f"{u}-{d}-{j}", "option_id": "a", "tags": [wtag[w]],
+                                 "response_time_ms": RT, "presented_position": j + 1, "was_timeout": False})
+                sel.extend(VBD[d][: sk[(i, d)]])
+            cs.append({"user_id": u, "layer": "aspirational_self", "selected_value_ids": sel})
+        return sess, cs
+
+    def realize_pred(n, targets):
+        preds = []
+        for i in range(n):
+            u = f"u{i:02d}"
+            for j, e in enumerate(greedy(POPT, KP, targets[i])):
+                p, r = E2P[round(e, 6)]
+                preds.append({"user_id": u, "session_id": f"{u}-p", "probe_id": f"{u}-c{j}",
+                              "domain": "truth-telling", "channel": "axis", "stakes_pool": None,
+                              "predicted_tags": [p], "realized_tags": [r]})
+        return preds
+
+    def corpus(mode, n, seed):
+        sess, cs = build_sess_cs(n, seed)
+        pby = A._h9b_person_predictors(sess, cs, tag_map)
+        gaps = [pby[f"u{i:02d}"]["gap"] for i in range(n)]
+        revs = [pby[f"u{i:02d}"]["revealed"] for i in range(n)]
+        if mode == "reducible":
+            # cal_error IS a linear function of its predictors → [gap, revealed] explain it → R² high.
+            targets = [max(0.05, 0.55 + 0.25 * gaps[i] + 0.20 * revs[i]) for i in range(n)]
+        else:
+            # seed-search a cal_error draw orthogonal to BOTH predictors → R² ~ 0 → SUPPORTED.
+            cseed = seed + 500
+            for cand in range(seed + 500, seed + 9000):
+                tv = grid(0.15, 1.15, n, cand)
+                if abs(A._pearson_r(tv, gaps)) < 0.05 and abs(A._pearson_r(tv, revs)) < 0.05:
+                    cseed = cand
+                    break
+            targets = grid(0.15, 1.15, n, cseed)
+        return sess, cs, realize_pred(n, targets)
+
+    def run(mode, n, seed):
+        s, c, p = corpus(mode, n, seed)
+        return A.compute_h9b_discriminant(s, c, p, tag_map)
+
+    ind = run("independent", 40, 800000)
+    red = run("reducible", 40, 800333)
+    ts, tc, tp = corpus("independent", 6, 800000)          # < 8-participant floor
+    tiny = A.compute_h9b_discriminant(ts, tc, tp, tag_map)
+
+    # (iv) MECHANICAL TRAP as an EXACT identity: if predictions merely echoed the card-sort aspiration
+    # (pred ≡ stated, rev ≡ revealed) and the outcome were the SIGNED cal_bias = stated − revealed, then
+    # cal_bias = (μ_s − μ_r) + σ_s·gap + (σ_s − σ_r)·z_rev is an exact affine combo of [gap, z_rev] (within-
+    # domain z is affine) → _ols_r_squared MUST report 1.0. This is why the |e| MAGNITUDE from a separate
+    # prediction channel is load-bearing — a signed echo would make the discriminant fail by construction.
+    def zscore(xs):
+        n = len(xs)
+        m = sum(xs) / n
+        sd = (sum((x - m) ** 2 for x in xs) / (n - 1)) ** 0.5
+        return [(x - m) / sd for x in xs]
+    stated = [0.20, 0.80, 0.40, 1.00, 0.60, 0.20, 0.80, 0.40, 0.60, 1.00, 0.20, 0.80]
+    reveal = [0.30, -0.50, 0.10, 0.70, -0.20, 0.55, -0.35, 0.25, -0.10, 0.40, 0.65, -0.45]
+    zs, zr = zscore(stated), zscore(reveal)
+    gap_syn = [zs[k] - zr[k] for k in range(len(stated))]
+    cal_bias_syn = [stated[k] - reveal[k] for k in range(len(stated))]
+    trap_r2 = A._ols_r_squared([gap_syn, zr], cal_bias_syn)
+
+    render = A.render_h9_result(None, None, None, None, None, ind)
+    ceil = A.H9B_R2_CEILING
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["r2_ci_high"] == r["r2_ci_high"] and r["r2_ci_high"] < ceil)
+
+    checks = [
+        ("INDEPENDENT (cal_error ⊥ [gap, revealed]): SUPPORTED True, upper CI clears the ceiling",
+         ind is not None and ind["supported"] is True and ind["r2_ci_high"] == ind["r2_ci_high"]
+         and ind["r2_ci_high"] < ceil and ind["n_participants"] == 40),
+        ("REDUCIBLE (cal_error = f([gap, revealed])): SUPPORTED False, R² high, upper CI ≥ ceiling",
+         red is not None and red["supported"] is False and red["r2"] > ceil and red["r2_ci_high"] >= ceil),
+        ("SUPPORTED is EXACTLY (upper-CI < ceiling) on both corpora — the CI gate cannot be bypassed",
+         exact(ind) and exact(red)),
+        ("MECHANICAL TRAP: signed cal_bias (pred≡stated) is exact affine in [gap, z_rev] ⇒ R² ≡ 1 (why |e|/separate)",
+         trap_r2 is not None and abs(trap_r2 - 1.0) < 1e-9),
+        ("descriptive companion localizes leakage: |cal·gap r| small when independent, strongly signed when reducible",
+         ind is not None and red is not None and abs(ind["cal_gap_r"]) < 0.20
+         and abs(ind["cal_revealed_r"]) < 0.20 and abs(red["cal_gap_r"]) > 0.70),
+        ("inclusion floor: < H9B_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — NOT reducible to over-claiming+level, cohort/no-pool, never ranked",
+         "self-knowledge NOT reducible to over-claiming + virtue level" in render
+         and "cohort/no-pool" in render and "cal·gap r" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h9b-discriminant: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -1627,6 +1809,12 @@ def main() -> int:
     for m in h11block_msgs:
         print(m)
     if not h11block_ok:
+        all_pass = False
+
+    h9block_ok, h9block_msgs = check_h9b_discriminant_lock()
+    for m in h9block_msgs:
+        print(m)
+    if not h9block_ok:
         all_pass = False
 
     if all_pass:
