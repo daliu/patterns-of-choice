@@ -540,7 +540,7 @@ A participant enters H9c with ≥ 1 valid axis-channel error in *each* pool.
 
 Design source: [`h10-cross-situational-consistency.md`](h10-cross-situational-consistency.md). H10 asks whether the **variability** of a person's revealed scores across surface *contexts* is itself a stable individual-difference trait (Fleeson's density-distribution view; Mischel's if–then signatures; Doris situationism). It reuses the revealed axis scores already computed for §2–§3 — **no new elicitation** — and reads a `context:*` metadata tag off each item to bin it by setting. Contexts in the canonical corpus: `workplace`, `family`, `public`, `anonymous`.
 
-**Status.** H10a + H10c + the per-construct `sd_i(c)` / `V_i` reveal quantities are BUILT (`analyze.py --context-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-context-log.json`, Python-only so parity stays green). H10b and the on-device reveal are DEFERRED (§15.3, §15.6).
+**Status.** H10a + H10b + H10c + the per-construct `sd_i(c)` / `V_i` reveal quantities are BUILT — so **H10 = H10a ∧ H10b is now complete** (a reliable variability trait *and* one discriminable from the person's level / over-claim / self-insight, with a residual-variability de-confound). H10a/H10c on `analyze.py --context-log` (gated on `analysis/fixtures/sample-context-log.json`); H10b (the two-legged discriminant) on `analyze.py --h10b-log`, gated in `check_analyzer_thresholds.py` (H10 sub-expectation `H10b_discriminant` + a load-bearing `check_h10b_discriminant_lock()`) on `analysis/fixtures/sample-h10b-log.json`. All Python-only (H10b is a cohort-level R², no on-device reveal) so parity stays green. Only the **on-device `sd_i(c)` reveal** remains DEFERRED (§15.6).
 
 ### 15.1 Measurement primitive (§1.1 of the design doc)
 
@@ -560,16 +560,19 @@ Split each participant's sessions into odd/even halves (1-indexed sorted order),
 
 (Fleeson & Gallagher 2009 report density-distribution parameters with split-half reliabilities in the .6–.9 band; 0.40 is a deliberately modest floor for n≈200.) Bootstrap: percentile method, pre-committed seed `20260510 + 13`. This is the reliability of the **variability trait itself** — orthogonal to the person's *level*; that de-confound is H10b.
 
-### 15.3 H10b — discriminant validity (DEFERRED — cohort-coupled)
+### 15.3 H10b — discriminant validity (BUILT — two-legged)
 
-`V_i` must not be a proxy for the person's mean level, their stated–revealed gap, or their self-prediction error, and must survive a range-restriction check:
+`V_i` must not be a proxy for the person's mean level, their aspirational stated–revealed over-claim, or their self-prediction error, and the within-person variability must survive a range-restriction check. **Two legs, both required:**
 
-    regress V_i on [ level_i = mean_c mbar_i(c),  gap_i = mean_d |gap(i,d)|,  cal_error_i ]
-    H10b (discriminant) supported  ⇔  upper 95% CI of R²  < 0.50
-    AND a residual-variability de-confound: regress sd_i(c) on |mbar_i(c)|, confirm residual
-        variance survives (variability is not merely a mid-scale range artifact).
+    (1) MAIN — regress V_i on [ level_i = mean_c mbar_i(c),  gap_i (the §6 aspirational
+        stated−revealed over-claim),  cal_error_i (the §14.2 self-prediction error magnitude) ]
+        supported  ⇔  upper 95% CI of the model R²  < 0.50
+    (2) DE-CONFOUND — regress each (user, construct) cell's sd_i(c) on |mbar_i(c)|
+        supported  ⇔  upper 95% CI of THAT R²  < 0.50   (variability is not a mid-scale range artifact)
 
-Supported only if **both** criteria agree. **DEFERRED** because it couples to the H2–H7 cohort pipeline (`gap_i`, `cal_error_i`) exactly as the H9b-discriminant half does — the current increment stays isolated on its own fixtures.
+Supported iff **both** legs clear the ceiling. The main leg says consistency is not reducible to how high a person scores + how much they over-claim + how poorly they know themselves; the de-confound says the within-person variability is not merely a range artifact (a construct mean near 0 has more headroom to vary than one pinned at an axis extreme). The de-confound is **cell-level**, so it carries a pseudo-replication caveat (multiple cells per person) — documented, not gated; a descriptive check on the same 0.50 ceiling, never a per-person score.
+
+**No algebraic trap.** `V_i` is measured on the context-**variance** channel (§15.1), never an affine echo of level/gap/cal_error (contrast H9b's signed `cal_bias = stated − revealed` identity or H11b's circle-mean identity), so the lock is honestly two-sided: `check_h10b_discriminant_lock()` exercises the main leg's supported **and** reducible directions, the de-confound's both directions, and confirms **both legs are load-bearing** (a cohort where the main leg passes but the de-confound fails → not supported, and vice-versa) on real-pipeline corpora. Bootstrap seeds `20260510 + 31` (main) / `+ 32` (de-confound). Cohort-level statistic — `V_i`, `level_i`, `gap_i`, `cal_error_i` and each `sd`/`|mbar|` cell stay separate facets, never pooled (§13.5).
 
 ### 15.4 H10c — observer-effect anchor (BUILT, directional)
 

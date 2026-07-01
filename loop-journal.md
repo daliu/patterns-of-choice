@@ -13,6 +13,54 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 32 — 2026-07-01 — H10 · Cross-situational-consistency DISCRIMINANT (H10b leg; TWO-legged, cohort-level) → H10 complete
+
+`build-and-validate.md` item 2. H10's `sd_i(c)`/`V_i` primitive + **H10a** (variability-trait split-half reliability) + **H10c** (the observer-effect
+anchor) shipped 2026-06-30 — but the design defines H10 as **reliability ∧ discriminant**. A *reliable* person variability index `V_i` is not
+enough: cross-situational (in)consistency must also be **discriminable from how high a person scores, how much they over-claim, and how poorly they
+know themselves** — otherwise `V_i` collapses into "low scorers near mid-scale just have more room to wobble," and the Fleeson/Mischel/Doris
+consistency construct adds nothing. That discriminant half, **H10b**, was the sole remaining H10 core gap. This iteration builds it, completing H10.
+Uniquely among the branch discriminants (H9b/H11b/R2c/H12b/R6b), H10b is **two-legged** — a main discriminant *and* a residual-variability
+de-confound, both required — because `V_i`, `level_i`, and each cell's `sd_i(c)`/`mbar_i(c)` are all read off the **same** context items, so the
+range-restriction confound has to be knocked out explicitly.
+
+- **What shipped (`scripts/analyze.py`, `--h10b-log`).** `compute_h10b_discriminant` runs **two** regressions. **(1) MAIN:** `V_i` (§15.1,
+  `mean_c sd_i(c)`) on `[ level_i = mean_c mbar_i(c), gap_i (§6 aspirational stated−revealed over-claim, via `_h9b_person_predictors`), cal_error_i
+  (§14.2 self-prediction error magnitude, via `calibration_person_indices`) ]` — consistency is a distinct construct iff the **upper 95% bootstrap CI
+  of that R² < 0.50** (`H10B_R2_CEILING`; seed `20260510 + 31`; ≥ `H10B_MIN_PARTICIPANTS = 8`). **(2) DE-CONFOUND:** each `(user, construct)` cell's
+  `sd_i(c)` on `|mbar_i(c)|` — the within-person variability is not a mid-scale range artifact iff the upper 95% CI of *that* R² < 0.50 too
+  (seed `+ 32`; ≥ `H10B_MIN_DECONF_CELLS = 8`; cell-level, so a documented pseudo-replication caveat, never gated per person). **Supported iff both
+  legs clear.** Reuses the `_ols_r_squared` + `_bootstrap_ci_r2` machinery verbatim; a new `context_sd_mbar_by_user_construct` returns `(sd, mbar)`
+  per cell in one pass (the old `context_sd_by_user_construct` now just drops the `mbar` leg — bit-identical, H10a still green). Descriptive companions
+  `v_level_r`/`v_gap_r`/`v_cal_error_r` + `deconf_sd_absmbar_r` localize any leakage without pooling. JSON `H10.H10b_discriminant` + a two-line render
+  (main leg / de-confound leg / both-clear verdict); `render_h10_result` gained the `h10b_disc` arg.
+
+- **The lock (`check_h10b_discriminant_lock`, 8 assertions, all green) — proves BOTH legs load-bearing.** Three real-pipeline cohorts with known
+  ground truth: **A INDEPENDENT** (`V ⊥ [level, gap, cal_error]` AND `sd ⊥ |mbar|`) → both legs met → SUPPORTED; **B REDUCIBLE-MAIN** (`V` made a
+  linear function of `level`) → main fails but **the de-confound STILL passes** → NOT supported; **C RANGE-ARTIFACT** (`sd` made a linear function of
+  `|mbar|`) → de-confound fails but **the main leg STILL passes** → NOT supported. B and C are the novel bit: each flips the verdict through a
+  *different* leg, so neither leg alone is decorative. The trick that lets C keep the main leg passing while the de-confound fails: `V_i` rides
+  `mean_c|mbar|` while `level_i` rides `mean_c mbar`, so on a **symmetric** level grid `corr(|q|, q) = 0` — the range artifact lives at the cell level
+  without contaminating the person-level `V ⊥ level`. **No manufactured trap** (same honesty call as H12b/R6b): `V_i` is measured on the context-
+  *variance* channel, never an affine echo of the predictors — had an identity existed the ⊥ cohort would pin R² ≡ 1, yet it lands ~0
+  (main R² = 0.002, upper CI 0.28; de-confound R² = 0.03, upper CI 0.12).
+
+- **Disciplines honored.** §13.5 no-pool (two cohort-level R²s; `V_i`/`level_i`/`gap_i`/`cal_error_i` and every `sd`/`|mbar|` cell stay separate
+  facets — no pooled "consistency score", which `check_h10` already rejects); §13.2 censoring untouched (H10b reads only axis context-means); value-
+  neutral (low `V` = **steadiness**, high `V` = **responsiveness** — descriptive poles, never ranked; Dancy particularism caveat); N=1 unchanged (the
+  discriminant is cohort-level; the reveal quantity `sd_i(c)` stays per-person). Cohort-level R², **no on-device reveal → `poc-projection.js`
+  untouched, parity stays 9/9.** Fraud/non-replication wall intact (Fleeson 2001 density-distributions, Mischel & Shoda 1995 if-then signatures,
+  Doris 2002 situationism — all foundational, well-replicated).
+
+- **Shipped.** `make check` green — 66 validate scenarios + the analyzer threshold gate (H10 now `H10a ∧ H10c ∧ H10b_discriminant`, all True) + 9/9
+  parity. `analyze.py` + `check_analyzer_thresholds.py` (`check_h10b_discriminant_lock` + wiring, `H10b_discriminant` sub-expectation, `--h10b-log`
+  in `run_analyzer`) + `analysis/fixtures/sample-h10b-log.json` (40 participants × four channels = 2920 records, self-checked generator, SUPPORTED
+  with main R² = 0.002 / de-confound R² = 0.03) + `scoring.md` §15.3/§15 status + `build-and-validate.md` item 2. **H10 = reliability ∧ discriminant
+  complete;** only the on-device `sd_i(c)` reveal + the real-corpus `context:*` tag pass (human raters) remain deferred. Generator stayed in `/tmp`
+  (never committed).
+
+---
+
 ## Iteration 31 — 2026-07-01 — R6 · Metaethical-objectivism DISCRIMINANT (R6b leg; cohort-level) → R6 complete
 
 `build-and-validate.md` item 7. R6's two claim-type reads (`objectivism_moral_i` / `objectivism_taste_i`) + **R6a** (objectivism split-half

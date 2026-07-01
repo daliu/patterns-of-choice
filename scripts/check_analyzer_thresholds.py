@@ -132,7 +132,7 @@ EXPECTATIONS = {
     "H6": {"kind": "range", "in_range": False},
     "H7": {"kind": "single", "threshold_met": True},
     "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9b_discriminant": True, "H9c": True}},
-    "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True}},
+    "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True, "H10b_discriminant": True}},
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True, "H12b_discriminant": True}},
@@ -171,6 +171,7 @@ def run_analyzer() -> dict:
         "--h9b-log", str(FIXTURES / "sample-h9b-log.json"),
         "--h12b-log", str(FIXTURES / "sample-h12b-log.json"),
         "--r6b-log", str(FIXTURES / "sample-r6b-log.json"),
+        "--h10b-log", str(FIXTURES / "sample-h10b-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -2012,6 +2013,289 @@ def check_r6b_discriminant_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_h10b_discriminant_lock() -> tuple[bool, list[str]]:
+    """The H10b cross-situational-consistency DISCRIMINANT discipline (§15.3), asserted directly
+    against the code. H10b is TWO-legged and BOTH legs must clear H10B_R2_CEILING:
+      MAIN        — regress the person variability index V_i (§15.1, mean_c sd_i(c)) on
+                    [ level_i = mean_c mbar_i(c), the §6 aspirational over-claim gap_i, the §14.2
+                    self-prediction error MAGNITUDE cal_error_i ]; consistency is a DISTINCT
+                    construct — not reducible to how high a person scores + over-claims + misjudges
+                    themselves — iff the UPPER 95% bootstrap CI of that R² < ceiling (Fleeson 2001
+                    density distributions vs Mischel & Shoda 1995 if-then vs Doris 2002 situationism).
+      DE-CONFOUND — regress each (user, construct) cell's sd_i(c) on |mbar_i(c)|; the within-person
+                    variability is not merely a mid-scale RANGE artifact iff the upper 95% CI of THAT
+                    R² < ceiling too (a construct mean near 0 has more headroom to vary than one
+                    pinned at an axis extreme).
+    Supported iff BOTH agree. This lock proves, on synthetic cohorts with KNOWN ground truth built
+    through the REAL §15.1 context / §6 gap / §14.2 calibration pipelines:
+      (i)   INDEPENDENT (V_i ⊥ [level, gap, cal_error] AND sd ⊥ |mbar|): both legs met, SUPPORTED
+            True — consistency is a genuinely distinct construct, not a range artifact;
+      (ii)  REDUCIBLE MAIN (V_i made a linear function of level): main R² high, its upper CI ≥
+            ceiling → MAIN leg NOT met; the de-confound STILL clears → SUPPORTED False anyway —
+            proving the MAIN leg is load-bearing;
+      (iii) RANGE-ARTIFACT DE-CONFOUND (sd_i(c) made a linear function of |mbar_i(c)|): the
+            de-confound R² high, its upper CI ≥ ceiling → DE-CONFOUND leg NOT met; the MAIN leg
+            STILL clears (V_i rides mean_c|mbar| while level_i rides mean_c mbar, so a SYMMETRIC
+            level grid decouples V from level) → SUPPORTED False anyway — proving the DE-CONFOUND
+            leg is load-bearing;
+      (iv)  SUPPORTED is EXACTLY (main upper-CI < ceiling) AND (deconf upper-CI < ceiling) on all
+            three cohorts — neither CI gate can be bypassed;
+      (v)   NO ALGEBRAIC TRAP — V_i is measured on the context-VARIANCE channel (§15.1), never an
+            affine echo of level/gap/cal_error (unlike H9b's signed cal_bias = stated − revealed or
+            H11b's circle-mean identity); had an identity existed the ⊥ cohort would pin R² ≡ 1, yet
+            here it is ~0. The gate tracks the DATA, not a manufactured identity;
+      (vi)  the descriptive companions localize leakage — |V·predictor r| all small when
+            independent, |V·level r| large when reducible, |sd·|mbar| r| large under the range
+            artifact — WITHOUT pooling anything per person (§13.5);
+      (vii) the inclusion floor holds — < H10B_MIN_PARTICIPANTS joined users returns None;
+      (viii) the reveal is COHORT-level and value-neutral — steadiness↔responsiveness never ranked.
+    This is the H10 analog of the H12b moral-hypocrisy / R6b metaethical-objectivism discriminant
+    locks — but two-legged, so it additionally proves BOTH legs are load-bearing."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+    from collections import defaultdict
+
+    import analyze as A
+    tag_map = A.load_tag_axis_map(A.DEFAULT_TAG_MAP)
+    CEIL = A.H10B_R2_CEILING
+    N, K_CTX, N_SESS, K_PRED, RT, TS = 40, 4, 6, 6, 5000, "2026-07-01T12:00:00Z"
+    DOMAINS = ["truth-telling", "resource-allocation", "reciprocity-cooperation"]
+    CONTEXTS = ["workplace", "family", "public", "anonymous"]
+    USERS = [f"lk-u{i:02d}" for i in range(N)]
+
+    DN = [d / A._sample_sd([-1.5, -0.5, 0.5, 1.5]) for d in (-1.5, -0.5, 0.5, 1.5)]  # sample-SD 1, mean 0
+    JIT_M = [-0.08, 0.0, 0.08]         # zero-sum per-construct level jitter (spreads WITHIN a user)
+    JIT_S = [-0.03, 0.0, 0.03]         # zero-sum per-construct variability jitter
+
+    PAL_TAGS = {
+        "truth-telling": ["truth:commission", "transparency", "truth:partial", "tact",
+                          "discretion", "lie:white", "lie:omission", "lie:commission"],
+        "resource-allocation": ["generosity", "need_sensitivity", "fairness",
+                                "self_reliance:projected", "self_reliance"],
+        "reciprocity-cooperation": ["trust", "forgiveness", "trust:asymmetric",
+                                    "trust:institutional", "vigilance:mild", "vigilance"],
+    }
+    REVEAL_TAGS = {
+        "truth-telling": ["truth:commission", "truth:state", "truth:partial", "truth:implicit",
+                          "lie:protective", "lie:omission", "lie:commission"],
+        "resource-allocation": ["generosity", "need_sensitivity", "fairness",
+                                "self_reliance:projected", "self_reliance"],
+        "reciprocity-cooperation": ["trust", "forgiveness", "trust:asymmetric",
+                                    "trust:institutional", "vigilance:mild", "vigilance"],
+    }
+
+    def tw(domain, tag):
+        s, n = A.item_score({"domain": domain, "tags": [tag]}, tag_map)
+        assert n == 1, f"{tag!r} not a single {domain} primary-axis tag"
+        return s
+
+    PALETTE = {d: [(tw(d, t), t) for t in PAL_TAGS[d]] for d in DOMAINS}
+    REVEAL = {d: [(tw(d, t), t) for t in REVEAL_TAGS[d]] for d in DOMAINS}
+    DECK = A.load_values_deck_domains()
+    VBD = {d: [v for v, dd in DECK.items() if dd == d] for d in DOMAINS}
+    _PRED_PAIRS = [
+        ("truth:commission", "truth:commission"), ("truth:state", "truth:partial"),
+        ("truth:commission", "truth:state"), ("truth:state", "truth:implicit"),
+        ("truth:commission", "truth:partial"), ("truth:implicit", "discretion"),
+        ("truth:partial", "discretion"), ("transparency", "discretion"),
+        ("transparency", "lie:protective"),
+    ]
+    PRED_MENU = [(abs(tw("truth-telling", pt) - tw("truth-telling", rt)), pt, rt)
+                 for pt, rt in _PRED_PAIRS]
+    PRED_OPTIONS = [e for e, _, _ in PRED_MENU]
+    E2PAIR = {round(e, 6): (pt, rt) for e, pt, rt in PRED_MENU}
+
+    def grid(lo, hi, seed, n=N):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def greedy(options, K, target):
+        chosen, s = [], 0.0
+        for j in range(K):
+            best = min(options, key=lambda o: abs((s + o) / (j + 1) - target))
+            chosen.append(best)
+            s += best
+        return chosen
+
+    def build_context(spec, n=N):
+        # spec[(i, dom)] = (mbar, sd); realized cell-mean ≈ mbar + sd·δ̂ (δ̂ sample-SD 1) → sd_i(c)≈sd, mbar_i(c)≈mbar
+        recs = []
+        for i in range(n):
+            u = f"lk-u{i:02d}"
+            for di, d in enumerate(DOMAINS):
+                mbar, sd = spec[(i, d)]
+                wtag = {w: t for w, t in PALETTE[d]}
+                weights = [w for w, _ in PALETTE[d]]
+                for ki, ctx in enumerate(CONTEXTS):
+                    target = max(-0.98, min(0.98, mbar + sd * DN[ki]))
+                    for j, w in enumerate(greedy(weights, K_CTX, target)):
+                        recs.append({
+                            "session_id": f"{u}-ctx", "user_id": u, "timestamp_iso": TS,
+                            "scenario_id": f"lk-{d}-{ctx}", "scenario_type": "quick-fire-round",
+                            "domain": d, "item_id": f"{u}-{d}-{ctx}-{j}", "option_id": "a",
+                            "tags": [wtag[w], f"context:{ctx}"], "response_time_ms": RT,
+                            "presented_position": j + 1, "was_timeout": False,
+                        })
+        return recs
+
+    def build_gap(seed):
+        s_recs, cs_recs, rtgt, sk = [], [], {}, {}
+        for di, d in enumerate(DOMAINS):
+            rg = grid(-0.80, 0.80, seed + 100 + di)
+            kg = grid(1.0, 5.0, seed + 200 + di)
+            for i in range(N):
+                rtgt[(i, d)] = rg[i]
+                sk[(i, d)] = max(1, min(5, round(kg[i])))
+        for i in range(N):
+            u = f"lk-u{i:02d}"
+            sel = []
+            for d in DOMAINS:
+                wtag = {w: t for w, t in REVEAL[d]}
+                for j, w in enumerate(greedy([w for w, _ in REVEAL[d]], N_SESS, rtgt[(i, d)])):
+                    s_recs.append({
+                        "session_id": f"{u}-{d}-s1", "user_id": u, "timestamp_iso": TS,
+                        "scenario_id": f"lk-{d}", "scenario_type": "quick-fire-round", "domain": d,
+                        "item_id": f"{u}-{d}-{j}", "option_id": "a", "tags": [wtag[w]],
+                        "response_time_ms": RT, "presented_position": j + 1, "was_timeout": False,
+                    })
+                sel.extend(VBD[d][: sk[(i, d)]])
+            cs_recs.append({"user_id": u, "layer": "aspirational_self", "selected_value_ids": sel})
+        return s_recs, cs_recs
+
+    def build_pred(seed):
+        tg = grid(0.15, 1.15, seed + 400)
+        recs = []
+        for i in range(N):
+            u = f"lk-u{i:02d}"
+            for j, e in enumerate(greedy(PRED_OPTIONS, K_PRED, tg[i])):
+                pt, rtag = E2PAIR[round(e, 6)]
+                recs.append({
+                    "user_id": u, "session_id": f"{u}-pred", "probe_id": f"{u}-cal-{j}",
+                    "domain": "truth-telling", "channel": "axis", "stakes_pool": None,
+                    "predicted_tags": [pt], "realized_tags": [rtag],
+                })
+        return recs
+
+    def realized(recs):
+        sd_mbar = A.context_sd_mbar_by_user_construct(A.context_item_records(recs, tag_map))
+        v_by = A.variability_index_by_user({k: sd for k, (sd, _m) in sd_mbar.items()})
+        acc = defaultdict(list)
+        for (u, _d), (_sd, m) in sd_mbar.items():
+            acc[u].append(m)
+        lvl = {u: sum(ms) / len(ms) for u, ms in acc.items() if len(ms) >= A.H10_CONSTRUCT_MIN}
+        if not all(u in v_by and u in lvl for u in USERS):
+            return None, None
+        return [v_by[u] for u in USERS], [lvl[u] for u in USERS]
+
+    def find_gapcal(V, L, base):
+        # cheap orthogonality search on the DRAWS (pearson only, no bootstrap in the loop).
+        for cand in range(base, base + 20000):
+            s_recs, cs_recs = build_gap(cand)
+            p_recs = build_pred(cand + 777)
+            pby = A._h9b_person_predictors(s_recs, cs_recs, tag_map)
+            cal = A.calibration_person_indices(A.calibration_axis_records(p_recs, tag_map))
+            if any(u not in pby or u not in cal for u in USERS):
+                continue
+            g = [pby[u]["gap"] for u in USERS]
+            c = [cal[u]["cal_error"] for u in USERS]
+            if max(abs(A._pearson_r(V, g)), abs(A._pearson_r(V, c)), abs(A._pearson_r(L, g)),
+                   abs(A._pearson_r(L, c)), abs(A._pearson_r(g, c))) < 0.06:
+                return s_recs, cs_recs, p_recs
+        raise AssertionError("no orthogonal gap/cal draw for the H10b lock")
+
+    # ---- Cohort A: INDEPENDENT (V ⊥ level, sd ⊥ |mbar|) → BOTH legs met → SUPPORTED. ----
+    ctxA = VA = LA = None
+    for cs in range(30300000, 30300000 + 4000):
+        b = grid(0.15, 0.40, cs + 11)
+        lv = grid(-0.40, 0.40, cs + 4441)
+        specA = {(i, d): (lv[i] + JIT_M[di], max(0.08, b[i] + JIT_S[di]))
+                 for i in range(N) for di, d in enumerate(DOMAINS)}
+        recs = build_context(specA)
+        VA, LA = realized(recs)
+        if VA is not None and abs(A._pearson_r(VA, LA)) < 0.06:
+            ctxA = recs
+            break
+    assert ctxA is not None, "no V⊥level context seed for the H10b lock"
+    sA, csA, pA = find_gapcal(VA, LA, 30350000)
+    resA = A.compute_h10b_discriminant(ctxA, sA, csA, pA, tag_map)
+
+    # ---- Cohort B: REDUCIBLE MAIN (V_i = 0.29 + 0.35·level + noise) → main fails, de-confound STILL passes. ----
+    qB = grid(-0.35, 0.35, 30360001)
+    nzB = grid(-0.03, 0.03, 30360002)
+    specB = {(i, d): (qB[i] + JIT_M[di], max(0.08, 0.29 + 0.35 * qB[i] + nzB[i] + JIT_S[di]))
+             for i in range(N) for di, d in enumerate(DOMAINS)}
+    resB = A.compute_h10b_discriminant(build_context(specB), *build_gap(30361000),
+                                       build_pred(30361777), tag_map)
+
+    # ---- Cohort C: RANGE-ARTIFACT DE-CONFOUND (sd = 0.70·|mbar| + 0.08) → de-confound fails, main STILL passes. ----
+    qC = grid(-0.35, 0.35, 30362001)
+    cnC = grid(-0.02, 0.02, 30362002)
+    specC = {(i, d): (qC[i] + JIT_M[di], max(0.08, 0.70 * abs(qC[i] + JIT_M[di]) + 0.08 + cnC[i]))
+             for i in range(N) for di, d in enumerate(DOMAINS)}
+    ctxC = build_context(specC)
+    VC, LC = realized(ctxC)
+    assert VC is not None, "cohort C context failed to form V_i/level_i for all users"
+    sC, csC, pC = find_gapcal(VC, LC, 30363000)
+    resC = A.compute_h10b_discriminant(ctxC, sC, csC, pC, tag_map)
+
+    # ---- tiny cohort: 6 users < H10B_MIN_PARTICIPANTS → None (never a bare scalar). ----
+    bT = grid(0.15, 0.40, 77, n=6)
+    lT = grid(-0.40, 0.40, 88, n=6)
+    specT = {(i, d): (lT[i] + JIT_M[di], max(0.08, bT[i] + JIT_S[di]))
+             for i in range(6) for di, d in enumerate(DOMAINS)}
+    resT = A.compute_h10b_discriminant(build_context(specT, n=6), *build_gap(99),
+                                       build_pred(111), tag_map)
+
+    render = A.render_h10_result(None, None, resA["n_participants"], resA["deconf_n_cells"], resA)
+
+    def maxabs_pred(r):
+        return max(abs(r["v_level_r"]), abs(r["v_gap_r"]), abs(r["v_cal_error_r"]))
+
+    def exact(r):
+        if r is None:
+            return False
+        dm = r["r2_ci_high"] == r["r2_ci_high"] and r["r2_ci_high"] < CEIL
+        cm = r["deconf_r2_ci_high"] == r["deconf_r2_ci_high"] and r["deconf_r2_ci_high"] < CEIL
+        return (r["discriminant_met"] == dm and r["deconf_met"] == cm
+                and r["supported"] == (dm and cm))
+
+    checks = [
+        ("INDEPENDENT (V ⊥ [level, gap, cal_error] AND sd ⊥ |mbar|): BOTH legs met, SUPPORTED True, n=40",
+         resA is not None and resA["supported"] is True and resA["discriminant_met"] is True
+         and resA["deconf_met"] is True and resA["r2"] < 0.20 and resA["deconf_r2"] < 0.20
+         and resA["r2_ci_high"] < CEIL and resA["deconf_r2_ci_high"] < CEIL
+         and resA["n_participants"] == 40),
+        ("REDUCIBLE MAIN (V = f(level)): main leg NOT met (R² high, upper CI ≥ ceiling), de-confound STILL met",
+         resB is not None and resB["discriminant_met"] is False and resB["r2"] > CEIL
+         and resB["r2_ci_high"] >= CEIL and resB["deconf_met"] is True),
+        ("RANGE-ARTIFACT DE-CONFOUND (sd = f(|mbar|)): de-confound NOT met (R² high, upper CI ≥ ceiling), main STILL met",
+         resC is not None and resC["deconf_met"] is False and resC["deconf_r2"] > CEIL
+         and resC["deconf_r2_ci_high"] >= CEIL and resC["discriminant_met"] is True),
+        ("BOTH legs load-bearing: reducible-main → SUPPORTED False though de-confound passed; range-artifact → SUPPORTED False though main passed",
+         resB is not None and resB["supported"] is False and resB["deconf_met"] is True
+         and resC is not None and resC["supported"] is False and resC["discriminant_met"] is True),
+        ("SUPPORTED is EXACTLY (main upper-CI < ceiling) AND (deconf upper-CI < ceiling) on all three cohorts — the CI gates cannot be bypassed",
+         exact(resA) and exact(resB) and exact(resC)),
+        ("descriptive companions localize leakage, no pooling: |V·pred r| all small when independent, |V·level r| large when reducible, |sd·|mbar| r| large under the range artifact",
+         resA is not None and maxabs_pred(resA) < 0.25 and resB is not None and abs(resB["v_level_r"]) > 0.60
+         and resC is not None and abs(resC["deconf_sd_absmbar_r"]) > 0.60 and abs(resC["v_level_r"]) < 0.30),
+        ("inclusion floor: < H10B_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         resT is None),
+        ("reveal is COHORT-level & value-neutral — both legs shown, consistency not reducible to level/over-claim/self-insight, cohort/no-pool",
+         "H10b DISCRIMINANT (V_i ~ [level, aspirational gap, self-prediction error])" in render
+         and "consistency NOT reducible to level + over-claim + self-insight" in render
+         and "de-confound leg — sd_i(c) ~ |mbar_i(c)|" in render and "cohort/no-pool" in render
+         and "H10b supported (BOTH legs clear the ceiling)" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h10b-discriminant: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -2167,6 +2451,12 @@ def main() -> int:
     for m in r6block_msgs:
         print(m)
     if not r6block_ok:
+        all_pass = False
+
+    h10block_ok, h10block_msgs = check_h10b_discriminant_lock()
+    for m in h10block_msgs:
+        print(m)
+    if not h10block_ok:
         all_pass = False
 
     if all_pass:

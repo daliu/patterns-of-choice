@@ -1639,6 +1639,27 @@ H10A_RELIABILITY_FLOOR = 0.40   # split-half reliability lower 95% CI (§1.2; Fl
 # H10c is directional: lower 95% CI of the mean observer-effect gap > 0 (§1.4).
 H10_OBSERVED_CONTEXTS = {"public", "observed"}      # observed pole (§1.4)
 H10_ANONYMOUS_CONTEXTS = {"anonymous"}              # anonymous pole (§1.4)
+# H10b DISCRIMINANT (§1.3), the deferred sibling of the H10a reliability + H10c observer
+# halves. Cross-situational moral CONSISTENCY is a DISTINCT construct — NOT reducible to how
+# HIGH a person scores (level), how much they over-claim (the §6 aspirational gap), or how
+# poorly they know themselves (the §14.2 self-prediction error). TWO criteria, BOTH required:
+#  (1) MAIN — regress V_i on [level_i, gap_i, cal_error_i]; supported iff the UPPER 95%
+#      bootstrap CI of that R² < H10B_R2_CEILING (the context-variance channel carries variance
+#      none of the three explain; Fleeson 2001 density-distributions vs Mischel & Shoda 1995
+#      if-then signatures vs Doris 2002 situationism).
+#  (2) DE-CONFOUND — regress each cell's sd_i(c) on |mbar_i(c)|; supported iff the upper 95%
+#      CI of THAT R² < H10B_R2_CEILING too, proving the within-person variability is not merely
+#      a mid-scale RANGE artifact (a person parked near 0 has more headroom to vary than one
+#      pinned at an axis extreme). Cell-level → a pseudo-replication caveat (documented, not
+#      gated); it is a descriptive de-confound on the same 0.50 ceiling, never a per-person score.
+# Supported iff BOTH agree. Like the H12b/R6b discriminants there is NO algebraic trap: V_i
+# rides the context-variance channel, not an affine echo of level/gap/cal_error, so the lock is
+# honestly two-sided. PROPOSED locks (DECISIONS §19); the analyzer reports met/not-met, never gates.
+H10B_R2_CEILING = 0.50          # BOTH the discriminant AND the de-confound upper 95% CI must clear this
+H10B_MIN_PARTICIPANTS = 8       # ≥8 users with V_i + level + gap + cal_error before a 3-predictor R² is stable
+H10B_MIN_DECONF_CELLS = 8       # ≥8 (user×construct) sd cells before the sd~|mbar| range-artifact R² is stable
+H10B_SEED_OFFSET = 31           # bootstrap seed band for the main discriminant R² CI (R6B 30; next free)
+H10B_DECONF_SEED_OFFSET = 32    # bootstrap seed band for the de-confound sd~|mbar| R² CI
 
 
 def _context_of(entry: dict) -> str | None:
@@ -1697,15 +1718,18 @@ def context_item_records(
     return records
 
 
-def context_sd_by_user_construct(
+def context_sd_mbar_by_user_construct(
     records: list[dict[str, Any]],
     session_ok=None,
-) -> dict[tuple[str, str], float]:
-    """sd_i(c): per (user, domain) cross-context SD of the context-means r_i(c,k)
-    (§1.1). A context enters only with ≥H10_ITEMS_PER_CONTEXT_MIN items; a
-    construct yields an sd only with ≥H10_CONTEXT_MIN qualifying contexts (§1.5),
-    else it is SUPPRESSED (omitted). `session_ok(user, session)` optionally
-    restricts to a session subset (the H10a odd/even split)."""
+) -> dict[tuple[str, str], tuple[float, float]]:
+    """Both sd_i(c) AND mbar_i(c) per (user, domain) cell (§1.1): sd = the
+    cross-context SD of the context-means r_i(c,k); mbar = the GRAND MEAN over
+    those same context-means (the construct's level). Identical suppression floors
+    to context_sd_by_user_construct, so the two agree exactly on which cells
+    survive: a context enters with ≥H10_ITEMS_PER_CONTEXT_MIN items, a construct
+    with ≥H10_CONTEXT_MIN qualifying contexts (§1.5). Powers the H10b discriminant
+    (level_i = mean_c mbar) and its range-artifact de-confound (sd vs |mbar|).
+    `session_ok(user, session)` optionally restricts to a session subset."""
     cell: dict[tuple[str, str, str], list[float]] = defaultdict(list)
     for r in records:
         if session_ok is not None and not session_ok(r["user"], r["session"]):
@@ -1715,11 +1739,28 @@ def context_sd_by_user_construct(
     for (user, domain, _ctx), scores in cell.items():
         if len(scores) >= H10_ITEMS_PER_CONTEXT_MIN:
             ctx_mean[(user, domain)].append(sum(scores) / len(scores))
-    out: dict[tuple[str, str], float] = {}
+    out: dict[tuple[str, str], tuple[float, float]] = {}
     for (user, domain), means in ctx_mean.items():
         if len(means) >= H10_CONTEXT_MIN:
-            out[(user, domain)] = _sample_sd(means)
+            out[(user, domain)] = (_sample_sd(means), sum(means) / len(means))
     return out
+
+
+def context_sd_by_user_construct(
+    records: list[dict[str, Any]],
+    session_ok=None,
+) -> dict[tuple[str, str], float]:
+    """sd_i(c): per (user, domain) cross-context SD of the context-means r_i(c,k)
+    (§1.1). A context enters only with ≥H10_ITEMS_PER_CONTEXT_MIN items; a
+    construct yields an sd only with ≥H10_CONTEXT_MIN qualifying contexts (§1.5),
+    else it is SUPPRESSED (omitted). `session_ok(user, session)` optionally
+    restricts to a session subset (the H10a odd/even split). Derived from
+    context_sd_mbar_by_user_construct (drops the mbar leg), so the two share
+    identical suppression floors bit-for-bit."""
+    return {
+        k: sd for k, (sd, _mbar)
+        in context_sd_mbar_by_user_construct(records, session_ok).items()
+    }
 
 
 def variability_index_by_user(
@@ -1806,6 +1847,118 @@ def compute_h10c_observer_effect(records: list[dict[str, Any]]) -> dict[str, Any
         "mean_obs_gap": sum(gaps) / len(gaps),
         "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(gaps),
         "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_h10b_discriminant(
+    context_entries: list[dict],
+    session_entries: list[dict],
+    card_sort_responses: list[dict],
+    predictions: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> dict[str, Any] | None:
+    """H10b — the cross-situational-consistency DISCRIMINANT (§1.3), the deferred sibling of
+    the H10a reliability and H10c observer-effect halves. TWO criteria that must BOTH agree:
+
+    (1) MAIN discriminant — regress the person variability index V_i (§1.1, mean_c sd_i(c)) on
+    [ level_i = mean_c mbar_i(c), gap_i (the §6 aspirational stated−revealed over-claim),
+    cal_error_i (the §14.2 self-prediction error MAGNITUDE) ]; consistency is a DISTINCT
+    construct — NOT reducible to how high a person scores + how much they over-claim + how
+    poorly they know themselves — iff the UPPER 95% bootstrap CI of the model R² <
+    H10B_R2_CEILING (the cross-context variability channel carries variance none of level,
+    over-claim, or self-insight explains; Fleeson 2001 density-distributions vs Mischel & Shoda
+    1995 if-then signatures vs Doris 2002 situationism).
+
+    (2) Residual-variability DE-CONFOUND — regress each (user, construct) cell's sd_i(c) on
+    |mbar_i(c)|, supported iff the upper 95% CI of THAT R² < H10B_R2_CEILING too: the
+    within-person variability is NOT merely a mid-scale RANGE artifact (a person whose construct
+    mean sits near 0 has more headroom to vary than one pinned near an axis extreme). Cell-level,
+    so it carries a pseudo-replication caveat (multiple cells per person) — documented, NOT
+    gated; a descriptive de-confound on the SAME 0.50 ceiling, never a per-person score.
+
+    Supported iff BOTH criteria hold. NO algebraic trap — by design: V_i is measured on the
+    context-variance channel (§1.1), NOT an affine echo of level/gap/cal_error, so the lock is
+    honestly two-sided (check_h10b_discriminant_lock exercises the main leg AND the de-confound
+    on real-pipeline corpora, and confirms BOTH are load-bearing). COHORT-level statistic, NEVER
+    a per-person reveal: V_i, level_i, gap_i, cal_error_i and each sd/|mbar| cell stay separate
+    facets, never pooled (§13.5). Seeds BOOTSTRAP_SEED+31 (main) / +32 (de-confound)."""
+    records = context_item_records(context_entries, tag_map)
+    sd_mbar = context_sd_mbar_by_user_construct(records)
+    v_by_user = variability_index_by_user({k: sd for k, (sd, _m) in sd_mbar.items()})
+    # level_i = mean_c mbar_i(c) over the SAME qualifying constructs that form V_i (same floor).
+    mbar_acc: dict[str, list[float]] = defaultdict(list)
+    for (user, _domain), (_sd, mbar) in sd_mbar.items():
+        mbar_acc[user].append(mbar)
+    level_by_user = {
+        u: sum(ms) / len(ms) for u, ms in mbar_acc.items() if len(ms) >= H10_CONSTRUCT_MIN
+    }
+    predictors_by_user = _h9b_person_predictors(session_entries, card_sort_responses, tag_map)
+    cal = calibration_person_indices(calibration_axis_records(predictions, tag_map))
+    rows: list[tuple[float, float, float, float]] = []
+    for user in sorted(set(v_by_user) & set(level_by_user) & set(predictors_by_user) & set(cal)):
+        v = v_by_user[user]
+        level = level_by_user[user]
+        gap = predictors_by_user[user]["gap"]
+        cal_error = cal[user]["cal_error"]
+        if v != v or level != level or gap != gap or cal_error != cal_error:
+            continue
+        rows.append((level, gap, cal_error, v))   # predictors = [level, gap, cal_error]; y = V_i
+    if len(rows) < H10B_MIN_PARTICIPANTS:
+        return None
+    predictors = [[r[0] for r in rows], [r[1] for r in rows], [r[2] for r in rows]]
+    y = [r[3] for r in rows]
+    r2 = _ols_r_squared(predictors, y)
+    if r2 is None:
+        return None
+    ci_low, ci_high = _bootstrap_ci_r2(rows, random.Random(BOOTSTRAP_SEED + H10B_SEED_OFFSET))
+    disc_met = None if ci_high != ci_high else bool(ci_high < H10B_R2_CEILING)
+    # Descriptive companions (reported, NOT the gate): V_i's bare correlation with each
+    # predictor alone, so a reader sees WHICH predictor (if any) carries leakage — no pooling.
+    v_level_r = _pearson_r([r[0] for r in rows], y)
+    v_gap_r = _pearson_r([r[1] for r in rows], y)
+    v_cal_error_r = _pearson_r([r[2] for r in rows], y)
+
+    # (2) DE-CONFOUND: regress each surviving cell's sd on |mbar| (the range-artifact check).
+    deconf_rows: list[tuple[float, float]] = [
+        (abs(mbar), sd) for (sd, mbar) in sd_mbar.values() if sd == sd
+    ]
+    deconf_r2 = None
+    deconf_ci_low = deconf_ci_high = float("nan")
+    deconf_met: bool | None = None
+    deconf_sd_absmbar_r = None
+    if len(deconf_rows) >= H10B_MIN_DECONF_CELLS:
+        deconf_r2 = _ols_r_squared([[r[0] for r in deconf_rows]], [r[1] for r in deconf_rows])
+        if deconf_r2 is not None:
+            deconf_ci_low, deconf_ci_high = _bootstrap_ci_r2(
+                deconf_rows, random.Random(BOOTSTRAP_SEED + H10B_DECONF_SEED_OFFSET)
+            )
+            deconf_met = (
+                None if deconf_ci_high != deconf_ci_high
+                else bool(deconf_ci_high < H10B_R2_CEILING)
+            )
+            deconf_sd_absmbar_r = _pearson_r([r[0] for r in deconf_rows], [r[1] for r in deconf_rows])
+    # Overall support requires BOTH the discriminant AND the de-confound to clear the ceiling.
+    supported = (
+        None if disc_met is None or deconf_met is None else bool(disc_met and deconf_met)
+    )
+    return {
+        "r2": r2,
+        "r2_ci_low": ci_low,
+        "r2_ci_high": ci_high,
+        "ceiling": H10B_R2_CEILING,
+        "v_level_r": v_level_r,
+        "v_gap_r": v_gap_r,
+        "v_cal_error_r": v_cal_error_r,
+        "discriminant_met": disc_met,
+        "deconf_r2": deconf_r2,
+        "deconf_r2_ci_low": deconf_ci_low,
+        "deconf_r2_ci_high": deconf_ci_high,
+        "deconf_sd_absmbar_r": deconf_sd_absmbar_r,
+        "deconf_n_cells": len(deconf_rows),
+        "deconf_met": deconf_met,
+        "n_participants": len(rows),
+        "supported": supported,
+        "pre_registered_threshold_met": supported,
     }
 
 
@@ -3676,11 +3829,12 @@ def render_h10_result(
     h10c: dict[str, Any] | None,
     person_variability_n: int,
     n_construct_sd_cells: int,
+    h10b_disc: dict[str, Any] | None = None,
 ) -> str:
     """H10 cross-situational consistency (scoring.md §15). Value-neutral: the
     per-construct sd_i(c) and V_i name WHERE a person sits on steadiness↔
     responsiveness; they never rank (Dancy caveat, §15.5)."""
-    if h10a is None and h10c is None and n_construct_sd_cells == 0:
+    if h10a is None and h10c is None and n_construct_sd_cells == 0 and h10b_disc is None:
         return (
             "(H10: insufficient data — supply --context-log with context:*-tagged "
             "items to compute cross-situational consistency)"
@@ -3699,7 +3853,7 @@ def render_h10_result(
         lines.append(
             f"     threshold (lower CI ≥ {h10a['threshold_low']:.2f}): "
             f"{_met_glyph(h10a['pre_registered_threshold_met'])}  "
-            f"(discriminant half H10b deferred — see build-and-validate.md)"
+            f"(the level de-confound is the H10b discriminant, below)"
         )
     else:
         lines.append("  H10a trait reliability: insufficient data (need ≥3 users with a V_i in both session halves)")
@@ -3715,6 +3869,28 @@ def render_h10_result(
         )
     else:
         lines.append("  H10c observer-effect anchor: insufficient data (need ≥3 users with both a public and an anonymous item)")
+    if h10b_disc is not None:
+        lines.append(
+            f"  H10b DISCRIMINANT (V_i ~ [level, aspirational gap, self-prediction error])  "
+            f"R² = {h10b_disc['r2']:.3f}, upper 95% CI {_f3(h10b_disc['r2_ci_high'])}, n = {h10b_disc['n_participants']}"
+        )
+        lines.append(
+            f"     main leg (upper CI < {h10b_disc['ceiling']:.2f} — consistency NOT reducible to level + "
+            f"over-claim + self-insight, §15.3): {_met_glyph(h10b_disc['discriminant_met'])}  "
+            f"(V·level r = {_f3(h10b_disc['v_level_r'])}, V·gap r = {_f3(h10b_disc['v_gap_r'])}, "
+            f"V·cal_error r = {_f3(h10b_disc['v_cal_error_r'])}, cohort/no-pool)"
+        )
+        lines.append(
+            f"     de-confound leg — sd_i(c) ~ |mbar_i(c)|  R² = {_f3(h10b_disc['deconf_r2'])}, "
+            f"upper 95% CI {_f3(h10b_disc['deconf_r2_ci_high'])}, {h10b_disc['deconf_n_cells']} cells "
+            f"(upper CI < {h10b_disc['ceiling']:.2f} — variability is not a mid-scale range artifact): "
+            f"{_met_glyph(h10b_disc['deconf_met'])}  (sd·|mbar| r = {_f3(h10b_disc['deconf_sd_absmbar_r'])}; "
+            f"cell-level, a pseudo-replication caveat)"
+        )
+        lines.append(
+            f"     H10b supported (BOTH legs clear the ceiling): "
+            f"{_met_glyph(h10b_disc['pre_registered_threshold_met'])}"
+        )
     return "\n".join(lines)
 
 
@@ -4382,6 +4558,15 @@ def main() -> int:
              "sacredness (|P_i|) + R1 centrality (internalization) + value-importance.",
     )
     parser.add_argument(
+        "--h10b-log",
+        type=Path,
+        default=None,
+        help="Optional combined context + session + card-sort + predictions log (object with context/"
+             "session/card_sort/predictions arrays for a SHARED cohort) for the H10b cross-situational-"
+             "consistency DISCRIMINANT (§15.3): tests whether the person variability index V_i is reducible "
+             "to level + aspirational gap + self-prediction error, and de-confounds sd_i(c) vs |mbar_i(c)|.",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -4737,6 +4922,25 @@ def main() -> int:
             r6b_bundle.get("card_sort", []),
         )
 
+    h10b_discriminant_result: dict[str, Any] | None = None
+    if args.h10b_log:
+        try:
+            with args.h10b_log.open() as f:
+                h10b_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading H10b log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(h10b_bundle, dict):
+            print("ERROR: H10b log must be a JSON object with context/session/card_sort/predictions arrays", file=sys.stderr)
+            return 2
+        h10b_discriminant_result = compute_h10b_discriminant(
+            h10b_bundle.get("context", []),
+            h10b_bundle.get("session", []),
+            h10b_bundle.get("card_sort", []),
+            h10b_bundle.get("predictions", []),
+            tag_map,
+        )
+
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
     # value_slot + wave (+ taboo) is supplied. Pure re-read of the `never` tail as
     # the protected set P_i (§13.2 censoring, categorical, never finitized).
@@ -5077,6 +5281,30 @@ def main() -> int:
             h10_block["H10a"] = _h9_json(h10a_result)
         if h10c_result is not None:
             h10_block["H10c"] = _h9_json(h10c_result)
+        if h10b_discriminant_result is not None:
+            # H10b DISCRIMINANT half — COHORT-level R² (§15.3). NO pooled per-person scalar:
+            # V_i, level_i, gap_i, cal_error_i and each sd/|mbar| cell stay separate facets
+            # (§13.5). supported is EXACTLY (main upper-CI < ceiling) AND (de-confound upper-CI
+            # < ceiling); the gate re-derives BOTH legs (check_h10b_discriminant_lock).
+            h10_block["H10b_discriminant"] = {
+                "r2": h10b_discriminant_result["r2"],
+                "r2_ci_low": _nan_to_none(h10b_discriminant_result["r2_ci_low"]),
+                "r2_ci_high": _nan_to_none(h10b_discriminant_result["r2_ci_high"]),
+                "ceiling": h10b_discriminant_result["ceiling"],
+                "v_level_r": h10b_discriminant_result["v_level_r"],
+                "v_gap_r": h10b_discriminant_result["v_gap_r"],
+                "v_cal_error_r": h10b_discriminant_result["v_cal_error_r"],
+                "discriminant_met": h10b_discriminant_result["discriminant_met"],
+                "deconf_r2": _nan_to_none(h10b_discriminant_result["deconf_r2"]),
+                "deconf_r2_ci_low": _nan_to_none(h10b_discriminant_result["deconf_r2_ci_low"]),
+                "deconf_r2_ci_high": _nan_to_none(h10b_discriminant_result["deconf_r2_ci_high"]),
+                "deconf_sd_absmbar_r": h10b_discriminant_result["deconf_sd_absmbar_r"],
+                "deconf_n_cells": h10b_discriminant_result["deconf_n_cells"],
+                "deconf_met": h10b_discriminant_result["deconf_met"],
+                "n_participants": h10b_discriminant_result["n_participants"],
+                "supported": h10b_discriminant_result["supported"],
+                "pre_registered_threshold_met": h10b_discriminant_result["pre_registered_threshold_met"],
+            }
         if h10_block or h10_construct_sd_n:
             h10_block["person_variability_n"] = h10_person_variability_n
             h10_block["n_construct_sd_cells"] = h10_construct_sd_n
@@ -5313,10 +5541,12 @@ def main() -> int:
                 h9a_result, h9b_result, h9c_result, h9_cov, len(h9_person_indices),
                 h9b_discriminant_result,
             ))
-        if h10a_result is not None or h10c_result is not None or h10_construct_sd_n:
+        if (h10a_result is not None or h10c_result is not None or h10_construct_sd_n
+                or h10b_discriminant_result is not None):
             print()
             print(render_h10_result(
-                h10a_result, h10c_result, h10_person_variability_n, h10_construct_sd_n
+                h10a_result, h10c_result, h10_person_variability_n, h10_construct_sd_n,
+                h10b_discriminant_result,
             ))
         if h11a_result is not None or h11c_result is not None or h11_person_shape_n:
             print()
