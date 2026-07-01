@@ -5303,6 +5303,7 @@ def main() -> int:
     r1_profile_n = 0
     r1_mean_internalization = 0.0
     r1_mean_symbolization = 0.0
+    r1_facet_reveal: list[dict[str, Any]] = []   # per-person N=1 facet reveal (§19.1), no-pool
     if args.identity_log:
         try:
             with args.identity_log.open() as f:
@@ -5322,6 +5323,21 @@ def main() -> int:
             r1_mean_symbolization = sum(_r1_symbol[u] for u in _r1_both) / len(_r1_both)
         r1a_result = compute_r1a_reliability(identity_records)
         r1c_result = compute_r1c_internalization_anchor(identity_records)
+        # The N=1 on-device reveal (§19.1): each person's two facet means, exposed
+        # SEPARATELY (never pooled into one centrality scalar, §13.5) — None ⇔ that
+        # facet is below the ≥3-item floor (SUPPRESSED, §1.5). Mirrors the runtime's
+        # poc-projection.js centralityFacets, whose equality is locked in
+        # check_impl_parity.py (JS↔Python). Reuses the already-computed facet dicts.
+        _r1_int_items = centrality_items_by_user(identity_records, "internalization")
+        _r1_sym_items = centrality_items_by_user(identity_records, "symbolization")
+        for _u in sorted(set(_r1_int_items) | set(_r1_sym_items)):
+            r1_facet_reveal.append({
+                "user": _u,
+                "internalization": _r1_intern.get(_u),   # None ⇔ facet below the ≥3-item floor
+                "symbolization": _r1_symbol.get(_u),
+                "n_internalization": len(_r1_int_items.get(_u, [])),
+                "n_symbolization": len(_r1_sym_items.get(_u, [])),
+            })
 
     # --- R6 moral conviction / metaethical objectivism: the STATED objectivism probe
     # read (§20). The stated probe is NEVER pooled with the (deferred, κ-gated) revealed
@@ -5690,6 +5706,11 @@ def main() -> int:
             # Two facets exposed SEPARATELY — no pooled "centrality" key (§13.5).
             r1_block["mean_internalization"] = _nan_to_none(r1_mean_internalization)
             r1_block["mean_symbolization"] = _nan_to_none(r1_mean_symbolization)
+            if r1_facet_reveal:
+                # N=1 on-device reveal (§19.1) — per-person facet means, two facets
+                # SEPARATE, None ⇔ below the ≥3-item floor. Parity-locked against
+                # poc-projection.js centralityFacets (check_impl_parity.py). No pool.
+                r1_block["moral_identity_facet_reveal"] = r1_facet_reveal
             hypotheses["R1"] = r1_block
 
         r6_block: dict[str, Any] = {}

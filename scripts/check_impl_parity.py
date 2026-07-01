@@ -151,6 +151,68 @@ else:
                 ok(False, f"itemScore parity {case['domain']} {case['tags']}", f"py={p} js={j}")
         ok(all_match, f"itemScore: JS == Python on all {len(ITEM_CASES)} cases (incl. secondary-axis)")
 
+    # --- centrality facet reveal parity (R1 §19.1): the N=1 on-device reveal -----
+    # The runtime's centralityFacets() (computed per person, on-device) must equal
+    # the analyzer's centrality_facet_by_user for EVERY participant — same two facet
+    # means, same scorable-item counts, same ≥3-item-floor suppression, same declined-
+    # item drop. Reuses the R1 fixture, plus a synthetic below-floor user so the
+    # SUPPRESSED (null) path is exercised on both sides too. This is the first shipped
+    # on-device reveal for the H9–R6 family; the two facets stay SEPARATE (§13.5).
+    if node and proj_js.exists():
+        id_recs = [r for r in json.loads(
+            (REPO_ROOT / "analysis" / "fixtures" / "sample-identity-centrality-log.json").read_text())
+            if isinstance(r, dict)]
+        # a synthetic user with only 2 internalization items (below the ≥3 floor) and 0
+        # symbolization items: analyzer suppresses (absent) ⇔ runtime returns null.
+        id_recs = id_recs + [
+            {"user": "zz-below-floor", "session": "zz-s1", "item_id": "int-a", "facet": "internalization", "response": 5.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "item_id": "int-b", "facet": "internalization", "response": 5.0},
+        ]
+        id_users = sorted({r.get("user") for r in id_recs if r.get("user") is not None})
+        py_int = A.centrality_facet_by_user(id_recs, "internalization")
+        py_sym = A.centrality_facet_by_user(id_recs, "symbolization")
+        py_int_items = A.centrality_items_by_user(id_recs, "internalization")
+        py_sym_items = A.centrality_items_by_user(id_recs, "symbolization")
+        py_facets = {u: {"internalization": py_int.get(u), "symbolization": py_sym.get(u),
+                         "n_internalization": len(py_int_items.get(u, [])),
+                         "n_symbolization": len(py_sym_items.get(u, []))} for u in id_users}
+        cen_script = (
+            "const P = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const out = {};\n"
+            "for (const u of users) {\n"
+            "  const f = P.centralityFacets(recs.filter(r => r.user === u));\n"
+            "  out[u] = { internalization: f.internalization, symbolization: f.symbolization,\n"
+            "             n_internalization: f.n_internalization, n_symbolization: f.n_symbolization };\n"
+            "}\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)),)
+        cproc = subprocess.run([node, "-e", cen_script, json.dumps(id_recs), json.dumps(id_users)],
+                               capture_output=True, text=True)
+        if cproc.returncode != 0:
+            ok(False, "node centralityFacets run", cproc.stderr.strip()[:300])
+        else:
+            js_facets = json.loads(cproc.stdout)
+
+            def _close(a, b):
+                if a is None or b is None:
+                    return a is None and b is None
+                return abs(a - b) < 1e-9
+
+            all_c = True
+            for u in id_users:
+                p, j = py_facets[u], js_facets.get(u, {})
+                m = (_close(p["internalization"], j.get("internalization"))
+                     and _close(p["symbolization"], j.get("symbolization"))
+                     and p["n_internalization"] == j.get("n_internalization")
+                     and p["n_symbolization"] == j.get("n_symbolization"))
+                all_c = all_c and m
+                if not m:
+                    ok(False, f"centralityFacets parity user {u}", f"py={p} js={j}")
+            ok(all_c, f"centralityFacets: JS == Python on all {len(id_users)} participants "
+                      f"(facet means + item counts + ≥3-floor suppression)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

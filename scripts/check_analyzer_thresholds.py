@@ -445,6 +445,26 @@ def check_r1(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             f"{hid}: the two facets must be exposed separately "
             f"(mean_internalization / mean_symbolization), got keys {sorted(payload)}"
         )
+    # The N=1 on-device reveal (§19.1) must honor the same disciplines as the cohort
+    # read: two facets SEPARATE per person (no pooled per-entry key), and the ≥3-item
+    # floor — a facet below it is SUPPRESSED (None), one at/above it is scored. The
+    # runtime-vs-analyzer equality of this block is locked in check_impl_parity.py.
+    reveal = payload.get("moral_identity_facet_reveal")
+    if reveal is not None:
+        if not isinstance(reveal, list) or not reveal:
+            return False, f"{hid}: moral_identity_facet_reveal must be a non-empty list"
+        for e in reveal:
+            if "internalization" not in e or "symbolization" not in e:
+                return False, f"{hid}: reveal entry missing a facet key ({e})"
+            if pooled_keys & set(e):
+                return False, f"{hid}: reveal entry carries a pooled moral-identity key ({e})"
+            for facet, nkey in (("internalization", "n_internalization"), ("symbolization", "n_symbolization")):
+                n, v = e.get(nkey, 0), e.get(facet)
+                if n < 3 and v is not None:
+                    return False, f"{hid}: reveal scored a below-floor {facet} facet ({e})"
+                if n >= 3 and not isinstance(v, (int, float)):
+                    return False, f"{hid}: reveal suppressed an at/above-floor {facet} facet ({e})"
+        parts.append(f"reveal×{len(reveal)}")
     if payload.get("profile_n", 0) < 1:
         return False, (
             f"{hid}: no complete two-facet profile "
