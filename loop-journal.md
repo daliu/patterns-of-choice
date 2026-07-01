@@ -13,6 +13,50 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 31 — 2026-07-01 — R6 · Metaethical-objectivism DISCRIMINANT (R6b leg; cohort-level) → R6 complete
+
+`build-and-validate.md` item 7. R6's two claim-type reads (`objectivism_moral_i` / `objectivism_taste_i`) + **R6a** (objectivism split-half
+reliability, on the higher 0.50 bar) + **R6d** (the moral > taste directional anchor) shipped 2026-06-30 — but the design defines R6 as
+**reliability ∧ anchor ∧ discriminant**. A reliable, on-average-moral-exceeds-taste objectivism read is not enough: metaethical objectivism must
+also be **discriminable from how much a person simply cares** — otherwise "I treat morals as objective facts" collapses into "my values are
+absolute / central / broad," and the meta-level construct adds nothing. That discriminant half, **R6b**, was the sole remaining R6 core gap. This
+iteration builds it, completing R6. R6b asks: is `objectivism_moral_i` just a proxy for three "how much morality matters" constructs — the size of
+the protected/`never` set (R2 sacredness), moral-identity internalization (R1 centrality), and the breadth of endorsed aspirational values (§5.1
+card-sort importance) — or does treating morals as *objective fact* carry its own variance? A genuine metaethical stance is dissociable from all three.
+
+- **What shipped (`scripts/analyze.py`, `--r6b-log`).** `compute_r6b_discriminant` regresses `objectivism_moral_i` on **three** predictors drawn from
+  **three different channels** — `sacredness_i = |P_i|` (R2/§17.1, a count of protected slots, never a price — §13.2 censoring), `centrality_i`
+  (R1/§19.1 internalization mean), and `value_importance_i` (the §5.1 aspirational card-sort selection breadth) — and calls objectivism discriminable
+  iff the **upper 95% bootstrap CI of the model R² < 0.50** (`R6B_R2_CEILING`; seed `20260510 + 30`; ≥ `R6B_MIN_PARTICIPANTS = 8` shared users). It
+  reuses the R²-CI discriminant machinery (`_ols_r_squared` + `_bootstrap_ci_r2`) verbatim, and each predictor rides its own real aggregate pipeline
+  (`protected_value_sets` / `centrality_facet_by_user` / `card_sort_scores`) — no `tag_map`, no session-splitting, four direct-aggregate channels.
+  Consumes a combined `{objectivism, protected, identity, card_sort}` cohort bundle, keeping R6b isolated from the main `sample-objectivism-log` R6a/R6d
+  cohort. Descriptive companions `o_sacredness_r` / `o_centrality_r` / `o_importance_r` localize any leakage without pooling per person. JSON
+  `R6.R6b_discriminant` + a value-neutral render line (extra force — the branch is charged).
+
+- **The lock (`check_r6b_discriminant_lock`, 7 assertions, all green) — same honesty call as H12b.** Two-sided on real-pipeline cohorts:
+  INDEPENDENT (objectivism ⊥ [sacredness, centrality, importance]) → SUPPORTED; REDUCIBLE (objectivism = a noisy linear echo of the three) → NOT.
+  **As with H12b, I did NOT manufacture a mechanical-trap identity** — and that is again the point. The four quantities come from four DIFFERENT logs
+  (objectivism / protected / identity / card-sort), so there is no algebraic identity that could force the R². The lock proves that *absence*: it builds
+  ONE base corpus (fixed `sacredness`, `centrality`, `importance`), attaches two different objectivism channels, and shows the verdict flips
+  **True→False on identical predictors** — had a hidden identity existed, even the ⊥ draw would pin R² ≡ 1, yet it lands ~0 (R² = 0.003, upper CI 0.26).
+  Fabricating a trap here (as H9b's signed-`cal_bias` affine echo or H11b's circle-mean identity required) would have been dishonest for an independent
+  Likert channel.
+
+- **Disciplines honored.** §13.5 no-pool (the R² is a cohort-level statistic; no pooled per-person "conviction"/"objectivism" scalar — `check_r6`
+  already rejects such keys); §13.2 censoring (sacredness is `|P_i|`, a count of `never`-slots, never finitized into a price); value-neutral with
+  **EXTRA force** (objectivism = moral clarity OR rigid intolerance, subjectivism = tolerant pluralism OR standing for nothing — dual-read, never
+  ranked); N=1 (unchanged — the discriminant is cohort-level, the reveal quantity `objectivism_moral_i` stays per-person). Cohort-level R², **no
+  on-device reveal → `poc-projection.js` untouched, parity stays 9/9.** Fraud/non-replication wall intact (Goodwin & Darley 2008 + Skitka 2010, both
+  well-replicated).
+
+- **Shipped.** `make check` green — 66 validate scenarios + the analyzer threshold gate (R6 now `R6a ∧ R6d ∧ R6b_discriminant`, all True) + 9/9 parity.
+  `analyze.py` + `check_analyzer_thresholds.py` (`check_r6b_discriminant_lock` + wiring) + `analysis/fixtures/sample-r6b-log.json` (40 participants,
+  self-checked generator, SUPPORTED with R² = 0.003) + `scoring.md` §20.5/§20 status + `build-and-validate.md` item 7. **R6 = reliability ∧ anchor ∧
+  discriminant complete;** only R6c (the κ-gated stated–revealed meta-gap) remains deferred. Generator stayed in `/tmp` (never committed).
+
+---
+
 ## Iteration 30 — 2026-07-01 — H12 · Moral-hypocrisy DISCRIMINANT (H12b leg; cohort-level) → H12 complete
 
 `build-and-validate.md` item 5. H12's `H_i` primitive + **H12a** (asymmetry split-half reliability) + **H12c** (the self-serving directional

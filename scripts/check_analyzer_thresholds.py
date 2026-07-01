@@ -137,7 +137,7 @@ EXPECTATIONS = {
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True, "H12b_discriminant": True}},
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
-    "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True}},
+    "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True, "R6b_discriminant": True}},
     "A3": {"kind": "a3", "kappa_met": True},
     "A4": {"kind": "a4", "any_met": True},
     "H8": {"kind": "a8a", "supported": True},
@@ -170,6 +170,7 @@ def run_analyzer() -> dict:
         "--h11b-log", str(FIXTURES / "sample-h11b-log.json"),
         "--h9b-log", str(FIXTURES / "sample-h9b-log.json"),
         "--h12b-log", str(FIXTURES / "sample-h12b-log.json"),
+        "--r6b-log", str(FIXTURES / "sample-r6b-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -1850,6 +1851,167 @@ def check_h12b_discriminant_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_r6b_discriminant_lock() -> tuple[bool, list[str]]:
+    """The R6b metaethical-objectivism DISCRIMINANT discipline (§20.5), asserted directly against the
+    code. R6b regresses objectivism_moral_i (the STATED how-objective-are-moral-claims read, §20.1,
+    Goodwin & Darley 2008) on THREE "how much morality matters" constructs drawn from THREE DIFFERENT
+    channels — sacredness |P_i| (R2/§17.1, the size of the protected/`never` set), centrality_i
+    (R1/§19.1 internalization), and value-importance (§5.1, aspirational card-sort selection breadth) —
+    and calls metaethical objectivism DISCRIMINABLE from "how much you care" iff the UPPER 95% bootstrap
+    CI of the model R² < R6B_R2_CEILING. This lock proves, on synthetic cohorts with KNOWN ground truth
+    built through the REAL §17.1/§19.1/§5.1 pipelines:
+      (i)   INDEPENDENT (objectivism drawn ⊥ [sacredness, centrality, importance]): R² ~ 0, upper CI
+            clears the 0.50 ceiling, SUPPORTED True — objectivism is a genuinely distinct construct;
+      (ii)  REDUCIBLE (objectivism made a noisy linear function of the three predictors): R² high, upper
+            CI ≥ ceiling, SUPPORTED False — a "conviction" that IS how-much-you-care is not supported;
+      (iii) SUPPORTED is EXACTLY (upper-CI < ceiling) on both cohorts — the CI gate cannot be bypassed;
+      (iv)  NO ALGEBRAIC TRAP — as with H12b, both cohorts share the IDENTICAL predictors (same protected /
+            identity / card-sort logs → same sacredness, centrality, importance); ONLY the objectivism
+            Likert channel differs, and the verdict flips True→False. Because objectivism rides an
+            INDEPENDENT fourth log (not an affine echo of the predictors the way H9b's signed
+            cal_bias = stated − revealed or H11b's circle-mean identity were), no construction forces the
+            R²: had such an identity existed the ⊥ draw would pin R² ≡ 1, yet here it is ~0. The gate
+            tracks the DATA, not a manufactured identity — so no trap is fabricated to make it pass;
+      (v)   the descriptive companion localizes leakage — |obj·predictor r| small when independent,
+            strongly signed when reducible — WITHOUT pooling anything per person (§13.5);
+      (vi)  the inclusion floor holds — < R6B_MIN_PARTICIPANTS joined users returns None (never a scalar);
+      (vii) the reveal is COHORT-level and value-neutral — objective-fact / matter-of-taste never ranked.
+    This is the R6 analog of the H12b moral-hypocrisy-discriminant lock / the §14.1 censoring lock."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    DECK = A.load_values_deck_domains()
+    DOMAINS = sorted({d for d in DECK.values()})
+    VBD = {d: [v for v, dd in DECK.items() if dd == d] for d in DOMAINS}
+    CoV_SLOTS = [f"cov-slot-{k}" for k in range(6)]        # 6 protected slots → |P_i| ∈ {0..6}
+    OFFS = (-0.30, -0.10, 0.10, 0.30)                      # 4 Likert items, mean == target exactly (Σoff=0)
+
+    def grid(lo, hi, n, seed):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def build_protected(sac):
+        recs = []
+        for i, k in enumerate(sac):
+            u = f"r{i:02d}"
+            for j, slot in enumerate(CoV_SLOTS):
+                prot = j < k
+                recs.append({"user_id": u, "wave": "w1", "value_slot": slot,
+                             "no_break_point": bool(prot),
+                             "first_accept_rung": "never" if prot else "r3",
+                             "first_accept_stake": None if prot else 1000.0})
+        return recs
+
+    def build_identity(cen):
+        recs = []
+        for i, t in enumerate(cen):
+            u = f"r{i:02d}"
+            for j, off in enumerate(OFFS):
+                recs.append({"user": u, "session": f"{u}-s{j}", "facet": "internalization",
+                             "item_id": f"{u}-int-{j}", "response": round(t + off, 4)})
+        return recs
+
+    def build_cardsort(totals):
+        recs = []
+        for i, T in enumerate(totals):
+            u = f"r{i:02d}"
+            sel, remaining = [], T
+            for d in DOMAINS:
+                take = min(len(VBD[d]), remaining)
+                sel.extend(VBD[d][:take])
+                remaining -= take
+            recs.append({"user_id": u, "layer": "aspirational_self", "selected_value_ids": sel})
+        return recs
+
+    def build_objectivism(obj):
+        recs = []
+        for i, t in enumerate(obj):
+            u = f"r{i:02d}"
+            for j, off in enumerate(OFFS):
+                recs.append({"user": u, "session": f"{u}-o{j}", "claim_type": "moral",
+                             "item_id": f"{u}-m{j}", "objectivism": round(t + off, 4)})
+        return recs
+
+    def base_corpus(n, seed):
+        # Fixed protected/identity/card-sort → fixed [sacredness, centrality, importance] predictors.
+        protected = build_protected([int(round(x)) for x in grid(0, 6, n, seed + 1)])
+        identity = build_identity(grid(2.5, 5.5, n, seed + 2))
+        card_sort = build_cardsort([int(round(x)) for x in grid(2, 18, n, seed + 3)])
+        _sets, _ = A.protected_value_sets(protected)
+        sac = [len(_sets.get((f"r{i:02d}", "w1"), set())) for i in range(n)]
+        _cen = A.centrality_facet_by_user(identity, "internalization")
+        cen = [_cen[f"r{i:02d}"] for i in range(n)]
+        _cs = A.card_sort_scores(card_sort, DECK)
+        acc: dict[str, list[float]] = {}
+        for (u, _d, layer), s in _cs.items():
+            if layer == "aspirational_self":
+                acc.setdefault(u, []).append(s)
+        imp = [sum(acc[f"r{i:02d}"]) / len(acc[f"r{i:02d}"]) for i in range(n)]
+        return protected, identity, card_sort, sac, cen, imp
+
+    def indep_obj(n, seed, sac, cen, imp):
+        oseed = seed + 900
+        for cand in range(seed + 900, seed + 60000):
+            ov = grid(2.5, 5.5, n, cand)
+            if (abs(A._pearson_r(ov, sac)) < 0.05 and abs(A._pearson_r(ov, cen)) < 0.05
+                    and abs(A._pearson_r(ov, imp)) < 0.05):
+                oseed = cand
+                break
+        return grid(2.5, 5.5, n, oseed)
+
+    def reducible_obj(n, seed, sac, cen, imp):
+        # objectivism_moral_i made a NOISY linear function of the three predictors (centrality-dominant)
+        # — a statistical reducibility, not an algebraic identity (noise keeps R² < 1).
+        noise = grid(-0.30, 0.30, n, seed + 1300)
+        return [1.4 * cen[i] + 0.3 * sac[i] + 1.0 * imp[i] + noise[i] for i in range(n)]
+
+    # ONE base corpus → the SAME predictors feed both verdicts; only the objectivism channel changes.
+    protected, identity, card_sort, sac, cen, imp = base_corpus(40, 660000)
+    ind = A.compute_r6b_discriminant(build_objectivism(indep_obj(40, 660000, sac, cen, imp)),
+                                     protected, identity, card_sort)
+    red = A.compute_r6b_discriminant(build_objectivism(reducible_obj(40, 660000, sac, cen, imp)),
+                                     protected, identity, card_sort)
+    tp, ti, tc, _ts, _tc, _ti = base_corpus(6, 660000)     # < 8-participant floor
+    tiny = A.compute_r6b_discriminant(build_objectivism(grid(2.5, 5.5, 6, 660900)), tp, ti, tc)
+
+    render = A.render_r6_result(None, None, 0, 0.0, 0.0, ind)
+    ceil = A.R6B_R2_CEILING
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["r2_ci_high"] == r["r2_ci_high"] and r["r2_ci_high"] < ceil)
+
+    def max_abs_r(r):
+        return max(abs(r["o_sacredness_r"]), abs(r["o_centrality_r"]), abs(r["o_importance_r"]))
+
+    checks = [
+        ("INDEPENDENT (objectivism ⊥ [sacredness, centrality, importance]): SUPPORTED True, R² ~ 0, upper CI clears the ceiling",
+         ind is not None and ind["supported"] is True and ind["r2"] < 0.10
+         and ind["r2_ci_high"] == ind["r2_ci_high"] and ind["r2_ci_high"] < ceil and ind["n_participants"] == 40),
+        ("REDUCIBLE (objectivism = f([sacredness, centrality, importance]) + noise): SUPPORTED False, R² high, upper CI ≥ ceiling",
+         red is not None and red["supported"] is False and red["r2"] > ceil and red["r2_ci_high"] >= ceil),
+        ("SUPPORTED is EXACTLY (upper-CI < ceiling) on both cohorts — the CI gate cannot be bypassed",
+         exact(ind) and exact(red)),
+        ("NO ALGEBRAIC TRAP: identical predictors, verdict flips True→False via the independent objectivism channel alone",
+         ind is not None and red is not None and ind["n_participants"] == red["n_participants"] == 40
+         and ind["supported"] is True and red["supported"] is False),
+        ("descriptive companion localizes leakage: all |obj·predictor r| small when independent, strongly signed when reducible",
+         ind is not None and red is not None and max_abs_r(ind) < 0.20 and max_abs_r(red) > 0.50),
+        ("inclusion floor: < R6B_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — morals-as-objective-FACT NOT reducible to how-much-you-care, cohort/no-pool",
+         "objective FACT NOT reducible to how absolute/central/broad the values are" in render
+         and "cohort/no-pool" in render and "obj·sacredness r" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r6b-discriminant: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -1999,6 +2161,12 @@ def main() -> int:
     for m in h12block_msgs:
         print(m)
     if not h12block_ok:
+        all_pass = False
+
+    r6block_ok, r6block_msgs = check_r6b_discriminant_lock()
+    for m in r6block_msgs:
+        print(m)
+    if not r6block_ok:
         all_pass = False
 
     if all_pass:

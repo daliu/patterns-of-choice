@@ -2760,6 +2760,99 @@ def compute_r6d_moral_objectivism_anchor(
     }
 
 
+R6B_R2_CEILING = 0.50          # discriminant: UPPER 95% CI of objectivism_moral~[sacredness,centrality,importance] R² must clear this
+R6B_MIN_PARTICIPANTS = 8       # ≥8 users with all three predictors + an objectivism read before a 3-predictor R² is stable
+R6B_SEED_OFFSET = 30           # bootstrap seed band for the R² CI (H12B 29; next free)
+
+
+def compute_r6b_discriminant(
+    objectivism_records: list[dict],
+    protected_responses: list[dict],
+    identity_records: list[dict],
+    card_sort_responses: list[dict],
+) -> dict[str, Any] | None:
+    """R6b — the metaethical-objectivism DISCRIMINANT (§20.5), the deferred sibling of the
+    R6a reliability and R6d moral>taste-anchor halves. Regress a person's MORAL objectivism
+    read objectivism_moral_i (§20.1, how fact-like they treat moral claims) on THREE
+    neighbouring "how much morality matters" constructs, each from its OWN channel:
+        sacredness_i       = |P_i|, the SIZE of their protected/`never` set   (§17.1, R2)
+        centrality_i       = internalization_i, how self-defining morality is (§19.1, R1)
+        value_importance_i = mean aspirational_self card-sort endorsement      (§5.1 — the
+                             breadth of values a person holds up as their ideal)
+    Metaethical objectivism is a DISTINCT construct — NOT reducible to how ABSOLUTE, how
+    CENTRAL, or how BROAD a person's values are — iff the UPPER 95% bootstrap CI of the
+    model R² < R6B_R2_CEILING (treating morality as objective FACT carries variance those
+    three "mattering" channels do not; Goodwin & Darley 2008 dissociate metaethical
+    objectivism from moral conviction / importance). Completes R6 = reliability ∧ anchor ∧
+    discriminant.
+
+    NO algebraic trap here — and, as with H12b, by design. objectivism_moral_i is measured
+    on an INDEPENDENT Likert channel (the §20.1 objectivism probe), NOT an affine echo of
+    the three predictors the way the H9b signed-cal_bias or H11b circle-mean outcomes were,
+    so the discriminant cannot be manufactured true or false by construction: the lock is
+    honestly two-sided — SUPPORTED when the objectivism channel carries its own variance,
+    NOT-supported when objectivism_moral_i is linearly reducible to sacredness + centrality +
+    importance. check_r6b_discriminant_lock exercises both directions on real-pipeline
+    corpora (no hand-built identity). COHORT-level statistic, NEVER a per-person reveal:
+    objectivism_moral_i, |P_i|, internalization_i and the importance breadth stay separate
+    facets, never pooled (§13.5) — and the R6 load-bearing discipline holds, the STATED
+    objectivism probe is never fused with the deferred κ-gated revealed signatures. The four
+    predictors/outcome ride four DIFFERENT logs, so this couples the R2 + R1 + card-sort
+    pipelines yet keeps every channel isolated. Seed BOOTSTRAP_SEED+30."""
+    obj = objectivism_by_user(objectivism_records, "moral")
+    intern = centrality_facet_by_user(identity_records, "internalization")
+    sets, waves_seen = protected_value_sets(protected_responses)
+    sacredness: dict[str, int] = {}
+    for user in waves_seen:
+        slots: set[str] = set()
+        for w in waves_seen[user]:
+            slots |= sets.get((user, w), set())
+        sacredness[user] = len(slots)   # |P_i| — a count, never a price (§13.2 censoring)
+    value_domain = load_values_deck_domains()
+    cs = card_sort_scores(card_sort_responses, value_domain)
+    imp_by_user: dict[str, list[float]] = defaultdict(list)
+    for (user, _domain, layer), s in cs.items():
+        if layer == "aspirational_self":
+            imp_by_user[user].append(s)
+    importance = {u: sum(v) / len(v) for u, v in imp_by_user.items()}
+    rows: list[tuple[float, float, float, float]] = []
+    for user in sorted(set(obj) & set(sacredness) & set(intern) & set(importance)):
+        sv = float(sacredness[user])
+        cv = intern[user]
+        iv = importance[user]
+        ov = obj[user]
+        if sv != sv or cv != cv or iv != iv or ov != ov:
+            continue
+        rows.append((sv, cv, iv, ov))   # predictors = [sacredness, centrality, importance]; y = objectivism_moral
+    if len(rows) < R6B_MIN_PARTICIPANTS:
+        return None
+    predictors = [[r[0] for r in rows], [r[1] for r in rows], [r[2] for r in rows]]
+    y = [r[3] for r in rows]
+    r2 = _ols_r_squared(predictors, y)
+    if r2 is None:
+        return None
+    ci_low, ci_high = _bootstrap_ci_r2(rows, random.Random(BOOTSTRAP_SEED + R6B_SEED_OFFSET))
+    supported = None if ci_high != ci_high else bool(ci_high < R6B_R2_CEILING)
+    # Descriptive companions (reported, NOT the gate): objectivism's bare correlation with
+    # each predictor alone, so a reader sees WHICH neighbour (if any) carries leakage —
+    # without pooling anything per person.
+    o_sacredness_r = _pearson_r([r[0] for r in rows], y)
+    o_centrality_r = _pearson_r([r[1] for r in rows], y)
+    o_importance_r = _pearson_r([r[2] for r in rows], y)
+    return {
+        "r2": r2,
+        "r2_ci_low": ci_low,
+        "r2_ci_high": ci_high,
+        "ceiling": R6B_R2_CEILING,
+        "o_sacredness_r": o_sacredness_r,
+        "o_centrality_r": o_centrality_r,
+        "o_importance_r": o_importance_r,
+        "n_participants": len(rows),
+        "supported": supported,
+        "pre_registered_threshold_met": supported,
+    }
+
+
 # --- A3: the moral-language channel — the coder + the κ gate (scoring.md §21,
 # h-a3-moral-language.md; branch A3 of measurement-avenues.md). A THIRD channel on
 # values: what a person spontaneously MORALIZES about, in what moral vocabulary —
@@ -3876,6 +3969,7 @@ def render_r6_result(
     profile_n: int,
     mean_moral_objectivism: float,
     mean_taste_objectivism: float,
+    r6b_disc: dict[str, Any] | None = None,
 ) -> str:
     """R6 moral conviction / metaethical objectivism (scoring.md §20). The STATED
     objectivism probe read (Goodwin & Darley 2008): how objective a person treats
@@ -3887,7 +3981,7 @@ def render_r6_result(
     is better — objectivism can be moral clarity OR rigid intolerance of dissent,
     subjectivism tolerant pluralism OR a relativism that won't stand for anything; the
     reveal names where you sit, never ranks (§20.4)."""
-    if r6a is None and r6d is None and profile_n == 0:
+    if r6a is None and r6d is None and profile_n == 0 and r6b_disc is None:
         return (
             "(R6: insufficient data — supply --objectivism-log with per-item "
             "metaethical-objectivism ratings across moral + taste claim types)"
@@ -3921,13 +4015,24 @@ def render_r6_result(
         )
     else:
         lines.append("  R6d moral > taste objectivism: insufficient data (need ≥3 users with both a moral and a taste read)")
+    if r6b_disc is not None:
+        lines.append(
+            f"  R6b DISCRIMINANT (objectivism_moral ~ [R2 sacredness |P_i|, R1 centrality, value-importance])  "
+            f"R² = {r6b_disc['r2']:.3f}, upper 95% CI {_f3(r6b_disc['r2_ci_high'])}, n = {r6b_disc['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {r6b_disc['ceiling']:.2f} — treating morals as objective FACT NOT reducible "
+            f"to how absolute/central/broad the values are, §20.5): {_met_glyph(r6b_disc['pre_registered_threshold_met'])}  "
+            f"(obj·sacredness r = {_f3(r6b_disc['o_sacredness_r'])}, obj·centrality r = {_f3(r6b_disc['o_centrality_r'])}, "
+            f"obj·importance r = {_f3(r6b_disc['o_importance_r'])}, cohort/no-pool)"
+        )
     lines.append(
         "  Value-neutral (extra force — the branch is charged): holding morals as objective facts is NOT scored as "
         "better or worse than holding them as your own (objectivism = moral clarity OR rigid intolerance; subjectivism "
         "= tolerant pluralism OR standing for nothing — each pole dual-read, §20.4); the stance is described, never ranked. "
-        "R6d is a cohort construct-validity anchor, not a per-person verdict. R6b (discriminant vs R2 sacredness / R1 "
-        "centrality / value-content) and R6c (the stated–revealed meta-gap — the revealed tolerance/compromise + "
-        "objectivist-language signatures) are deferred (cohort-coupled / κ-gated); see build-and-validate.md."
+        "R6d is a cohort construct-validity anchor, not a per-person verdict. R6b is the discriminant (objectivism vs R2 "
+        "sacredness / R1 centrality / value-importance, §20.5); R6c (the stated–revealed meta-gap — the revealed "
+        "tolerance/compromise + objectivist-language signatures) remains deferred (κ-gated); see build-and-validate.md."
     )
     return "\n".join(lines)
 
@@ -4268,6 +4373,15 @@ def main() -> int:
              "aspirational gap + self-prediction error.",
     )
     parser.add_argument(
+        "--r6b-log",
+        type=Path,
+        default=None,
+        help="Optional combined objectivism + protected-values + identity + card-sort log (object with "
+             "objectivism/protected/identity/card_sort arrays for a SHARED cohort) for the R6b metaethical-"
+             "objectivism DISCRIMINANT (§20.5): tests whether objectivism_moral_i is reducible to R2 "
+             "sacredness (|P_i|) + R1 centrality (internalization) + value-importance.",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -4603,6 +4717,24 @@ def main() -> int:
             h12b_bundle.get("predictions", []),
             h12b_bundle.get("hypocrisy", []),
             tag_map,
+        )
+
+    r6b_discriminant_result: dict[str, Any] | None = None
+    if args.r6b_log:
+        try:
+            with args.r6b_log.open() as f:
+                r6b_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading R6b log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(r6b_bundle, dict):
+            print("ERROR: R6b log must be a JSON object with objectivism/protected/identity/card_sort arrays", file=sys.stderr)
+            return 2
+        r6b_discriminant_result = compute_r6b_discriminant(
+            r6b_bundle.get("objectivism", []),
+            r6b_bundle.get("protected", []),
+            r6b_bundle.get("identity", []),
+            r6b_bundle.get("card_sort", []),
         )
 
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
@@ -5029,6 +5161,23 @@ def main() -> int:
             r6_block["R6a"] = _h9_json(r6a_result)
         if r6d_result is not None:
             r6_block["R6d"] = _h9_json(r6d_result)
+        if r6b_discriminant_result is not None:
+            # R6b DISCRIMINANT half — COHORT-level R² (§20.5). NO pooled per-person scalar:
+            # objectivism_moral_i, |P_i|, internalization_i and the importance breadth stay
+            # separate facets (§13.5). supported is EXACTLY (r2 upper-CI < ceiling); the gate
+            # re-derives it (check_r6b_discriminant_lock).
+            r6_block["R6b_discriminant"] = {
+                "r2": r6b_discriminant_result["r2"],
+                "r2_ci_low": _nan_to_none(r6b_discriminant_result["r2_ci_low"]),
+                "r2_ci_high": _nan_to_none(r6b_discriminant_result["r2_ci_high"]),
+                "ceiling": r6b_discriminant_result["ceiling"],
+                "o_sacredness_r": r6b_discriminant_result["o_sacredness_r"],
+                "o_centrality_r": r6b_discriminant_result["o_centrality_r"],
+                "o_importance_r": r6b_discriminant_result["o_importance_r"],
+                "n_participants": r6b_discriminant_result["n_participants"],
+                "supported": r6b_discriminant_result["supported"],
+                "pre_registered_threshold_met": r6b_discriminant_result["pre_registered_threshold_met"],
+            }
         if r6_block or r6_profile_n:
             r6_block["profile_n"] = r6_profile_n
             # STATED probe only — moral and taste reads exposed SEPARATELY; no pooled
@@ -5194,11 +5343,13 @@ def main() -> int:
                 r1a_result, r1c_result, r1_profile_n,
                 r1_mean_internalization, r1_mean_symbolization,
             ))
-        if r6a_result is not None or r6d_result is not None or r6_profile_n:
+        if (r6a_result is not None or r6d_result is not None or r6_profile_n
+                or r6b_discriminant_result is not None):
             print()
             print(render_r6_result(
                 r6a_result, r6d_result, r6_profile_n,
                 r6_mean_moral, r6_mean_taste,
+                r6b_discriminant_result,
             ))
         if a3_kappa_result is not None or a3_profile:
             print()
