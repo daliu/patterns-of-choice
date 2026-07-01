@@ -1,0 +1,1327 @@
+[
+  {
+    "user_id": "u01",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": -0.2,
+    "stated_aspirational": -0.2126
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": -0.2394,
+    "stated_aspirational": -0.2126
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.6434,
+    "stated_aspirational": 0.6923
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.7676,
+    "stated_aspirational": 0.6923
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": -0.2347,
+    "stated_aspirational": 0.6923
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.3246,
+    "stated_aspirational": 0.6923
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": -0.758,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.3593,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": -0.246,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.1152,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.4764,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": -0.2565,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": 0.4307,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": 0.0204,
+    "stated_aspirational": -0.1604
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-allocation-001",
+    "form": "abstract",
+    "primary_axis_score": -0.1037
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-allocation-001",
+    "form": "narrative",
+    "primary_axis_score": -0.1486
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-ingroup-002",
+    "form": "abstract",
+    "primary_axis_score": -0.4844
+  },
+  {
+    "user_id": "u01",
+    "pair_id": "pp-ingroup-002",
+    "form": "narrative",
+    "primary_axis_score": -0.4611
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.4333,
+    "stated_aspirational": 0.0415
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.2067,
+    "stated_aspirational": 0.0415
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.1976,
+    "stated_aspirational": 0.1824
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.1991,
+    "stated_aspirational": 0.1824
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": -0.393,
+    "stated_aspirational": 0.1824
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.0015,
+    "stated_aspirational": 0.1824
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": 0.4853,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.035,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": 0.3582,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.0379,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": 0.5423,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": 0.0656,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": -0.3833,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u02",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": -0.259,
+    "stated_aspirational": -0.3756
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.7844,
+    "stated_aspirational": 0.23
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.5021,
+    "stated_aspirational": 0.23
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.5021,
+    "stated_aspirational": 0.5737
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.5483,
+    "stated_aspirational": 0.5737
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": 0.5636,
+    "stated_aspirational": 0.5737
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.6058,
+    "stated_aspirational": 0.5737
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": -0.4454,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": 0.1279,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": 0.7679,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": 0.6823,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.4563,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": 0.1471,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": 0.7018,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u03",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": 0.6528,
+    "stated_aspirational": 0.583
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": -0.545,
+    "stated_aspirational": 0.4369
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.0027,
+    "stated_aspirational": 0.4369
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": -0.005,
+    "stated_aspirational": 0.2306
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.2322,
+    "stated_aspirational": 0.2306
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": 0.3102,
+    "stated_aspirational": 0.2306
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.2306,
+    "stated_aspirational": 0.2306
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": -0.7767,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.6647,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": -0.3584,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.4919,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.6166,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": -0.6852,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": -0.3998,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u04",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": -0.4513,
+    "stated_aspirational": -0.5421
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.3236,
+    "stated_aspirational": 0.0526
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.1408,
+    "stated_aspirational": 0.0526
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.3778,
+    "stated_aspirational": -0.775
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": -0.2469,
+    "stated_aspirational": -0.775
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": -0.4891,
+    "stated_aspirational": -0.775
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": -0.7841,
+    "stated_aspirational": -0.775
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": -0.6138,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.6846,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": 0.2889,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.4621,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.54,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": -0.6727,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": -0.7018,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": -0.7693,
+    "stated_aspirational": -0.7997
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-allocation-001",
+    "form": "abstract",
+    "primary_axis_score": -0.398
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-allocation-001",
+    "form": "narrative",
+    "primary_axis_score": -0.4538
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-ingroup-002",
+    "form": "abstract",
+    "primary_axis_score": -0.7018
+  },
+  {
+    "user_id": "u05",
+    "pair_id": "pp-ingroup-002",
+    "form": "narrative",
+    "primary_axis_score": -0.679
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": -0.4488,
+    "stated_aspirational": -0.3668
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": -0.4034,
+    "stated_aspirational": -0.3668
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": -0.7333,
+    "stated_aspirational": -0.4792
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": -0.6148,
+    "stated_aspirational": -0.4792
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": 0.2321,
+    "stated_aspirational": -0.4792
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": -0.187,
+    "stated_aspirational": -0.4792
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": 0.2399,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.1348,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": -0.0808,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.3625,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.107,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": -0.2723,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": 0.1052,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u06",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": -0.0931,
+    "stated_aspirational": -0.4349
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.5369,
+    "stated_aspirational": 0.1391
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.2577,
+    "stated_aspirational": 0.1391
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.3314,
+    "stated_aspirational": 0.4556
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.336,
+    "stated_aspirational": 0.4556
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": 0.351,
+    "stated_aspirational": 0.4556
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.3485,
+    "stated_aspirational": 0.4556
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": 0.2548,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": 0.1184,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": -0.3655,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.2013,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.603,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": -0.2695,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": -0.0161,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u07",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": -0.0748,
+    "stated_aspirational": -0.0828
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.5937,
+    "stated_aspirational": 0.1318
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.3638,
+    "stated_aspirational": 0.1318
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": -0.584,
+    "stated_aspirational": 0.7641
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.1963,
+    "stated_aspirational": 0.7641
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": -0.4371,
+    "stated_aspirational": 0.7641
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.3988,
+    "stated_aspirational": 0.7641
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": -0.3,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.371,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": 0.113,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.1801,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": 0.4627,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": 0.1188,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": 0.0583,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u08",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": -0.1567,
+    "stated_aspirational": -0.3122
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.7461,
+    "stated_aspirational": -0.7533
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": -0.247,
+    "stated_aspirational": -0.7533
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.3073,
+    "stated_aspirational": 0.0858
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.1429,
+    "stated_aspirational": 0.0858
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": 0.6199,
+    "stated_aspirational": 0.0858
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.2545,
+    "stated_aspirational": 0.0858
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": 0.2152,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": 0.5841,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": -0.5119,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": 0.2346,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": 0.7655,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": 0.7109,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": -0.5757,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": 0.1638,
+    "stated_aspirational": 0.7267
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-allocation-001",
+    "form": "abstract",
+    "primary_axis_score": 0.713
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-allocation-001",
+    "form": "narrative",
+    "primary_axis_score": 0.7432
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-ingroup-002",
+    "form": "abstract",
+    "primary_axis_score": -0.6363
+  },
+  {
+    "user_id": "u09",
+    "pair_id": "pp-ingroup-002",
+    "form": "narrative",
+    "primary_axis_score": -0.6533
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": -0.3314,
+    "stated_aspirational": 0.0504
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": -0.2226,
+    "stated_aspirational": 0.0504
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.3716,
+    "stated_aspirational": -0.1673
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.0733,
+    "stated_aspirational": -0.1673
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": -0.0024,
+    "stated_aspirational": -0.1673
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": -0.0665,
+    "stated_aspirational": -0.1673
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": 0.768,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.0191,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": -0.317,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": -0.5306,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.2133,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": -0.5616,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": 0.3005,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u10",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": -0.3935,
+    "stated_aspirational": -0.7757
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.4113,
+    "stated_aspirational": -0.443
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": -0.0227,
+    "stated_aspirational": -0.443
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.6085,
+    "stated_aspirational": -0.704
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": -0.1224,
+    "stated_aspirational": -0.704
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": -0.6995,
+    "stated_aspirational": -0.704
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": -0.6919,
+    "stated_aspirational": -0.704
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": 0.2367,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": 0.41,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": 0.4376,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": 0.5092,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": -0.4922,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": 0.1494,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": 0.3187,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u11",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": 0.468,
+    "stated_aspirational": 0.5132
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": -0.2153,
+    "stated_aspirational": 0.1677
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.0024,
+    "stated_aspirational": 0.1677
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": -0.3661,
+    "stated_aspirational": 0.3578
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": 0.0931,
+    "stated_aspirational": 0.3578
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": -0.4706,
+    "stated_aspirational": 0.3578
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.027,
+    "stated_aspirational": 0.3578
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-001",
+    "form": "abstract",
+    "primary_axis_score": 0.6779,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-001",
+    "form": "narrative",
+    "primary_axis_score": -0.0175,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-002",
+    "form": "abstract",
+    "primary_axis_score": 0.7638,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-002",
+    "form": "narrative",
+    "primary_axis_score": 0.0194,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-003",
+    "form": "abstract",
+    "primary_axis_score": 0.3253,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-003",
+    "form": "narrative",
+    "primary_axis_score": -0.1271,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-004",
+    "form": "abstract",
+    "primary_axis_score": 0.7087,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u12",
+    "pair_id": "pp-truth-004",
+    "form": "narrative",
+    "primary_axis_score": 0.0393,
+    "stated_aspirational": -0.4661
+  },
+  {
+    "user_id": "u13",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": -0.5796,
+    "stated_aspirational": 0.0022
+  },
+  {
+    "user_id": "u13",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": -0.3297,
+    "stated_aspirational": 0.0022
+  },
+  {
+    "user_id": "u13",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": -0.3031,
+    "stated_aspirational": -0.41
+  },
+  {
+    "user_id": "u13",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": -0.38,
+    "stated_aspirational": -0.41
+  },
+  {
+    "user_id": "u13",
+    "pair_id": "pp-reciprocity-002",
+    "form": "abstract",
+    "primary_axis_score": 0.2537,
+    "stated_aspirational": -0.41
+  },
+  {
+    "user_id": "u13",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "primary_axis_score": 0.0011,
+    "stated_aspirational": -0.41
+  },
+  {
+    "user_id": "u14",
+    "pair_id": "pp-ingroup-001",
+    "form": "abstract",
+    "primary_axis_score": 0.6588,
+    "stated_aspirational": -0.0245
+  },
+  {
+    "user_id": "u14",
+    "pair_id": "pp-ingroup-001",
+    "form": "narrative",
+    "primary_axis_score": 0.1422,
+    "stated_aspirational": -0.0245
+  },
+  {
+    "user_id": "u14",
+    "pair_id": "pp-reciprocity-001",
+    "form": "abstract",
+    "primary_axis_score": 0.688,
+    "stated_aspirational": -0.7462
+  },
+  {
+    "user_id": "u14",
+    "pair_id": "pp-reciprocity-001",
+    "form": "narrative",
+    "primary_axis_score": -0.1404,
+    "stated_aspirational": -0.7462
+  },
+  {
+    "user_id": "u14",
+    "pair_id": "pp-reciprocity-002",
+    "form": "narrative",
+    "timed_out": true,
+    "primary_axis_score": null
+  }
+]

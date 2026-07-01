@@ -140,6 +140,7 @@ EXPECTATIONS = {
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True}},
     "A3": {"kind": "a3", "kappa_met": True},
     "A4": {"kind": "a4", "any_met": True},
+    "H8": {"kind": "a8a", "supported": True},
 }
 
 
@@ -165,6 +166,7 @@ def run_analyzer() -> dict:
         "--objectivism-log", str(FIXTURES / "sample-objectivism-log.json"),
         "--language-log", str(FIXTURES / "sample-language-log.json"),
         "--process-log", str(FIXTURES / "sample-process-log.json"),
+        "--h8-log", str(FIXTURES / "sample-h8-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -622,6 +624,69 @@ def check_a4(hid: str, payload: dict, any_met: bool) -> tuple[bool, str]:
         f"{hid}: {glyph} A4a reliability {n_met}/{len(per_domain)} domain(s) clear "
         f"lower-CI ≥ 0.40 (effort, no pool, no framework label), "
         f"{cells} conflict cell(s)×{payload.get('n_participants')} participant(s)"
+    )
+
+
+def check_h8a(hid: str, payload: dict, supported: bool) -> tuple[bool, str]:
+    """H8 narrative-immersion — the COHORT-level debiasing test (§9.2). H8a is a SECONDARY research
+    hypothesis, NEVER a per-person reveal and never a gate-criterion (§9.5): assert the payload shape
+    honours no-pool (no per-person narrative/immersion/transportation scalar anywhere) and that the
+    SUPPORTED verdict is the CONJUNCTION the spec requires — the headline correlation's lower CI ≥ 0.15
+    AND the de-coupled Frisch–Waugh–Lovell partial's lower CI > 0 (the §9.2 regression-to-the-mean
+    guard, whose CI — not its bare point sign — is what bites). The two-sided null lock (headline clears
+    the floor by artifact yet the guard withholds support) lives in check_h8a_decoupling_lock()."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    banned = {"narrative_score", "immersion_score", "transportation_score", "h8_score",
+              "h8a_score", "narrative_immersion_score", "debiasing_score"}
+
+    def _scan(d, where):
+        present = banned & set(d)
+        if present:
+            return (f"{hid}: pooled per-person key(s) {sorted(present)} present in {where} — H8 is a "
+                    f"COHORT effect, never scored per person (§9.5)")
+        return None
+
+    bad = _scan(payload, "the H8 block")
+    if bad:
+        return False, bad
+    a = payload.get("H8a")
+    if not isinstance(a, dict):
+        return False, f"{hid}: missing the H8a debiasing block"
+    bad = _scan(a, "H8a")
+    if bad:
+        return False, bad
+    if abs(a.get("threshold_low", -1) - 0.15) > 1e-9:
+        return False, f"{hid}: H8a threshold_low = {a.get('threshold_low')!r}, expected 0.15 (§9.2)"
+    # The gate must agree with its own arithmetic on BOTH arms of the conjunction.
+    ci_low = a.get("ci_low")
+    headline_met = a.get("headline_met")
+    exp_headline = isinstance(ci_low, (int, float)) and ci_low >= 0.15
+    if headline_met != exp_headline:
+        return False, (f"{hid}: headline_met={headline_met!r} disagrees with ci_low {ci_low!r} "
+                       f"vs floor 0.15")
+    p_lo = a.get("partial_ci_low")
+    dec = a.get("decoupled_partial_positive")
+    exp_dec = isinstance(p_lo, (int, float)) and p_lo > 0.0
+    if dec != exp_dec:
+        return False, (f"{hid}: decoupled_partial_positive={dec!r} disagrees with partial_ci_low "
+                       f"{p_lo!r} vs 0 (the guard is the CI, not the point sign)")
+    # SUPPORTED is EXACTLY the conjunction — the de-coupling guard cannot be bypassed.
+    exp_supported = bool(headline_met and dec)
+    if a.get("supported") != exp_supported:
+        return False, (f"{hid}: supported={a.get('supported')!r} != (headline_met AND "
+                       f"decoupled_partial_positive)={exp_supported!r}")
+    if a.get("supported") != supported:
+        return False, f"{hid}: supported={a.get('supported')!r}, expected {supported!r}"
+    if a.get("n_participants", 0) < 3:
+        return False, f"{hid}: n_participants={a.get('n_participants')!r}, expected ≥ 3 (§9.5)"
+    if a.get("n_probe_rows", 0) < 3:
+        return False, f"{hid}: n_probe_rows={a.get('n_probe_rows')!r}, expected ≥ 3"
+    glyph = "✓" if supported else "✗"
+    return True, (
+        f"{hid}: {glyph} H8a debiasing SUPPORTED={a['supported']} "
+        f"(rho lower-CI ≥ 0.15 ∧ de-coupled partial lower-CI > 0; "
+        f"{a['n_participants']} participants, {a['n_probe_rows']} probe rows, cohort/no-pool)"
     )
 
 
@@ -1205,6 +1270,97 @@ def check_a4_conflict_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_h8a_decoupling_lock() -> tuple[bool, list[str]]:
+    """The H8a de-coupling discipline (§9.2), asserted directly against the code so a regression is
+    caught even if the fixture changes. H8a's headline — corr(D_low, gap_abs), with D = z(r_narr) −
+    z(r_abs) and gap = z(stated) − z(r_abs) — SHARES the term z(r_abs), so under the null it is POSITIVE
+    by regression to the mean even when the narrative form carries NO extra pull toward the stated value.
+    The confirmatory verdict is therefore CONJOINED with a de-coupled Frisch–Waugh–Lovell partial
+    (r_narr · stated | r_abs) whose LOWER 95% CI must clear zero. This lock proves, on synthetic corpora
+    with KNOWN ground truth:
+      (i)   NULL (r_narr independent of stated given r_abs): the headline CLEARS its own 0.15 floor by
+            artifact (headline_met True) yet the de-coupled partial CI straddles zero, so SUPPORTED is
+            False — the guard adds discriminating power the headline alone does NOT have;
+      (ii)  the guard is the CI, not the bare sign — the design-doc's one-line 'sign > 0' is a coin-flip
+            under the null, so the lock-time tightening to 'lower CI > 0' is load-bearing;
+      (iii) DIRECTION matters — a corpus whose narrative pulls AWAY from stated yields a NEGATIVE
+            headline (headline_met False) and is not supported;
+      (iv)  a REAL debiasing pull toward stated is SUPPORTED (positive control);
+      (v)   SUPPORTED is EXACTLY (headline lower-CI ≥ 0.15) AND (partial lower-CI > 0) — a strict
+            conjunction that cannot be bypassed;
+      (vi)  the inclusion floor holds — < 3 qualifying participants returns None (never a bare scalar);
+      (vii) the reveal is COHORT-level and value-neutral — framed as DEBIASING, never scored per person.
+    This is the H8 analog of the §14.1 censoring lock / the A4 two-sided reliability lock."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    pairs = A.load_h8_pairs(REPO_ROOT / "scenarios" / "h8-probe-pairs.json")
+    low = sorted(p for p, m in pairs.items() if m["stakes_level"] == "low")
+    doms = sorted({pairs[p]["domain"] for p in low})
+
+    def clip(x):
+        return max(-1.0, min(1.0, x))
+
+    def corpus(mode, n_users, seed):
+        # mode: 'null' = r_narr independent of stated given r_abs (regression-to-the-mean null);
+        #       'flip' = narrative pulled AWAY from stated; 'real' = narrative pulled TOWARD stated.
+        rng = random.Random(seed)
+        recs = []
+        for i in range(n_users):
+            u = f"u{i:02d}"
+            stated = {d: rng.uniform(-0.8, 0.8) for d in doms}
+            for pid in low:
+                d = pairs[pid]["domain"]
+                abst = rng.uniform(-0.8, 0.8)
+                if mode == "null":
+                    narr = rng.uniform(-0.8, 0.8)
+                elif mode == "flip":
+                    narr = clip(abst - 0.6 * (stated[d] - abst) + rng.gauss(0, 0.06))
+                else:
+                    narr = clip(abst + 0.6 * (stated[d] - abst) + rng.gauss(0, 0.06))
+                recs.append({"user_id": u, "pair_id": pid, "form": "abstract",
+                             "primary_axis_score": round(clip(abst), 4),
+                             "stated_aspirational": round(stated[d], 4)})
+                recs.append({"user_id": u, "pair_id": pid, "form": "narrative",
+                             "primary_axis_score": round(narr, 4),
+                             "stated_aspirational": round(stated[d], 4)})
+        return recs
+
+    nul = A.compute_h8a_debiasing(corpus("null", 100, 424242), pairs)
+    flp = A.compute_h8a_debiasing(corpus("flip", 40, 424242), pairs)
+    rea = A.compute_h8a_debiasing(corpus("real", 40, 424242), pairs)
+    tiny = A.compute_h8a_debiasing(corpus("real", 2, 424242), pairs)  # below the 3-participant floor
+    render = A.render_h8_result(rea)
+
+    def conj_ok(r):
+        return r is not None and r["supported"] == bool(r["headline_met"] and r["decoupled_partial_positive"])
+
+    checks = [
+        ("NULL: headline CLEARS its 0.15 floor by regression-to-the-mean (headline_met True, rho > 0.15)",
+         nul is not None and nul["headline_met"] is True and nul["rho_8a"] > 0.15),
+        ("NULL: de-coupled partial CI STRADDLES zero (decoupled_partial_positive False)",
+         nul is not None and nul["decoupled_partial_positive"] is False and nul["partial_ci_low"] <= 0),
+        ("NULL: SUPPORTED is False — the guard withholds support the headline alone would grant",
+         nul is not None and nul["supported"] is False),
+        ("FLIP (narrative pulled AWAY from stated): headline NEGATIVE, not supported",
+         flp is not None and flp["rho_8a"] < 0 and flp["headline_met"] is False and flp["supported"] is False),
+        ("REAL (narrative pulled TOWARD stated): SUPPORTED True, de-coupled partial CI clears 0 (control)",
+         rea is not None and rea["supported"] is True and rea["decoupled_partial_positive"] is True),
+        ("SUPPORTED is EXACTLY (headline lower-CI ≥ 0.15) ∧ (partial lower-CI > 0) across all corpora",
+         conj_ok(nul) and conj_ok(flp) and conj_ok(rea)),
+        ("inclusion floor: < 3 qualifying participants returns None (never a bare scalar, §9.5)",
+         tiny is None),
+        ("the reveal is COHORT-level DEBIASING, never scored per person (value-neutral, §9.5)",
+         "DEBIASING" in render and "cohort" in render and "never scored per person" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h8a-decoupling: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -1264,6 +1420,8 @@ def main() -> int:
             ok, msg = check_a3(hid, payload, spec["kappa_met"])
         elif spec["kind"] == "a4":
             ok, msg = check_a4(hid, payload, spec["any_met"])
+        elif spec["kind"] == "a8a":
+            ok, msg = check_h8a(hid, payload, spec["supported"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -1328,6 +1486,12 @@ def main() -> int:
     for m in a4lock_msgs:
         print(m)
     if not a4lock_ok:
+        all_pass = False
+
+    h8lock_ok, h8lock_msgs = check_h8a_decoupling_lock()
+    for m in h8lock_msgs:
+        print(m)
+    if not h8lock_ok:
         all_pass = False
 
     if all_pass:

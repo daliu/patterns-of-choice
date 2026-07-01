@@ -157,6 +157,18 @@ Implemented here:
   adjunct with NO public card (§1.4). Parity-gated in principle; the on-device conflict reveal +
   its JS parity lock are DEFERRED this increment (as the H9–R6 on-device reveals are). A4b
   (conflict adds information beyond the choice) is cohort-coupled, DEFERRED.
+- H8 narrative immersion — the COHORT secondary channel (§9 of scoring.md, h8-narrative-immersion-
+  design.md; does an established-arc "narrative" form of a moral choice pull behaviour toward stated
+  values vs a structurally-equivalent quick-fire "abstract" form?). When --h8-log is supplied (per-form
+  primary_axis_score + stated_aspirational, paired via scenarios/h8-probe-pairs.json): H8a debiasing
+  (low-stakes) correlates per-participant mean D = z(r_narr)−z(r_abs) with the stated−revealed gap
+  z(stated)−z(r_abs); confirmatory rho_8a lower CI ≥ 0.15, POSITIVE (§6 convention; reconciles the
+  design-doc's one-line "negative" which assumed revealed−stated). THE LOAD-BEARING DISCIPLINE (§9.2):
+  D and gap SHARE r_abs, inflating their correlation under the null (regression to the mean), so the
+  headline is CONJOINED with a de-coupled Frisch–Waugh–Lovell partial (r_narr·stated | r_abs) that must
+  be positive — SUPPORTED only if both AGREE. COHORT property, NEVER a per-person reveal and never a
+  gate-criterion (§9.5) → no on-device projection (parity stays green), no public card. H8b (attachment-
+  laden shift, §9.4) needs the §9.3 per-character attachment instrument and is DEFERRED.
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -216,6 +228,7 @@ BOOTSTRAP_CI = 0.95
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TAG_MAP = REPO_ROOT / "analysis" / "tag_axis_map_v0.1.csv"
 DEFAULT_DISTANCE_MAP = REPO_ROOT / "analysis" / "counterparty_distance_map_v0.1.csv"
+DEFAULT_H8_MANIFEST = REPO_ROOT / "scenarios" / "h8-probe-pairs.json"
 SCENARIOS_DIR = REPO_ROOT / "scenarios" / "sample"
 INVENTORY_DIR = REPO_ROOT / "inventory"
 
@@ -2896,6 +2909,230 @@ def compute_a4a_conflict_reliability(records: list[dict]) -> dict[str, Any] | No
     }
 
 
+# ---------------------------------------------------------------------------
+# H8 — narrative-immersion (scoring.md §9). A SECONDARY, COHORT-level hypothesis:
+# does an established-arc "narrative" form of a moral choice pull behaviour toward
+# a person's stated values relative to a structurally-equivalent "abstract" quick-
+# fire form? Cohort research test only — never a per-person reveal, never a gate-
+# criterion (§9.5) — so there is NO on-device projection (parity stays green) and
+# NO public card. It reuses the §2–§3 item scoring: the log carries the already-
+# scored primary-axis values; the pairing / domain / stakes live in the manifest
+# (scenarios/h8-probe-pairs.json), exactly as pairwise comparisons live in
+# inventory/pairwise-pairs.json.
+#
+# This increment builds H8a — the DEBIASING leg (low-stakes pairs, §9.2):
+#   D_i^p        = z(r_narr) − z(r_abs)                         (§9.1 divergence)
+#   gap_abs(i,p) = z(stated_aspirational) − z(r_abs)            (§9.2, §6 convention)
+#   rho_8a       = corr_i( mean_p D_i^p , mean_p gap_abs(i,p) )
+# The confirmatory criterion is rho_8a's lower 95% bootstrap CI ≥ 0.15, POSITIVE
+# under scoring.md §6's canonical stated−revealed gap convention (the design-doc's
+# one-line "negative" assumed revealed−stated; reconciled here — §9.2 sign note).
+#
+# THE LOAD-BEARING DISCIPLINE (§9.2 mathematical-coupling caveat): D_i and gap_i
+# SHARE the term r_abs, which inflates their correlation even under the null (a
+# regression-to-the-mean artifact). So the confirmatory test is CONJOINED with a
+# de-coupled partial-association guard: regress r_narr jointly on stated and r_abs
+# and require the partial association of r_narr with stated (controlling r_abs) to
+# be positive — the narrative response pulled toward the stated value BEYOND what
+# the abstract response already predicts. Computed by Frisch–Waugh–Lovell as
+# sign( corr( resid(r_narr ~ r_abs), resid(stated ~ r_abs) ) ), reusing
+# _ols_residuals. H8a is SUPPORTED only if the headline CI AND the de-coupled sign
+# AGREE — a two-sided conjunction a naive correlation cannot fake. This is the H8
+# analog of the §13.2 censoring / |8.0| lock.
+#
+# H8b (the attachment-laden shift, §9.4) needs the separate per-character
+# attachment instrument (§9.3) and is DEFERRED to the next increment.
+
+H8A_RHO_FLOOR = 0.15    # rho_8a lower 95% bootstrap CI ≥ this (§9.2; the deliberately-modest secondary bar)
+H8A_MIN_LOW_PAIRS = 3   # a participant enters H8a with ≥ 3 complete low-stakes pairs (§9.5 inclusion)
+H8A_SEED_OFFSET = 26    # de-coupling partial-association robustness-CI band; rho_8a uses the §9.5-pinned BOOTSTRAP_SEED
+
+
+def load_h8_pairs(manifest_path: Path) -> dict[str, dict[str, str]]:
+    """Read the paired-probe manifest → {pair_id: {"domain", "stakes_level"}}. The manifest is the
+    SOURCE OF TRUTH for which narrative form pairs with which abstract form, in which domain, at which
+    stakes level (scoring.md §9.1); the response log carries only the scored primary-axis values."""
+    with manifest_path.open() as f:
+        manifest = json.load(f)
+    out: dict[str, dict[str, str]] = {}
+    for entry in manifest.get("pairs", []):
+        pid = entry.get("pair_id")
+        if pid is None:
+            continue
+        out[pid] = {"domain": entry.get("domain"), "stakes_level": entry.get("stakes_level")}
+    return out
+
+
+def _h8_completed(rec: dict) -> bool:
+    """A form contributes only if it was completed — neither timed-out nor missing (§9.5)."""
+    if rec.get("timed_out") is True:
+        return False
+    sc = rec.get("primary_axis_score")
+    return isinstance(sc, (int, float)) and not isinstance(sc, bool)
+
+
+def compute_h8a_debiasing(
+    records: list[dict], pairs: dict[str, dict[str, str]]
+) -> dict[str, Any] | None:
+    """H8a debiasing test (scoring.md §9.2). Returns the confirmatory rho_8a (with bootstrap CI) AND
+    the de-coupled partial-association guard, plus the SUPPORTED verdict (both must agree — §9.2).
+    COHORT-level; None if <3 participants clear the ≥3-complete-low-pairs inclusion (§9.5). Never a
+    per-person read (no on-device projection, no public card)."""
+    low_pairs = {pid for pid, meta in pairs.items() if meta.get("stakes_level") == "low"}
+    # 1. Index completed responses: {(user, pair, form): score}; capture stated per (user, domain).
+    by_key: dict[tuple[str, str, str], float] = {}
+    stated_raw: dict[tuple[str, str], float] = {}
+    for rec in records:
+        pid = rec.get("pair_id")
+        if pid not in low_pairs or not _h8_completed(rec):
+            continue
+        user = rec.get("user_id")
+        form = rec.get("form")
+        if user is None or form not in ("narrative", "abstract"):
+            continue
+        by_key[(user, pid, form)] = float(rec["primary_axis_score"])
+        st = rec.get("stated_aspirational")
+        if isinstance(st, (int, float)) and not isinstance(st, bool):
+            stated_raw[(user, pairs[pid]["domain"])] = float(st)
+
+    # 2. Sample-standardize (§2): each (pair, form) column across users; stated per domain across users.
+    zmap: dict[tuple[str, str, str], float] = {}
+    for pid in low_pairs:
+        for form in ("narrative", "abstract"):
+            users = sorted(u for (u, p, f) in by_key if p == pid and f == form)
+            zs = _z([by_key[(u, pid, form)] for u in users])
+            if zs is None:
+                continue
+            for u, zv in zip(users, zs):
+                zmap[(u, pid, form)] = zv
+    zstated: dict[tuple[str, str], float] = {}
+    for d in sorted({dd for (_u, dd) in stated_raw}):
+        users = sorted(u for (u, dd) in stated_raw if dd == d)
+        zs = _z([stated_raw[(u, d)] for u in users])
+        if zs is None:
+            continue
+        for u, zv in zip(users, zs):
+            zstated[(u, d)] = zv
+
+    # 3. Per user: collect completed low-stakes probe ROWS — one (participant, pair) each, carrying the
+    #    z-scored narrative, abstract, and stated values (both forms present + stated present).
+    per_user_rows: dict[str, list[tuple[float, float, float]]] = defaultdict(list)  # (zn, za, zst)
+    for pid in sorted(low_pairs):
+        d = pairs[pid]["domain"]
+        for u in sorted(u for (u, p, f) in zmap if p == pid and f == "abstract"):
+            zn = zmap.get((u, pid, "narrative"))
+            za = zmap.get((u, pid, "abstract"))
+            zst = zstated.get((u, d))
+            if zn is None or za is None or zst is None:
+                continue
+            per_user_rows[u].append((zn, za, zst))
+
+    # 4. Inclusion (§9.5): a participant enters with ≥3 complete low-stakes pairs — and gates BOTH arms,
+    #    so the headline correlation and the de-coupling guard describe the SAME cohort. Need ≥3 to correlate.
+    users_in = sorted(u for u in per_user_rows if len(per_user_rows[u]) >= H8A_MIN_LOW_PAIRS)
+    if len(users_in) < 3:
+        return None
+
+    # Confirmatory: correlate per-participant means D_low = mean_p(zn − za) with gap_abs = mean_p(zst − za).
+    d_low = [sum(zn - za for (zn, za, _z) in per_user_rows[u]) / len(per_user_rows[u]) for u in users_in]
+    gap_abs = [sum(zs - za for (_n, za, zs) in per_user_rows[u]) / len(per_user_rows[u]) for u in users_in]
+    rho = _pearson_r(d_low, gap_abs)
+    ci_low, ci_high = _bootstrap_ci_r(d_low, gap_abs, random.Random(BOOTSTRAP_SEED))
+    headline_met = bool(rho is not None and ci_low == ci_low and ci_low >= H8A_RHO_FLOOR)
+
+    # De-coupling probe rows are drawn from the SAME included participants (row-level pooled partial).
+    probe_narr: list[float] = []
+    probe_stated: list[float] = []
+    probe_abs: list[float] = []
+    for u in users_in:
+        for (zn, za, zst) in per_user_rows[u]:
+            probe_narr.append(zn)
+            probe_stated.append(zst)
+            probe_abs.append(za)
+
+    # 5. De-coupled partial-association guard via Frisch–Waugh–Lovell (§9.2 caveat). The gate is the
+    #    partial's LOWER bootstrap CI clearing ZERO — reliably positive after removing the shared r_abs
+    #    — NOT the bare point sign. This matters: under the §9.2 null (r_narr independent of stated
+    #    given r_abs) the headline corr(D, gap) is still POSITIVE by regression to the mean (D and gap
+    #    share −z(r_abs)), and the partial's POINT sign is a coin-flip — but its CI straddles zero. So
+    #    the CI, not the sign, is what deterministically bites. (A lock-time tightening of the design-
+    #    doc's one-line "sign > 0"; strictly stronger — CI_low > 0 implies point > 0. Surfaced to Dave.)
+    e1 = _ols_residuals([probe_abs], probe_narr)    # resid(r_narr ~ r_abs)
+    e2 = _ols_residuals([probe_abs], probe_stated)  # resid(stated ~ r_abs)
+    partial_r = _pearson_r(e1, e2) if (e1 is not None and e2 is not None) else None
+    p_ci_low = p_ci_high = float("nan")
+    if e1 is not None and e2 is not None and len(probe_abs) >= 3:
+        rng = random.Random(BOOTSTRAP_SEED + H8A_SEED_OFFSET)
+        m = len(probe_abs)
+        vals: list[float] = []
+        for _ in range(BOOTSTRAP_N):
+            idx = [rng.randrange(m) for _ in range(m)]
+            b1 = _ols_residuals([[probe_abs[i] for i in idx]], [probe_narr[i] for i in idx])
+            b2 = _ols_residuals([[probe_abs[i] for i in idx]], [probe_stated[i] for i in idx])
+            if b1 is None or b2 is None:
+                continue
+            pr = _pearson_r(b1, b2)
+            if pr is not None:
+                vals.append(pr)
+        if len(vals) >= 10:
+            vals.sort()
+            alpha = (1 - BOOTSTRAP_CI) / 2
+            p_ci_low = vals[int(len(vals) * alpha)]
+            p_ci_high = vals[min(int(len(vals) * (1 - alpha)), len(vals) - 1)]
+
+    # Reliably positive iff the de-coupled partial's LOWER 95% CI clears zero.
+    decoupled_reliably_positive = bool(
+        partial_r is not None and p_ci_low == p_ci_low and p_ci_low > 0.0
+    )
+    return {
+        "rho_8a": rho,
+        "ci_low": ci_low,
+        "ci_high": ci_high,
+        "threshold_low": H8A_RHO_FLOOR,
+        "headline_met": headline_met,
+        "partial_r": partial_r,
+        "partial_ci_low": p_ci_low,
+        "partial_ci_high": p_ci_high,
+        "decoupled_partial_positive": decoupled_reliably_positive,
+        "supported": bool(headline_met and decoupled_reliably_positive),
+        "n_participants": len(users_in),
+        "n_probe_rows": len(probe_abs),
+    }
+
+
+def render_h8_result(h8a: dict[str, Any] | None) -> str:
+    """H8 narrative-immersion (scoring.md §9). COHORT secondary hypothesis — reported with effect
+    sizes + CIs, NEVER a per-person reveal and never a gate-criterion (§9.5). H8a supported only if
+    the headline correlation lower-CI AND the de-coupled partial's lower-CI both clear their floors
+    (the §9.2 regression-to-the-mean guard — the partial's CI must clear zero, not just its sign)."""
+    if h8a is None:
+        return (
+            "H8 (narrative immersion — cohort secondary): insufficient data — supply --h8-log with "
+            "≥3 participants who each completed both forms of ≥3 low-stakes pairs (§9.2/§9.5)."
+        )
+
+    def _f(v: Any) -> str:
+        return "nan" if (v is None or v != v) else f"{v:+.3f}"
+
+    lines = [
+        "H8a — narrative debiasing (low-stakes paired probes, §9.2; COHORT secondary, never a "
+        "per-person reveal):",
+        f"  rho_8a = corr(D_low, gap_abs) = {_f(h8a['rho_8a'])}  "
+        f"95% CI [{_f(h8a['ci_low'])}, {_f(h8a['ci_high'])}]  "
+        f"lower ≥ {h8a['threshold_low']:.2f}? {_met_glyph(h8a['headline_met'])}",
+        f"  de-coupled partial (r_narr·stated | r_abs, Frisch–Waugh–Lovell) = {_f(h8a['partial_r'])}  "
+        f"95% CI [{_f(h8a['partial_ci_low'])}, {_f(h8a['partial_ci_high'])}]  "
+        f"lower CI > 0? {_met_glyph(h8a['decoupled_partial_positive'])}",
+        f"  SUPPORTED (headline lower-CI ≥ floor AND de-coupled partial lower-CI > 0 — the "
+        f"regression-to-the-mean guard, §9.2) {_met_glyph(h8a['supported'])}  "
+        f"[{h8a['n_participants']} participants, {h8a['n_probe_rows']} probe rows]",
+        "  Read: a narrative form pulling behaviour toward stated values is DEBIASING, not virtue — "
+        "the effect is a cohort property, never scored per person. H8b (attachment-laden shift, "
+        "§9.4) deferred — needs the per-character attachment instrument (§9.3).",
+    ]
+    return "\n".join(lines)
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -3635,6 +3872,18 @@ def main() -> int:
         help="Optional decision-process log (per-item response_time_ms + prompt_chars + presented_position) for the A4 conflict channel (§22).",
     )
     parser.add_argument(
+        "--h8-log",
+        type=Path,
+        default=None,
+        help="Optional narrative-immersion paired-probe log (per-form primary_axis_score + stated_aspirational) for the H8a debiasing test (§9.2).",
+    )
+    parser.add_argument(
+        "--h8-manifest",
+        type=Path,
+        default=DEFAULT_H8_MANIFEST,
+        help="Paired-probe manifest (pair_id→domain/stakes/refs) for H8 (default: scenarios/h8-probe-pairs.json).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -4065,6 +4314,31 @@ def main() -> int:
         a4_n_users = len({u for (u, _d) in _a4_cells})
         a4a_result = compute_a4a_conflict_reliability(process_records)
 
+    # --- H8 narrative immersion — the COHORT secondary channel (scoring.md §9). Re-uses the §2–§3
+    # item scoring: the log carries already-scored primary-axis values per (user, pair, form); the
+    # manifest supplies pairing/domain/stakes. H8a (debiasing, low-stakes) tests whether the narrative
+    # form pulls behaviour toward stated values — with the §9.2 regression-to-the-mean guard (D and gap
+    # SHARE r_abs, so a de-coupled Frisch–Waugh–Lovell partial must AGREE with the headline CI). NEVER a
+    # per-person reveal and never a gate-criterion (§9.5) → no on-device projection (parity stays green),
+    # no public card (like A4). H8b (attachment shift, §9.4) needs the §9.3 instrument and is DEFERRED.
+    h8a_result: dict[str, Any] | None = None
+    if args.h8_log:
+        try:
+            with args.h8_log.open() as f:
+                h8_records = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading H8 log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(h8_records, list):
+            print("ERROR: H8 log must be a JSON array", file=sys.stderr)
+            return 2
+        try:
+            h8_pairs = load_h8_pairs(args.h8_manifest)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading H8 manifest: {e}", file=sys.stderr)
+            return 2
+        h8a_result = compute_h8a_debiasing(h8_records, h8_pairs)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -4299,6 +4573,27 @@ def main() -> int:
                 "n_participants": a4_n_users,
             }
 
+        if h8a_result is not None:
+            # H8a debiasing — COHORT secondary (§9.2). NO pooled narrative/immersion/transportation
+            # scalar: the reveal is never per-person (§9.5). `supported` requires the headline CI AND
+            # the de-coupled Frisch–Waugh–Lovell partial sign to agree (the regression-to-the-mean guard).
+            hypotheses["H8"] = {
+                "H8a": {
+                    "rho_8a": h8a_result["rho_8a"],
+                    "ci_low": _nan_to_none(h8a_result["ci_low"]),
+                    "ci_high": _nan_to_none(h8a_result["ci_high"]),
+                    "threshold_low": h8a_result["threshold_low"],
+                    "headline_met": h8a_result["headline_met"],
+                    "partial_r": h8a_result["partial_r"],
+                    "partial_ci_low": _nan_to_none(h8a_result["partial_ci_low"]),
+                    "partial_ci_high": _nan_to_none(h8a_result["partial_ci_high"]),
+                    "decoupled_partial_positive": h8a_result["decoupled_partial_positive"],
+                    "supported": h8a_result["supported"],
+                    "n_participants": h8a_result["n_participants"],
+                    "n_probe_rows": h8a_result["n_probe_rows"],
+                },
+            }
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -4407,6 +4702,9 @@ def main() -> int:
         if a4a_result is not None or a4_n_cells:
             print()
             print(render_a4_result(a4a_result, a4_n_users, a4_n_cells))
+        if h8a_result is not None:
+            print()
+            print(render_h8_result(h8a_result))
 
     return 0
 

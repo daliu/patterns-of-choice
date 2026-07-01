@@ -13,6 +13,85 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 27 — 2026-07-01 — H8 · Narrative-immersion debiasing (H8a leg; secondary, cohort-level)
+
+`build-and-validate.md` item 10. After nine consecutive branch-outs into *new* channels (H9–R6, A3, A4), this iteration circles back to
+close the oldest open spec: **H8**, one of Round 1's original ten, specified in full (`h8-narrative-immersion-design.md`, `scoring.md §9`)
+but left spec-only through the whole build phase because its confirmatory test carries a subtle statistical trap. H8 asks whether an
+**established narrative arc debiases choice toward a person's stated values** — do the people whose quick-fire (abstract) behaviour falls
+furthest short of what they *say* they value shift most toward those values when the same choice is embedded in a story they're immersed
+in? It is a **secondary, cohort-level** hypothesis (§9.5): unlike every prior branch it produces **no per-person reveal** and is **never a
+gate-criterion** for instrument validation. H8a (the low-stakes *debiasing* leg) was the cheapest-clean buildable half; H8b (the
+high-stakes *attachment* leg) stays deferred behind an instrument it needs.
+
+- **What shipped (`scripts/analyze.py`, `--h8-log --h8-manifest`).** `compute_h8a_debiasing` reads the narrative↔abstract pairing manifest
+  (`scenarios/h8-probe-pairs.json`, via `load_h8_pairs` — 9 declared pairs, 7 low-stakes = the H8a pool, 2 high-stakes = the deferred H8b
+  pool) and for each participant with **≥ 3 complete low-stakes pairs** (§9.5 inclusion; a pair counts only if *both* forms are non-timed-out)
+  computes two per-person means: the **divergence** `D_i^(low) = mean_p [ z(r_narr) − z(r_abs) ]` and the §6 **abstract gap**
+  `gap_i^(abs) = mean_p [ z(stated) − z(r_abs) ]`. The **headline** test is `rho_8a = corr_i(D_low, gap_abs)`, gated at the secondary bar —
+  the *lower* 95% bootstrap CI ≥ **0.15**. But the headline alone is **not** enough, and that is the whole point of this branch (see below).
+  The JSON `H8` block carries `H8a.{rho_8a, ci_low, ci_high, headline_met, partial_r, partial_ci_low, partial_ci_high,
+  decoupled_partial_positive, supported, n_participants, n_probe_rows}` — **no** pooled scalar. Gated in `check_analyzer_thresholds.py`
+  (`check_h8a` rejecting any pooled `narrative_score`/`immersion_score`/`transportation_score`/`h8_score`/`debiasing_score` key, pinning the
+  threshold + the `supported = headline_met ∧ decoupled_partial_positive` conjunction identity + the inclusion floor, and a
+  `check_h8a_decoupling_lock()` unit-regression, **8 assertions all green**) on a self-contained fixture (`analysis/fixtures/sample-h8-log.json`,
+  14 participants, a real BETA=0.6 debiasing effect: u01–u12 complete all 7 low pairs, u13 exactly 3 (the floor — included), u14 only 2 + a
+  timed-out row (**excluded** — exercises the floor), 3 users also carry high-stakes rows the low-only path must ignore; known ground truth
+  `rho_8a` ≈ 0.89, headline CI ≈ [0.74, 0.97], `partial_r` ≈ 0.96, **SUPPORTED**, 13 participants, 87 probe rows).
+- **The load-bearing discipline — mathematical coupling, and the de-coupled guard (§9.2).** `D_i^(low)` and `gap_i^(abs)` **share the term
+  `r_abs`** (D subtracts it, gap subtracts it), so they correlate **even under the null** by regression-to-the-mean — under §2 z-scoring the
+  artifact correlation is ≈ √(1 − ρ_na)/2, positive whenever the two forms aren't perfectly correlated. A naïve headline test would "confirm"
+  H8a on noise. So the confirmatory test is **conjoined** with a **de-coupled Frisch–Waugh–Lovell** analysis: `partial_r =
+  corr( resid(r_narr ~ r_abs), resid(stated ~ r_abs) )` (reusing `_ols_residuals` twice) — does the narrative response track the *stated*
+  value beyond what the abstract response already predicts? **H8a is SUPPORTED iff the headline lower-CI ≥ 0.15 AND the de-coupled guard
+  holds**, both over the **same** included cohort (the below-floor u14 leaks into *neither* arm — a cohort-consistency refactor this
+  iteration: originally the row-level FWL arm pooled all probe rows incl. below-floor participants, inflating the row count 87→89; now both
+  arms gate on `users_in`). `check_h8a_decoupling_lock` proves the guard is load-bearing on an **n=100 honest null** (`r_narr` independent of
+  both stated and `r_abs`): the headline lower-CI **clears 0.15 by the artifact alone** (`headline_met` True) yet the de-coupled partial CI
+  straddles 0, so `supported` is **False**. The instrument refuses to confirm debiasing on the coupling artifact.
+- **The CI-over-sign refinement (a rigor tightening surfaced to Dave).** The spec (`scoring.md §9.2`, design-doc §1) framed the de-coupled
+  guard as "the partial-association **sign** is positive." But under the §9.2 null the partial's point sign is a **coin-flip** —
+  non-deterministic and not falsifiable, so a point-sign gate would pass ~half the time on noise. I **tightened** the guard to require the
+  partial's **lower 95% bootstrap CI > 0** (reliably positive). Strictly stronger (CI_low > 0 ⟹ point > 0) and deterministically gate-able;
+  the n=100 null-lock is exactly the case that exposes the difference (positive point sign possible, but CI straddles 0 → not supported).
+- **Disciplines honored.** *Value-neutral, cohort-only* (the load-bearing one): the debiasing effect is a **cohort property, never scored per
+  person** and **never a gate-criterion** (§9.5); the render says so verbatim ("cohort property, never scored per person"; "COHORT",
+  "DEBIASING"). *No composite / never-pool* (§13.5): the headline `rho_8a`, the de-coupled `partial_r`, and their CIs are reported as
+  **separate** facets, never summed into a "narrative-immersion score"; `check_h8a` rejects five pooled key names. *Inclusion honesty* (§9.5):
+  the ≥ 3-complete-low-pairs floor is enforced identically for both arms; a timed-out form drops its pair, never imputes. *Standardization is
+  per-item, not pooled*: `r_narr`/`r_abs` z-scored per (pair, form) across users (§2), `stated` per domain (§6); Pearson-`r`-invariant, so the
+  self-checking generator (`/tmp/gen_h8.py`, never committed) verifies ground truth **through the real analyzer path**, not an approximation.
+- **Scope — cohort-level, no reveal, parity untouched; a new seed pair consumed.** H8 has **no on-device surface**, so it sits **outside** the
+  `poc-projection.js` ↔ `analyze.py` parity contract entirely (like A3, but for a different reason — A3 is non-deterministic coding; H8 is a
+  secondary cohort statistic with nothing to reveal per person), and **parity stays 9/9** (`poc-projection.js` untouched this iteration). The
+  bootstrap consumes the project seed for the headline CI and **seed offset +26** for the de-coupled partial CI (the next after A4's +25).
+  **Deferred (documented):** **H8b — the attachment-laden shift** (high-stakes, §9.4) needs the per-character `attachment_strength` instrument
+  (§9.3: the PSR-PRD self-report adaptation, Tukachinsky 2010, at sessions 8/16/24 + the RT-latency-gap behavioural channel), which needs the
+  **NPC cast** (`scenarios/npc-cast.json` — the manifest's high-stakes pairs already carry `npc_ref`, but the cast isn't built) and the
+  **Mode-A (central-buddy) vs Mode-B (flat-ensemble)** narrative-design lock (design-doc Q4). All design/runtime-gated — surfaced to Dave.
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §28 — H8a pre-registration.* A **secondary, cohort-level** narrative-immersion
+  debiasing test read off a new light `--h8-log` data-contract + the `scenarios/h8-probe-pairs.json` pairing manifest. Per-person `D_i^(low)` =
+  mean z-divergence (narrative − abstract) and `gap_i^(abs)` = mean §6 gap (stated − abstract), over ≥ 3 complete low-stakes pairs. Headline
+  `rho_8a` = their correlation, gate the secondary lower-CI ≥ **0.15**; **conjoined** with a de-coupled FWL partial (`r_narr` residual-on-`r_abs`
+  vs `stated` residual-on-`r_abs`), gate its **lower CI > 0**. **Three reconciliations to ratify:** (i) the correlation **sign is positive**
+  under §6's *stated − revealed* convention (the design-doc §1 "negative" assumed the opposite gap); (ii) **per-(pair, form)** standardization
+  for revealed forms, **per-domain** for stated; (iii) the de-coupling guard is the partial's **lower CI > 0**, not the point sign (the point
+  sign is a coin-flip under the coupling null). **The wall is load-bearing:** the debiasing effect is a **cohort property, never a per-person
+  reveal and never a validation gate-criterion** (§9.5). If this reads right, say **"lock §28"** and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, H10, H11, R2, H12, R1, R6, A3, A4, **H8**,
+  probe-ceiling, h9-censoring, h10-suppression, h11-suppression, r2-censoring, h12-pairing, r1-nopool, r6-nopool, a3-kappa, a4-conflict,
+  **h8a-decoupling**) + JS↔Python parity 9/9 (H8 adds nothing to parity, by design). Commit on `poc` main.
+
+**The loop now closes the last of Round 1's original ten.** H8 was the one branch whose confirmatory test could be *faked by its own
+arithmetic* — D and the gap share `r_abs`, so a headline correlation confirms itself on noise. The build's answer is the conjoined
+de-coupled FWL guard, tightened from a coin-flip point sign to a reliable lower-CI, and locked two-sided against an n=100 null that clears
+the headline yet fails the conjunction. What remains buildable-without-Dave keeps thinning: the cohort-coupled discriminant halves
+(H·b / R·c / H-A4b / H8's own attachment leg needs an instrument, not just a discriminant), the deferred on-device reveals, A5's emotion
+channel, and the language branches (R3/R4/R5) behind A3's real-human-κ wall. The loop continues in the Dave-gated tail, one clean branch
+at a time.
+
+---
+
 ## Iteration 26 — 2026-06-30 — A4 · The decision-conflict channel: the RT-derived effort signal (first *process* channel)
 
 `build-and-validate.md` item 9, and the second consecutive **branch-out**. Iteration 25 (A3) opened a third channel on *values* — the

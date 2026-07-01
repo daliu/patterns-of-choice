@@ -232,6 +232,12 @@ All point estimates report **95% bootstrap CIs** with 10,000 resamples at the pa
 
 This section operationalizes the H8 secondary hypothesis (`pre-registration.md` §6; design rationale in `h8-narrative-immersion-design.md`). H8 has two sub-hypotheses, each with its own derived score. All inputs are the standard revealed per-item scores of §2–§3; nothing here introduces a new scale.
 
+**Status.** H8a (debiasing, §9.2) — the headline correlation `rho_8a`, its bootstrap CI, and the **conjoined de-coupled Frisch–Waugh–Lovell partial-association guard** — is BUILT (`analyze.py --h8-log --h8-manifest`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-h8-log.json`). H8 is a **secondary, cohort-level** hypothesis (§9.5): it produces **no per-person reveal and no on-device surface**, so it adds nothing to the `poc-projection.js` ↔ `analyze.py` parity contract and **parity stays 9/9** (`poc-projection.js` untouched). H8b (attachment-laden shift, §9.4) is DEFERRED — it requires the per-character `attachment_strength` instrument (§9.3), which needs the NPC-cast + high-stakes attachment elicitation (surfaced to Dave). Three pre-registration reconciliations were resolved at build time and are **surfaced for Dave's lock, not auto-locked** (proposed as **DECISIONS §28**):
+
+1. **Sign → positive.** The design doc §1 called the correlation "negative" under an assumed *revealed − stated* gap; under scoring.md §6's canonical *stated − revealed* convention the same prediction is **positive**. Implemented positive (the §9.2 Sign note is now resolved).
+2. **Standardization is per-item, not pooled.** `r_narr` and `r_abs` are z-scored **per (pair, form) across users** (§2 per-item standardization); `stated_aspirational` is z-scored **per domain across users** (§6). Pearson `r` is invariant to per-variable affine scaling, so the self-checking generator can verify ground truth by running the real analyzer path.
+3. **De-coupling guard uses the CI, not the point sign.** The spec framed the §9.2 de-coupled guard as "partial sign > 0." Under the §9.2 null the point sign is a coin-flip (non-deterministic, not falsifiable), so the guard was **tightened** to require the partial's **lower 95% bootstrap CI > 0** (reliably positive) — strictly stronger (CI_low > 0 ⟹ point > 0) and deterministically gate-able. See §9.2.
+
 ### 9.1 Paired-probe divergence score `D`
 
 A *paired probe* is one construct presented to the same participant in two structurally-equivalent forms at well-separated sessions (order counterbalanced across participants):
@@ -251,7 +257,7 @@ D_i^p       = r_narr(i,p) - r_abs(i,p)
 
 `D_i^p > 0` means the narrative form elicited a more axis-positive response (e.g. more honest, more generous) than the abstract form. Both terms are sample-standardized (§2) before subtraction, so `D` is in standard-deviation units.
 
-### 9.2 H8a — debiasing (low-stakes paired probes)
+### 9.2 H8a — debiasing (low-stakes paired probes) (BUILT — conjoined headline + de-coupled guard)
 
 H8a predicts that participants whose abstract-form behaviour falls furthest short of their *stated* values show the largest narrative-induced shift toward those values.
 
@@ -265,9 +271,9 @@ gap_i^(abs)  = mean_p gap_abs(i,p)     over the same pairs
 
 **H8a test statistic:** Pearson correlation across participants `rho_8a = corr(D_i^(low), gap_i^(abs))`; the H8a criterion is a **lower 95% bootstrap-CI bound ≥ 0.15** (positive). Spearman is reported as a distribution-free robustness check.
 
-> **Sign note (pre-registration-critical).** The one-line statement in `h8-narrative-immersion-design.md` §1 calls this correlation "negative"; that phrasing assumed a *revealed − stated* gap. Under scoring.md §6's canonical *stated − revealed* convention the predicted sign is **positive**. scoring.md's convention is canonical for the OSF filing — the two statements describe the same prediction, differing only in the gap's sign convention. This must be reconciled to one sign before lock.
+> **Sign note (RESOLVED at build).** The one-line statement in `h8-narrative-immersion-design.md` §1 calls this correlation "negative"; that phrasing assumed a *revealed − stated* gap. Under scoring.md §6's canonical *stated − revealed* convention the predicted sign is **positive**. scoring.md's convention is canonical for the OSF filing — the two statements describe the same prediction, differing only in the gap's sign convention. **Implemented positive** (`compute_h8a_debiasing`, `H8A_RHO_FLOOR = +0.15`); surfaced for Dave's DECISIONS §28 lock.
 
-> **Mathematical-coupling caveat.** `D_i^(low)` and `gap_i^(abs)` share the term `r_abs`, which inflates their correlation even under the null (a regression-to-the-mean artifact). The confirmatory H8a test is therefore paired with a **pre-registered de-coupled analysis**: regress `r_narr` jointly on `s_i` and `r_abs`, and test whether the partial association of `r_narr` with `s_i` is positive controlling for `r_abs` — i.e. the narrative response is pulled toward the stated value beyond what the abstract response already predicts. H8a is counted as supported only if the headline correlation criterion **and** the de-coupled partial-association sign agree.
+> **Mathematical-coupling caveat (BUILT — the load-bearing discipline).** `D_i^(low)` and `gap_i^(abs)` share the term `r_abs`, which inflates their correlation even under the null (a regression-to-the-mean artifact: under §2 z-scoring the artifact correlation is ≈ √(1 − ρ_na)/2, positive whenever the narrative and abstract forms are less than perfectly correlated). The confirmatory H8a test is therefore **conjoined** with a de-coupled analysis via **Frisch–Waugh–Lovell**: `partial_r = corr( resid(r_narr ~ r_abs), resid(stated ~ r_abs) )` (reusing `_ols_residuals` twice), which asks whether the narrative response is pulled toward the stated value *beyond* what the abstract response already predicts. Both arms are computed over the **same included cohort** — participants with ≥ 3 complete low-stakes pairs (§9.5); below-floor participants leak into neither arm. **H8a is SUPPORTED iff the headline lower-CI criterion (≥ 0.15) AND the de-coupled guard both hold.** The guard is the **lower 95% bootstrap CI of `partial_r` > 0**, not the point sign — under this null the point sign is a coin-flip, so a point-sign test is not falsifiable; the CI test is deterministic and strictly stronger (see §9-Status ¶3). `check_h8a_decoupling_lock` proves this is load-bearing: on an n=100 honest null the **headline** lower-CI clears 0.15 by the artifact alone (`headline_met` True) yet the partial CI straddles 0, so `supported` is **False**.
 
 ### 9.3 Attachment strength `attachment_strength`
 
@@ -283,7 +289,7 @@ attachment_strength(i,c) = mean( selfreport(i,c), latencygap(i,c) )
 
 If the behavioural channel is too sparse for character *c* (pre-registered minimum: latency available in ≥ 3 sessions), `attachment_strength` falls back to `selfreport` alone and the substitution is logged. Both channels are z-scored within-sample before combination so neither dominates by scale.
 
-### 9.4 H8b — attachment-laden shift (high-stakes paired probes)
+### 9.4 H8b — attachment-laden shift (high-stakes paired probes) (DEFERRED — needs the §9.3 attachment instrument)
 
 H8b predicts that, on high-stakes probes where a specific character's welfare is at stake, more-attached participants deviate more from their abstract-form response. Because the protective direction is not assumed in advance, H8b uses deviation **magnitude**. For each high-stakes attachment-laden pair *p* featuring character `c(p)`, aggregate per participant over their such pairs:
 
