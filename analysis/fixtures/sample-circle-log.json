@@ -1,0 +1,4898 @@
+[
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 1,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 2,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 3,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 4,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 5,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 6,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 7,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 8,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 9,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 10,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 11,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 12,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 13,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 14,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 15,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 16,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 17,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 18,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 19,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 20,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 21,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 22,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 23,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u01",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u01-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 24,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 25,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 26,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 27,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 28,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 29,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 30,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 31,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 32,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 33,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 34,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 35,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 36,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 37,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 38,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 39,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 40,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 41,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 42,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 43,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 44,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 45,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 46,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 47,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u02",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u02-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 48,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 49,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 50,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 51,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 52,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 53,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 54,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 55,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 56,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 57,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 58,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 59,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 60,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 61,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 62,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 63,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 64,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 65,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 66,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 67,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 68,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 69,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 70,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 71,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u03",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u03-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 72,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 73,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 74,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 75,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 76,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 77,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 78,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 79,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 80,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 81,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 82,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 83,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 84,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 85,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 86,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 87,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 88,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 89,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 90,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 91,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 92,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 93,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 94,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 95,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u04",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u04-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 96,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 97,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 98,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 99,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 100,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 101,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 102,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 103,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 104,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 105,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 106,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 107,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 108,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 109,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 110,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 111,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 112,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 113,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 114,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 115,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 116,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 117,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 118,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 119,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u05",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u05-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 120,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 121,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 122,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 123,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 124,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 125,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 126,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 127,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 128,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 129,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 130,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 131,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 132,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 133,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 134,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 135,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 136,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 137,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 138,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 139,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 140,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 141,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 142,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 143,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u06",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u06-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 144,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 145,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 146,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 147,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 148,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 149,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 150,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 151,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 152,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 153,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 154,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 155,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 156,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 157,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 158,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 159,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 160,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 161,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 162,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 163,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 164,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 165,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 166,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 167,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u07",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u07-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 168,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 169,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 170,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 171,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 172,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 173,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 174,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 175,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 176,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 177,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 178,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 179,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 180,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 181,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 182,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 183,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 184,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 185,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 186,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 187,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 188,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 189,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 190,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 191,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u08",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u08-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 192,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 193,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 194,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 195,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 196,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 197,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 198,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 199,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 200,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 201,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 202,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 203,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 204,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 205,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 206,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 207,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 208,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 209,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 210,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 211,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 212,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 213,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 214,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 215,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u09",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u09-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 216,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 217,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 218,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 219,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 220,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 221,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 222,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 223,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 224,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 225,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 226,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 227,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 228,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 229,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 230,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 231,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 232,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 233,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 234,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 235,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 236,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 237,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 238,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 239,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u10",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u10-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 240,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 241,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 242,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 243,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 244,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 245,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 246,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 247,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 248,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 249,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 250,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 251,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 252,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 253,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 254,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 255,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 256,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 257,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 258,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 259,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 260,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 261,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 262,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 263,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u11",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u11-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 264,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 265,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 266,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 267,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 268,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 269,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 270,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 271,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 272,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 273,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 274,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 275,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s1",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s1-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 276,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin0-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 277,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin0",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin0-1",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:close"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 278,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin1-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 279,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin1",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin1-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:peer"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 280,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin2-0",
+    "option_id": "a",
+    "tags": [
+      "hospitality",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 281,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin2",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin2-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:community"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 282,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin3-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 283,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin3",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin3-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger-known"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 284,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin4-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 285,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin4",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin4-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:stranger"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 286,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin5-0",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 287,
+    "was_timeout": false
+  },
+  {
+    "session_id": "h11-s2",
+    "user_id": "h11-u12",
+    "timestamp_iso": "2026-05-10T09:00:00Z",
+    "scenario_id": "h11-ingroup-bin5",
+    "scenario_type": "quick-fire-round",
+    "domain": "in-group-out-group",
+    "item_id": "h11-u12-h11-s2-bin5-1",
+    "option_id": "a",
+    "tags": [
+      "boundaries",
+      "counterparty:out-group-new"
+    ],
+    "response_time_ms": 5000,
+    "presented_position": 288,
+    "was_timeout": false
+  }
+]

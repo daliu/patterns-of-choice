@@ -584,6 +584,64 @@ Seed `20260510 + 14`. Axis scores only — no cross-channel pooling.
 
 ---
 
+## 16. H11 — moral-circle radius (PROPOSED — pending DECISIONS §21 lock)
+
+Design source: [`h11-moral-circle-radius.md`](h11-moral-circle-radius.md). H11 asks how far a person's **concern reaches across recipient social/moral distance** — Singer's *expanding circle* made behavioral and within-person (Crimston et al. 2016 Moral Expansiveness Scale; Waytz et al. 2019 on the *shape* of the ideological circle; Cikara & Bruneau on parochial empathy). It reuses the **`circle_radius` secondary axis** already scored for the in-group domain (§2.3, hospitality **+1** / boundaries **−1**) — **no new elicitation** — and bins each item by its `counterparty:*` metadata tag through a **versioned distance-ordering map** (`analysis/counterparty_distance_map_v0.1.csv`, §16.5).
+
+**Status.** H11a + H11c + the per-person `β_i` / `R_i` reveal quantities are BUILT (`analyze.py --circle-log --distance-map`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-circle-log.json`, Python-only so parity stays green). H11b and the on-device reveal are DEFERRED (§16.3, §16.6). The scorer reads `circle_radius` **separately** from the primary `item_score`, so the parity secondary-axis-exclusion lock (hospitality **out** of the revealed score) is untouched.
+
+### 16.1 Measurement primitive (§1.1 of the design doc)
+
+For person `i` and distance bin `d`, let `concern_i(d)` be the mean **`circle_radius`-axis** item score (§16.5 scorer) over that person's in-group items whose `counterparty:*` tag falls in bin `d` (a bin enters only with **≥2 informative items**). Two within-person shape summaries:
+
+    β_i        = OLS slope of concern_i(d) on the bin index d          # parochialism steepness (negative = concern declines with distance)
+    midpoint_i = ½ · ( concern_i(nearest populated bin) + AXIS_FLOOR ) # AXIS_FLOOR = −1.0 (boundaries pole)
+    R_i        = the first bin d (ascending) with concern_i(d) ≤ midpoint_i   # the reach of concern
+
+`β_i` is the **robust** read — always finite. `R_i` is the **distance-axis analog of the cost-of-virtue break point**: it is **RIGHT-CENSORED** (`radius = None`, `censored = True`) when concern never crosses the midpoint (a wide/flat, impartial circle), and — inheriting §13.2 verbatim — a censored `R_i` is **NEVER made finite**. Both are on the fixed secondary axis + ordering; reported as facets, **never** summed into a composite (§13.5) and **never** pooled with the primary or cost-of-virtue channels.
+
+### 16.2 H11a — shape reliability (BUILT)
+
+Split each participant's sessions into odd/even halves (1-indexed sorted order), recompute `β_i` on each, and correlate across participants:
+
+    H11a supported  ⇔  lower 95% bootstrap CI of  corr( β_i^odd, β_i^even )  ≥ 0.40
+
+`β_i` (not `R_i`) carries the reliability precisely because it is always finite, whereas `R_i` right-censors whenever a participant's circle is flat (§6 Q3 of the design doc: the slope is the robust shape read when many participants are impartial). Bootstrap: percentile method, pre-committed seed `20260510 + 15`. This is the reliability of the **shape itself** — the de-confound from generosity level is H11b.
+
+### 16.3 H11b — discriminant validity (DEFERRED — cohort-coupled)
+
+The circle shape must not be a proxy for how generous the person is at the near bin, nor for their overall generosity level:
+
+    regress shape (β_i, R_i) on [ near-bin concern_i,  generosity level_i ]
+    H11b (discriminant) supported  ⇔  upper 95% CI of R²  < 0.50
+
+**DEFERRED** because it couples to the cohort pipeline (a person-level generosity level), exactly as the H9b- and H10b-discriminant halves do — the current increment stays isolated on its own fixtures.
+
+### 16.4 H11c — parochial-gradient anchor (BUILT, directional)
+
+A directional sanity anchor validating that the researcher-imposed distance ordering is **behaviorally real** (Cikara & Bruneau): concern should, on average, decline from the nearest to the furthest bin. Per participant with a formed shape (≥4 populated bins):
+
+    gradient_i = concern_i(nearest populated bin) − concern_i(furthest populated bin)
+    H11c supported  ⇔  lower 95% CI of  mean_i gradient_i  > 0   (one-sided)
+
+Seed `20260510 + 16`. `circle_radius` scores only — no cross-channel pooling. A wide/flat circle contributes `gradient_i ≈ 0` (it neither confirms nor breaks the ordering); the anchor is carried by the parochial majority.
+
+### 16.5 Distance-ordering map, suppression, N=1, value-neutrality (§1.5 of the design doc)
+
+- **The distance-ordering map (§3 A1).** `analysis/counterparty_distance_map_v0.1.csv` maps a bare `counterparty` tag → an ordered integer bin (0 = nearest). It is a **researcher-imposed ordering** (a CV-2 "smuggled values" risk, §1.5) and a **v0.1 DRAFT** whose **REL-2 inter-rater validation is human-gated** (see build-and-validate.md "Needs Dave / external"). The **§6 Q4 distance/power confound** is handled *in the map*: the power/role counterparties (`senior`, `subordinate`, `business`) and the within-item distance-*contrast* markers (`near-vs-far`, `local-vs-global`, `family-vs-stranger`, `close-distant`, `close-vs-peer`) are given a non-integer bin so the loader **excludes** them from the ladder while keeping them documented in the file.
+- **Suppression floors.** A bin contributes `concern_i(d)` only with **≥2 informative items**; a participant yields `β_i` / `R_i` only with **≥4 populated ordered bins** — else suppressed, no shape reported. (Locked directly against the code by `check_h11_suppression()` — with the §13.2 censoring lock, the H11 analog of the §14.1 CoV-ceiling lock.)
+- **N=1 interpretability.** `β_i` / `R_i` are within-person quantities on the fixed secondary axis + ordering, so they are reveal-eligible for a single user with **no cohort standardization** (contrast the cohort-only H11a/b statistics).
+- **Value-neutrality (load-bearing).** A **wider circle is not scored as better** — Singer's impartialism is one defensible pole, Williams/MacIntyre/Confucian **partialism** (special obligations to the near) the other. The reveal **names the shape** (how far concern reaches, how steeply it falls) and **never ranks** it. This carries the same charge as R6's value-neutrality.
+
+### 16.6 What §16 deliberately does not compute
+
+- **No composite / no cross-branch pooling.** `β_i` and `R_i` are within-branch facets on the secondary axis; neither is summed with a gap, calibration index, variability index, or CoV price into one "circle score" (§13.5), nor pooled with the primary revealed score.
+- **No ranking in any user-facing surface.** The cohort H11a/b/c statistics live only in the research analysis; the reveal stays within-person and descriptive (reach + steepness, impartial↔partial, never ranked).
+- **No on-device projection yet.** The `β_i` / `R_i` reveal is NOT in `poc-projection.js` this increment (Python-only, parity stays green); when added it changes **both** scorers under the §13.5/parity locks.
+- **No far-beings (non-human) bin in the MVP.** The map reserves bin 6 (`animal-dependent`) but the fixture exercises bins 0–5; the MVP-2 far-beings extension (design-doc §3 A3) is deferred.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.

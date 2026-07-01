@@ -13,6 +13,70 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 20 — 2026-06-30 — H11 · Moral-circle radius
+
+`build-and-validate.md` item 3, the next cheapest-clean buildable branch: **H11** (`scoring.md §16`,
+design doc `h11-moral-circle-radius.md`). Not *where* you sit or how much you *move* (H9/H10) but how far
+your concern **reaches** across recipient social/moral distance — Singer's *expanding circle* made
+behavioral and within-person (Crimston et al. 2016 Moral Expansiveness Scale; Waytz et al. 2019 on the
+*shape* of the ideological circle; Cikara & Bruneau on parochial empathy). No new elicitation: it re-reads
+the **`circle_radius` secondary axis** already scored for the in-group domain (hospitality +1 / boundaries
+−1) and bins each item by its `counterparty:*` tag through a versioned distance-ordering map.
+
+- **What shipped (`scripts/analyze.py`, `--circle-log` / `--distance-map`).** The §16.1 primitive —
+  `circle_item_records` → `concern_i(d)` (mean circle_radius score per distance bin) → `β_i` (OLS slope of
+  concern on bin index = parochialism steepness) and `R_i` (the *reach*: first bin where concern crosses the
+  person's midpoint `½·(near-concern + −1)`); **H11a** shape reliability (split each person's sessions
+  odd/even, correlate `β_i^odd` vs `β_i^even`, lower bootstrap-CI ≥ 0.40, seed +15 — `β_i` carries it
+  because it is always finite, whereas `R_i` right-censors on a flat circle, §6 Q3); **H11c** the
+  parochial-gradient anchor (`near − far` concern, lower-CI > 0, one-sided, directional, seed +16 — validates
+  the distance ordering is behaviorally real). Plus the versioned map
+  `analysis/counterparty_distance_map_v0.1.csv` (28 laddered counterparty tags over 7 bins; the §6 Q4
+  power/role tags `senior`/`subordinate`/`business` and the within-item contrast markers excluded *in the
+  map* via a non-integer bin). Gated in `check_analyzer_thresholds.py` (H11 expectations + a
+  `check_h11_suppression()` unit-regression) on a self-contained fixture
+  (`analysis/fixtures/sample-circle-log.json`, 12 participants on a 6-level parochialism ladder, 6 bins × 2
+  items × 2 sessions; ground truth hand-checked: β-ladder 0→−0.457, `corr(β_odd,β_even)`=+0.992 CI-low 0.959,
+  mean near−far gradient +1.5 CI-low 1.083, 10 finite radii / 2 right-censored).
+- **Disciplines honored.** *No composite / never-pool* (§13.5): `β_i`/`R_i` are within-branch facets on the
+  secondary axis, never summed with a gap/calibration/variability/CoV index, never pooled with the primary
+  channel. *Censoring* (§13.2 — verbatim): a flat/impartial circle's `R_i` is right-censored (`radius=None`,
+  `censored=True`) and **NEVER made finite** — the distance-axis analog of the `never`-on-$10M `|8.0|` lock;
+  asserted directly against the code in `check_h11_suppression()` (flat → censored; parochial control →
+  finite R=1). *Suppression* (§1.5): a bin needs ≥2 items, a shape ≥4 populated bins — else omitted, never
+  scored on thin data (2 more assertions, all green). *Value-neutral* (load-bearing, R6-grade charge) — a
+  **wider circle is NOT scored as better**: Singer's impartialism ↔ Williams/MacIntyre/Confucian partialism,
+  the reveal names the shape and **never ranks** it. *N=1* — `β_i`/`R_i` on the fixed secondary axis +
+  ordering, reveal-eligible for one user with no cohort norms. *Fraud/replication* — no excluded paradigms.
+- **Scope (same pattern as H9/H10).** The scorer reads `circle_radius` **separately** from the primary
+  `item_score`, so the parity secondary-axis-exclusion lock (hospitality **out** of the revealed score) is
+  untouched → Python-only → **parity trivially green** (poc-projection.js untouched, 9/9; the parity gate
+  explicitly re-confirms `hospitality (circle_radius) excluded`). **Deferred (documented):** (a)
+  **H11b-discriminant** — R² of shape on `[near-bin concern, generosity level]` < 0.50; couples to the cohort
+  pipeline like the H9b/H10b discriminants. (b) The **on-device `β_i`/`R_i` reveal** in `poc-projection.js` +
+  its parity lock. (c) The **real-corpus `counterparty:*` ordering** + **REL-2 inter-rater validity** — the
+  ordering is a researcher-imposed value judgment (CV-2), needs human raters (surfaced under "Needs Dave /
+  external"). (d) The **MVP-2 far-beings (non-human) bin** — the map reserves bin 6 (`animal-dependent`), the
+  fixture exercises 0–5 (design-doc §3 A3).
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §21 — H11 pre-registration.* Concern read on
+  the `circle_radius` secondary axis, binned by `counterparty:*` through the v0.1 distance-ordering map
+  (28 tags → 7 bins; power/role + contrast markers excluded per §6 Q4). H11a floor 0.40 on `corr(β_i^odd,
+  β_i^even)` (split-half odd/even, seed 20260510+15). H11c directional, lower-CI > 0 (seed +16). `R_i`
+  right-censored on a non-declining circle, never made finite (§13.2). Suppression: ≥2 items/bin, ≥4
+  bins/shape. Value-neutrality (impartial↔partial, no ranking) is load-bearing, matching R6's charge. H11b
+  threshold (R² < 0.50) proposed but not built. The v0.1 ordering itself is proposed pending REL-2. If this
+  reads right, say "lock §21" and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, H10, **H11**,
+  probe-ceiling, h9-censoring, h10-suppression, **h11-suppression**) + JS↔Python parity 9/9. Commit on
+  `poc` main.
+
+**Buildable-without-Dave work remains** (`build-and-validate.md` items 4+): R2 sacred/protected values
+(re-reads the already-tested censored `never`s as the protected set — reuses the censoring machinery), H12
+hypocrisy (self–other delta, needs light corpus authoring), R1 identity centrality, R6 conviction. Loop
+continues.
+
+---
+
 ## Iteration 19 — 2026-06-30 — H10 · Cross-situational moral consistency
 
 `build-and-validate.md` item 2, the next cheapest-clean buildable branch: **H10** (`scoring.md §15`,

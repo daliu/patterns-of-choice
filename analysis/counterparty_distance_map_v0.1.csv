@@ -1,0 +1,37 @@
+counterparty_tag,bin_index,bin_label,description
+close,0,kin-intimate,closest bonds — the innermost circle
+close-irl,0,kin-intimate,close in-person relationship
+close-online,0,kin-intimate,close relationship maintained online
+chosen-family,0,kin-intimate,family by choice rather than blood
+family-of-origin,0,kin-intimate,the family one was born into
+child,0,kin-intimate,a dependent child in one's care
+distant-family,1,extended-kin-and-peers,relatives outside the intimate circle
+peer,1,extended-kin-and-peers,a known equal — friend or colleague
+peer-known-past,1,extended-kin-and-peers,a peer known from the past
+new-peer,1,extended-kin-and-peers,a newly met equal
+in-group-peer,1,extended-kin-and-peers,a peer inside one's group
+peer-in-team,1,extended-kin-and-peers,a teammate (non-hierarchical)
+community,2,community-ingroup,one's local community
+in-group-community,2,community-ingroup,the community one belongs to
+peer-group,2,community-ingroup,one's broader peer group
+in-group-tribal,2,community-ingroup,the tribe/faction one identifies with
+in-group-tradition,2,community-ingroup,those bound by shared tradition
+peer-tribal,2,community-ingroup,a peer within the same tribe/faction
+peer-distant,3,acquaintance-distant,a peer at social remove
+peer-out-team,3,acquaintance-distant,a peer on a different team
+peer-other,3,acquaintance-distant,a peer outside one's circle
+stranger-known,3,acquaintance-distant,a stranger with some shared context
+stranger-affiliated,3,acquaintance-distant,a stranger sharing an affiliation
+stranger,4,stranger,an unaffiliated stranger
+anonymous,4,stranger,an anonymous, faceless other
+out-group-new,5,outgroup-foreign,a member of a newly encountered out-group
+stranger-foreign,5,outgroup-foreign,a stranger from a foreign group
+animal-dependent,6,non-human,a non-human animal in one's care
+senior,excluded-power,EXCLUDED,§6 Q4 power/role confound — distance entangled with hierarchy (up)
+subordinate,excluded-power,EXCLUDED,§6 Q4 power/role confound — distance entangled with hierarchy (down)
+business,excluded-power,EXCLUDED,§6 Q4 role confound — transactional counterparty, not a distance rung
+near-vs-far,excluded-contrast,EXCLUDED,within-item distance-contrast marker (used by other reads, not a rung)
+local-vs-global,excluded-contrast,EXCLUDED,within-item distance-contrast marker
+family-vs-stranger,excluded-contrast,EXCLUDED,within-item distance-contrast marker
+close-distant,excluded-contrast,EXCLUDED,within-item distance-contrast marker
+close-vs-peer,excluded-contrast,EXCLUDED,within-item distance-contrast marker

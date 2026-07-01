@@ -64,6 +64,21 @@ Implemented here:
   de-confound) is deferred — it couples to the cohort pipeline, like the
   H9b discriminant; see build-and-validate.md. sd_i(c) is never summed
   into a composite (§13.5) and never pooled across the CoV channel.
+- H11a/H11c moral-circle radius (§16 of scoring.md, 11th pre-reg branch).
+  When --circle-log is supplied (in-group items carrying circle_radius
+  hospitality/boundaries tags + counterparty:* distance tags): concern_i(d)
+  = mean circle_radius-axis score per distance bin (via the versioned
+  counterparty→bin ordering map, --distance-map), and the two within-person
+  shape summaries β_i (OLS slope = parochialism steepness) and R_i (the
+  radius = first bin where concern crosses the person's midpoint,
+  RIGHT-CENSORED and never made finite when concern never declines — the
+  distance-axis analog of the cost-of-virtue break point, §13.2). H11a shape
+  reliability (β_i split-window odd/even, lower CI ≥ 0.40) and H11c the
+  parochial-gradient anchor (near − far concern > 0, directional). The H11b
+  DISCRIMINANT half (shape regressed on generosity level + near-bin concern)
+  is deferred — cohort-coupled, like H9b/H10b. Value-neutral (§1.5): a wider
+  circle is never scored as better; β_i/R_i are reported as facets, never
+  summed (§13.5) and never pooled with the primary or CoV channels.
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -122,6 +137,7 @@ BOOTSTRAP_CI = 0.95
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TAG_MAP = REPO_ROOT / "analysis" / "tag_axis_map_v0.1.csv"
+DEFAULT_DISTANCE_MAP = REPO_ROOT / "analysis" / "counterparty_distance_map_v0.1.csv"
 SCENARIOS_DIR = REPO_ROOT / "scenarios" / "sample"
 INVENTORY_DIR = REPO_ROOT / "inventory"
 
@@ -1593,6 +1609,244 @@ def compute_h10c_observer_effect(records: list[dict[str, Any]]) -> dict[str, Any
     }
 
 
+# ----------------------------------------------------------------------------
+# H11 — moral-circle radius (scoring.md §16, h11-moral-circle-radius.md). The
+# REACH of concern across recipient social/moral distance, read from the
+# `circle_radius` SECONDARY axis (hospitality +1 / boundaries −1, §2.3) binned by
+# each item's `counterparty:*` tag through a versioned distance-ordering map (§3
+# A1). Two within-person summaries (§1.1): β_i = OLS slope of concern on distance
+# (parochialism steepness), and R_i = the distance bin at which concern first
+# crosses the person's own midpoint — the DISTANCE-axis analog of the cost-of-
+# virtue break point, RIGHT-CENSORED when concern never declines (a wide/flat,
+# impartial circle), and — inheriting §13.2 verbatim — NEVER made finite.
+# Value-neutral (§1.5, load-bearing): a wider circle is not scored as better
+# (Singer's impartialism vs Williams/MacIntyre partialism); the reveal names the
+# shape, never ranks it. N=1: β_i/R_i are within-person on the fixed axis +
+# ordering, reveal-eligible; reported as facets, never summed into a composite
+# (§13.5), never pooled with the primary or cost-of-virtue channels. This scorer
+# reads the circle_radius axis SEPARATELY from the primary item_score — the
+# parity secondary-axis-exclusion lock (hospitality out of the revealed score)
+# still holds, so this increment is Python-only and parity stays green.
+# ----------------------------------------------------------------------------
+
+H11_CIRCLE_AXIS = "circle_radius"
+H11_COUNTERPARTY_PREFIX = "counterparty:"
+H11_ITEMS_PER_BIN_MIN = 2       # ≥2 informative items per distance bin (§1.5 suppression)
+H11_BINS_MIN = 4                # ≥4 populated ordered bins before β_i / R_i form (§1.5)
+H11A_RELIABILITY_FLOOR = 0.40   # split-window shape reliability lower 95% CI (§1.2)
+H11_AXIS_FLOOR = -1.0           # circle_radius axis minimum (boundaries pole) — the R_i midpoint anchor
+# H11c is directional: lower 95% CI of the mean near−far concern gradient > 0 (§1.4).
+
+
+def load_counterparty_distance_map(path: Path) -> tuple[dict[str, int], dict[int, str]]:
+    """The versioned counterparty→distance-bin ordering map (§3 A1): a bare
+    counterparty tag (e.g. 'close', 'stranger') → ordered bin index (0 = nearest).
+    Rows whose bin_index is not an integer are EXCLUDED from the ladder but remain
+    documented in the file — the power/role tags (senior/subordinate/business, §6
+    Q4, a distance/power confound) and the within-item distance-contrast markers
+    (near-vs-far, …, used by H11c). Returns (tag→bin, bin→label). The ordering is
+    researcher-imposed (CV-2 smuggled values, §1.5); this is a v0.1 DRAFT whose
+    REL-2 inter-rater validation is human-gated (see build-and-validate.md)."""
+    m: dict[str, int] = {}
+    labels: dict[int, str] = {}
+    with path.open() as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            tag = (row.get("counterparty_tag") or "").strip()
+            bin_str = (row.get("bin_index") or "").strip()
+            if not tag:
+                continue
+            try:
+                b = int(bin_str)
+            except ValueError:
+                continue  # excluded (power/role or contrast marker) — documented, not laddered
+            m[tag] = b
+            labels[b] = (row.get("bin_label") or "").strip()
+    return m, labels
+
+
+def _circle_axis_score(
+    entry: dict, tag_map: dict[tuple[str, str], tuple[str, float]]
+) -> tuple[float, int]:
+    """Per-item score on the circle_radius SECONDARY axis (hospitality +1 /
+    boundaries −1, §2.3); clamped to [-1, +1]. Structurally identical to
+    item_score but filtered to the circle_radius axis instead of the domain's
+    primary axis — kept SEPARATE so the primary revealed score (and its parity
+    lock) is untouched. Returns (score, n_contributing); (0.0, 0) if no
+    circle_radius tag contributes (NA-for-H11-purposes)."""
+    domain = entry.get("domain", "")
+    total = 0.0
+    n = 0
+    for tag in entry.get("tags", []):
+        hit = tag_map.get((domain, tag))
+        if hit and hit[0] == H11_CIRCLE_AXIS:
+            total += hit[1]
+            n += 1
+    return (max(-1.0, min(1.0, total)), n)
+
+
+def _distance_bin_of(entry: dict, dist_map: dict[str, int]) -> int | None:
+    """The distance-bin index from an entry's `counterparty:*` tag via the
+    ordering map (§1.1). None if the item carries no mapped counterparty tag —
+    power/role and contrast-marker counterparties are excluded from the ladder,
+    so such items are invisible to the radius (they still score normally on every
+    other axis)."""
+    for tag in entry.get("tags", []):
+        if tag.startswith(H11_COUNTERPARTY_PREFIX):
+            key = tag[len(H11_COUNTERPARTY_PREFIX):]
+            if key in dist_map:
+                return dist_map[key]
+    return None
+
+
+def circle_item_records(
+    entries: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+    dist_map: dict[str, int],
+) -> list[dict[str, Any]]:
+    """Per-item H11 inputs {user, session, domain, bin, score}: the circle_radius-
+    axis score of each item that carries BOTH a circle_radius tag and a mapped
+    counterparty distance tag. Items missing either are dropped. The §10
+    inattentive-session exclusion is applied at (user, session, domain)
+    granularity — matching context_item_records — and fails open when RTs are
+    absent/non-numeric (as with synthetic fixtures)."""
+    grouped: dict[tuple[str, str, str], dict[str, list]] = defaultdict(
+        lambda: {"items": [], "rts": []}
+    )
+    for entry in entries:
+        b = _distance_bin_of(entry, dist_map)
+        if b is None:
+            continue
+        score, n = _circle_axis_score(entry, tag_map)
+        if n == 0:
+            continue
+        key = (entry.get("user_id"), entry.get("session_id"), entry.get("domain"))
+        grouped[key]["items"].append((b, score))
+        grouped[key]["rts"].append(entry.get("response_time_ms"))
+    records: list[dict[str, Any]] = []
+    for (user, session, domain), g in grouped.items():
+        rts = [r for r in g["rts"] if isinstance(r, (int, float)) and not isinstance(r, bool)]
+        if len(rts) == len(g["rts"]) and rts and _median(rts) < INATTENTIVE_RT_MS:
+            continue  # §10 inattentive drop (fails open when any RT is absent/non-numeric)
+        for b, score in g["items"]:
+            records.append({
+                "user": user, "session": session, "domain": domain,
+                "bin": b, "score": score,
+            })
+    return records
+
+
+def _ols_slope(xs: list[float], ys: list[float]) -> float:
+    """Ordinary-least-squares slope of ys on xs; nan if xs has no spread."""
+    n = len(xs)
+    if n < 2:
+        return float("nan")
+    mx = sum(xs) / n
+    my = sum(ys) / n
+    denom = sum((x - mx) ** 2 for x in xs)
+    if denom == 0:
+        return float("nan")
+    return sum((xs[i] - mx) * (ys[i] - my) for i in range(n)) / denom
+
+
+def circle_shape_by_user(
+    records: list[dict[str, Any]],
+    session_ok=None,
+) -> dict[str, dict[str, Any]]:
+    """Per-user circle shape (§1.1): concern_i(d) = mean circle_radius score per
+    distance bin (a bin enters only with ≥H11_ITEMS_PER_BIN_MIN items); then
+        β_i = OLS slope of concern on bin index (parochialism steepness), and
+        R_i = the first bin where concern ≤ midpoint_i, where
+              midpoint_i = ½·(concern at the nearest populated bin + axis floor).
+    R_i is RIGHT-CENSORED (radius=None, censored=True) when concern never crosses
+    — inheriting the §13.2 censoring discipline; a censored radius is NEVER made
+    finite. Suppressed (user omitted) below H11_BINS_MIN populated bins (§1.5).
+    `session_ok(user, session)` optionally restricts to a session subset (the
+    H11a odd/even split)."""
+    cell: dict[tuple[str, int], list[float]] = defaultdict(list)
+    for r in records:
+        if session_ok is not None and not session_ok(r["user"], r["session"]):
+            continue
+        cell[(r["user"], r["bin"])].append(r["score"])
+    by_user: dict[str, dict[int, float]] = defaultdict(dict)
+    for (user, b), scores in cell.items():
+        if len(scores) >= H11_ITEMS_PER_BIN_MIN:
+            by_user[user][b] = sum(scores) / len(scores)
+    out: dict[str, dict[str, Any]] = {}
+    for user, concern in by_user.items():
+        if len(concern) < H11_BINS_MIN:
+            continue  # §1.5 suppression — fewer than 4 populated ordered bins
+        bins = sorted(concern)
+        beta = _ols_slope([float(b) for b in bins], [concern[b] for b in bins])
+        near_bin, far_bin = bins[0], bins[-1]
+        near_c, far_c = concern[near_bin], concern[far_bin]
+        midpoint = (near_c + H11_AXIS_FLOOR) / 2.0
+        radius: int | None = None
+        censored = True
+        for b in bins:
+            if concern[b] <= midpoint:
+                radius, censored = b, False
+                break
+        out[user] = {
+            "beta": beta, "radius": radius, "censored": censored,
+            "n_bins": len(concern), "midpoint": midpoint,
+            "near_bin": near_bin, "far_bin": far_bin,
+            "near_concern": near_c, "far_concern": far_c,
+        }
+    return out
+
+
+def compute_h11a_reliability(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """H11a: split each user's sessions odd/even, recompute β_i on each half,
+    correlate across users. Supported iff the lower 95% bootstrap CI of the
+    correlation ≥ H11A_RELIABILITY_FLOOR (§1.2). β_i (the slope) is the robust
+    circle-SHAPE read — always finite, whereas R_i can be right-censored (§6 Q3),
+    so β_i carries the reliability. The de-confound from generosity level is H11b
+    (deferred, cohort-coupled). Seed BOOTSTRAP_SEED+15."""
+    odd, even = _odd_even_sessions(records)
+    shape_odd = circle_shape_by_user(records, lambda u, s: s in odd.get(u, set()))
+    shape_even = circle_shape_by_user(records, lambda u, s: s in even.get(u, set()))
+    shared = sorted(set(shape_odd) & set(shape_even))
+    if len(shared) < 3:
+        return None
+    xs = [shape_odd[u]["beta"] for u in shared]
+    ys = [shape_even[u]["beta"] for u in shared]
+    if any(v != v for v in xs + ys):
+        return None
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 15)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_low != ci_low else bool(ci_low >= H11A_RELIABILITY_FLOOR)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n": len(shared),
+        "threshold_low": H11A_RELIABILITY_FLOOR, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_h11c_gradient(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """H11c (parochial-gradient anchor, directional): per user,
+        gradient_i = concern at the nearest populated bin − concern at the furthest.
+    Supported iff the lower 95% CI of mean_i gradient_i > 0 (one-sided) — concern
+    declines with social distance, validating the distance ordering as
+    behaviorally real (§1.4; Cikara & Bruneau). A user enters with ≥4 populated
+    bins (a formed shape). circle_radius scores only; no cross-channel pooling.
+    Seed BOOTSTRAP_SEED+16."""
+    shapes = circle_shape_by_user(records)
+    gaps = [s["near_concern"] - s["far_concern"] for s in shapes.values()]
+    if len(gaps) < 3:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 16)
+    ci_low, ci_high = _bootstrap_ci_mean(gaps, rng)
+    met = None if ci_low != ci_low else bool(ci_low > 0.0)
+    return {
+        "mean_gradient": sum(gaps) / len(gaps),
+        "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(gaps),
+        "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -1749,6 +2003,60 @@ def render_h10_result(
     return "\n".join(lines)
 
 
+def render_h11_result(
+    h11a: dict[str, Any] | None,
+    h11c: dict[str, Any] | None,
+    person_shape_n: int,
+    radius_finite: int,
+    radius_censored: int,
+) -> str:
+    """H11 moral-circle radius (scoring.md §16). Value-neutral: β_i (parochialism
+    steepness) and R_i (the reach of concern) name the SHAPE of a person's circle;
+    a wider circle is never scored as better (§1.5, Singer vs Williams/MacIntyre)."""
+    if h11a is None and h11c is None and person_shape_n == 0:
+        return (
+            "(H11: insufficient data — supply --circle-log with counterparty:*-tagged "
+            "in-group items to compute the moral-circle radius)"
+        )
+    lines = ["H11 (moral-circle radius — the reach of concern across social distance, value-neutral):"]
+    lines.append(
+        f"  Reveal-eligible circle shapes: {person_shape_n} participant(s) with β_i/R_i "
+        f"(≥{H11_BINS_MIN} populated distance bins each); R_i finite for {radius_finite}, "
+        f"right-censored for {radius_censored} "
+        f"(concern never crosses the midpoint — a wide/flat circle; never made finite, §13.2)"
+    )
+    lines.append("  -- circle_radius axis (secondary, §2.3); β_i/R_i reported as facets, never summed (§13.5) --")
+    if h11a is not None:
+        lines.append(
+            f"  H11a shape reliability (β_i split-window, odd/even sessions)  r = {h11a['r']:+.3f}, "
+            f"95% CI {_ci_str(h11a)}, n = {h11a['n']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {h11a['threshold_low']:.2f}): "
+            f"{_met_glyph(h11a['pre_registered_threshold_met'])}  "
+            f"(discriminant half H11b deferred — see build-and-validate.md)"
+        )
+    else:
+        lines.append("  H11a shape reliability: insufficient data (need ≥3 users with a β_i in both session halves)")
+    if h11c is not None:
+        lines.append(
+            f"  H11c parochial gradient (near − far concern)  mean = {h11c['mean_gradient']:+.3f}, "
+            f"95% CI {_ci_str(h11c)}, n = {h11c['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI > {h11c['threshold']:.1f}, one-sided, directional): "
+            f"{_met_glyph(h11c['pre_registered_threshold_met'])}  "
+            f"(concern declines with social distance — the parochial gradient is behaviorally real)"
+        )
+    else:
+        lines.append("  H11c parochial gradient: insufficient data (need ≥3 users with ≥4 populated bins)")
+    lines.append(
+        "  Value-neutral: a wider circle is not scored as better (Singer's impartialism vs "
+        "Williams/MacIntyre partialism, §1.5) — the reveal names the shape, never ranks it."
+    )
+    return "\n".join(lines)
+
+
 def render_test_retest_result(
     name: str, threshold_text: str, results: dict[str, dict[str, Any]]
 ) -> str:
@@ -1890,6 +2198,18 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional context-tagged session log (context:* items) for H10 cross-situational consistency.",
+    )
+    parser.add_argument(
+        "--circle-log",
+        type=Path,
+        default=None,
+        help="Optional counterparty-tagged in-group session log (circle_radius + counterparty:* items) for H11 moral-circle radius.",
+    )
+    parser.add_argument(
+        "--distance-map",
+        type=Path,
+        default=DEFAULT_DISTANCE_MAP,
+        help="Counterparty→distance-bin ordering map for H11 (default: analysis/counterparty_distance_map_v0.1.csv).",
     )
     parser.add_argument(
         "--min-items",
@@ -2124,6 +2444,40 @@ def main() -> int:
         h10a_result = compute_h10a_reliability(h10_records)
         h10c_result = compute_h10c_observer_effect(h10_records)
 
+    # H11 moral-circle radius (scoring.md §16) if a counterparty-tagged in-group
+    # log is supplied. Self-contained on its own fixture; Python-only this
+    # increment — the on-device R_i reveal in poc-projection.js is deferred, so
+    # parity stays green (same scope pattern as H9/H10). Reads the circle_radius
+    # secondary axis via the versioned counterparty→distance-bin ordering map (a
+    # v0.1 DRAFT; its REL-2 inter-rater validation is Dave/human-gated).
+    h11a_result: dict[str, Any] | None = None
+    h11c_result: dict[str, Any] | None = None
+    h11_person_shape_n = 0
+    h11_radius_finite = 0
+    h11_radius_censored = 0
+    if args.circle_log:
+        try:
+            with args.circle_log.open() as f:
+                circle_entries = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading circle log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(circle_entries, list):
+            print("ERROR: circle log must be a JSON array", file=sys.stderr)
+            return 2
+        try:
+            dist_map, _dist_labels = load_counterparty_distance_map(args.distance_map)
+        except FileNotFoundError:
+            print(f"ERROR: distance map not found at {args.distance_map}", file=sys.stderr)
+            return 2
+        h11_records = circle_item_records(circle_entries, tag_map, dist_map)
+        h11_shapes = circle_shape_by_user(h11_records)
+        h11_person_shape_n = len(h11_shapes)
+        h11_radius_finite = sum(1 for s in h11_shapes.values() if not s["censored"])
+        h11_radius_censored = sum(1 for s in h11_shapes.values() if s["censored"])
+        h11a_result = compute_h11a_reliability(h11_records)
+        h11c_result = compute_h11c_gradient(h11_records)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -2265,6 +2619,17 @@ def main() -> int:
             h10_block["n_construct_sd_cells"] = h10_construct_sd_n
             hypotheses["H10"] = h10_block
 
+        h11_block: dict[str, Any] = {}
+        if h11a_result is not None:
+            h11_block["H11a"] = _h9_json(h11a_result)
+        if h11c_result is not None:
+            h11_block["H11c"] = _h9_json(h11c_result)
+        if h11_block or h11_person_shape_n:
+            h11_block["person_shape_n"] = h11_person_shape_n
+            h11_block["radius_finite"] = h11_radius_finite
+            h11_block["radius_censored"] = h11_radius_censored
+            hypotheses["H11"] = h11_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -2337,6 +2702,12 @@ def main() -> int:
             print()
             print(render_h10_result(
                 h10a_result, h10c_result, h10_person_variability_n, h10_construct_sd_n
+            ))
+        if h11a_result is not None or h11c_result is not None or h11_person_shape_n:
+            print()
+            print(render_h11_result(
+                h11a_result, h11c_result, h11_person_shape_n,
+                h11_radius_finite, h11_radius_censored,
             ))
 
     return 0

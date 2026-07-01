@@ -34,6 +34,14 @@ Expected outcomes on the current synthetic fixtures:
   fixtures, with per-construct sd_i(c) and V_i populated. Plus the §1.5
   SUPPRESSION-FLOOR regression: an under-sampled construct/participant is
   omitted, never scored on thin data.
+- H11 (moral-circle radius): H11a shape reliability (β_i split-window
+  odd/even, r's lower CI ≥ 0.40) and H11c the parochial-gradient anchor
+  (near − far concern mean's lower CI > 0, directional) both met = True on
+  the fixtures, with both finite and right-censored radii present (a flat/
+  impartial circle yields a censored R_i, never a finite one). Plus the
+  §13.2 CENSORING + §1.5 SUPPRESSION regression (check_h11_suppression): a
+  flat circle's R_i stays censored — NEVER made finite — and a user below
+  the ≥4-populated-bin floor (or a bin below the ≥2-item floor) is omitted.
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -62,6 +70,7 @@ EXPECTATIONS = {
     "H7": {"kind": "single", "threshold_met": True},
     "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9c": True}},
     "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True}},
+    "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11c": True}},
 }
 
 
@@ -80,6 +89,7 @@ def run_analyzer() -> dict:
         "--predictions", str(FIXTURES / "sample-predictions.json"),
         "--predictions-window-b", str(FIXTURES / "sample-predictions-window-b.json"),
         "--context-log", str(FIXTURES / "sample-context-log.json"),
+        "--circle-log", str(FIXTURES / "sample-circle-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -194,6 +204,40 @@ def check_h10(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 
+def check_h11(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
+    """H11 moral-circle radius. Assert each present sub-hypothesis (H11a β_i
+    split-window shape reliability, H11c the parochial-gradient anchor) hit its
+    pre-registered outcome, and that the N=1 reveal quantities are populated —
+    at least one participant with a formed β_i/R_i, AND both a finite radius and
+    a right-censored radius present (proving the flat/impartial circle censors,
+    §13.2). The §13.2 censoring + §1.5 suppression floors are asserted directly
+    against the code in check_h11_suppression() below."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    parts = []
+    for sub, expected in sub_met.items():
+        block = payload.get(sub)
+        if block is None:
+            return False, f"{hid}: sub-hypothesis {sub} missing"
+        met = block.get("pre_registered_threshold_met")
+        if met != expected:
+            return False, f"{hid}.{sub}: threshold_met = {met!r}, expected {expected!r}"
+        if block.get("n", block.get("n_participants", 0)) < 3:
+            return False, f"{hid}.{sub}: n too small ({block})"
+        parts.append(f"{sub}={met}")
+    if payload.get("person_shape_n", 0) < 1:
+        return False, f"{hid}: no reveal-eligible β_i/R_i (person_shape_n={payload.get('person_shape_n')})"
+    if payload.get("radius_finite", 0) < 1:
+        return False, f"{hid}: no finite R_i (radius_finite={payload.get('radius_finite')})"
+    if payload.get("radius_censored", 0) < 1:
+        return False, (
+            f"{hid}: no right-censored R_i — the flat/impartial-circle censoring case "
+            f"must be exercised (radius_censored={payload.get('radius_censored')})"
+        )
+    parts.append(f"shapes×{payload['person_shape_n']}, R[finite={payload['radius_finite']},censored={payload['radius_censored']}]")
+    return True, f"{hid}: ✓ {', '.join(parts)}"
+
+
 def check_h9_censoring() -> tuple[bool, list[str]]:
     """Unit regression for the §14.1 CENSORING LOCK (the H9 analog of the |8.0|
     ceiling lock): calibration_cov_records must NEVER emit a finite e_price when
@@ -280,6 +324,57 @@ def check_h10_suppression() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_h11_suppression() -> tuple[bool, list[str]]:
+    """Unit regression for the H11 discipline locks, asserted directly against the
+    code (via circle_shape_by_user on pre-binned records) so a regression is caught
+    even if a fixture is later changed:
+      (i)   the §13.2 CENSORING LOCK — a flat/impartial circle (concern never
+            declines below the person's midpoint) yields a RIGHT-CENSORED R_i
+            (radius None, censored True), NEVER a finite one; a parochial control
+            (concern crosses the midpoint) yields a finite R_i;
+      (ii)  the §1.5 ≥4-populated-bin floor — a user with <4 bins is suppressed;
+      (iii) the §1.5 ≥2-item-per-bin floor — a bin with a single item does not
+            count toward the ≥4-bin floor (so the user is suppressed)."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+
+    def recs(user, bins_scores):
+        out = []
+        for b, scores in bins_scores.items():
+            for sc in scores:
+                out.append({"user": user, "session": "s1", "bin": b, "score": float(sc)})
+        return out
+
+    records = []
+    # (i) flat/impartial circle: 4 bins all +1 -> concern never crosses midpoint -> CENSORED
+    records += recs("flat", {0: [1, 1], 1: [1, 1], 2: [1, 1], 3: [1, 1]})
+    #     parochial control: concern [1, 0, -1, -1] -> crosses at bin 1 -> FINITE R_i=1
+    records += recs("paro", {0: [1, 1], 1: [1, -1], 2: [-1, -1], 3: [-1, -1]})
+    # (ii) thin: only 3 populated bins -> below the >=4-bin floor -> suppressed
+    records += recs("thin", {0: [1, 1], 1: [0, 0], 2: [-1, -1]})
+    # (iii) sparse: 3 full bins + a single-item bin -> the 1-item bin does not count -> suppressed
+    records += recs("sparse", {0: [1, 1], 1: [0, 0], 2: [-1, -1], 3: [-1]})
+
+    shapes = A.circle_shape_by_user(records)
+    flat = shapes.get("flat")
+    paro = shapes.get("paro")
+    checks = [
+        ("a flat/impartial circle yields a CENSORED R_i (radius None, censored True), never finite (§13.2)",
+         flat is not None and flat["censored"] is True and flat["radius"] is None),
+        ("a parochial circle yields a FINITE R_i (control: concern crosses the midpoint at bin 1)",
+         paro is not None and paro["censored"] is False and paro["radius"] == 1),
+        ("a user with <4 populated bins is suppressed (§1.5, no β_i/R_i)",
+         "thin" not in shapes),
+        ("a bin with <2 items does not count toward the ≥4-bin floor (user suppressed, §1.5)",
+         "sparse" not in shapes),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  h11-suppression: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -325,6 +420,8 @@ def main() -> int:
             ok, msg = check_h9(hid, payload, spec["sub_met"])
         elif spec["kind"] == "h10":
             ok, msg = check_h10(hid, payload, spec["sub_met"])
+        elif spec["kind"] == "h11":
+            ok, msg = check_h11(hid, payload, spec["sub_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -347,6 +444,12 @@ def main() -> int:
     for m in h10sup_msgs:
         print(m)
     if not h10sup_ok:
+        all_pass = False
+
+    h11sup_ok, h11sup_msgs = check_h11_suppression()
+    for m in h11sup_msgs:
+        print(m)
+    if not h11sup_ok:
         all_pass = False
 
     if all_pass:
