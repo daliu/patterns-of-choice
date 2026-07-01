@@ -526,6 +526,64 @@ A participant enters H9c with ≥ 1 valid axis-channel error in *each* pool.
 
 ---
 
+## 15. H10 — cross-situational moral consistency (PROPOSED — pending DECISIONS §20 lock)
+
+Design source: [`h10-cross-situational-consistency.md`](h10-cross-situational-consistency.md). H10 asks whether the **variability** of a person's revealed scores across surface *contexts* is itself a stable individual-difference trait (Fleeson's density-distribution view; Mischel's if–then signatures; Doris situationism). It reuses the revealed axis scores already computed for §2–§3 — **no new elicitation** — and reads a `context:*` metadata tag off each item to bin it by setting. Contexts in the canonical corpus: `workplace`, `family`, `public`, `anonymous`.
+
+**Status.** H10a + H10c + the per-construct `sd_i(c)` / `V_i` reveal quantities are BUILT (`analyze.py --context-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-context-log.json`, Python-only so parity stays green). H10b and the on-device reveal are DEFERRED (§15.3, §15.6).
+
+### 15.1 Measurement primitive (§1.1 of the design doc)
+
+For person `i`, construct (home domain) `c`, and context `k`, let `r_i(c, k)` be the mean revealed **primary-axis** item score (§2.1) over that person's items in that construct × context. Then:
+
+    mbar_i(c) = mean_k r_i(c, k)                                        # construct context-mean
+    sd_i(c)   = sqrt( (1 / (K_i(c) − 1)) · Σ_k ( r_i(c, k) − mbar_i(c) )² )   # cross-context SD (sample)
+    V_i       = mean_c sd_i(c)                                          # person-level variability index
+
+`sd_i(c)` is the within-person **cross-context** dispersion in one construct; `V_i` averages it over that person's qualifying constructs. Both are in axis units. `V_i` is a mean of facets reported **alongside** the per-construct `sd_i(c)` — it is **never** summed with any other branch's index into a composite (§13.5), and **never** pooled with the cost-of-virtue channel.
+
+### 15.2 H10a — trait reliability (BUILT)
+
+Split each participant's sessions into odd/even halves (1-indexed sorted order), recompute `V_i` on each, and correlate across participants:
+
+    H10a supported  ⇔  lower 95% bootstrap CI of  corr( V_i^odd, V_i^even )  ≥ 0.40
+
+(Fleeson & Gallagher 2009 report density-distribution parameters with split-half reliabilities in the .6–.9 band; 0.40 is a deliberately modest floor for n≈200.) Bootstrap: percentile method, pre-committed seed `20260510 + 13`. This is the reliability of the **variability trait itself** — orthogonal to the person's *level*; that de-confound is H10b.
+
+### 15.3 H10b — discriminant validity (DEFERRED — cohort-coupled)
+
+`V_i` must not be a proxy for the person's mean level, their stated–revealed gap, or their self-prediction error, and must survive a range-restriction check:
+
+    regress V_i on [ level_i = mean_c mbar_i(c),  gap_i = mean_d |gap(i,d)|,  cal_error_i ]
+    H10b (discriminant) supported  ⇔  upper 95% CI of R²  < 0.50
+    AND a residual-variability de-confound: regress sd_i(c) on |mbar_i(c)|, confirm residual
+        variance survives (variability is not merely a mid-scale range artifact).
+
+Supported only if **both** criteria agree. **DEFERRED** because it couples to the H2–H7 cohort pipeline (`gap_i`, `cal_error_i`) exactly as the H9b-discriminant half does — the current increment stays isolated on its own fixtures.
+
+### 15.4 H10c — observer-effect anchor (BUILT, directional)
+
+A directional sanity anchor: revealed scores should shift between observed and anonymous settings (an expected sensitivity, not a failure of the trait). Per person, pooling axis items across constructs:
+
+    obs_gap_i = mean( r_i over observed/public items ) − mean( r_i over anonymous items )
+    H10c supported  ⇔  lower 95% CI of  mean_i obs_gap_i  > 0   (one-sided)
+
+Seed `20260510 + 14`. Axis scores only — no cross-channel pooling.
+
+### 15.5 Suppression, N=1 reveal, value-neutrality (§1.5–§1.6 of the design doc)
+
+- **Suppression floors.** A context contributes `r_i(c, k)` only with **≥2 informative items**; a construct yields `sd_i(c)` only with **≥3 qualifying contexts**; `V_i` is formed only with **≥3 qualifying constructs** — else it is suppressed and the reveal reports the per-construct `sd_i(c)` alone. (Locked directly against the code by `check_h10_suppression()` — the H10 analog of the §14.1 censoring lock.)
+- **N=1 interpretability.** `sd_i(c)` is a within-person quantity on the fixed primary axis, so it is reveal-eligible for a single user with **no cohort standardization** (contrast the cohort-only H10a/b statistics).
+- **Value-neutrality (Dancy caveat).** Low variability is named **"steadiness"**, high variability **"responsiveness"** — descriptive poles, **never ranked**. Particularism holds that sensitivity-to-context can be a virtue, not a defect; the reveal must not imply that consistency is better than responsiveness.
+
+### 15.6 What §15 deliberately does not compute
+
+- **No composite / no cross-branch pooling.** `V_i` is a within-branch mean of `sd_i(c)` facets; it is never summed with a gap, a calibration index, or a CoV price into one "consistency score" (§13.5).
+- **No ranking in any user-facing surface.** The cohort H10a/b/c statistics live only in the research analysis; the reveal stays within-person and descriptive (steadiness↔responsiveness).
+- **No on-device projection yet.** The `sd_i(c)` reveal is NOT in `poc-projection.js` this increment (Python-only, parity stays green); when added it changes **both** scorers under the §13.5/parity locks.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.

@@ -13,6 +13,52 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 19 — 2026-06-30 — H10 · Cross-situational moral consistency
+
+`build-and-validate.md` item 2, the next cheapest-clean buildable branch: **H10** (`scoring.md §15`,
+design doc `h10-cross-situational-consistency.md`). Not *where* you sit on an axis (already measured)
+but how much you **move** across surface contexts — and whether that movement is a stable trait of the
+person (Fleeson density-distribution; Mischel if–then signatures; Doris situationism). No new
+elicitation: it re-reads the revealed axis scores and bins each item by a `context:*` setting tag.
+
+- **What shipped (`scripts/analyze.py`, `--context-log`).** The §15.1 primitive —
+  `context_item_records` → `sd_i(c)` (per-construct cross-context SD of the context-means `r_i(c,k)`) →
+  `V_i = mean_c sd_i(c)` (person variability index); **H10a** trait reliability (split each person's
+  sessions odd/even, correlate `V_i^odd` vs `V_i^even`, lower bootstrap-CI ≥ 0.40, seed +13); **H10c**
+  the observer-effect anchor (`mean(public) − mean(anonymous)`, lower-CI > 0, one-sided, directional,
+  seed +14). Gated in `check_analyzer_thresholds.py` (H10 expectations + a `check_h10_suppression()`
+  unit-regression) on a self-contained fixture (`analysis/fixtures/sample-context-log.json`,
+  12 participants on a 6-level variability ladder, 4 contexts × 2 items × 2 sessions; ground truth
+  hand-checked: V-ladder .40→.83, `corr(V_odd,V_even)`=+0.946 CI-low 0.870, mean obs_gap +1.51 CI-low 1.26).
+- **Disciplines honored.** *No composite / never-pool* (§13.5): `V_i` is a within-branch mean of
+  `sd_i(c)` facets, reported alongside them, never summed with a gap/calibration/CoV index. *Suppression*
+  (§1.5 — the H10 analog of the §14.1 censoring lock): a context needs ≥2 items, a construct ≥3 qualifying
+  contexts, `V_i` ≥3 qualifying constructs — else omitted, never scored on thin data; locked directly
+  against the code in `check_h10_suppression()` (3 assertions, all green). *Value-neutral* — low
+  variability = "steadiness", high = "responsiveness", **never ranked** (Dancy particularism caveat:
+  context-sensitivity can be a virtue). *N=1* — `sd_i(c)` is on the fixed primary axis, reveal-eligible
+  for one user with no cohort norms. *Fraud/replication* — no excluded paradigms touched.
+- **Scope (same pattern as H9).** Python-only → **parity trivially green** (poc-projection.js untouched,
+  9/9). **Deferred (documented):** (a) **H10b-discriminant** — R² of `V_i` on `[level_i, gap_i,
+  cal_error_i]` < 0.50 + the residual-variability de-confound; couples to the H2–H7 cohort pipeline like
+  the H9b-discriminant. (b) The **on-device `sd_i(c)` reveal** in `poc-projection.js` + its parity lock.
+  (c) The **real-corpus `context:*` tag pass** (design-doc §3 A1) + **REL-2 inter-rater validity** —
+  needs human raters (surfaced under "Needs Dave / external").
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §20 — H10 pre-registration.* Contexts =
+  {workplace, family, public, anonymous} read from `context:*`. H10a floor 0.40 (split-half odd/even,
+  seed 20260510+13). H10c directional, lower-CI > 0 (seed +14). Suppression: ≥2 items/context,
+  ≥3 contexts/construct, ≥3 constructs/`V_i`. Value-neutrality (steadiness↔responsiveness, no ranking)
+  is load-bearing, matching R6's charge. H10b thresholds (R² < 0.50 + residual de-confound) proposed but
+  not built. If this reads right, say "lock §20" and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, **H10**,
+  probe-ceiling, h9-censoring, **h10-suppression**) + JS↔Python parity 9/9. Commit on `poc` main.
+
+**Buildable-without-Dave work remains** (`build-and-validate.md` items 3+): H11 moral-circle radius
+(circle_radius already in projection/parity), R2 sacred values (reuses the censoring machinery), H12
+hypocrisy, R1, R6. Loop continues.
+
+---
+
 ## Iteration 18 — 2026-06-30 — H9 · Self-prediction calibration (FIRST build-and-validate increment)
 
 The pivot's first *code* increment: the build loop stops designing branches and starts closing

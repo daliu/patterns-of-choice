@@ -52,6 +52,18 @@ Implemented here:
   The H9b DISCRIMINANT half (R² of cal_error on [gap, revealed_level])
   is deferred — it couples to the H2-H7 cohort pipeline; see
   build-and-validate.md.
+- H10a/H10c cross-situational moral consistency (§15 of scoring.md,
+  10th pre-reg branch). When --context-log is supplied (a session log
+  whose items carry context:* setting tags): the per-construct
+  within-person cross-context SD sd_i(c) and the person-level
+  variability index V_i (N=1 reveal-eligible, value-neutral — steadiness
+  vs responsiveness, never ranked), H10a trait reliability (split-half
+  odd/even sessions, lower CI ≥ 0.40), and H10c the observer-effect
+  anchor (public − anonymous > 0, directional). The H10b DISCRIMINANT
+  half (V_i regressed on level/gap/cal_error + the residual-variability
+  de-confound) is deferred — it couples to the cohort pipeline, like the
+  H9b discriminant; see build-and-validate.md. sd_i(c) is never summed
+  into a composite (§13.5) and never pooled across the CoV channel.
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -1391,6 +1403,196 @@ def calibration_cov_records(predictions: list[dict]) -> dict[str, Any]:
     }
 
 
+# ----------------------------------------------------------------------------
+# H10 — cross-situational moral consistency (scoring.md §15, h10-cross-
+# situational-consistency.md). Within-person variability of the revealed axis
+# score ACROSS surface contexts, treated as a stable individual-difference trait
+# (Fleeson density-distribution; Mischel; Doris situationism). Value-neutral per
+# Dancy: low variability = "steadiness", high = "responsiveness" — never ranked.
+# N=1: sd_i(c) is a within-person quantity on the fixed primary axis, so it is
+# reveal-eligible for a single user without cohort standardization. V_i is the
+# mean of per-construct SDs reported ALONGSIDE the facets (§13.5) — never summed
+# into a composite index, and never pooled across the CoV channel.
+# ----------------------------------------------------------------------------
+
+H10_CONTEXT_PREFIX = "context:"
+H10_ITEMS_PER_CONTEXT_MIN = 2   # ≥2 informative items per context (§1.5 suppression)
+H10_CONTEXT_MIN = 3             # ≥3 distinct qualifying contexts for a construct's sd (§1.5)
+H10_CONSTRUCT_MIN = 3           # ≥3 qualifying constructs before V_i is formed (§1.5)
+H10A_RELIABILITY_FLOOR = 0.40   # split-half reliability lower 95% CI (§1.2; Fleeson & Gallagher 2009)
+# H10c is directional: lower 95% CI of the mean observer-effect gap > 0 (§1.4).
+H10_OBSERVED_CONTEXTS = {"public", "observed"}      # observed pole (§1.4)
+H10_ANONYMOUS_CONTEXTS = {"anonymous"}              # anonymous pole (§1.4)
+
+
+def _context_of(entry: dict) -> str | None:
+    """The surface-context setting from an entry's `context:*` tag (§1.1), e.g.
+    'workplace' / 'anonymous'. None if the item carries no context tag — such
+    items are invisible to H10 (they still score normally for every other
+    hypothesis; context:* is a metadata-axis stratifier, ignored by item_score)."""
+    for tag in entry.get("tags", []):
+        if tag.startswith(H10_CONTEXT_PREFIX):
+            return tag[len(H10_CONTEXT_PREFIX):]
+    return None
+
+
+def _sample_sd(xs: list[float]) -> float:
+    """Sample (n−1) standard deviation; nan if <2 points (§1.1 sd_i(c))."""
+    n = len(xs)
+    if n < 2:
+        return float("nan")
+    m = sum(xs) / n
+    return math.sqrt(sum((x - m) ** 2 for x in xs) / (n - 1))
+
+
+def context_item_records(
+    entries: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> list[dict[str, Any]]:
+    """Per-item H10 inputs {user, session, domain, context, score}. The score is
+    the SAME primary-axis item_score used by the revealed pipeline (§2). Items
+    with no primary-axis contribution (n==0) or no context:* tag are dropped. The
+    §10 inattentive-session exclusion is applied at (user, session, domain)
+    granularity — matching session_aggregates — and fails open when RTs are
+    absent/non-numeric (as with synthetic fixtures)."""
+    grouped: dict[tuple[str, str, str], dict[str, list]] = defaultdict(
+        lambda: {"items": [], "rts": []}
+    )
+    for entry in entries:
+        ctx = _context_of(entry)
+        if ctx is None:
+            continue
+        score, n = item_score(entry, tag_map)
+        if n == 0:
+            continue
+        key = (entry.get("user_id"), entry.get("session_id"), entry.get("domain"))
+        grouped[key]["items"].append((ctx, score))
+        grouped[key]["rts"].append(entry.get("response_time_ms"))
+    records: list[dict[str, Any]] = []
+    for (user, session, domain), g in grouped.items():
+        rts = [r for r in g["rts"] if isinstance(r, (int, float)) and not isinstance(r, bool)]
+        if len(rts) == len(g["rts"]) and rts and _median(rts) < INATTENTIVE_RT_MS:
+            continue  # §10 inattentive drop (fails open when any RT is absent/non-numeric)
+        for ctx, score in g["items"]:
+            records.append({
+                "user": user, "session": session, "domain": domain,
+                "context": ctx, "score": score,
+            })
+    return records
+
+
+def context_sd_by_user_construct(
+    records: list[dict[str, Any]],
+    session_ok=None,
+) -> dict[tuple[str, str], float]:
+    """sd_i(c): per (user, domain) cross-context SD of the context-means r_i(c,k)
+    (§1.1). A context enters only with ≥H10_ITEMS_PER_CONTEXT_MIN items; a
+    construct yields an sd only with ≥H10_CONTEXT_MIN qualifying contexts (§1.5),
+    else it is SUPPRESSED (omitted). `session_ok(user, session)` optionally
+    restricts to a session subset (the H10a odd/even split)."""
+    cell: dict[tuple[str, str, str], list[float]] = defaultdict(list)
+    for r in records:
+        if session_ok is not None and not session_ok(r["user"], r["session"]):
+            continue
+        cell[(r["user"], r["domain"], r["context"])].append(r["score"])
+    ctx_mean: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for (user, domain, _ctx), scores in cell.items():
+        if len(scores) >= H10_ITEMS_PER_CONTEXT_MIN:
+            ctx_mean[(user, domain)].append(sum(scores) / len(scores))
+    out: dict[tuple[str, str], float] = {}
+    for (user, domain), means in ctx_mean.items():
+        if len(means) >= H10_CONTEXT_MIN:
+            out[(user, domain)] = _sample_sd(means)
+    return out
+
+
+def variability_index_by_user(
+    sd_by_uc: dict[tuple[str, str], float],
+) -> dict[str, float]:
+    """V_i = mean_c sd_i(c) over a user's qualifying constructs; the user enters
+    only with ≥H10_CONSTRUCT_MIN qualifying constructs (§1.5), else V_i is
+    suppressed (the per-construct sd_i(c) is still reveal-eligible on its own)."""
+    by_user: dict[str, list[float]] = defaultdict(list)
+    for (user, _domain), sd in sd_by_uc.items():
+        by_user[user].append(sd)
+    return {u: sum(v) / len(v) for u, v in by_user.items() if len(v) >= H10_CONSTRUCT_MIN}
+
+
+def _odd_even_sessions(
+    records: list[dict[str, Any]],
+) -> tuple[dict[str, set], dict[str, set]]:
+    """Split each user's sessions into odd/even halves by sorted session order
+    (1-indexed: 1st, 3rd, … = odd; 2nd, 4th, … = even) — §1.2."""
+    user_sessions: dict[str, set] = defaultdict(set)
+    for r in records:
+        user_sessions[r["user"]].add(r["session"])
+    odd: dict[str, set] = {}
+    even: dict[str, set] = {}
+    for user, sess in user_sessions.items():
+        ordered = sorted(sess)
+        odd[user] = set(ordered[0::2])
+        even[user] = set(ordered[1::2])
+    return odd, even
+
+
+def compute_h10a_reliability(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """H10a: split each user's sessions odd/even, recompute V_i on each half,
+    correlate across users. Supported iff the lower 95% bootstrap CI of the
+    correlation ≥ H10A_RELIABILITY_FLOOR (§1.2). Reliability of the variability
+    TRAIT itself — orthogonal to the person's level (that de-confound is H10b,
+    deferred). Seed BOOTSTRAP_SEED+13."""
+    odd, even = _odd_even_sessions(records)
+    v_odd = variability_index_by_user(
+        context_sd_by_user_construct(records, lambda u, s: s in odd.get(u, set()))
+    )
+    v_even = variability_index_by_user(
+        context_sd_by_user_construct(records, lambda u, s: s in even.get(u, set()))
+    )
+    shared = sorted(set(v_odd) & set(v_even))
+    if len(shared) < 3:
+        return None
+    xs = [v_odd[u] for u in shared]
+    ys = [v_even[u] for u in shared]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 13)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_low != ci_low else bool(ci_low >= H10A_RELIABILITY_FLOOR)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n": len(shared),
+        "threshold_low": H10A_RELIABILITY_FLOOR, "pre_registered_threshold_met": met,
+    }
+
+
+def compute_h10c_observer_effect(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """H10c (observer-effect anchor, directional): per user,
+        obs_gap_i = mean(score over observed/public items) − mean(over anonymous items)
+    pooled across constructs (§1.4). Supported iff the lower 95% CI of
+    mean_i obs_gap_i > 0 (one-sided). A user enters with ≥1 item in each pole.
+    Axis scores only; no cross-channel pooling. Seed BOOTSTRAP_SEED+14."""
+    pub: dict[str, list[float]] = defaultdict(list)
+    anon: dict[str, list[float]] = defaultdict(list)
+    for r in records:
+        if r["context"] in H10_OBSERVED_CONTEXTS:
+            pub[r["user"]].append(r["score"])
+        elif r["context"] in H10_ANONYMOUS_CONTEXTS:
+            anon[r["user"]].append(r["score"])
+    gaps: list[float] = []
+    for user in sorted(set(pub) & set(anon)):
+        gaps.append(sum(pub[user]) / len(pub[user]) - sum(anon[user]) / len(anon[user]))
+    if len(gaps) < 3:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 14)
+    ci_low, ci_high = _bootstrap_ci_mean(gaps, rng)
+    met = None if ci_low != ci_low else bool(ci_low > 0.0)
+    return {
+        "mean_obs_gap": sum(gaps) / len(gaps),
+        "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(gaps),
+        "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -1497,6 +1699,53 @@ def render_h9_result(
             "     censoring lock (§14.1): a 'never' endpoint is NEVER priced — "
             "reported categorically only."
         )
+    return "\n".join(lines)
+
+
+def render_h10_result(
+    h10a: dict[str, Any] | None,
+    h10c: dict[str, Any] | None,
+    person_variability_n: int,
+    n_construct_sd_cells: int,
+) -> str:
+    """H10 cross-situational consistency (scoring.md §15). Value-neutral: the
+    per-construct sd_i(c) and V_i name WHERE a person sits on steadiness↔
+    responsiveness; they never rank (Dancy caveat, §15.5)."""
+    if h10a is None and h10c is None and n_construct_sd_cells == 0:
+        return (
+            "(H10: insufficient data — supply --context-log with context:*-tagged "
+            "items to compute cross-situational consistency)"
+        )
+    lines = ["H10 (cross-situational moral consistency — steadiness vs responsiveness, value-neutral):"]
+    lines.append(
+        f"  Reveal-eligible per-construct sd_i(c): {n_construct_sd_cells} (user × construct) cell(s); "
+        f"V_i formed for {person_variability_n} participant(s) (≥3 qualifying constructs each)"
+    )
+    lines.append("  -- Axis channel (axis units; per-construct SDs never summed into a composite, §13.5) --")
+    if h10a is not None:
+        lines.append(
+            f"  H10a trait reliability (split-half, odd/even sessions)  r = {h10a['r']:+.3f}, "
+            f"95% CI {_ci_str(h10a)}, n = {h10a['n']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {h10a['threshold_low']:.2f}): "
+            f"{_met_glyph(h10a['pre_registered_threshold_met'])}  "
+            f"(discriminant half H10b deferred — see build-and-validate.md)"
+        )
+    else:
+        lines.append("  H10a trait reliability: insufficient data (need ≥3 users with a V_i in both session halves)")
+    if h10c is not None:
+        lines.append(
+            f"  H10c observer-effect anchor (public − anonymous)  mean gap = {h10c['mean_obs_gap']:+.3f}, "
+            f"95% CI {_ci_str(h10c)}, n = {h10c['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (lower CI > {h10c['threshold']:.1f}, one-sided, directional): "
+            f"{_met_glyph(h10c['pre_registered_threshold_met'])}  "
+            f"(scores shift between observed and anonymous settings)"
+        )
+    else:
+        lines.append("  H10c observer-effect anchor: insufficient data (need ≥3 users with both a public and an anonymous item)")
     return "\n".join(lines)
 
 
@@ -1635,6 +1884,12 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional second predictions JSON (weeks 3-4) for the H9b test-retest split.",
+    )
+    parser.add_argument(
+        "--context-log",
+        type=Path,
+        default=None,
+        help="Optional context-tagged session log (context:* items) for H10 cross-situational consistency.",
     )
     parser.add_argument(
         "--min-items",
@@ -1844,6 +2099,31 @@ def main() -> int:
             h9_axis_records_b = calibration_axis_records(predictions_b, tag_map)
             h9b_result = compute_h9b_stability(h9_axis_records, h9_axis_records_b)
 
+    # H10 cross-situational consistency (scoring.md §15) if a context-tagged log
+    # is supplied. Self-contained on its own fixture; Python-only this increment —
+    # the on-device sd_i(c) reveal in poc-projection.js is deferred, so parity
+    # stays green (same scope pattern as the H9 increment).
+    h10a_result: dict[str, Any] | None = None
+    h10c_result: dict[str, Any] | None = None
+    h10_person_variability_n = 0
+    h10_construct_sd_n = 0
+    if args.context_log:
+        try:
+            with args.context_log.open() as f:
+                context_entries = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading context log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(context_entries, list):
+            print("ERROR: context log must be a JSON array", file=sys.stderr)
+            return 2
+        h10_records = context_item_records(context_entries, tag_map)
+        h10_sd = context_sd_by_user_construct(h10_records)
+        h10_construct_sd_n = len(h10_sd)
+        h10_person_variability_n = len(variability_index_by_user(h10_sd))
+        h10a_result = compute_h10a_reliability(h10_records)
+        h10c_result = compute_h10c_observer_effect(h10_records)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -1975,6 +2255,16 @@ def main() -> int:
         if h9_block:
             hypotheses["H9"] = h9_block
 
+        h10_block: dict[str, Any] = {}
+        if h10a_result is not None:
+            h10_block["H10a"] = _h9_json(h10a_result)
+        if h10c_result is not None:
+            h10_block["H10c"] = _h9_json(h10c_result)
+        if h10_block or h10_construct_sd_n:
+            h10_block["person_variability_n"] = h10_person_variability_n
+            h10_block["n_construct_sd_cells"] = h10_construct_sd_n
+            hypotheses["H10"] = h10_block
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -2042,6 +2332,11 @@ def main() -> int:
             print()
             print(render_h9_result(
                 h9a_result, h9b_result, h9c_result, h9_cov, len(h9_person_indices)
+            ))
+        if h10a_result is not None or h10c_result is not None or h10_construct_sd_n:
+            print()
+            print(render_h10_result(
+                h10a_result, h10c_result, h10_person_variability_n, h10_construct_sd_n
             ))
 
     return 0
