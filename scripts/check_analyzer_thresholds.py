@@ -90,6 +90,21 @@ Expected outcomes on the current synthetic fixtures:
   denominator; a non-blank zero-foundation utterance counts — the particularist is
   described, never scored deficient). κ is a coder-pair statistic, never a person score.
   NOT parity-gated by design (LLM coding is non-deterministic; §1.5).
+- A4 (decision-conflict channel — the RT-derived EFFORT/ambivalence signal, §22): the
+  conflict(i, domain) cell is a within-person z of response time RESIDUALIZED on reading-
+  load + presented position (timeouts + the timed quick-fire set excluded), and its A4a
+  split-half per-domain test–retest clears the exploratory lower-CI ≥ 0.40 bar on the
+  synthetic fixture (any_met = True) — certifying the MACHINERY, never a person score.
+  The payload carries NO pooled 'conflict score' and NO framework label (slow ≠
+  deontological; §22 is value-neutral — effortful virtue is not worse than easy virtue).
+  Plus the conflict discipline regression (check_a4_conflict_lock): the OLS residualizer
+  is exact on a hand case, residualizing reading-load REMOVES a pure length confound
+  (a 10×-longer item does not read as high conflict), timeouts + timed items are
+  excluded, the within-person z has mean ≈ 0 (so a person-pooled conflict is degenerate —
+  the unit is per-domain), and the reliability gate is TWO-SIDED (a reliable corpus clears
+  0.40, an effort-scrambled one does NOT). RT-only; answer-revision capture is deferred
+  (§4 Q1). NO public card (§1.4). Parity-gated in principle, but the on-device JS reveal
+  is DEFERRED (H9–R6 precedent), so parity is unchanged.
 
 Exits 0 if all expectations match; 1 if any expectation is violated;
 2 if the analyzer cannot be run or its output cannot be parsed.
@@ -124,6 +139,7 @@ EXPECTATIONS = {
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True}},
     "A3": {"kind": "a3", "kappa_met": True},
+    "A4": {"kind": "a4", "any_met": True},
 }
 
 
@@ -148,6 +164,7 @@ def run_analyzer() -> dict:
         "--identity-log", str(FIXTURES / "sample-identity-centrality-log.json"),
         "--objectivism-log", str(FIXTURES / "sample-objectivism-log.json"),
         "--language-log", str(FIXTURES / "sample-language-log.json"),
+        "--process-log", str(FIXTURES / "sample-process-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -520,6 +537,91 @@ def check_a3(hid: str, payload: dict, kappa_met: bool) -> tuple[bool, str]:
     return True, (
         f"{hid}: {glyph} κ={k:.3f} (gate {glyph}, promotable={kap.get('promotable')}, "
         f"descriptive_only), foundation profile×{prof['profile_n']} (6 foundations separate)"
+    )
+
+
+def check_a4(hid: str, payload: dict, any_met: bool) -> tuple[bool, str]:
+    """A4 decision-conflict channel — the RT-derived EFFORT signal + the A4a reliability
+    gate (§22). Assert the split-half per-domain test–retest hit its expected outcome AND
+    that the value-neutral / no-pool discipline holds in the SHAPE of the payload: conflict
+    is an EFFORT read, so there must be NO pooled 'conflict score' scalar and NO moral-
+    framework label (deliberation/utilitarian/deontological) anywhere — slow ≠ deontological
+    (§22). conflict(i, domain) is a per-DOMAIN cell (the within-person z has mean 0, so a
+    person-pooled conflict would be degenerate), exposed as a per_domain reliability VECTOR
+    with its bootstrap CI + n (never a bare scalar). The exploratory bar is the lower CI
+    ≥ 0.40, and each domain's `pre_registered_threshold_met` must AGREE with its own
+    ci_low ≥ threshold (the gate can't disagree with its own arithmetic). The residualizer
+    exactness, the length-confound removal, the timeout/timed exclusions, the within-person
+    mean-0 property, and the two-sided reliability gate are asserted directly against the
+    code in check_a4_conflict_lock()."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    # No pooled scalar, no framework label — conflict is EFFORT, never a graded score (§22).
+    banned_keys = {"conflict_score", "a4_score", "process_score", "effort_score",
+                   "deliberation_score", "deliberation", "utilitarian", "deontological",
+                   "framework", "framework_label", "rt_score", "moral_conflict_score"}
+    def _scan(d, where):
+        present = banned_keys & set(d)
+        if present:
+            return (f"{hid}: pooled/framework key(s) {sorted(present)} present in {where} "
+                    f"— conflict is EFFORT/ambivalence, never a score and never a framework "
+                    f"label (slow ≠ deontological; §22)")
+        return None
+    top_bad = _scan(payload, "the A4 block")
+    if top_bad:
+        return False, top_bad
+    a4a = payload.get("A4a")
+    if not isinstance(a4a, dict):
+        return False, f"{hid}: missing the A4a conflict-reliability block"
+    a4a_bad = _scan(a4a, "A4a")
+    if a4a_bad:
+        return False, a4a_bad
+    if a4a.get("any_met") != any_met:
+        return False, (
+            f"{hid}: A4a any_met = {a4a.get('any_met')!r}, expected {any_met!r}"
+        )
+    if abs(a4a.get("threshold_low", -1) - 0.40) > 1e-9:
+        return False, (
+            f"{hid}: A4a threshold_low = {a4a.get('threshold_low')!r}, expected 0.40 "
+            f"(the exploratory lower-CI bar, §22)"
+        )
+    per_domain = a4a.get("per_domain")
+    if not isinstance(per_domain, list) or not per_domain:
+        return False, f"{hid}: A4a per_domain must be a non-empty reliability vector"
+    n_met = 0
+    for cell in per_domain:
+        if not isinstance(cell, dict):
+            return False, f"{hid}: A4a per_domain cell is not a dict"
+        for key in ("domain", "r", "ci_low", "ci_high", "n", "pre_registered_threshold_met", "threshold"):
+            if key not in cell:
+                return False, f"{hid}: A4a per_domain cell missing '{key}' (must carry its CI + n)"
+        # The gate must agree with its own arithmetic: met iff lower CI clears the threshold.
+        met = cell["pre_registered_threshold_met"]
+        ci_low, thr = cell["ci_low"], cell["threshold"]
+        if isinstance(ci_low, (int, float)) and isinstance(thr, (int, float)):
+            if met != (ci_low >= thr):
+                return False, (
+                    f"{hid}: domain {cell['domain']!r} met={met!r} disagrees with "
+                    f"ci_low {ci_low:.3f} vs threshold {thr:.2f}"
+                )
+        if met:
+            n_met += 1
+    if a4a.get("any_met") != (n_met > 0):
+        return False, (
+            f"{hid}: any_met = {a4a.get('any_met')!r} but {n_met} domain(s) actually met"
+        )
+    if a4a.get("n_domains_met") != n_met:
+        return False, (
+            f"{hid}: n_domains_met = {a4a.get('n_domains_met')!r} but counted {n_met}"
+        )
+    cells = payload.get("n_conflict_cells")
+    if not isinstance(cells, int) or cells < 1:
+        return False, f"{hid}: no conflict cells (n_conflict_cells={cells!r})"
+    glyph = "✓" if any_met else "✗"
+    return True, (
+        f"{hid}: {glyph} A4a reliability {n_met}/{len(per_domain)} domain(s) clear "
+        f"lower-CI ≥ 0.40 (effort, no pool, no framework label), "
+        f"{cells} conflict cell(s)×{payload.get('n_participants')} participant(s)"
     )
 
 
@@ -989,6 +1091,120 @@ def check_a3_kappa_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_a4_conflict_lock() -> tuple[bool, list[str]]:
+    """The A4 decision-conflict discipline (§22), asserted directly against the code so a
+    regression is caught even if the fixture is later changed:
+      (i)   the OLS residualizer is EXACT — residuals of a perfectly linear y on its
+            predictors are ~0; a rank-deficient (collinear) design and an underdetermined
+            (n ≤ k) design each return None (the caller then falls back to mean-centering);
+      (ii)  residualizing reading-load REMOVES a pure length confound — a 10×-longer item
+            with MEDIAN effort is a large naive-RT outlier (z ≈ +2) but lands mid-pack after
+            residualization (|z| < 0.3): a slow-because-long item is NOT high conflict;
+      (iii) the CV-1 exclusions hold — was_timeout, timed, and the quick-fire set are each
+            excluded, and an excluded row never becomes a conflict cell;
+      (iv)  the conflict score is WITHIN-PERSON z (mean ≈ 0 per person) — so a person-pooled
+            conflict is degenerate and the unit is per-DOMAIN (cell keys are (user, domain));
+      (v)   the A4a reliability gate is TWO-SIDED — a corpus with a stable per-domain effort
+            tilt clears the lower-CI ≥ 0.40 bar (any_met True), while the SAME corpus with the
+            tilt flipped at retest does NOT (any_met False): reliability is earned, not structural;
+      (vi)  the reveal is value-NEUTRAL — the render frames conflict as EFFORT, never a moral-
+            framework label (slow ≠ deontological; Bago & De Neys 2019)."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+
+    # (i) residualizer exactness + degeneracy.
+    x1, x2 = [1, 2, 3, 4, 5], [0, 1, 0, 1, 0]
+    y_lin = [10 + 2 * a + 5 * b for a, b in zip(x1, x2)]
+    resid_lin = A._ols_residuals([x1, x2], y_lin)
+    collinear = A._ols_residuals([[1, 2, 3, 4], [2, 4, 6, 8]], [1, 2, 3, 5])  # x2 == 2·x1
+    underdet = A._ols_residuals([[1, 2, 3], [0, 1, 0]], [1, 2, 3])            # n=3 ≤ k=3
+
+    # (ii) length-confound removal: item i3 is 10× longer but has MEDIAN effort.
+    eff = [-1000, -500, 0, 500, 1000]
+    chars_c = [100, 100, 1000, 100, 100]
+    pos_c = [1, 3, 5, 2, 4]
+    rt_c = [2000 + 15 * c + 80 * p + e for c, p, e in zip(chars_c, pos_c, eff)]
+    conf_recs = [{"user": "h", "item": f"i{k+1}", "domain": "d",
+                  "response_time_ms": float(rt_c[k]), "prompt_chars": chars_c[k],
+                  "presented_position": pos_c[k]} for k in range(5)]
+    cs = A.conflict_scores_by_item(conf_recs)
+    z_long = cs[("h", "i3")]
+    mu_c = sum(rt_c) / 5
+    sd_c = (sum((v - mu_c) ** 2 for v in rt_c) / 5) ** 0.5
+    naive_z_long = (rt_c[2] - mu_c) / sd_c
+
+    # (iii) exclusions — predicate + corpus-level.
+    excl_to = A._a4_excluded({"was_timeout": True})
+    excl_timed = A._a4_excluded({"timed": True})
+    excl_qf = A._a4_excluded({"scenario_type": "quick-fire-round"})
+    excl_none = A._a4_excluded({"response_time_ms": 3000})
+    cs_to = A.conflict_scores_by_item(conf_recs + [
+        {"user": "h", "item": "iTO", "domain": "d", "response_time_ms": 99999.0,
+         "prompt_chars": 100, "presented_position": 6, "was_timeout": True}])
+
+    # (iv) within-person z has mean ≈ 0 (per-domain is the unit, not per-person).
+    wp = A.conflict_scores_by_item([
+        {"user": "z", "item": f"i{k}", "domain": "d", "response_time_ms": float(2000 + 700 * k),
+         "prompt_chars": 120 + 5 * k, "presented_position": (k % 3) + 1} for k in range(6)])
+    wp_z = [v for (u, _i), v in wp.items() if u == "z"]
+    wp_mean = sum(wp_z) / len(wp_z)
+    cells_keyed = A.conflict_by_user_domain(conf_recs)
+
+    # (v) two-sided reliability — a stable per-domain effort tilt clears; flip it at retest and it does not.
+    def _rel_corpus(scramble):
+        recs, tilts = [], {"u1": 1200, "u2": 600, "u3": 0, "u4": -600, "u5": -1200}
+        for u, tilt0 in tilts.items():
+            for dom in ("harm", "truth"):
+                for sess in ("s1", "s2"):
+                    tilt = -tilt0 if (scramble and sess == "s2") else tilt0
+                    dom_eff = (tilt if dom == "harm" else -tilt) / 2.0
+                    for it in range(4):
+                        chars = 120 + 40 * ((it * 3) % 4)
+                        pos = ((it * 2) % 4) + 1
+                        rt = 2000 + 15 * chars + 60 * pos + dom_eff + 30 * it
+                        recs.append({"user": u, "session": sess, "domain": dom,
+                                     "item": f"{u}-{sess}-{dom}-{it}",
+                                     "response_time_ms": float(rt), "prompt_chars": chars,
+                                     "presented_position": pos})
+        return recs
+    rel = A.compute_a4a_conflict_reliability(_rel_corpus(False))
+    scr = A.compute_a4a_conflict_reliability(_rel_corpus(True))
+
+    # (vi) value-neutral render.
+    rel_cells = A.conflict_by_user_domain(_rel_corpus(False))
+    render = A.render_a4_result(rel, len({u for u, _d in rel_cells}), len(rel_cells))
+
+    checks = [
+        ("OLS residuals of a perfectly-linear y are ~0 (exact residualizer)",
+         resid_lin is not None and max(abs(v) for v in resid_lin) < 1e-9),
+        ("a collinear (rank-deficient) design returns None → caller mean-centers", collinear is None),
+        ("an underdetermined design (n ≤ k) returns None", underdet is None),
+        ("residualizing reading-load REMOVES the length confound: a 10×-longer median-effort "
+         "item is a naive-RT outlier (z > 1.5) but mid-pack residualized (|z| < 0.3)",
+         naive_z_long > 1.5 and abs(z_long) < 0.3),
+        ("was_timeout is excluded (CV-1)", excl_to is True),
+        ("the timed quick-fire set is excluded (timed flag)", excl_timed is True),
+        ("the quick-fire scenario_type is excluded", excl_qf is True),
+        ("a normal row is NOT excluded", excl_none is False),
+        ("an excluded (timeout) row never becomes a conflict cell", ("h", "iTO") not in cs_to),
+        ("conflict is WITHIN-PERSON z (mean ≈ 0) — a person-pooled score is degenerate",
+         abs(wp_mean) < 1e-9),
+        ("the conflict unit is per-DOMAIN: cell keys are (user, domain)",
+         bool(cells_keyed) and all(isinstance(k, tuple) and len(k) == 2 for k in cells_keyed)),
+        ("A4a gate CLEARS on a stable-tilt corpus (any_met True, ≥1 domain over lower-CI 0.40)",
+         rel is not None and rel["any_met"] is True and rel["n_domains_met"] >= 1),
+        ("A4a gate HOLDS on the SAME corpus with the tilt flipped at retest (any_met False)",
+         scr is not None and scr["any_met"] is False and scr["n_domains_met"] == 0),
+        ("the reveal is value-neutral EFFORT, never a moral-framework label (Bago & De Neys)",
+         "EFFORT" in render and "never a moral-framework label" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  a4-conflict: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_probe_ceiling() -> tuple[bool, list[str]]:
     """Unit regression for the cost-of-virtue ladder ceiling: a 'never' refusal must
     anchor to the PROBE'S OWN top rung (log10(max stake) + 1), not a hardcoded $10K.
@@ -1046,6 +1262,8 @@ def main() -> int:
             ok, msg = check_r6(hid, payload, spec["sub_met"])
         elif spec["kind"] == "a3":
             ok, msg = check_a3(hid, payload, spec["kappa_met"])
+        elif spec["kind"] == "a4":
+            ok, msg = check_a4(hid, payload, spec["any_met"])
         else:
             ok, msg = False, f"{hid}: unknown expectation kind '{spec['kind']}'"
         print(f"  {msg}")
@@ -1104,6 +1322,12 @@ def main() -> int:
     for m in a3lock_msgs:
         print(m)
     if not a3lock_ok:
+        all_pass = False
+
+    a4lock_ok, a4lock_msgs = check_a4_conflict_lock()
+    for m in a4lock_msgs:
+        print(m)
+    if not a4lock_ok:
         all_pass = False
 
     if all_pass:

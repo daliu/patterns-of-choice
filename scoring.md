@@ -944,6 +944,57 @@ Built this increment: the coder + the κ gate + `foundation_i(f)` + the syntheti
 
 ---
 
+## 22. A4 — the decision-conflict channel: the RT-derived effort signal (PROPOSED — pending DECISIONS §27 lock)
+
+> **Numbering.** This is **sequential §22** in scoring.md (the running build order §14 H9 … §21 A3, §22 A4). The design doc is `h-a4-a5-process-emotion.md` (A4 = the process channel; A5 = the emotion channel, not built this increment). The DECISIONS lock is proposed as **§27** (A3 was §26).
+
+A4 opens a **fourth channel**, orthogonal to the three on *values* — but A4 is not a channel on *which* values a person holds at all. The stated (§20/R1 probes), revealed (R2/H10–H12 choices), and spontaneous-language (§21 A3) channels all read **what** a person moralizes about. A4 reads the **process**: *how effortfully a choice was reached* — the response-time signature of hesitation, ambivalence, and cognitive load behind a moral judgment, independent of which way it went. It is the instrument's first **process** measure, and it is exploratory / high-noise by nature, so it ships behind a **tight reliability gate** and with the strongest value-neutrality wall in the project.
+
+**The load-bearing discipline: conflict is EFFORT, never a framework read.** The single most important constraint on A4 is what it must **not** claim. A slow, effortful response is **not** evidence of deontological (vs. utilitarian) processing — the dual-process "hard cases are slow" story does not survive replication (Bago & De Neys, *Fast logic?* 2019; the instrument's `concept.md` already disclaims the Greene fast/slow mapping). So A4's read is **effort/ambivalence only**: `conflict(i, ·)` says *this choice was harder for this person than their baseline*, and nothing about **which moral framework** produced it. `check_a4` structurally rejects any `deliberation` / `utilitarian` / `deontological` / `framework` key; `check_a4_conflict_lock` asserts the render frames the signal as EFFORT and never a framework label.
+
+### 22.1 Measurement primitive
+
+A **decision-process log**: each record is one item response `{user, session, domain, item, response_time_ms, prompt_chars, presented_position}`. The conflict primitive is a **within-person, confound-residualized** z of response time:
+
+    exclude       was_timeout ∨ timed ∨ scenario_type startswith "quick-fire"        # CV-1: quick-fire / timed items are not free-RT
+    resid_i       = OLS residuals of response_time_ms on [prompt_chars, presented_position]   # strip reading-load + order
+    conflict(i,item) = within-person z-score of resid_i                              # people read at different speeds
+    conflict(i,domain) = mean over person i's domain items of conflict(i,item)
+
+`_ols_residuals` residualizes RT on **reading-load** (`prompt_chars`) and **order** (`presented_position`) via the normal equations (intercept + 2 predictors) so a **slow-because-the-prompt-was-long** response is not misread as high conflict; if a person's within-person design is rank-deficient (no length/position variance) it falls back to plain within-person mean-centering. The `was_timeout` and the **timed quick-fire** set (CV-1) are **excluded** — a timed item's RT is an artifact of the clock, not of deliberation. `check_a4_conflict_lock` pins the residualizer exact on a hand case and proves the length-confound removal directly: a 10×-longer item with **median** effort is a large *naive*-RT outlier (z ≈ +2) but lands **mid-pack** after residualization (|z| < 0.3).
+
+**Why the unit is per-DOMAIN, not per-person.** `conflict(i, item)` is z-scored **within each person**, so a person's conflict values have mean ≈ 0 **by construction** — a single pooled "person conflict score" would be degenerate (every participant would sit at ~0). The interpretable unit is therefore the **within-person relative effort per domain**: is this person more ambivalent about *harm* items than *truth* items than *fairness* items? `conflict_by_user_domain` returns `{(user, domain): mean_rt_z}`; `check_a4_conflict_lock` asserts the within-person mean is ≈ 0 (so a person-pool is degenerate) and that the cell key is `(user, domain)`.
+
+### 22.2 The binding A4a reliability gate (BUILT: machinery only)
+
+    A4a machinery certified  ⇔  per-domain split-half test–retest, lower 95% CI ≥ A4A_RELIABILITY_FLOOR (0.40)   # any_met
+
+`compute_a4a_conflict_reliability` splits each person's sessions **odd/even**, computes `conflict(i, domain)` in each half, and correlates the two halves **across people, per domain** (participant-level non-parametric bootstrap, reusing `_domain_test_retest_r` and the project bootstrap seed). The gate is the **exploratory** bar — the *lower* 95% CI of the per-domain test–retest r ≥ **0.40** (deliberately below the 0.40–0.50 confirmatory bars of H10a–R6a, because a process channel is noisier). `any_met` is True iff **at least one** domain clears it. On the synthetic fixture all three domains clear (r ≈ 0.98–1.00). This certifies **the machinery only** — that the residualizer, the exclusions, the within-person z, the per-domain averaging, and the bootstrap are correct — never that a *real* cohort's decision conflict is reliable. The gate is **two-sided**: `check_a4_conflict_lock` asserts a corpus with a stable per-domain effort tilt clears the bar (`any_met` True) while the **same** corpus with the tilt flipped at retest does **not** (`any_met` False) — reliability is earned, not structural.
+
+### 22.3 No pooled score, no framework label, value-neutrality (EXTRA force)
+
+- **No pooled conflict scalar (§13.5).** A4 emits per-`(user, domain)` relative-effort cells and a per-domain reliability vector — **never** a summed "conflict score," and conflict is never blended with the stated / revealed / language channels. `check_a4` rejects any `conflict_score` / `a4_score` / `process_score` / `effort_score` key.
+- **No moral-framework label — the load-bearing wall (§22 intro).** conflict is **effort**, not a read on utilitarian-vs-deontological processing (slow ≠ deontological; Bago & De Neys 2019). `check_a4` rejects `deliberation` / `utilitarian` / `deontological` / `framework` keys; the lock asserts the render never attaches a framework label.
+- **Value-neutral: effortful virtue is not worse than easy virtue.** High conflict is **not** a deficit. Finding a virtuous choice **hard** — feeling the pull of the cost and choosing well anyway — is arguably the *stronger* character signal (the effortful-virtue cell), not the weaker one. A4 **describes** where the effort sits; it never ranks low-conflict above high-conflict or vice-versa.
+- **N=1 interpretability.** `conflict(i, domain)` is reveal-eligible for a single user with no cohort standardization ("your *harm* choices took more deliberation than your *fairness* choices") — but descriptively, and only as effort, never as a framework diagnosis.
+
+### 22.4 DEFERRED — revision capture, the discriminant half, the on-device reveal
+
+Built this increment: the conflict primitive + the A4a reliability gate + the synthetic reliability fixture. **Deferred:**
+
+- **Answer-revision capture (Q1, Dave/runtime-gated).** RT is one process signal; **answer changes** (a participant selecting, then switching) are a second, arguably cleaner ambivalence signal. Whether the runtime captures revision events — and how — is an **open runtime question** (`h-a4-a5-process-emotion.md` §4 Q1), surfaced to Dave, not guessed. A4 is **RT-only** this increment.
+- **H-A4b — does conflict add information beyond the choice? (discriminant).** Whether `conflict(i, domain)` predicts anything the revealed choice does not (e.g. gap instability, later value-change) **couples to the cohort pipeline**, exactly as the H9b/H10b/H11b/R2c/R1b/R6b discriminant halves do — deferred.
+- **The on-device reveal + its parity lock.** A4 is **parity-gated in principle** (unlike A3, whose non-determinism put it permanently outside parity — conflict is a deterministic arithmetic transform of logged RT, so it *belongs* in parity once revealed). But the on-device `conflict(i, domain)` reveal in `poc-projection.js` is **deferred this increment** (the H9–R6 Python-only precedent), so A4 adds **nothing** to the parity contract and parity stays green (9/9). When the reveal ships, it changes **both** `analyze.py` and `poc-projection.js` together.
+
+### 22.5 What §22 deliberately does not compute
+
+- **No conflict score / no pooling.** Per-domain effort cells + a per-domain reliability vector; no summed "conflict"/"process"/"effort" scalar, never blended across channels (§13.5). Asserted by `check_a4` + `check_a4_conflict_lock`.
+- **No moral-framework read.** conflict is EFFORT/ambivalence, never utilitarian-vs-deontological (Bago & De Neys 2019). The render carries the disclaimer; the lock asserts it.
+- **No promotion on synthetic reliability.** Synthetic `any_met` certifies the machinery; a *real* cohort's process reliability is unproven until real data. Exploratory-only.
+- **No public card (§1.4).** A4 is an **analysis adjunct** — context for the reveal, never a headline card in `research-program.json`. This also sidesteps the site-sync seam (no card to sync). A4 gets **no** public card, by design.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.

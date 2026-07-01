@@ -143,6 +143,20 @@ Implemented here:
   DESIGN — LLM coding is non-deterministic, deliberately outside the poc-projection ↔
   analyze.py parity contract (§1.5). The framing ratio, the third ordering L_i + the
   three S/R/L concordances (extending §13.4), and H-A3a/b/c are cohort/κ-gated, DEFERRED.
+- A4 decision conflict — the PROCESS channel (§22 of scoring.md, h-a4-a5-process-emotion.md
+  Part 1; the dynamics that SURROUND a choice, not the choice itself). When --process-log is
+  supplied (per-item response_time_ms + prompt_chars + presented_position across ≥2 sessions):
+  conflict(i, domain) = the within-person z-score of response time, RESIDUALIZED on reading-load
+  (prompt_chars) + presented position, with timeouts and the TIMED quick-fire set (CV-1)
+  EXCLUDED, z within-person (people read at different speeds). A4a reliability = split-half
+  odd/even per-domain test–retest, lower CI ≥ 0.40 (the exploratory bar). THE LOAD-BEARING
+  DISCIPLINE (Bago & De Neys 2019): conflict is EFFORT/ambivalence, FULL STOP — never a moral
+  framework read (slow ≠ deontological, fast ≠ utilitarian; concept.md disclaims the Greene
+  fast/slow mapping). Value-neutral (§3): effort is not graded (effortful virtue arguably the
+  STRONGER signal). RT-ONLY (answer-revision capture Dave/runtime-gated, §4 Q1); an analysis
+  adjunct with NO public card (§1.4). Parity-gated in principle; the on-device conflict reveal +
+  its JS parity lock are DEFERRED this increment (as the H9–R6 on-device reveals are). A4b
+  (conflict adds information beyond the choice) is cohort-coupled, DEFERRED.
 
 Reserved for the future validation-cohort analyzer:
 - CFA on item-level loadings (§7 of scoring.md, H1 of pre-reg) —
@@ -2669,6 +2683,219 @@ def foundation_profile_by_user(
     return out
 
 
+# --- A4: decision conflict — the PROCESS channel (scoring.md §22, h-a4-a5-process-emotion.md
+# Part 1; branch A4 of measurement-avenues.md). The dynamics that SURROUND a choice rather than
+# the choice itself: how EFFORTFUL/ambivalent the decision was, read from already-logged response
+# times (§5, near-free re-analysis). conflict(i, item) = the within-person, confound-guarded
+# z-score of response time — residualized on item reading-load (prompt_chars) + presented
+# position, with timeouts and the TIMED quick-fire set (CV-1) EXCLUDED, then z-scored WITHIN each
+# person (people read at different speeds). THE LOAD-BEARING DISCIPLINE (§1.1, Bago & De Neys
+# 2019): conflict is EFFORT / ambivalence, FULL STOP — NEVER mapped to a moral framework (slow ≠
+# deontological, fast ≠ utilitarian; the Greene dual-process mapping does not hold and concept.md
+# already disclaims it). VALUE-NEUTRAL (§3): effort is not graded — finding virtue hard is not
+# worse than finding it easy (the effortful-virtue cell arguably makes high conflict the STRONGER
+# character signal). EXPLORATORY, RT-ONLY: answer-revision capture is a Dave/runtime-gated open
+# question (§4 Q1), so this increment omits `rev` and reads RT alone. NO PUBLIC CARD (§1.4): A4 is
+# an analysis adjunct — a flag on which of a person's choices were hard-won vs. automatic, context
+# for the reveal, never a browsable headline. Parity-gated in principle; the on-device conflict
+# reveal + its JS parity lock are DEFERRED this increment (as the H9–R6 on-device reveals are).
+A4A_RELIABILITY_FLOOR = 0.40   # conflict split-half reliability lower 95% CI (§1.2) — the exploratory bar
+A4_MIN_ITEMS = 4               # per-user scorable-item floor for a within-person residualized RT fit (intercept + 2 predictors + slack)
+A4A_SEED_OFFSET = 25           # bootstrap seed band BOOTSTRAP_SEED+25 (+ per-domain i, via _domain_test_retest_r); A3 consumed none, R6d used +24
+
+
+def _a4_user(r: dict) -> str | None:
+    """Participant id — tolerant of the extension-log `user` and the primary session-log
+    `user_id` (A4 re-analyses already-logged session dynamics; §1.1/§5)."""
+    return r.get("user") if r.get("user") is not None else r.get("user_id")
+
+
+def _a4_session(r: dict) -> str | None:
+    return r.get("session") if r.get("session") is not None else r.get("session_id")
+
+
+def _a4_item(r: dict) -> str | None:
+    return r.get("item") if r.get("item") is not None else r.get("item_id")
+
+
+def _a4_excluded(r: dict) -> bool:
+    """§1.1 exclusions: timed-out items (no genuine RT) and the TIMED quick-fire set — the CV-1
+    timer construct interacts with any RT measure, so conflict is read only on the untimed session
+    types. `timed` explicit, else inferred from a quick-fire scenario_type."""
+    if r.get("was_timeout"):
+        return True
+    if r.get("timed"):
+        return True
+    st = r.get("scenario_type")
+    return isinstance(st, str) and st.startswith("quick-fire")
+
+
+def _a4_prompt_chars(r: dict) -> float | None:
+    """Item reading-load — explicit `prompt_chars`, else the length of the item text/prompt (the
+    confound §1.1 residualizes out: longer items take longer to read, independent of conflict)."""
+    v = r.get("prompt_chars")
+    if isinstance(v, (int, float)) and not isinstance(v, bool):
+        return float(v)
+    for key in ("text", "prompt", "prompt_text"):
+        t = r.get(key)
+        if isinstance(t, str):
+            return float(len(t))
+    return None
+
+
+def _solve_linear(mat: list[list[float]], vec: list[float]) -> list[float] | None:
+    """Gaussian elimination with partial pivoting for a small dense system mat·x = vec. Returns
+    None if (near-)singular. Pure stdlib, deterministic — no numpy — so the confound-guarded
+    residual is byte-reproducible (§1.1)."""
+    n = len(mat)
+    aug = [list(mat[i]) + [vec[i]] for i in range(n)]
+    for col in range(n):
+        piv = max(range(col, n), key=lambda rr: abs(aug[rr][col]))
+        if abs(aug[piv][col]) < 1e-12:
+            return None
+        aug[col], aug[piv] = aug[piv], aug[col]
+        pivot = aug[col][col]
+        for rr in range(n):
+            if rr == col:
+                continue
+            factor = aug[rr][col] / pivot
+            if factor == 0.0:
+                continue
+            for cc in range(col, n + 1):
+                aug[rr][cc] -= factor * aug[col][cc]
+    return [aug[i][n] / aug[i][i] for i in range(n)]
+
+
+def _ols_residuals(predictors: list[list[float]], y: list[float]) -> list[float] | None:
+    """OLS residuals of y on [intercept] + predictors, via the normal equations XᵀX β = Xᵀy
+    (small k, Gaussian elimination). Returns None if underdetermined (n ≤ k) or the design is
+    rank-deficient (e.g. a predictor has no within-person variance) — the caller then falls back
+    to plain within-person mean-centering."""
+    n = len(y)
+    cols = [[1.0] * n] + [list(c) for c in predictors]
+    k = len(cols)
+    if n <= k:
+        return None
+    XtX = [[sum(cols[a][i] * cols[b][i] for i in range(n)) for b in range(k)] for a in range(k)]
+    Xty = [sum(cols[a][i] * y[i] for i in range(n)) for a in range(k)]
+    beta = _solve_linear(XtX, Xty)
+    if beta is None:
+        return None
+    resid = []
+    for i in range(n):
+        pred = sum(beta[a] * cols[a][i] for a in range(k))
+        resid.append(y[i] - pred)
+    return resid
+
+
+def conflict_scores_by_item(records: list[dict]) -> dict[tuple[str, str], float]:
+    """rt_z(i, item) (§1.1): the within-person z-score of RESIDUALIZED response_time_ms —
+    residualized on [prompt_chars, presented_position] to strip reading-load + order effects, with
+    was_timeout and the TIMED quick-fire set (CV-1) EXCLUDED, then z-scored WITHIN each person
+    (people read at different speeds). Returns {(user, item): rt_z}; higher = more effortful /
+    ambivalent, NOT more deliberative-ergo-utilitarian (Bago & De Neys 2019). If a user's
+    within-person design is rank-deficient (no length/position variance) the residual falls back
+    to plain mean-centering (still within-person, just no confound removal)."""
+    per_user: dict[str, list[tuple[str, float, float, float]]] = defaultdict(list)
+    for r in records:
+        if _a4_excluded(r):
+            continue
+        user = _a4_user(r)
+        item = _a4_item(r)
+        rt = r.get("response_time_ms")
+        chars = _a4_prompt_chars(r)
+        pos = r.get("presented_position")
+        if (user is None or item is None
+                or not isinstance(rt, (int, float)) or isinstance(rt, bool)
+                or chars is None
+                or not isinstance(pos, (int, float)) or isinstance(pos, bool)):
+            continue
+        per_user[user].append((item, float(rt), chars, float(pos)))
+    out: dict[tuple[str, str], float] = {}
+    for user, items in per_user.items():
+        if len(items) < A4_MIN_ITEMS:
+            continue
+        y = [it[1] for it in items]
+        resid = _ols_residuals([[it[2] for it in items], [it[3] for it in items]], y)
+        if resid is None:
+            mean_y = sum(y) / len(y)
+            resid = [v - mean_y for v in y]
+        mu = sum(resid) / len(resid)
+        sd = (sum((v - mu) ** 2 for v in resid) / len(resid)) ** 0.5
+        for (item, *_rest), rz in zip(items, resid):
+            out[(user, item)] = 0.0 if sd == 0.0 else (rz - mu) / sd
+    return out
+
+
+def conflict_by_user_domain(records: list[dict]) -> dict[tuple[str, str], float]:
+    """conflict(i, d) (§1.1): the mean rt_z over person i's items in domain d — person i's
+    RELATIVE effort on domain d (which of their choices were hard-won vs. automatic). NEVER a
+    pooled cross-person scalar (no "conflict score" leaderboard), NEVER a virtue ranking (§3,
+    value-neutral). The unit the reveal reads and A4a's reliability is computed over."""
+    rz = conflict_scores_by_item(records)
+    domain_of: dict[tuple[str, str], str] = {}
+    for r in records:
+        user = _a4_user(r)
+        item = _a4_item(r)
+        dom = r.get("domain")
+        if user is not None and item is not None and dom is not None:
+            domain_of[(user, item)] = dom
+    cells: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for (user, item), z in rz.items():
+        dom = domain_of.get((user, item))
+        if dom is None:
+            continue
+        cells[(user, dom)].append(z)
+    return {k: sum(v) / len(v) for k, v in cells.items()}
+
+
+def _odd_even_sessions_a4(records: list[dict]) -> tuple[dict[str, set], dict[str, set]]:
+    """Odd/even session split (as _odd_even_sessions) but via the tolerant A4 accessors, so A4a
+    runs on either the extension `user`/`session` log or the primary `user_id`/`session_id`
+    session log (§5, already-logged dynamics)."""
+    user_sessions: dict[str, set] = defaultdict(set)
+    for r in records:
+        u, s = _a4_user(r), _a4_session(r)
+        if u is not None and s is not None:
+            user_sessions[u].add(s)
+    odd: dict[str, set] = {}
+    even: dict[str, set] = {}
+    for user, sess in user_sessions.items():
+        ordered = sorted(sess)
+        odd[user] = set(ordered[0::2])
+        even[user] = set(ordered[1::2])
+    return odd, even
+
+
+def compute_a4a_conflict_reliability(records: list[dict]) -> dict[str, Any] | None:
+    """A4a (§1.2): split each user's sessions odd/even, recompute conflict(i, domain) on each
+    half, per-domain test–retest correlation across users. Reliable iff the lower 95% bootstrap CI
+    ≥ A4A_RELIABILITY_FLOOR (0.40 — the exploratory bar). Reuses the shared _domain_test_retest_r
+    machinery (as H3/H5), users the independent bootstrap unit; seed band BOOTSTRAP_SEED+25 (+
+    per-domain i). CONDITIONAL, honestly (§1.2/§7 Q2): reliability presumes the confound guards
+    actually removed the length/device variance — the residualization here DEMONSTRATES the
+    machinery on synthetic dynamics with known injected confounds; real-data confound-adequacy is
+    a pilot check (Dave/data-gated). EXPLORATORY, no public card (§1.4)."""
+    odd, even = _odd_even_sessions_a4(records)
+    window_a = conflict_by_user_domain(
+        [r for r in records if _a4_session(r) in odd.get(_a4_user(r), set())]
+    )
+    window_b = conflict_by_user_domain(
+        [r for r in records if _a4_session(r) in even.get(_a4_user(r), set())]
+    )
+    per_domain = _domain_test_retest_r(window_a, window_b, A4A_SEED_OFFSET, A4A_RELIABILITY_FLOOR)
+    if not per_domain:
+        return None
+    n_met = sum(1 for d in per_domain.values() if d.get("pre_registered_threshold_met"))
+    return {
+        "per_domain": per_domain,
+        "n_domains": len(per_domain),
+        "n_domains_met": n_met,
+        "threshold_low": A4A_RELIABILITY_FLOOR,
+        "any_met": bool(n_met > 0),
+    }
+
+
 def render_correlation_result(name: str, threshold_text: str, result: dict[str, Any] | None) -> str:
     if result is None:
         return f"({name}: insufficient data — need ≥3 users with both revealed truth-telling and the external measure)"
@@ -3177,6 +3404,46 @@ def render_a3_result(
     return "\n".join(lines)
 
 
+def render_a4_result(a4a: dict[str, Any] | None, n_users: int, n_cells: int) -> str:
+    """A4 decision conflict — the PROCESS channel (scoring.md §22). RT-derived EFFORT /
+    ambivalence, confound-guarded (residualized on reading-load + order, timeouts + the timed set
+    excluded, z within-person). NEVER a framework read (slow ≠ deontological; Bago & De Neys 2019)
+    and value-neutral (high conflict is not worse — effortful virtue is arguably the stronger
+    signal). Exploratory, RT-only (revisions Dave-gated, §4 Q1), NO public card (§1.4)."""
+    if a4a is None:
+        return (
+            "A4 (decision conflict — process channel): insufficient data — supply --process-log "
+            "with per-item response_time_ms + prompt_chars + presented_position across ≥2 "
+            "sessions/user (untimed, non-timeout items; ≥3 users scorable per domain in both halves)."
+        )
+    lines = ["A4 (decision conflict — RT-derived effort/ambivalence, value-neutral, exploratory):"]
+    lines.append(
+        f"  conflict(i, domain) = within-person z of response time, residualized on reading-load "
+        f"+ presented position; timeouts + the timed quick-fire set excluded (CV-1). "
+        f"{n_cells} (user × domain) cell(s) over {n_users} participant(s)."
+    )
+    lines.append(
+        f"  A4a conflict reliability (split-half odd/even, per-domain test–retest): "
+        f"{a4a['n_domains_met']}/{a4a['n_domains']} domain(s) clear the lower-CI ≥ "
+        f"{a4a['threshold_low']:.2f} bar  {_met_glyph(a4a['any_met'])}"
+    )
+    for dom in sorted(a4a["per_domain"]):
+        res = a4a["per_domain"][dom]
+        lines.append(
+            f"     {dom}: r = {res['r']:+.3f}, 95% CI {_ci_str(res)}, n = {res['n']}  "
+            f"{_met_glyph(res.get('pre_registered_threshold_met'))}"
+        )
+    lines.append(
+        "  Read: EFFORT/ambivalence, never a moral-framework label (slow ≠ deontological, fast ≠ "
+        "utilitarian; Bago & De Neys 2019). Value-neutral: high conflict is not worse than low — "
+        "finding virtue effortful is arguably the STRONGER character signal (effortful virtue). "
+        "Exploratory, RT-only (answer-revision capture deferred, §4 Q1); an analysis adjunct with "
+        "NO public card — context for the reveal, never a headline. A4b (does conflict add "
+        "information beyond the choice) is cohort-coupled and DEFERRED."
+    )
+    return "\n".join(lines)
+
+
 def render_test_retest_result(
     name: str, threshold_text: str, results: dict[str, dict[str, Any]]
 ) -> str:
@@ -3360,6 +3627,12 @@ def main() -> int:
         type=Path,
         default=None,
         help="Optional moral-language log (free-text utterances + gold_foundations codes) for the A3 coder + κ gate (§21).",
+    )
+    parser.add_argument(
+        "--process-log",
+        type=Path,
+        default=None,
+        help="Optional decision-process log (per-item response_time_ms + prompt_chars + presented_position) for the A4 conflict channel (§22).",
     )
     parser.add_argument(
         "--min-items",
@@ -3768,6 +4041,30 @@ def main() -> int:
         a3_kappa_result = compute_a3_coding_kappa(language_records)
         a3_profile = foundation_profile_by_user(language_records)
 
+    # --- A4 decision conflict — the PROCESS channel (§22). Re-analysis of already-logged
+    # response-time dynamics into a within-person, confound-guarded EFFORT signal — residualized
+    # on reading-load + order, timeouts + the timed set (CV-1) excluded, z within-person. RT-only
+    # (answer-revision capture Dave/runtime-gated, §4 Q1). Value-neutral and NEVER a framework read
+    # (Bago & De Neys 2019). EXPLORATORY, no public card (§1.4). Parity-gated in principle; the
+    # on-device conflict reveal + its JS parity lock are DEFERRED (as the H9–R6 reveals are).
+    a4a_result: dict[str, Any] | None = None
+    a4_n_users = 0
+    a4_n_cells = 0
+    if args.process_log:
+        try:
+            with args.process_log.open() as f:
+                process_records = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading process log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(process_records, list):
+            print("ERROR: process log must be a JSON array", file=sys.stderr)
+            return 2
+        _a4_cells = conflict_by_user_domain(process_records)
+        a4_n_cells = len(_a4_cells)
+        a4_n_users = len({u for (u, _d) in _a4_cells})
+        a4a_result = compute_a4a_conflict_reliability(process_records)
+
     def _nan_to_none(v: float) -> float | None:
         return None if v != v else v
 
@@ -3986,6 +4283,22 @@ def main() -> int:
         if a3_block:
             hypotheses["A3"] = a3_block
 
+        if a4a_result is not None:
+            # Per-domain reliability only — NO pooled "conflict_score" scalar and NO framework
+            # label (deliberative/utilitarian/deontological): conflict is EFFORT, value-neutral
+            # (§1.1/§1.4, Bago & De Neys 2019). No public card (§1.4).
+            hypotheses["A4"] = {
+                "A4a": {
+                    "per_domain": _per_domain_json(a4a_result["per_domain"]),
+                    "n_domains": a4a_result["n_domains"],
+                    "n_domains_met": a4a_result["n_domains_met"],
+                    "threshold_low": a4a_result["threshold_low"],
+                    "any_met": a4a_result["any_met"],
+                },
+                "n_conflict_cells": a4_n_cells,
+                "n_participants": a4_n_users,
+            }
+
         if hypotheses:
             out["hypotheses"] = hypotheses
         print(json.dumps(out, indent=2))
@@ -4091,6 +4404,9 @@ def main() -> int:
         if a3_kappa_result is not None or a3_profile:
             print()
             print(render_a3_result(a3_kappa_result, a3_profile))
+        if a4a_result is not None or a4_n_cells:
+            print()
+            print(render_a4_result(a4a_result, a4_n_users, a4_n_cells))
 
     return 0
 

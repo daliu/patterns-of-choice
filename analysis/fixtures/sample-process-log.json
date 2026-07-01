@@ -1,0 +1,1328 @@
+[
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u01-s1-harm-0",
+    "response_time_ms": 4050.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u01-s1-harm-1",
+    "response_time_ms": 6070.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u01-s1-harm-2",
+    "response_time_ms": 13280.0,
+    "prompt_chars": 600,
+    "presented_position": 9
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u01-s1-truth-0",
+    "response_time_ms": 3610.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u01-s1-truth-1",
+    "response_time_ms": 5120.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u01-s1-truth-2",
+    "response_time_ms": 7440.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u01-s1-fairness-0",
+    "response_time_ms": 3810.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u01-s1-fairness-1",
+    "response_time_ms": 5530.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u01-s1-fairness-2",
+    "response_time_ms": 7340.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u01-s2-harm-0",
+    "response_time_ms": 4170.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u01-s2-harm-1",
+    "response_time_ms": 6190.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u01-s2-harm-2",
+    "response_time_ms": 8000.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u01-s2-truth-0",
+    "response_time_ms": 3730.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u01-s2-truth-1",
+    "response_time_ms": 5240.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u01-s2-truth-2",
+    "response_time_ms": 6900.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u01-s2-fairness-0",
+    "response_time_ms": 3930.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u01-s2-fairness-1",
+    "response_time_ms": 5650.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u01",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u01-s2-fairness-2",
+    "response_time_ms": 7460.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u02-s1-harm-0",
+    "response_time_ms": 4470.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u02-s1-harm-1",
+    "response_time_ms": 5830.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u02-s1-harm-2",
+    "response_time_ms": 8300.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u02-s1-truth-0",
+    "response_time_ms": 3370.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u02-s1-truth-1",
+    "response_time_ms": 5540.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u02-s1-truth-2",
+    "response_time_ms": 7200.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u02-s1-fairness-0",
+    "response_time_ms": 4230.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u02-s1-fairness-1",
+    "response_time_ms": 5290.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u02-s1-fairness-2",
+    "response_time_ms": 7100.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u02-s2-harm-0",
+    "response_time_ms": 4590.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u02-s2-harm-1",
+    "response_time_ms": 5950.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u02-s2-harm-2",
+    "response_time_ms": 7760.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u02-s2-truth-0",
+    "response_time_ms": 3490.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u02-s2-truth-1",
+    "response_time_ms": 5000.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u02-s2-truth-2",
+    "response_time_ms": 7320.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u02-s2-fairness-0",
+    "response_time_ms": 4350.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u02-s2-fairness-1",
+    "response_time_ms": 5410.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u02",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u02-s2-fairness-2",
+    "response_time_ms": 7220.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u03-s1-harm-0",
+    "response_time_ms": 4230.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u03-s1-harm-1",
+    "response_time_ms": 6250.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u03-s1-harm-2",
+    "response_time_ms": 8060.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u03-s1-truth-0",
+    "response_time_ms": 3790.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u03-s1-truth-1",
+    "response_time_ms": 5300.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u03-s1-truth-2",
+    "response_time_ms": 6960.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u03-s1-fairness-0",
+    "response_time_ms": 3990.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u03-s1-fairness-1",
+    "response_time_ms": 5050.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u03",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u03-s1-fairness-2",
+    "response_time_ms": 7520.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u03-s2-harm-0",
+    "response_time_ms": 4350.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u03-s2-harm-1",
+    "response_time_ms": 5710.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u03-s2-harm-2",
+    "response_time_ms": 8180.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u03-s2-truth-0",
+    "response_time_ms": 3250.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u03-s2-truth-1",
+    "response_time_ms": 5420.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u03-s2-truth-2",
+    "response_time_ms": 7080.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u03-s2-fairness-0",
+    "response_time_ms": 4110.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u03-s2-fairness-1",
+    "response_time_ms": 5170.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u03",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u03-s2-fairness-2",
+    "response_time_ms": 7640.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u04-s1-harm-0",
+    "response_time_ms": 3850.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u04-s1-harm-1",
+    "response_time_ms": 5210.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u04-s1-harm-2",
+    "response_time_ms": 7020.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u04-s1-truth-0",
+    "response_time_ms": 5050.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u04-s1-truth-1",
+    "response_time_ms": 6560.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u04-s1-truth-2",
+    "response_time_ms": 8880.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u04-s1-fairness-0",
+    "response_time_ms": 3050.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u04-s1-fairness-1",
+    "response_time_ms": 4770.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u04",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u04-s1-fairness-2",
+    "response_time_ms": 6580.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u04-s2-harm-0",
+    "response_time_ms": 3310.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u04-s2-harm-1",
+    "response_time_ms": 5330.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u04-s2-harm-2",
+    "response_time_ms": 7140.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u04-s2-truth-0",
+    "response_time_ms": 5170.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u04-s2-truth-1",
+    "response_time_ms": 6680.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u04-s2-truth-2",
+    "response_time_ms": 9000.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u04-s2-fairness-0",
+    "response_time_ms": 3170.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u04-s2-fairness-1",
+    "response_time_ms": 4890.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u04",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u04-s2-fairness-2",
+    "response_time_ms": 6700.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u05-s1-harm-0",
+    "response_time_ms": 3610.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u05-s1-harm-1",
+    "response_time_ms": 4970.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u05-s1-harm-2",
+    "response_time_ms": 7440.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u05-s1-truth-0",
+    "response_time_ms": 4810.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u05-s1-truth-1",
+    "response_time_ms": 6980.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u05-s1-truth-2",
+    "response_time_ms": 8640.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u05-s1-fairness-0",
+    "response_time_ms": 3470.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u05-s1-fairness-1",
+    "response_time_ms": 4530.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u05",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u05-s1-fairness-2",
+    "response_time_ms": 7000.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u05-s2-harm-0",
+    "response_time_ms": 3730.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u05-s2-harm-1",
+    "response_time_ms": 5090.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u05-s2-harm-2",
+    "response_time_ms": 6900.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u05-s2-truth-0",
+    "response_time_ms": 4930.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u05-s2-truth-1",
+    "response_time_ms": 7100.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u05-s2-truth-2",
+    "response_time_ms": 8760.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u05-s2-fairness-0",
+    "response_time_ms": 3590.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u05-s2-fairness-1",
+    "response_time_ms": 4650.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u05",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u05-s2-fairness-2",
+    "response_time_ms": 6460.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u06-s1-harm-0",
+    "response_time_ms": 2670.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u06-s1-harm-1",
+    "response_time_ms": 4690.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u06-s1-harm-2",
+    "response_time_ms": 6500.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u06-s1-truth-0",
+    "response_time_ms": 4430.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u06-s1-truth-1",
+    "response_time_ms": 5940.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u06-s1-truth-2",
+    "response_time_ms": 7600.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u06-s1-fairness-0",
+    "response_time_ms": 4730.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u06-s1-fairness-1",
+    "response_time_ms": 6450.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u06",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u06-s1-fairness-2",
+    "response_time_ms": 8260.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u06-s2-harm-0",
+    "response_time_ms": 2790.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u06-s2-harm-1",
+    "response_time_ms": 4150.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u06-s2-harm-2",
+    "response_time_ms": 6620.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u06-s2-truth-0",
+    "response_time_ms": 4550.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u06-s2-truth-1",
+    "response_time_ms": 6060.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u06-s2-truth-2",
+    "response_time_ms": 7720.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u06-s2-fairness-0",
+    "response_time_ms": 4850.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u06-s2-fairness-1",
+    "response_time_ms": 5910.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u06",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u06-s2-fairness-2",
+    "response_time_ms": 8380.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u07-s1-harm-0",
+    "response_time_ms": 3090.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u07-s1-harm-1",
+    "response_time_ms": 4450.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u07-s1-harm-2",
+    "response_time_ms": 6260.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u07-s1-truth-0",
+    "response_time_ms": 4190.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u07-s1-truth-1",
+    "response_time_ms": 5700.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u07-s1-truth-2",
+    "response_time_ms": 8020.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u07-s1-fairness-0",
+    "response_time_ms": 5150.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u07-s1-fairness-1",
+    "response_time_ms": 6210.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u07",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u07-s1-fairness-2",
+    "response_time_ms": 8020.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u07-s2-harm-0",
+    "response_time_ms": 2550.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u07-s2-harm-1",
+    "response_time_ms": 4570.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u07-s2-harm-2",
+    "response_time_ms": 6380.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u07-s2-truth-0",
+    "response_time_ms": 4310.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u07-s2-truth-1",
+    "response_time_ms": 5820.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u07-s2-truth-2",
+    "response_time_ms": 8140.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u07-s2-fairness-0",
+    "response_time_ms": 4610.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u07-s2-fairness-1",
+    "response_time_ms": 6330.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u07",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u07-s2-fairness-2",
+    "response_time_ms": 8140.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u08-s1-harm-0",
+    "response_time_ms": 2850.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u08-s1-harm-1",
+    "response_time_ms": 4210.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u08-s1-harm-2",
+    "response_time_ms": 6680.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u08-s1-truth-0",
+    "response_time_ms": 3950.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u08-s1-truth-1",
+    "response_time_ms": 6120.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u08-s1-truth-2",
+    "response_time_ms": 7780.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u08-s1-fairness-0",
+    "response_time_ms": 4910.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u08-s1-fairness-1",
+    "response_time_ms": 5970.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u08",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u08-s1-fairness-2",
+    "response_time_ms": 8440.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u08-s2-harm-0",
+    "response_time_ms": 2970.0,
+    "prompt_chars": 50,
+    "presented_position": 1
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u08-s2-harm-1",
+    "response_time_ms": 4330.0,
+    "prompt_chars": 130,
+    "presented_position": 5
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "harm",
+    "item": "u08-s2-harm-2",
+    "response_time_ms": 6800.0,
+    "prompt_chars": 240,
+    "presented_position": 9
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u08-s2-truth-0",
+    "response_time_ms": 4070.0,
+    "prompt_chars": 90,
+    "presented_position": 2
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u08-s2-truth-1",
+    "response_time_ms": 6240.0,
+    "prompt_chars": 180,
+    "presented_position": 6
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "truth",
+    "item": "u08-s2-truth-2",
+    "response_time_ms": 7900.0,
+    "prompt_chars": 300,
+    "presented_position": 7
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u08-s2-fairness-0",
+    "response_time_ms": 5030.0,
+    "prompt_chars": 70,
+    "presented_position": 3
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u08-s2-fairness-1",
+    "response_time_ms": 6090.0,
+    "prompt_chars": 150,
+    "presented_position": 4
+  },
+  {
+    "user": "u08",
+    "session": "s2",
+    "domain": "fairness",
+    "item": "u08-s2-fairness-2",
+    "response_time_ms": 7900.0,
+    "prompt_chars": 260,
+    "presented_position": 8
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "harm",
+    "item": "u01-s1-harm-timeout",
+    "response_time_ms": 99999.0,
+    "prompt_chars": 120,
+    "presented_position": 6,
+    "was_timeout": true
+  },
+  {
+    "user": "u01",
+    "session": "s1",
+    "domain": "truth",
+    "item": "u01-s1-truth-timed",
+    "response_time_ms": 1500.0,
+    "prompt_chars": 110,
+    "presented_position": 7,
+    "timed": true
+  },
+  {
+    "user": "u02",
+    "session": "s1",
+    "domain": "fairness",
+    "item": "u02-s1-fairness-qf",
+    "response_time_ms": 1600.0,
+    "prompt_chars": 100,
+    "presented_position": 8,
+    "scenario_type": "quick-fire-round"
+  }
+]

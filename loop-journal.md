@@ -13,6 +13,84 @@ Newest first. Each entry: what branch, what it adds, what it honors, what shippe
 
 ---
 
+## Iteration 26 — 2026-06-30 — A4 · The decision-conflict channel: the RT-derived effort signal (first *process* channel)
+
+`build-and-validate.md` item 9, and the second consecutive **branch-out**. Iteration 25 (A3) opened a third channel on *values* — the
+spontaneous-language read of *which* foundations a person invokes. A4 opens a channel that is **not about which values at all**: the
+**process**. Every prior branch (H9–R6, A3) reads *what* a person moralizes — stated, revealed, or spoken. A4 reads *how effortfully a
+choice was reached*: the response-time signature of hesitation and ambivalence behind a moral judgment, independent of which way it went.
+It is the instrument's **first process measure**, exploratory and high-noise by nature — so it ships behind a tight reliability gate and
+the strongest value-neutrality wall in the project. A4 was picked over R3/R4/R5 (all still κ-gated on A3's real human coder), R4/R5's
+corpus dependencies, and A5 (needs a new affect elicitation + a public card) as the one **cheapest-clean buildable-without-Dave** branch:
+its signal is derivable from a light new RT log, and its whole risk is in the disciplines, not the data.
+
+- **What shipped (`scripts/analyze.py`, `--process-log`).** Two pieces of machinery. **(1) The conflict primitive** —
+  `conflict_scores_by_item` reads a decision-process log (`{user, session, domain, item, response_time_ms, prompt_chars,
+  presented_position}`) → `conflict(i, item)` = the within-person z of `response_time_ms` **residualized on `[prompt_chars,
+  presented_position]`** (`_ols_residuals`, intercept + 2 predictors via the normal equations — strip reading-load + presentation
+  order; falls back to within-person mean-centering when the design is rank-deficient), with `was_timeout` + the **timed quick-fire**
+  set **excluded** (CV-1: a timed item's RT is a clock artifact, not deliberation); `conflict_by_user_domain` → `conflict(i, domain)`,
+  the per-domain relative-effort cell. **(2) The A4a reliability** — `compute_a4a_conflict_reliability` splits each person's sessions
+  **odd/even**, recomputes `conflict(i, domain)` in each half, and correlates the halves **across people, per domain** (participant-level
+  bootstrap, reusing `_domain_test_retest_r` and the project seed at offset **+25** — the first split-half branch since R6d to consume a
+  new seed), gated at the **exploratory** bar: the *lower* 95% CI ≥ **0.40** (below the 0.40–0.50 confirmatory bars, because a process
+  channel is noisier); `any_met` iff ≥1 domain clears. The JSON `A4` block carries `A4a.per_domain` (a reliability **vector** with each
+  domain's r + CI + n + `pre_registered_threshold_met`), `n_conflict_cells`, `n_participants` — and **no** pooled scalar, **no** framework
+  key. Gated in `check_analyzer_thresholds.py` (`check_a4` rejecting any pooled `conflict_score`/`process_score`/`effort_score` **or**
+  framework `deliberation`/`utilitarian`/`deontological`/`framework` key and requiring each per-domain cell to agree with its own
+  arithmetic (met ⇔ ci_low ≥ threshold) + a `check_a4_conflict_lock()` unit-regression, **14 assertions all green**) on a self-contained
+  fixture (`analysis/fixtures/sample-process-log.json`, 8 participants × 3 domains × 3 items × 2 sessions + 3 CV-1-excluded rows = 147
+  records, known ground truth: the confound-proof 600-char item, all 3 domains reliable r ≈ 0.98–1.00, `any_met` True).
+- **Disciplines honored.** *Value-neutral, with EXTRA force* (the load-bearing one here): conflict is **EFFORT/ambivalence, never a
+  moral-framework read** — a slow response is **not** deontological processing (the dual-process "hard cases are slow" story does not
+  replicate; Bago & De Neys 2019, which the project's `concept.md` already disclaims), and high conflict is **not** a deficit: finding a
+  virtuous choice **hard** and choosing well anyway is arguably the *stronger* character signal (the effortful-virtue cell), never ranked
+  below easy virtue. `check_a4_conflict_lock` asserts the render frames the signal as EFFORT and never a framework label. *Confound
+  control* (asserted directly against the code): residualizing reading-load **removes** a pure length confound — a 10×-longer item with
+  **median** effort is a large *naive*-RT outlier (z ≈ +2) but lands mid-pack after residualization (|z| < 0.3), so a slow-because-long
+  response is not misread as high conflict. *No composite / never-pool* (§13.5): per-`(user, domain)` effort cells + a per-domain
+  reliability vector, never a summed "conflict score," never blended across channels. *The per-DOMAIN unit is forced, not chosen*: the
+  within-person z has mean ≈ 0 by construction (asserted), so a single person-pooled conflict is degenerate — the interpretable unit is
+  within-person *relative* effort per domain. *CV-1 exclusions*: timeouts + timed quick-fire items never enter a conflict cell (asserted
+  predicate + corpus-level). *Two-sided gate*: a stable-tilt corpus clears the 0.40 bar while the **same** corpus with the tilt flipped
+  at retest does not (`any_met` False) — reliability is earned, not structural. *N=1*: `conflict(i, domain)` is reveal-eligible for a
+  single user ("your *harm* choices took more deliberation than your *fairness* choices"), descriptively, as effort only.
+- **Scope — parity-gated in principle, reveal deferred; a new seed consumed.** Unlike A3 (non-deterministic coding → *permanently*
+  outside parity), A4's conflict **is** a deterministic arithmetic transform of logged RT, so it *belongs* in the `poc-projection.js` ↔
+  `analyze.py` parity contract once revealed. But the on-device reveal is **deferred** this increment (the H9–R6 Python-only precedent),
+  so A4 adds **nothing** to parity and **parity stays green (9/9)**; when the reveal ships it changes **both** files together. A4 also
+  breaks A3's mold back the other way: it *is* a bootstrap-CI branch (consuming reliability seed offset **+25**, where A3 consumed none).
+  **Deferred (documented):** (a) **answer-revision capture** — a second, cleaner ambivalence signal (selecting then switching), gated on
+  an open **runtime** question (whether/how the runtime logs revisions, `h-a4-a5-process-emotion.md` §4 Q1) — A4 is **RT-only** for now;
+  (b) **H-A4b** (does conflict add information beyond the choice — the discriminant) — cohort-coupled, like every prior discriminant half;
+  (c) the **on-device `conflict(i, domain)` reveal** + its parity lock; (d) **A5**, the emotion channel — needs a new affect elicitation
+  + a reactivity control + one public card (Dave-gated). **No public card (§1.4):** A4 is an analysis adjunct, never a `research-program.json`
+  headline — which also sidesteps the site-sync seam.
+- **PROPOSED lock (Dave's call — not auto-locked).** *DECISIONS §27 — A4 pre-registration.* A **decision-conflict** channel read off a
+  new light `--process-log` data-contract (per-item `response_time_ms` + `prompt_chars` + `presented_position`): `conflict(i, item)` =
+  within-person z of RT **residualized** on reading-load + presented position, with `was_timeout` + the timed quick-fire set excluded
+  (CV-1); `conflict(i, domain)` the per-domain relative-effort cell. **A4a** reliability = split-half odd/even per-domain test–retest,
+  gate the **exploratory** lower-CI ≥ **0.40** (`A4A_RELIABILITY_FLOOR`). **The wall is load-bearing:** conflict is **EFFORT/ambivalence,
+  never a moral-framework label** — a slow choice is *not* deontological (Bago & De Neys 2019) — and high conflict is not worse than low
+  (effortful virtue is arguably the stronger signal). Per-`(user, domain)` cells + a per-domain reliability vector, **never** a pooled
+  conflict score (§13.5); the unit is per-domain because the within-person z is mean-0 by construction. **A4 gets NO public card** (§1.4,
+  an analysis adjunct). A4 **is** parity-gated in principle (deterministic RT transform) but the on-device reveal is **deferred**, so
+  parity is unchanged. **Two choices surfaced for Dave, not auto-locked:** (i) **answer-revision capture** — whether the runtime logs
+  select-then-switch events (the cleaner ambivalence signal, §4 Q1); (ii) the eventual **reveal wording** (effort, never a framework
+  diagnosis). If this reads right, say **"lock §27"** and I'll write it into `DECISIONS.md`.
+- **Shipped.** `make check` green (exit 0): validate 66 scenarios + analyzer gate (H2–H7, H9, H10, H11, R2, H12, R1, R6, A3, **A4**,
+  probe-ceiling, h9-censoring, h10-suppression, h11-suppression, r2-censoring, h12-pairing, r1-nopool, r6-nopool, a3-kappa,
+  **a4-conflict**) + JS↔Python parity 9/9 (A4 adds nothing to parity, by design). Commit on `poc` main.
+
+**The loop now spans four channel *kinds*: stated, revealed, spoken, and — as of this iteration — processed.** A3 left the parity
+contract for a reliability gate; A4 stays parity-eligible but defers the reveal, and swaps A3's deterministic κ point-estimate back for a
+bootstrap-CI reliability bar (the first new seed, +25, since R6d). What remains buildable-without-Dave is thinning: the cohort-coupled
+discriminant halves (H·b / R·c / H-A4b), the deferred on-device reveals, and A5's emotion channel — which, unlike A4, cannot be derived
+from an existing log and needs a fresh affect elicitation + a public-card decision. The language branches (R3/R4/R5) remain behind A3's
+real-human-κ wall. The loop continues in the Dave-gated tail, one clean branch at a time.
+
+---
+
 ## Iteration 25 — 2026-06-30 — A3 · The moral-language channel: the coder + the κ gate (first branch *out of parity by design*)
 
 `build-and-validate.md` item 8, and a genuine **branch-out** — the loop's remit this cycle was to "expand and explore other
