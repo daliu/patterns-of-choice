@@ -408,6 +408,82 @@ else:
             ok(all_c, f"contextVariability: JS == Python on all {len(cv_users)} participants "
                       f"(per-construct sd + context counts + §1.5 floor suppression)")
 
+    # --- circleShape (H11 · scoring.md §16.5/§16.7): the on-device moral-circle shape
+    # reveal. Python circle_shape_by_user vs JS circleShape on the SAME per-user flat
+    # records: concern per distance bin (mean of ≥2 circle_radius-axis item scores),
+    # β_i = OLS slope of concern on bin index, R_i = first bin ascending where concern
+    # crosses the near-bin↔axis-floor midpoint — RIGHT-CENSORED (radius None/null,
+    # censored true) when it never crosses, never made finite (§13.2). A user forms a
+    # shape only with ≥4 populated bins (§1.5): Python-absent ⇔ JS ok=false. Fixture
+    # entries are parsed once by the analyzer's own circle_item_records (item scoring +
+    # §10 exclusion + counterparty→bin map), then a synthetic below-floor user is
+    # appended POST-PARSE in the flat record shape so both suppression floors are
+    # exercised; the fixture itself already covers finite AND censored radii. β_i/R_i
+    # are facets, never pooled (§13.5); wider is never scored better (§16.5).
+    if node and proj_js.exists():
+        cs_entries = json.loads(
+            (REPO_ROOT / "analysis" / "fixtures" / "sample-circle-log.json").read_text())
+        cs_recs = A.circle_item_records(
+            cs_entries, A.load_tag_axis_map(A.DEFAULT_TAG_MAP),
+            A.load_counterparty_distance_map(A.DEFAULT_DISTANCE_MAP)[0])
+        # zz-below-floor: bins 0/1/2 = 2 items each (qualify) + bin 3 = 1 item (killed
+        # by the >=2-item floor) => 3 populated bins < 4 => no shape on either side.
+        cs_recs = cs_recs + [
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "bin": 0, "score": 0.9},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "bin": 0, "score": 0.7},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "bin": 1, "score": 0.5},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "bin": 1, "score": 0.3},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "bin": 2, "score": 0.2},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "bin": 2, "score": 0.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "bin": 3, "score": -0.5},
+        ]
+        cs_users = sorted({r["user"] for r in cs_recs})
+        py_shapes = A.circle_shape_by_user(cs_recs)
+        cs_script = (
+            "const P = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const out = {};\n"
+            "for (const u of users) {\n"
+            "  out[u] = P.circleShape(recs.filter(r => r.user === u));\n"
+            "}\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)),)
+        sproc = subprocess.run([node, "-e", cs_script, json.dumps(cs_recs), json.dumps(cs_users)],
+                               capture_output=True, text=True)
+        if sproc.returncode != 0:
+            ok(False, "node circleShape run", sproc.stderr.strip()[:300])
+        else:
+            js_cs = json.loads(sproc.stdout)
+
+            def _close_s(a, b):
+                if a is None or b is None:
+                    return a is None and b is None
+                return abs(a - b) < 1e-9
+
+            all_s = True
+            for u in cs_users:
+                p, j = py_shapes.get(u), js_cs.get(u, {})
+                if p is None:
+                    # below the >=4-bin floor: suppressed on both sides (§1.5)
+                    m = j.get("ok") is False and j.get("radius") is None and j.get("censored") is None
+                else:
+                    m = (j.get("ok") is True
+                         and _close_s(p["beta"], j.get("beta"))
+                         and p["radius"] == j.get("radius")          # int bin or None, exact (§13.2)
+                         and p["censored"] == j.get("censored")
+                         and p["n_bins"] == j.get("n_bins")
+                         and p["near_bin"] == j.get("near_bin")
+                         and p["far_bin"] == j.get("far_bin")
+                         and _close_s(p["midpoint"], j.get("midpoint"))
+                         and _close_s(p["near_concern"], j.get("near_concern"))
+                         and _close_s(p["far_concern"], j.get("far_concern")))
+                all_s = all_s and m
+                if not m:
+                    ok(False, f"circleShape parity user {u}", f"py={p} js={j}")
+            ok(all_s, f"circleShape: JS == Python on all {len(cs_users)} participants "
+                      f"(beta + censored radius + midpoint + §1.5/§13.2 floor-and-censoring)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

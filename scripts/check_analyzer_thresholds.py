@@ -327,8 +327,12 @@ def check_h11(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     pre-registered outcome, and that the N=1 reveal quantities are populated —
     at least one participant with a formed β_i/R_i, AND both a finite radius and
     a right-censored radius present (proving the flat/impartial circle censors,
-    §13.2). The §13.2 censoring + §1.5 suppression floors are asserted directly
-    against the code in check_h11_suppression() below."""
+    §13.2). When the per-person circle_shape_reveal (§16.7) is emitted, shape-lock
+    it: β_i/R_i facets only (no pooled circle score / verdict / rank key), every
+    row above the ≥4-bin floor, and the §13.2 censoring biconditional — censored
+    ⇔ radius is None; a finite radius is an int inside [near_bin, far_bin]. The
+    §13.2 censoring + §1.5 suppression floors are asserted directly against the
+    code in check_h11_suppression() below."""
     if not isinstance(payload, dict):
         return False, f"{hid}: missing or not a dict"
     parts = []
@@ -352,6 +356,63 @@ def check_h11(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             f"must be exercised (radius_censored={payload.get('radius_censored')})"
         )
     parts.append(f"shapes×{payload['person_shape_n']}, R[finite={payload['radius_finite']},censored={payload['radius_censored']}]")
+    reveal = payload.get("circle_shape_reveal")
+    if reveal is not None:
+        # §16.7 on-device reveal contract (the shape circleShape in
+        # poc-projection.js mirrors under the parity lock).
+        pooled_keys = {"circle_score", "reach_score", "parochialism_score",
+                       "impartiality_score", "verdict", "rank"}
+        if not isinstance(reveal, list) or not reveal:
+            return False, f"{hid}: circle_shape_reveal present but not a non-empty list"
+        for row in reveal:
+            if not isinstance(row, dict):
+                return False, f"{hid}: reveal row not a dict ({row!r})"
+            missing = {"user", "beta", "radius", "censored", "n_bins",
+                       "midpoint", "near_bin", "far_bin",
+                       "near_concern", "far_concern"} - row.keys()
+            if missing:
+                return False, f"{hid}: reveal row missing {sorted(missing)} ({row})"
+            hit = pooled_keys & row.keys()
+            if hit:
+                return False, (
+                    f"{hid}: reveal row carries a pooled/verdict key {sorted(hit)} — "
+                    f"β_i/R_i are facets, never a circle score (§13.5)"
+                )
+            if not isinstance(row["n_bins"], int) or row["n_bins"] < 4:
+                return False, (
+                    f"{hid}: reveal row below the ≥4-bin floor (n_bins={row['n_bins']!r}) — "
+                    f"suppressed users must be OMITTED, not emitted (§1.5)"
+                )
+            for key in ("beta", "midpoint", "near_concern", "far_concern"):
+                if not isinstance(row[key], (int, float)) or isinstance(row[key], bool):
+                    return False, f"{hid}: reveal {key} not numeric ({row[key]!r})"
+            cen, rad = row["censored"], row["radius"]
+            if cen is True:
+                if rad is not None:
+                    return False, (
+                        f"{hid}: CENSORED radius made finite (radius={rad!r}) — a "
+                        f"right-censored R_i stays None, NEVER finitized (§13.2)"
+                    )
+            elif cen is False:
+                if not isinstance(rad, int) or isinstance(rad, bool) or rad < 0:
+                    return False, f"{hid}: finite R_i not an int bin ≥ 0 (radius={rad!r})"
+                if not (row["near_bin"] <= rad <= row["far_bin"]):
+                    return False, (
+                        f"{hid}: finite R_i outside the populated bin range "
+                        f"({row['near_bin']} ≤ {rad} ≤ {row['far_bin']} fails)"
+                    )
+            else:
+                return False, f"{hid}: censored not a bool ({cen!r})"
+        n_cen = sum(1 for row in reveal if row["censored"])
+        if (len(reveal) != payload["person_shape_n"]
+                or n_cen != payload["radius_censored"]
+                or len(reveal) - n_cen != payload["radius_finite"]):
+            return False, (
+                f"{hid}: reveal counts disagree with the census (reveal×{len(reveal)}, "
+                f"censored={n_cen} vs person_shape_n={payload['person_shape_n']}, "
+                f"radius_censored={payload['radius_censored']}, radius_finite={payload['radius_finite']})"
+            )
+        parts.append(f"reveal×{len(reveal)}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 

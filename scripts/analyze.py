@@ -4149,7 +4149,7 @@ def render_h11_result(
         lines.append(
             f"     threshold (lower CI ≥ {h11a['threshold_low']:.2f}): "
             f"{_met_glyph(h11a['pre_registered_threshold_met'])}  "
-            f"(discriminant half H11b deferred — see build-and-validate.md)"
+            f"(discriminant half H11b runs from --h11b-log, §16.3)"
         )
     else:
         lines.append("  H11a shape reliability: insufficient data (need ≥3 users with a β_i in both session halves)")
@@ -5109,16 +5109,17 @@ def main() -> int:
         h10c_result = compute_h10c_observer_effect(h10_records)
 
     # H11 moral-circle radius (scoring.md §16) if a counterparty-tagged in-group
-    # log is supplied. Self-contained on its own fixture; Python-only this
-    # increment — the on-device R_i reveal in poc-projection.js is deferred, so
-    # parity stays green (same scope pattern as H9/H10). Reads the circle_radius
-    # secondary axis via the versioned counterparty→distance-bin ordering map (a
-    # v0.1 DRAFT; its REL-2 inter-rater validation is Dave/human-gated).
+    # log is supplied. Self-contained on its own fixture. The on-device β_i/R_i
+    # reveal is mirrored by circleShape in poc-projection.js under the parity
+    # lock (§16.7). Reads the circle_radius secondary axis via the versioned
+    # counterparty→distance-bin ordering map (a v0.1 DRAFT; its REL-2
+    # inter-rater validation is Dave/human-gated).
     h11a_result: dict[str, Any] | None = None
     h11c_result: dict[str, Any] | None = None
     h11_person_shape_n = 0
     h11_radius_finite = 0
     h11_radius_censored = 0
+    h11_shape_reveal: list[dict[str, Any]] = []
     if args.circle_log:
         try:
             with args.circle_log.open() as f:
@@ -5139,6 +5140,20 @@ def main() -> int:
         h11_person_shape_n = len(h11_shapes)
         h11_radius_finite = sum(1 for s in h11_shapes.values() if not s["censored"])
         h11_radius_censored = sum(1 for s in h11_shapes.values() if s["censored"])
+        for _u in sorted(h11_shapes):
+            _s = h11_shapes[_u]
+            h11_shape_reveal.append({
+                "user": _u,
+                "beta": _s["beta"],           # steepness facet — described, never ranked (§16.5)
+                "radius": _s["radius"],       # None ⇔ right-censored, NEVER made finite (§13.2)
+                "censored": _s["censored"],
+                "n_bins": _s["n_bins"],
+                "midpoint": _s["midpoint"],
+                "near_bin": _s["near_bin"],
+                "far_bin": _s["far_bin"],
+                "near_concern": _s["near_concern"],
+                "far_concern": _s["far_concern"],
+            })
         h11a_result = compute_h11a_reliability(h11_records)
         h11c_result = compute_h11c_gradient(h11_records)
 
@@ -5733,6 +5748,14 @@ def main() -> int:
             h11_block["person_shape_n"] = h11_person_shape_n
             h11_block["radius_finite"] = h11_radius_finite
             h11_block["radius_censored"] = h11_radius_censored
+            if h11_shape_reveal:
+                # The per-person N=1 reveal (§16.5): β_i steepness + R_i reach,
+                # reported as separate facets, never pooled into a circle score
+                # (§13.5). A right-censored radius stays None (§13.2 — never
+                # made finite). Impartial↔partial both described, never ranked.
+                # This is the shape circleShape in poc-projection.js mirrors
+                # under the JS↔Python parity lock (§16.7).
+                h11_block["circle_shape_reveal"] = h11_shape_reveal
             hypotheses["H11"] = h11_block
 
         r2_block: dict[str, Any] = {}
