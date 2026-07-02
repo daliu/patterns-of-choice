@@ -2441,11 +2441,12 @@ def compute_r2b_distinctness(responses: list[dict]) -> dict[str, Any] | None:
 # judged as one's own and as another's, and H_i = mean(severity_other −
 # severity_self) is the person's self–other asymmetry. Grounded in the moral-
 # superiority / holier-than-thou findings (Tappin & McKay 2017; Epley & Dunning
-# 2000; the actor–observer asymmetry) — NOT the excluded paradigms. Python-only:
-# a paired contrast reusing the reliability/bootstrap machinery, with NO on-device
-# H_i reveal this increment (like the H9b/H10b/H11b/R2c deferred halves), so
-# parity stays green. The H12b discriminant (vs the §6 gap / calibration error) is
-# cohort-coupled and deferred. The pairing/missing-data lock (a declined judgment
+# 2000; the actor–observer asymmetry) — NOT the excluded paradigms. The on-device
+# H_i reveal is SHIPPED (§18.7): hypocrisyAsymmetry() in poc-projection.js mirrors
+# hypocrisy_asymmetry_by_user under the JS↔Python parity lock, and the analyzer
+# emits the companion H12.hypocrisy_asymmetry_reveal. The H12b discriminant (vs
+# the §6 gap / calibration error) is BUILT — compute_h12b_discriminant, cohort-
+# level. The pairing/missing-data lock (a declined judgment
 # drops the pair, never imputed to 0; sign preserved) is the H12 analog of the
 # §13.2 censoring lock — asserted against the code by check_h12_pairing_lock().
 # ----------------------------------------------------------------------------
@@ -5277,6 +5278,7 @@ def main() -> int:
     h12c_result: dict[str, Any] | None = None
     h12_person_asymmetry_n = 0
     h12_mean_asymmetry = 0.0
+    h12_asymmetry_reveal: list[dict[str, Any]] = []   # per-person N=1 H_i reveal (§18.1), signed, no-pool
     if args.hypocrisy_log:
         try:
             with args.hypocrisy_log.open() as f:
@@ -5293,6 +5295,13 @@ def main() -> int:
             h12_mean_asymmetry = sum(_h12_census.values()) / len(_h12_census)
         h12a_result = compute_h12a_reliability(hypocrisy_records)
         h12c_result = compute_h12c_self_serving(hypocrisy_records)
+        _h12_deltas = hypocrisy_deltas_by_user(hypocrisy_records)
+        for _u in sorted(_h12_deltas):
+            h12_asymmetry_reveal.append({
+                "user": _u,
+                "h": _h12_census.get(_u),   # None ⇔ below the ≥3-pair floor (§1.5), never scored thin
+                "n_pairs": len(_h12_deltas[_u]),
+            })
 
     # --- R1 moral identity centrality: the two-facet centrality read (§19). The
     # two facets are kept SEPARATE (never pooled, §13.5); the moderation legs (R1b —
@@ -5698,6 +5707,11 @@ def main() -> int:
         if h12_block or h12_person_asymmetry_n:
             h12_block["person_asymmetry_n"] = h12_person_asymmetry_n
             h12_block["mean_asymmetry"] = _nan_to_none(h12_mean_asymmetry)
+            if h12_asymmetry_reveal:
+                # the per-person N=1 reveal (§18.1): SIGNED H_i + pair count, None below
+                # the ≥3-pair floor — no pooled hypocrisy scalar, no per-person verdict
+                # (§18.4); the shape the JS runtime mirrors under the parity lock (§18.7)
+                h12_block["hypocrisy_asymmetry_reveal"] = h12_asymmetry_reveal
             hypotheses["H12"] = h12_block
 
         r1_block: dict[str, Any] = {}

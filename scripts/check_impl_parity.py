@@ -274,6 +274,63 @@ else:
             ok(all_o, f"objectivismReads: JS == Python on all {len(ob_users)} participants "
                       f"(claim-type means + item counts + ≥3-floor suppression)")
 
+    # --- hypocrisy H_i reveal parity (H12 §18.1): the N=1 on-device reveal -------------
+    # The runtime's hypocrisyAsymmetry() (per person, on-device) must equal the analyzer's
+    # hypocrisy_asymmetry_by_user for EVERY participant — same SIGNED paired mean, same
+    # scorable-pair count, same ≥3-pair-floor suppression, same declined-pair drop (either
+    # side missing/non-numeric/boolean ⇒ the PAIR drops, never imputed 0; the §18.1
+    # pairing lock). Reuses the H12 fixture, plus a synthetic below-floor user so the
+    # SUPPRESSED (null) path is exercised on both sides. Signed, value-neutral, never
+    # pooled (§13.5) — no per-person verdict on either side.
+    if node and proj_js.exists():
+        hy_recs = [r for r in json.loads(
+            (REPO_ROOT / "analysis" / "fixtures" / "sample-hypocrisy-log.json").read_text())
+            if isinstance(r, dict)]
+        # a synthetic user with only 2 scorable pairs (below the ≥3 floor) plus 1 declined
+        # pair: analyzer suppresses (absent from asymmetry_by_user) ⇔ runtime returns null.
+        hy_recs = hy_recs + [
+            {"user": "zz-below-floor", "session": "zz-s1", "probe_id": "judge-x-1", "severity_self": 4.0, "severity_other": 6.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "probe_id": "judge-x-2", "severity_self": 5.0, "severity_other": 3.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "probe_id": "judge-x-3", "severity_self": 5.0, "severity_other": None},
+        ]
+        hy_users = sorted({r.get("user") for r in hy_recs if r.get("user") is not None})
+        py_h = A.hypocrisy_asymmetry_by_user(hy_recs)
+        py_deltas = A.hypocrisy_deltas_by_user(hy_recs)
+        py_hyp = {u: {"h": py_h.get(u), "n_pairs": len(py_deltas.get(u, []))} for u in hy_users}
+        hy_script = (
+            "const P = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const out = {};\n"
+            "for (const u of users) {\n"
+            "  const f = P.hypocrisyAsymmetry(recs.filter(r => r.user === u));\n"
+            "  out[u] = { h: f.h, n_pairs: f.n_pairs };\n"
+            "}\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)),)
+        hproc = subprocess.run([node, "-e", hy_script, json.dumps(hy_recs), json.dumps(hy_users)],
+                               capture_output=True, text=True)
+        if hproc.returncode != 0:
+            ok(False, "node hypocrisyAsymmetry run", hproc.stderr.strip()[:300])
+        else:
+            js_hyp = json.loads(hproc.stdout)
+
+            def _close_h(a, b):
+                if a is None or b is None:
+                    return a is None and b is None
+                return abs(a - b) < 1e-9
+
+            all_h = True
+            for u in hy_users:
+                p, j = py_hyp[u], js_hyp.get(u, {})
+                m = (_close_h(p["h"], j.get("h"))
+                     and p["n_pairs"] == j.get("n_pairs"))
+                all_h = all_h and m
+                if not m:
+                    ok(False, f"hypocrisyAsymmetry parity user {u}", f"py={p} js={j}")
+            ok(all_h, f"hypocrisyAsymmetry: JS == Python on all {len(hy_users)} participants "
+                      f"(signed paired means + pair counts + ≥3-pair-floor suppression)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

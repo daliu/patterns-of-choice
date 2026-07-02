@@ -370,7 +370,9 @@ def check_h12(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     H_i). The pairing/missing-data lock (a declined judgment drops the pair,
     never imputed to 0; the signed delta is preserved so harsher-on-self stays
     negative) is asserted directly against the code in check_h12_pairing_lock()
-    below."""
+    below. When the §18.7 on-device reveal block is present, assert its shape too:
+    per-person SIGNED H_i + n_pairs, None below the ≥3-pair floor, and no pooled
+    hypocrisy scalar / per-person verdict key (§13.5, §18.4)."""
     if not isinstance(payload, dict):
         return False, f"{hid}: missing or not a dict"
     parts = []
@@ -390,6 +392,26 @@ def check_h12(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             f"(person_asymmetry_n={payload.get('person_asymmetry_n')})"
         )
     parts.append(f"H_i×{payload['person_asymmetry_n']}")
+    # The on-device reveal block (§18.7): per-person SIGNED H_i + pair count, None
+    # below the ≥3-pair floor, and NO pooled hypocrisy scalar / per-person verdict
+    # key (§13.5, §18.4) — the shape the JS runtime mirrors under the parity lock.
+    pooled_keys = {"hypocrisy_score", "h12_score", "asymmetry_score",
+                   "moral_hypocrisy_score", "verdict", "hypocrite"}
+    reveal = payload.get("hypocrisy_asymmetry_reveal")
+    if reveal is not None:
+        if not isinstance(reveal, list) or not reveal:
+            return False, f"{hid}: hypocrisy_asymmetry_reveal must be a non-empty list"
+        for e in reveal:
+            if "h" not in e or "n_pairs" not in e:
+                return False, f"{hid}: reveal entry missing h/n_pairs ({e})"
+            if pooled_keys & set(e):
+                return False, f"{hid}: reveal entry carries a pooled/verdict key ({e})"
+            n, v = e.get("n_pairs", 0), e.get("h")
+            if n < 3 and v is not None:
+                return False, f"{hid}: reveal scored a below-floor H_i ({e})"
+            if n >= 3 and not isinstance(v, (int, float)):
+                return False, f"{hid}: reveal suppressed an at/above-floor H_i ({e})"
+        parts.append(f"reveal×{len(reveal)}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 
