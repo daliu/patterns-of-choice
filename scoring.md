@@ -540,7 +540,7 @@ A participant enters H9c with ≥ 1 valid axis-channel error in *each* pool.
 
 Design source: [`h10-cross-situational-consistency.md`](h10-cross-situational-consistency.md). H10 asks whether the **variability** of a person's revealed scores across surface *contexts* is itself a stable individual-difference trait (Fleeson's density-distribution view; Mischel's if–then signatures; Doris situationism). It reuses the revealed axis scores already computed for §2–§3 — **no new elicitation** — and reads a `context:*` metadata tag off each item to bin it by setting. Contexts in the canonical corpus: `workplace`, `family`, `public`, `anonymous`.
 
-**Status.** H10a + H10b + H10c + the per-construct `sd_i(c)` / `V_i` reveal quantities are BUILT — so **H10 = H10a ∧ H10b is now complete** (a reliable variability trait *and* one discriminable from the person's level / over-claim / self-insight, with a residual-variability de-confound). H10a/H10c on `analyze.py --context-log` (gated on `analysis/fixtures/sample-context-log.json`); H10b (the two-legged discriminant) on `analyze.py --h10b-log`, gated in `check_analyzer_thresholds.py` (H10 sub-expectation `H10b_discriminant` + a load-bearing `check_h10b_discriminant_lock()`) on `analysis/fixtures/sample-h10b-log.json`. All Python-only (H10b is a cohort-level R², no on-device reveal) so parity stays green. Only the **on-device `sd_i(c)` reveal** remains DEFERRED (§15.6).
+**Status.** H10a + H10b + H10c + the per-construct `sd_i(c)` / `V_i` reveal quantities are BUILT — so **H10 = H10a ∧ H10b is now complete** (a reliable variability trait *and* one discriminable from the person's level / over-claim / self-insight, with a residual-variability de-confound). H10a/H10c on `analyze.py --context-log` (gated on `analysis/fixtures/sample-context-log.json`); H10b (the two-legged discriminant) on `analyze.py --h10b-log`, gated in `check_analyzer_thresholds.py` (H10 sub-expectation `H10b_discriminant` + a load-bearing `check_h10b_discriminant_lock()`) on `analysis/fixtures/sample-h10b-log.json`. The **on-device `sd_i(c)`/`V_i` reveal is SHIPPED** (§15.7): `contextVariability` in `poc-projection.js` mirrors the analyzer's `context_profile_by_user` under the JS↔Python parity lock, and the analyzer emits the companion `H10.context_variability_reveal` (shape-locked in `check_h10`). H10b stays Python-only (a cohort-level R² has no on-device surface).
 
 ### 15.1 Measurement primitive (§1.1 of the design doc)
 
@@ -586,14 +586,26 @@ Seed `20260510 + 14`. Axis scores only — no cross-channel pooling.
 ### 15.5 Suppression, N=1 reveal, value-neutrality (§1.5–§1.6 of the design doc)
 
 - **Suppression floors.** A context contributes `r_i(c, k)` only with **≥2 informative items**; a construct yields `sd_i(c)` only with **≥3 qualifying contexts**; `V_i` is formed only with **≥3 qualifying constructs** — else it is suppressed and the reveal reports the per-construct `sd_i(c)` alone. (Locked directly against the code by `check_h10_suppression()` — the H10 analog of the §14.1 censoring lock.)
-- **N=1 interpretability.** `sd_i(c)` is a within-person quantity on the fixed primary axis, so it is reveal-eligible for a single user with **no cohort standardization** (contrast the cohort-only H10a/b statistics).
+- **N=1 interpretability.** `sd_i(c)` is a within-person quantity on the fixed primary axis, so it is reveal-eligible for a single user with **no cohort standardization** (contrast the cohort-only H10a/b statistics). *Shipped 2026-07-01:* this is exactly what `contextVariability` computes on-device (§15.7).
 - **Value-neutrality (Dancy caveat).** Low variability is named **"steadiness"**, high variability **"responsiveness"** — descriptive poles, **never ranked**. Particularism holds that sensitivity-to-context can be a virtue, not a defect; the reveal must not imply that consistency is better than responsiveness.
 
 ### 15.6 What §15 deliberately does not compute
 
 - **No composite / no cross-branch pooling.** `V_i` is a within-branch mean of `sd_i(c)` facets; it is never summed with a gap, a calibration index, or a CoV price into one "consistency score" (§13.5).
 - **No ranking in any user-facing surface.** The cohort H10a/b/c statistics live only in the research analysis; the reveal stays within-person and descriptive (steadiness↔responsiveness).
-- **No on-device projection yet.** The `sd_i(c)` reveal is NOT in `poc-projection.js` this increment (Python-only, parity stays green); when added it changes **both** scorers under the §13.5/parity locks.
+- **No cohort statistic on-device.** H10a/b/c never leave the research analyzer; the on-device surface (§15.7) is the within-person facets + `V_i` alone.
+
+### 15.7 On-device reveal (SHIPPED 2026-07-01)
+
+`contextVariability(records)` in `poc-projection.js` computes the §15.5 N=1 reveal on-device from the runtime's already-scored items `{domain, context, score}`:
+
+    { constructs: [ { domain, sd, n_contexts } … ],   # qualifying constructs only, domain-sorted
+      v,                                              # V_i, or null below the ≥3-construct floor
+      n_constructs, ok }
+
+- **Exact analyzer mirror.** Same §1.5 floors as `context_sd_by_user_construct` / `context_profile_by_user` (context ≥2 items → construct ≥3 qualifying contexts → `V_i` ≥3 qualifying constructs; below a floor the value is **suppressed**, and below the `V_i` floor the surviving per-construct facets still reveal alone), same sample-SD (n−1), and **no declined-value guard** — the records are post-scoring, exactly as on the Python side. Locked by the `contextVariability` case in `scripts/check_impl_parity.py` (fixture users + a synthetic below-floor user exercising all three floors).
+- **Analyzer companion.** `analyze.py --context-log` emits `H10.context_variability_reveal` — per user `{user, v, n_constructs, constructs}` — shape-locked in `check_h10`: facets + `V_i` only, every cell above the ≥3-context floor with numeric `sd`, `v` null **exactly** below the ≥3-construct floor, and no pooled/verdict key on any row (§13.5).
+- **Value-neutrality.** Steadiness↔responsiveness are described, never ranked (§15.5, Dancy); `V_i` is the §15.1 within-branch mean reported **alongside** its facets, never a cross-branch composite.
 
 ---
 

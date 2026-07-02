@@ -268,7 +268,11 @@ def check_h10(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     pre-registered outcome, and that the N=1 reveal quantities are populated (at
     least one participant with a V_i, and per-construct sd cells present). The
     §1.5 suppression floors are asserted directly against the code in
-    check_h10_suppression() below."""
+    check_h10_suppression() below. When the per-person context_variability_reveal
+    (§15.5/§15.7) is emitted, shape-lock it: facets + V_i only, every construct
+    cell above the ≥3-context floor with a numeric sd, V_i null exactly below the
+    ≥3-construct floor, and NO pooled/verdict key on any row (§13.5 —
+    steadiness↔responsiveness is described, never ranked)."""
     if not isinstance(payload, dict):
         return False, f"{hid}: missing or not a dict"
     parts = []
@@ -287,6 +291,33 @@ def check_h10(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     if payload.get("n_construct_sd_cells", 0) < 1:
         return False, f"{hid}: no per-construct sd cells (n_construct_sd_cells={payload.get('n_construct_sd_cells')})"
     parts.append(f"V_i×{payload['person_variability_n']}, sd_cells={payload['n_construct_sd_cells']}")
+    pooled_keys = {"consistency_score", "variability_score", "h10_score",
+                   "steadiness_score", "verdict", "rank"}
+    reveal = payload.get("context_variability_reveal")
+    if reveal is not None:
+        if not isinstance(reveal, list) or not reveal:
+            return False, f"{hid}: context_variability_reveal must be a non-empty list"
+        for e in reveal:
+            if "v" not in e or "n_constructs" not in e or "constructs" not in e:
+                return False, f"{hid}: reveal entry missing v/n_constructs/constructs ({e})"
+            if pooled_keys & set(e):
+                return False, f"{hid}: reveal entry carries a pooled/verdict key ({e})"
+            cs = e["constructs"]
+            if not isinstance(cs, list) or len(cs) != e["n_constructs"] or not cs:
+                return False, f"{hid}: reveal constructs malformed ({e})"
+            for c in cs:
+                if pooled_keys & set(c):
+                    return False, f"{hid}: construct cell carries a pooled/verdict key ({c})"
+                if not isinstance(c.get("sd"), (int, float)) or isinstance(c.get("sd"), bool):
+                    return False, f"{hid}: construct cell sd not numeric ({c})"
+                if c.get("n_contexts", 0) < 3:
+                    return False, f"{hid}: construct cell below the ≥3-context floor ({c})"
+            n, v = e["n_constructs"], e["v"]
+            if n < 3 and v is not None:
+                return False, f"{hid}: reveal scored a below-floor V_i ({e})"
+            if n >= 3 and not isinstance(v, (int, float)):
+                return False, f"{hid}: reveal suppressed an at/above-floor V_i ({e})"
+        parts.append(f"reveal×{len(reveal)}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 

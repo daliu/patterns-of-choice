@@ -1718,6 +1718,31 @@ def context_item_records(
     return records
 
 
+def _context_cells(
+    records: list[dict[str, Any]],
+    session_ok=None,
+) -> dict[tuple[str, str], tuple[float, float, int]]:
+    """The single §1.5-floor implementation every H10 census rides: per
+    (user, domain) cell, (sd_i(c), mbar_i(c), n_qualifying_contexts). A context
+    enters with ≥H10_ITEMS_PER_CONTEXT_MIN items, a construct survives with
+    ≥H10_CONTEXT_MIN qualifying contexts — else the cell is SUPPRESSED (absent).
+    `session_ok(user, session)` optionally restricts to a session subset."""
+    cell: dict[tuple[str, str, str], list[float]] = defaultdict(list)
+    for r in records:
+        if session_ok is not None and not session_ok(r["user"], r["session"]):
+            continue
+        cell[(r["user"], r["domain"], r["context"])].append(r["score"])
+    ctx_mean: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for (user, domain, _ctx), scores in cell.items():
+        if len(scores) >= H10_ITEMS_PER_CONTEXT_MIN:
+            ctx_mean[(user, domain)].append(sum(scores) / len(scores))
+    out: dict[tuple[str, str], tuple[float, float, int]] = {}
+    for (user, domain), means in ctx_mean.items():
+        if len(means) >= H10_CONTEXT_MIN:
+            out[(user, domain)] = (_sample_sd(means), sum(means) / len(means), len(means))
+    return out
+
+
 def context_sd_mbar_by_user_construct(
     records: list[dict[str, Any]],
     session_ok=None,
@@ -1729,21 +1754,13 @@ def context_sd_mbar_by_user_construct(
     survive: a context enters with ≥H10_ITEMS_PER_CONTEXT_MIN items, a construct
     with ≥H10_CONTEXT_MIN qualifying contexts (§1.5). Powers the H10b discriminant
     (level_i = mean_c mbar) and its range-artifact de-confound (sd vs |mbar|).
-    `session_ok(user, session)` optionally restricts to a session subset."""
-    cell: dict[tuple[str, str, str], list[float]] = defaultdict(list)
-    for r in records:
-        if session_ok is not None and not session_ok(r["user"], r["session"]):
-            continue
-        cell[(r["user"], r["domain"], r["context"])].append(r["score"])
-    ctx_mean: dict[tuple[str, str], list[float]] = defaultdict(list)
-    for (user, domain, _ctx), scores in cell.items():
-        if len(scores) >= H10_ITEMS_PER_CONTEXT_MIN:
-            ctx_mean[(user, domain)].append(sum(scores) / len(scores))
-    out: dict[tuple[str, str], tuple[float, float]] = {}
-    for (user, domain), means in ctx_mean.items():
-        if len(means) >= H10_CONTEXT_MIN:
-            out[(user, domain)] = (_sample_sd(means), sum(means) / len(means))
-    return out
+    `session_ok(user, session)` optionally restricts to a session subset.
+    Derived from _context_cells (drops the count leg), so every census shares
+    one floor implementation bit-for-bit."""
+    return {
+        k: (sd, mbar) for k, (sd, mbar, _n)
+        in _context_cells(records, session_ok).items()
+    }
 
 
 def context_sd_by_user_construct(
@@ -1773,6 +1790,32 @@ def variability_index_by_user(
     for (user, _domain), sd in sd_by_uc.items():
         by_user[user].append(sd)
     return {u: sum(v) / len(v) for u, v in by_user.items() if len(v) >= H10_CONSTRUCT_MIN}
+
+
+def context_profile_by_user(
+    records: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """The §15.5 N=1 reveal census: per user, the QUALIFYING per-construct
+    sd_i(c) facets ({domain, sd, n_contexts}, domain-sorted) plus the
+    within-branch V_i — None below the ≥H10_CONSTRUCT_MIN floor, in which case
+    the per-construct facets still reveal on their own (§1.5). Floors are
+    bit-for-bit those of context_sd_by_user_construct (both ride
+    _context_cells). V_i is the §15.1 within-branch mean of this branch's own
+    sd facets, reported ALONGSIDE them — never a cross-branch composite
+    (§13.5), and steadiness↔responsiveness is never ranked. The shape
+    poc-projection.js mirrors under the §15.7 parity lock."""
+    cells = _context_cells(records)
+    v_by_user = variability_index_by_user(
+        {k: sd for k, (sd, _mbar, _n) in cells.items()}
+    )
+    profiles: dict[str, dict[str, Any]] = {}
+    for (user, domain), (sd, _mbar, n_ctx) in sorted(cells.items()):
+        p = profiles.setdefault(user, {"constructs": []})
+        p["constructs"].append({"domain": domain, "sd": sd, "n_contexts": n_ctx})
+    for u, p in profiles.items():
+        p["n_constructs"] = len(p["constructs"])
+        p["v"] = v_by_user.get(u)   # None ⇔ below the ≥3-construct floor (§1.5)
+    return profiles
 
 
 def _odd_even_sessions(
@@ -5030,13 +5073,15 @@ def main() -> int:
             h9b_result = compute_h9b_stability(h9_axis_records, h9_axis_records_b)
 
     # H10 cross-situational consistency (scoring.md §15) if a context-tagged log
-    # is supplied. Self-contained on its own fixture; Python-only this increment —
-    # the on-device sd_i(c) reveal in poc-projection.js is deferred, so parity
-    # stays green (same scope pattern as the H9 increment).
+    # is supplied. Self-contained on its own fixture. The on-device sd_i(c)/V_i
+    # reveal is SHIPPED (§15.7): contextVariability in poc-projection.js mirrors
+    # context_profile_by_user under the JS↔Python parity lock, and the analyzer
+    # emits the companion H10.context_variability_reveal.
     h10a_result: dict[str, Any] | None = None
     h10c_result: dict[str, Any] | None = None
     h10_person_variability_n = 0
     h10_construct_sd_n = 0
+    h10_variability_reveal: list[dict[str, Any]] = []   # per-person N=1 reveal (§15.5), facets + V_i, no-pool
     if args.context_log:
         try:
             with args.context_log.open() as f:
@@ -5051,6 +5096,15 @@ def main() -> int:
         h10_sd = context_sd_by_user_construct(h10_records)
         h10_construct_sd_n = len(h10_sd)
         h10_person_variability_n = len(variability_index_by_user(h10_sd))
+        h10_profiles = context_profile_by_user(h10_records)
+        for _u in sorted(h10_profiles):
+            _p = h10_profiles[_u]
+            h10_variability_reveal.append({
+                "user": _u,
+                "v": _p["v"],            # None ⇔ below the ≥3-construct floor (§1.5)
+                "n_constructs": _p["n_constructs"],
+                "constructs": _p["constructs"],
+            })
         h10a_result = compute_h10a_reliability(h10_records)
         h10c_result = compute_h10c_observer_effect(h10_records)
 
@@ -5645,6 +5699,14 @@ def main() -> int:
         if h10_block or h10_construct_sd_n:
             h10_block["person_variability_n"] = h10_person_variability_n
             h10_block["n_construct_sd_cells"] = h10_construct_sd_n
+            if h10_variability_reveal:
+                # the per-person N=1 reveal (§15.5): the qualifying per-construct
+                # sd_i(c) facets + the within-branch V_i (None below the
+                # ≥3-construct floor — the facets still reveal); steadiness↔
+                # responsiveness never ranked, no pooled cross-branch score
+                # (§13.5); the shape the JS runtime mirrors under the parity
+                # lock (§15.7)
+                h10_block["context_variability_reveal"] = h10_variability_reveal
             hypotheses["H10"] = h10_block
 
         h11_block: dict[str, Any] = {}

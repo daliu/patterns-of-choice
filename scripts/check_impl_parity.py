@@ -331,6 +331,83 @@ else:
             ok(all_h, f"hypocrisyAsymmetry: JS == Python on all {len(hy_users)} participants "
                       f"(signed paired means + pair counts + ≥3-pair-floor suppression)")
 
+    # --- contextVariability (H10 · scoring.md §15.5/§15.7): the on-device cross-situational
+    # consistency reveal. Python context_profile_by_user vs JS contextVariability on the SAME
+    # per-user flat records: per-construct sd_i(c) (sample SD of ≥2-item context means, ≥3
+    # qualifying contexts) + the within-branch V (≥3 qualifying constructs, else SUPPRESSED
+    # null while the surviving facets still reveal alone — §1.5). Fixture entries are parsed
+    # once by the analyzer's own context_item_records (item scoring + §10 exclusion), then a
+    # synthetic below-floor user is appended POST-PARSE in the flat record shape so all three
+    # floors are exercised on both sides. Descriptive only, never pooled (§13.5).
+    if node and proj_js.exists():
+        cv_entries = json.loads(
+            (REPO_ROOT / "analysis" / "fixtures" / "sample-context-log.json").read_text())
+        cv_recs = A.context_item_records(cv_entries, A.load_tag_axis_map(A.DEFAULT_TAG_MAP))
+        # zz-below-floor: d1 = 3 contexts x 2 items (qualifies, n_contexts=3); d2 = 2 contexts
+        # x 2 items (killed by the >=3-context floor); d3 = 1 context x 1 item (killed by the
+        # >=2-item floor) => constructs=[d1] only, n_constructs=1, V suppressed (1 < 3).
+        cv_recs = cv_recs + [
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "context": "anonymous", "score": 2.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "context": "anonymous", "score": 4.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "context": "public", "score": 5.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "context": "public", "score": 7.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "context": "observed", "score": 1.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d1", "context": "observed", "score": 1.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d2", "context": "anonymous", "score": 3.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d2", "context": "anonymous", "score": 5.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d2", "context": "public", "score": 4.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d2", "context": "public", "score": 6.0},
+            {"user": "zz-below-floor", "session": "zz-s1", "domain": "zz-d3", "context": "anonymous", "score": 2.5},
+        ]
+        cv_users = sorted({r["user"] for r in cv_recs})
+        py_prof = A.context_profile_by_user(cv_recs)
+        py_cv = {}
+        for u in cv_users:
+            p = py_prof.get(u)
+            # analyzer-absent user (every construct suppressed) <=> runtime empty profile
+            py_cv[u] = ({"v": None, "n_constructs": 0, "constructs": []} if p is None
+                        else {"v": p["v"], "n_constructs": p["n_constructs"],
+                              "constructs": p["constructs"]})
+        cv_script = (
+            "const P = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const out = {};\n"
+            "for (const u of users) {\n"
+            "  const f = P.contextVariability(recs.filter(r => r.user === u));\n"
+            "  out[u] = { v: f.v, n_constructs: f.n_constructs, constructs: f.constructs };\n"
+            "}\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)),)
+        cproc = subprocess.run([node, "-e", cv_script, json.dumps(cv_recs), json.dumps(cv_users)],
+                               capture_output=True, text=True)
+        if cproc.returncode != 0:
+            ok(False, "node contextVariability run", cproc.stderr.strip()[:300])
+        else:
+            js_cv = json.loads(cproc.stdout)
+
+            def _close_c(a, b):
+                if a is None or b is None:
+                    return a is None and b is None
+                return abs(a - b) < 1e-9
+
+            all_c = True
+            for u in cv_users:
+                p, j = py_cv[u], js_cv.get(u, {})
+                jc = j.get("constructs") or []
+                m = (_close_c(p["v"], j.get("v"))
+                     and p["n_constructs"] == j.get("n_constructs")
+                     and len(p["constructs"]) == len(jc)
+                     and all(pc["domain"] == jx.get("domain")
+                             and pc["n_contexts"] == jx.get("n_contexts")
+                             and _close_c(pc["sd"], jx.get("sd"))
+                             for pc, jx in zip(p["constructs"], jc)))
+                all_c = all_c and m
+                if not m:
+                    ok(False, f"contextVariability parity user {u}", f"py={p} js={j}")
+            ok(all_c, f"contextVariability: JS == Python on all {len(cv_users)} participants "
+                      f"(per-construct sd + context counts + §1.5 floor suppression)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)
