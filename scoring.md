@@ -685,7 +685,7 @@ Seed `20260510 + 16`. `circle_radius` scores only — no cross-channel pooling. 
 
 Design source: [`r2-sacred-protected-values.md`](r2-sacred-protected-values.md). R2 asks which values a person **refuses to price at any stake** — protected/sacred values (Baron & Spranca 1997; Tetlock 2000 *taboo trade-offs*; Fiske & Tetlock 1997 *incommensurability*), where the resistance to trade-off is quantity-insensitive (Bartels & Medin 2007) and load-bearing in conflict (Ginges et al. 2007). It is a **pure re-read** of the cost-of-virtue channel (§4, §13.2): the **right-censored `never` tail** — the values a person won't sell at any rung in range — **is** their protected set. **No new break-point math**; the censoring discipline was already storing this construct.
 
-**Status.** R2a + R2b + the per-person `P_i` reveal quantity are BUILT (`analyze.py --protected-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-protected-values-log.json`, Python-only so parity stays green). R2c and the on-device protected-set reveal are DEFERRED (§17.4, §17.6). The `taboo` marker (§17.5) is a **new light data-contract field** scored here on synthetic fixtures; real collection + its exact phrasing are runtime/design-gated (surfaced to Dave). This re-reads the CoV break-point **primitive** (already parity-locked; the runtime emits per-slot `no_break_point` at `poc-projection.js:212`) **without changing it**.
+**Status.** R2a + R2b + the per-person `P_i` reveal quantity are BUILT (`analyze.py --protected-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-protected-values-log.json`; the cohort statistics stay Python-only). The on-device protected-set reveal is BUILT (2026-07-03 — `protectedValues` in `poc-projection.js`, §17.7, parity 14→15); R2c stays DEFERRED (§17.4, cohort-coupled). The `taboo` marker (§17.5) is a **new light data-contract field** scored here on synthetic fixtures; real collection + its exact phrasing are runtime/design-gated (surfaced to Dave). This re-reads the CoV break-point **primitive** (already parity-locked; the runtime emits per-slot `no_break_point` at `poc-projection.js:212`) **without changing it**.
 
 ### 17.1 Measurement primitive (§1.1 of the design doc)
 
@@ -728,7 +728,7 @@ Protectedness must not be a proxy for how *important* a value is on the stated i
 
 - **The `taboo` marker (§3 A1).** A new light data-contract field (0/1), a one-tap after a CoV probe. Scored here on synthetic fixtures; **real collection and its exact phrasing (Q1 — avoid a leading "was this offensive?") are runtime/design-gated** and surfaced to Dave (see build-and-validate.md "Needs Dave / external").
 - **Cheap-talk caveat (load-bearing).** A hypothetical `never` is **costless** — anyone can *say* a value is sacred. `P_i` is therefore labelled **PROFESSED** protected values; the reveal never claims they'd survive a real offer. Real-stakes validation (which `never`s hold when the price is actual) rides **H-A2 → Phase-2** (IRB-gated; surfaced to Dave).
-- **N=1 interpretability.** `P_i` is a within-person set on the fixed value slots — reveal-eligible for a single user with no cohort standardization ("honesty and loyalty are non-negotiable *for you*; generosity has a price"), contrast the cohort-only R2a/R2b statistics.
+- **N=1 interpretability.** `P_i` is a within-person set on the fixed value slots — reveal-eligible for a single user with no cohort standardization ("honesty and loyalty are non-negotiable *for you*; generosity has a price"), contrast the cohort-only R2a/R2b statistics. *Shipped 2026-07-03:* this is exactly what `protectedValues` computes on-device (§17.7).
 - **Value-neutrality (load-bearing).** A **large protected set is not scored as better** — many `never`s can be **integrity** OR rigid **dogmatism** (a value-monist who won't trade off anything is not more moral, just less flexible). The reveal **names the set** and **never ranks** it by size.
 
 ### 17.6 What §17 deliberately does not compute
@@ -736,7 +736,21 @@ Protectedness must not be a proxy for how *important* a value is on the stated i
 - **No sacredness score / no pooling.** `P_i` is a set and `taboo` a marker; neither is summed with a gap, calibration index, variability index, circle radius, or CoV price into one scalar (§13.5), nor pooled across branches.
 - **No finitized `never`.** The protected read **never** assigns a price to a `never` — it stays the right-censored categorical tail (§13.2), asserted directly against the code by `check_r2_censoring()` (the R2 analog of the §14.1 CoV-ceiling / |8.0| lock).
 - **No real-stakes claim.** `P_i` is professed; the reveal carries the cheap-talk caveat and never asserts a value would survive a real offer (that is H-A2, Phase-2).
-- **No on-device projection yet.** The `P_i` reveal is NOT in `poc-projection.js` this increment (Python-only, parity stays green); when added it changes **both** scorers under the §13.5/parity locks.
+- **No cohort statistic on-device.** R2a/b/c never leave the research analyzer; the on-device surface (§17.7) is the within-person professed set alone.
+
+### 17.7 On-device reveal (SHIPPED 2026-07-03)
+
+`protectedValues(records)` in `poc-projection.js` computes the §17.5 N=1 reveal on-device, mirroring `protected_profile_by_user` in `analyze.py` on the same flat CoV responses:
+
+    { professed: ["candor", "honesty"],   // P_i — sorted value-slot STRINGS, never prices
+      n_professed: 2,
+      n_slots_probed: 3,                  // distinct slots probed that wave (descriptive denominator)
+      wave: "w1",                         // FIRST wave (earliest sorted), like the analyzer census
+      ok: true }                          // false ⇔ no probed wave at all
+
+- **Exact analyzer mirror.** `isProtectedResponse` is the same predicate as `_cov_response_is_protected` (`no_break_point === true` OR `first_accept_rung === "never"` — pole-agnostic, both arms parity-exercised); the first-wave read matches the analyzer census; an **empty set is DATA** (every probed value has a price at some stake), not suppression — set membership is exact per item, nothing is estimated, so **no §1.5 floor applies**; `ok: false` exactly when the user has no probed wave ⇔ the analyzer omits them. `check_impl_parity.py` locks JS == Python on every fixture participant plus four edge users (no-wave, all-priced/empty-set, multi-wave first-wave-wins, probed-without-slot) — parity **14→15**.
+- **Categorical censoring (§13.2).** `professed` holds value-slot strings ONLY — a `never` is never finitized into a price. `check_r2` shape-locks the emitted `R2.protected_set_reveal`: banned price/score keys (`first_accept_stake`, `sacredness_score`, `rank`, …), entries sorted + duplicate-free, counts coherent with the census (`protected_set_n` / `protected_none_n` / `protected_set_sizes`), empty sets EMITTED.
+- **Cheap-talk + value-neutrality.** The key is named `professed` — the §17.5 caveat baked into the data contract (a hypothetical `never` is costless; real-stakes validation is H-A2 → Phase-2). A large set is never ranked or scored (integrity OR dogmatism, §17.5); no sacredness scalar (§13.5); the `taboo` marker stays cohort-side (R2b machinery), deliberately NOT in the reveal. Deterministic — no bootstrap, no seed consumed.
 
 ---
 

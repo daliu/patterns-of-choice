@@ -484,6 +484,78 @@ else:
             ok(all_s, f"circleShape: JS == Python on all {len(cs_users)} participants "
                       f"(beta + censored radius + midpoint + §1.5/§13.2 floor-and-censoring)")
 
+    # --- protectedValues (R2 · scoring.md §17.5/§17.7): the on-device professed-
+    # protected-set reveal. Python protected_profile_by_user vs JS protectedValues on
+    # the SAME flat CoV responses: P_i = the value slots whose response is a right-
+    # censored `never` (no_break_point true OR first_accept_rung "never" — both
+    # predicate arms exercised below), read on the FIRST wave, held as value-slot
+    # STRINGS never prices (§13.2). An EMPTY set is DATA, not suppression (§17.5) —
+    # only a user with no probed wave is Python-absent ⇔ JS ok=false. The fixture is
+    # consumed AS-IS (the census eats raw responses; no item-scoring parse step), then
+    # synthetic edge users are appended POST-LOAD: no-wave, all-priced (empty set),
+    # multi-wave (first-wave read must win), and probed-without-slot. Set + counts
+    # only, never a sacredness score (§13.5).
+    if node and proj_js.exists():
+        pv_recs = json.loads(
+            (REPO_ROOT / "analysis" / "fixtures" / "sample-protected-values-log.json").read_text())
+        pv_recs = pv_recs + [
+            # zz-no-wave: records without a wave key are dropped entirely -> no profile
+            {"user_id": "zz-no-wave", "value_slot": "honesty", "no_break_point": True},
+            {"user_id": "zz-no-wave", "wave": None, "value_slot": "loyalty", "no_break_point": True},
+            # zz-all-priced: both slots finite -> professed=[] emitted (empty set is DATA)
+            {"user_id": "zz-all-priced", "wave": "w1", "value_slot": "honesty",
+             "first_accept_rung": "r2", "first_accept_stake": 100, "no_break_point": False},
+            {"user_id": "zz-all-priced", "wave": "w1", "value_slot": "charity",
+             "first_accept_rung": "r4", "first_accept_stake": 10000, "no_break_point": False},
+            # zz-multiwave: w1 wins (first-wave read); both `never` predicate arms hit
+            # (honesty via no_break_point=True, candor via first_accept_rung="never")
+            {"user_id": "zz-multiwave", "wave": "w1", "value_slot": "honesty",
+             "first_accept_rung": None, "first_accept_stake": None, "no_break_point": True},
+            {"user_id": "zz-multiwave", "wave": "w1", "value_slot": "candor",
+             "first_accept_rung": "never", "first_accept_stake": None},
+            {"user_id": "zz-multiwave", "wave": "w1", "value_slot": "charity",
+             "first_accept_rung": "r3", "first_accept_stake": 1000, "no_break_point": False},
+            {"user_id": "zz-multiwave", "wave": "w2", "value_slot": "loyalty",
+             "first_accept_rung": None, "first_accept_stake": None, "no_break_point": True},
+            # zz-probed-noslot: a probed wave with no value_slot -> professed=[], 0 slots
+            {"user_id": "zz-probed-noslot", "wave": "w1", "no_break_point": True},
+        ]
+        pv_users = sorted({r["user_id"] for r in pv_recs})
+        py_pv = A.protected_profile_by_user(pv_recs)
+        pv_script = (
+            "const P = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const out = {};\n"
+            "for (const u of users) {\n"
+            "  out[u] = P.protectedValues(recs.filter(r => r.user_id === u));\n"
+            "}\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)),)
+        pproc = subprocess.run([node, "-e", pv_script, json.dumps(pv_recs), json.dumps(pv_users)],
+                               capture_output=True, text=True)
+        if pproc.returncode != 0:
+            ok(False, "node protectedValues run", pproc.stderr.strip()[:300])
+        else:
+            js_pv = json.loads(pproc.stdout)
+            all_p = True
+            for u in pv_users:
+                p, j = py_pv.get(u), js_pv.get(u, {})
+                if p is None:
+                    # no probed wave: absent on the Python side <=> ok=false in JS
+                    m = j.get("ok") is False and j.get("professed") is None
+                else:
+                    m = (j.get("ok") is True
+                         and p["wave"] == j.get("wave")
+                         and p["professed"] == j.get("professed")    # exact strings, exact order
+                         and p["n_professed"] == j.get("n_professed")
+                         and p["n_slots_probed"] == j.get("n_slots_probed"))
+                all_p = all_p and m
+                if not m:
+                    ok(False, f"protectedValues parity user {u}", f"py={p} js={j}")
+            ok(all_p, f"protectedValues: JS == Python on all {len(pv_users)} participants "
+                      f"(professed set + first-wave read + §13.2 categorical never + empty-set-is-data)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

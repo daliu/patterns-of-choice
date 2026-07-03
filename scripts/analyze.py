@@ -2345,10 +2345,11 @@ def compute_h11b_discriminant(
 # No composite (§13.5): P_i is a set, taboo a marker — never summed into a
 # "sacredness score" (§4 rejected exactly that). R2c (discriminant vs importance
 # rank) is DEFERRED — cohort-coupled, needs the inventory-rank + log-price
-# pipeline (like the H9b/H11b deferred halves). Python-only: this re-reads the
-# cov break-point PRIMITIVE (already parity-locked; the runtime emits per-slot
-# no_break_point at poc-projection.js:212) without changing it, so the on-device
-# protected-set reveal is deferred and parity stays green.
+# pipeline (like the H9b/H11b deferred halves). This re-reads the cov break-point
+# PRIMITIVE (already parity-locked; the runtime emits per-slot no_break_point at
+# poc-projection.js:212) without changing it; the on-device P_i reveal is
+# protectedValues in poc-projection.js, mirroring protected_profile_by_user
+# under the §17.7 parity lock.
 # ----------------------------------------------------------------------------
 
 R2A_RELIABILITY_FLOOR = 0.40   # protected-set test-retest Jaccard lower 95% CI (§17.2)
@@ -2389,6 +2390,46 @@ def protected_value_sets(
         if slot and _cov_response_is_protected(r):
             sets[(user, w)].add(slot)
     return sets, waves_seen
+
+
+def protected_profile_by_user(
+    responses: list[dict],
+    wave_of=lambda r: r.get("wave"),
+) -> dict[str, dict[str, Any]]:
+    """Per-user FIRST-WAVE professed-protected-set profile — the §17.5 N=1 reveal
+    census (and the shape protectedValues in poc-projection.js mirrors under the
+    §17.7 parity lock). For every user with ≥1 probed wave:
+        {"wave": first wave, "professed": sorted value_slot strings marked `never`,
+         "n_professed": …, "n_slots_probed": distinct slots probed that wave}
+    `professed` holds value-slot STRINGS, never prices (§13.2 — the categorical
+    right-censored tail, never finitized); the key name carries the §17.5
+    cheap-talk caveat (PROFESSED, not validated against a real offer). An EMPTY
+    set is DATA (every probed value has a price at some stake), not suppression —
+    set membership is exact per item, nothing is estimated, so no §1.5 floor
+    applies. Never summed into a sacredness score (§13.5)."""
+    sets, waves_seen = protected_value_sets(responses, wave_of)
+    slots_probed: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for r in responses:
+        w = wave_of(r)
+        if w is None:
+            continue
+        user = r.get("user_id")
+        if user is None:
+            continue
+        slot = r.get("value_slot")
+        if slot:
+            slots_probed[(user, w)].add(slot)
+    out: dict[str, dict[str, Any]] = {}
+    for user in sorted(waves_seen):
+        first_wave = sorted(waves_seen[user])[0]
+        professed = sorted(sets.get((user, first_wave), set()))
+        out[user] = {
+            "wave": first_wave,
+            "professed": professed,
+            "n_professed": len(professed),
+            "n_slots_probed": len(slots_probed.get((user, first_wave), set())),
+        }
+    return out
 
 
 def compute_r2a_reliability(
@@ -5308,14 +5349,15 @@ def main() -> int:
 
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
     # value_slot + wave (+ taboo) is supplied. Pure re-read of the `never` tail as
-    # the protected set P_i (§13.2 censoring, categorical, never finitized).
-    # Python-only this increment — the on-device protected-set reveal is deferred
-    # (same scope pattern as H9/H10/H11), so parity stays green.
+    # the protected set P_i (§13.2 censoring, categorical, never finitized). The
+    # on-device P_i reveal is mirrored by protectedValues in poc-projection.js
+    # under the parity lock (§17.7).
     r2a_result: dict[str, Any] | None = None
     r2b_result: dict[str, Any] | None = None
     r2_protected_set_n = 0
     r2_protected_none_n = 0
     r2_protected_set_sizes: list[int] = []
+    r2_protected_reveal: list[dict[str, Any]] = []
     if args.protected_log:
         try:
             with args.protected_log.open() as f:
@@ -5326,16 +5368,18 @@ def main() -> int:
         if not isinstance(protected_responses, list):
             print("ERROR: protected-values log must be a JSON array", file=sys.stderr)
             return 2
-        # First-wave protected-set census (per participant) for the reveal count.
-        _psets, _pwaves = protected_value_sets(protected_responses)
-        for _user in sorted(_pwaves):
-            first_wave = sorted(_pwaves[_user])[0]
-            size = len(_psets.get((_user, first_wave), set()))
-            if size > 0:
+        # First-wave protected-set census (per participant): the reveal counts AND
+        # the §17.5 N=1 reveal rows come from the same protected_profile_by_user
+        # pass (first-wave read unchanged from the original inline census).
+        _pprofiles = protected_profile_by_user(protected_responses)
+        for _user in sorted(_pprofiles):
+            _row = _pprofiles[_user]
+            if _row["n_professed"] > 0:
                 r2_protected_set_n += 1
-                r2_protected_set_sizes.append(size)
+                r2_protected_set_sizes.append(_row["n_professed"])
             else:
                 r2_protected_none_n += 1
+            r2_protected_reveal.append({"user": _user, **_row})
         r2a_result = compute_r2a_reliability(protected_responses)
         r2b_result = compute_r2b_distinctness(protected_responses)
 
@@ -5767,6 +5811,16 @@ def main() -> int:
             r2_block["protected_set_n"] = r2_protected_set_n
             r2_block["protected_none_n"] = r2_protected_none_n
             r2_block["protected_set_sizes"] = r2_protected_set_sizes
+            if r2_protected_reveal:
+                # The per-person N=1 reveal (§17.5): the PROFESSED protected set —
+                # value-slot strings only, never prices (§13.2 categorical tail,
+                # never finitized), never summed into a sacredness score (§13.5),
+                # never ranked by size (many `never`s = integrity OR dogmatism).
+                # The key name carries the cheap-talk caveat: professed, not
+                # validated against a real offer (that is H-A2 → Phase-2). This is
+                # the shape protectedValues in poc-projection.js mirrors under
+                # the JS↔Python parity lock (§17.7).
+                r2_block["protected_set_reveal"] = r2_protected_reveal
             hypotheses["R2"] = r2_block
 
         h12_block: dict[str, Any] = {}

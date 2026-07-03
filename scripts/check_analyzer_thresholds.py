@@ -423,8 +423,13 @@ def check_r2(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     least one participant with a non-empty protected set P_i AND at least one who
     protects nothing (the empty-set / all-priced case exercised), plus R2a's
     undefined-Jaccard exclusion (empty union in both waves) counted, never scored
-    as perfect agreement. The §13.2 categorical-`never` lock is asserted directly
-    against the code in check_r2_censoring() below."""
+    as perfect agreement. When the per-person protected_set_reveal (§17.7) is
+    emitted, shape-lock it: the PROFESSED set as value-slot STRINGS only — never
+    a price or stake key (§13.2), never a sacredness/verdict/rank key (§13.5) —
+    sorted, duplicate-free, count-coherent with the census (set_n / none_n /
+    set_sizes), empty sets EMITTED (data, not suppression). The §13.2
+    categorical-`never` lock is asserted directly against the code in
+    check_r2_censoring() below."""
     if not isinstance(payload, dict):
         return False, f"{hid}: missing or not a dict"
     parts = []
@@ -452,6 +457,61 @@ def check_r2(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             f"(n_excluded_empty={r2a.get('n_excluded_empty')})"
         )
     parts.append(f"P_i×{payload['protected_set_n']}, none={payload['protected_none_n']}, r2a_excl={r2a['n_excluded_empty']}")
+    reveal = payload.get("protected_set_reveal")
+    if reveal is not None:
+        # §17.7 on-device reveal contract (the shape protectedValues in
+        # poc-projection.js mirrors under the parity lock).
+        banned_keys = {"price", "prices", "stake", "first_accept_stake",
+                       "first_accept_rung", "break_point", "sacredness_score",
+                       "protected_score", "verdict", "rank"}
+        if not isinstance(reveal, list) or not reveal:
+            return False, f"{hid}: protected_set_reveal present but not a non-empty list"
+        for row in reveal:
+            if not isinstance(row, dict):
+                return False, f"{hid}: reveal row not a dict ({row!r})"
+            missing = {"user", "wave", "professed",
+                       "n_professed", "n_slots_probed"} - row.keys()
+            if missing:
+                return False, f"{hid}: reveal row missing {sorted(missing)} ({row})"
+            hit = banned_keys & row.keys()
+            if hit:
+                return False, (
+                    f"{hid}: reveal row carries a price/score key {sorted(hit)} — "
+                    f"P_i is a set of value-slot strings, never a price (§13.2) "
+                    f"and never a sacredness score (§13.5)"
+                )
+            prof = row["professed"]
+            if not isinstance(prof, list):
+                return False, f"{hid}: professed not a list ({prof!r})"
+            for slot in prof:
+                if not isinstance(slot, str) or not slot:
+                    return False, (
+                        f"{hid}: professed entry not a non-empty string ({slot!r}) — "
+                        f"a `never` stays a value-slot STRING, never finitized (§13.2)"
+                    )
+            if prof != sorted(prof) or len(set(prof)) != len(prof):
+                return False, f"{hid}: professed not sorted+duplicate-free ({prof})"
+            for key in ("n_professed", "n_slots_probed"):
+                if not isinstance(row[key], int) or isinstance(row[key], bool) or row[key] < 0:
+                    return False, f"{hid}: reveal {key} not a non-negative int ({row[key]!r})"
+            if row["n_professed"] != len(prof):
+                return False, f"{hid}: n_professed={row['n_professed']} != len(professed)={len(prof)}"
+            if row["n_professed"] > row["n_slots_probed"]:
+                return False, (
+                    f"{hid}: n_professed={row['n_professed']} exceeds "
+                    f"n_slots_probed={row['n_slots_probed']} — a professed slot must be a probed slot"
+                )
+        n_nonempty = sum(1 for row in reveal if row["n_professed"] > 0)
+        sizes = [row["n_professed"] for row in reveal if row["n_professed"] > 0]
+        if (n_nonempty != payload["protected_set_n"]
+                or len(reveal) - n_nonempty != payload["protected_none_n"]
+                or sizes != payload["protected_set_sizes"]):
+            return False, (
+                f"{hid}: reveal disagrees with the census (reveal×{len(reveal)}, "
+                f"nonempty={n_nonempty}, sizes={sizes} vs set_n={payload['protected_set_n']}, "
+                f"none_n={payload['protected_none_n']}, set_sizes={payload['protected_set_sizes']})"
+            )
+        parts.append(f"reveal×{len(reveal)}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 
