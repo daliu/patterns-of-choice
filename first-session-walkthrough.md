@@ -152,29 +152,40 @@ If the participant has selected a value, the app subtly shows the behavioral anc
 
 ## Screen 5 — first quick-fire scenario
 
-After the participant finishes the card sort (~3 minutes), the app moves to the quick-fire module. The screen briefly shows the timer expectation:
+After the participant finishes the card sort (~3 minutes), the app moves to the quick-fire module. The screen briefly explains the task:
 
 ```
 ┌──────────────────────────────────────────┐
 │                                          │
-│  A new kind of task: rapid choices       │
-│  under a timer.                          │
+│  A new kind of task: you read each       │
+│  moment untimed, then reveal two         │
+│  answers and a short clock starts.       │
 │                                          │
-│  Each one is between two options,        │
-│  eight seconds each.                     │
-│                                          │
-│  The point is to capture what you reach  │
-│  for first — not what you'd choose on    │
-│  reflection. There are no right answers  │
-│  and the timer is part of the data,      │
-│  not part of a test.                     │
+│  It captures which one you reach for     │
+│  first — not how fast you read, and      │
+│  not what you'd choose on reflection.    │
+│  There are no right answers; the clock   │
+│  is part of the data, not a test.        │
 │                                          │
 │              [  Ready  ]                 │
 │                                          │
 └──────────────────────────────────────────┘
 ```
 
-After Ready, the first item appears — sampled from one of the four MVP-1 domains. For this walkthrough we'll use `qf-truth-001-i01`:
+After Ready, the first item appears — sampled from one of the four MVP-1 domains. For this walkthrough we'll use `qf-truth-001-i01`. The prompt shows first with no clock, so reading time never eats the decision window:
+
+```
+┌──────────────────────────────────────────┐
+│                                          │
+│  Your housemate asks if you ate the      │
+│  leftovers they were saving. You did.    │
+│                                          │
+│  [  I've read it — show the choices  ]   │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+When the participant reveals the choices, the decision clock starts — response time is decision latency, not reading speed:
 
 ```
 ┌──────────────────────────────────────────┐
@@ -191,7 +202,7 @@ After Ready, the first item appears — sampled from one of the four MVP-1 domai
 └──────────────────────────────────────────┘
 ```
 
-The participant taps one. The next item appears immediately (no transition; the urgency is part of the design):
+The participant taps one within the clock. The next item appears the same way — prompt first and untimed — and the read-then-decide rhythm repeats:
 
 ```
 ┌──────────────────────────────────────────┐

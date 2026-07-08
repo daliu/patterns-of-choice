@@ -154,7 +154,7 @@ Two free-text prompts surface here. Rendered with no character minimum, no maxim
 
 Surfaced as the closing module of session 3:
 
-> A new kind of task: rapid choices under a timer. Each one is between two options, eight seconds each. The point is to capture what you reach for first — not what you'd choose on reflection. There are no right answers and the timer is part of the data, not part of a test.
+> A new kind of task: each one is a choice between two options. You read it untimed; the moment you reveal the two answers, a short clock starts — so it captures which one you reach for first, not how fast you read. There are no right answers and the timer is part of the data, not part of a test.
 
 (Quick-fire content follows the JSON format from `scenarios/sample/qf-truth-001.json` or rotation-equivalent.)
 
