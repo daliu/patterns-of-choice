@@ -259,6 +259,39 @@ def check_h9(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     if cov.get("n_censored", 0) < 1 or cov.get("n_finite", 0) < 1:
         return False, f"{hid}: cov_channel must have both finite and censored pairs (got {cov})"
     parts.append(f"cov[finite={cov['n_finite']},censored={cov['n_censored']}]")
+    # Per-person N=1 self-calibration reveal shape-lock (§14.2/§14.7). Each row is
+    # EXACTLY {user, cal_bias, cal_error, n_probes} — descriptive only. Exact-match
+    # is the strongest no-composite guarantee: it admits no calibration_score /
+    # self_knowledge_score / accuracy / rank / percentile / verdict / grade /
+    # cross_person key (§14.7 forbids a composite calibration score and any cross-
+    # person ranking). cal_bias is SIGNED (self-enhancement direction; value-neutral
+    # both ways — over- and under-confidence are described, never ranked). cal_error
+    # is a magnitude with cal_error >= |cal_bias| (mean|e| >= |mean e|, Jensen) — a
+    # real arithmetic guard, like R2's n_professed <= n_slots_probed. Mirrored on-
+    # device by selfCalibration() under the JS<->Python parity lock.
+    reveal = payload.get("calibration_reveal")
+    if reveal is not None:
+        if not isinstance(reveal, list) or not reveal:
+            return False, f"{hid}: calibration_reveal must be a non-empty list"
+
+        def _finite(x: object) -> bool:
+            return (isinstance(x, (int, float)) and not isinstance(x, bool)
+                    and x == x and abs(x) != float("inf"))
+        for e in reveal:
+            if not isinstance(e, dict) or set(e) != {"user", "cal_bias", "cal_error", "n_probes"}:
+                return False, f"{hid}: reveal row must be exactly {{user,cal_bias,cal_error,n_probes}} ({e})"
+            if not _finite(e["cal_bias"]) or not _finite(e["cal_error"]):
+                return False, f"{hid}: cal_bias/cal_error not finite ({e})"
+            if e["cal_error"] < 0:
+                return False, f"{hid}: cal_error negative ({e})"
+            if e["cal_error"] < abs(e["cal_bias"]) - 1e-9:
+                return False, f"{hid}: cal_error < |cal_bias| violates mean|e| >= |mean e| ({e})"
+            if not isinstance(e["n_probes"], int) or isinstance(e["n_probes"], bool) or e["n_probes"] < 1:
+                return False, f"{hid}: n_probes must be a positive int ({e})"
+        n_idx = payload.get("person_indices_n")
+        if n_idx is not None and len(reveal) != n_idx:
+            return False, f"{hid}: calibration_reveal count {len(reveal)} != person_indices_n {n_idx}"
+        parts.append(f"reveal×{len(reveal)}")
     return True, f"{hid}: ✓ {', '.join(parts)}"
 
 

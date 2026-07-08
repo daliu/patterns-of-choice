@@ -5723,6 +5723,14 @@ def main() -> int:
             }
         if h9_person_indices:
             h9_block["person_indices_n"] = len(h9_person_indices)
+            # Per-person N=1 self-calibration reveal (§14.2). Descriptive only:
+            # signed cal_bias (self-enhancement direction) + cal_error (magnitude),
+            # never a score-out-of-N and never cross-person-ranked (§14.7). Mirrored
+            # on-device by selfCalibration() in poc-projection.js under the JS<->Python
+            # parity lock (scripts/check_impl_parity.py).
+            h9_block["calibration_reveal"] = [
+                {"user": u, **h9_person_indices[u]} for u in sorted(h9_person_indices)
+            ]
         if h9_block:
             hypotheses["H9"] = h9_block
 

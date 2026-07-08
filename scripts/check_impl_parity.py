@@ -556,6 +556,75 @@ else:
             ok(all_p, f"protectedValues: JS == Python on all {len(pv_users)} participants "
                       f"(professed set + first-wave read + §13.2 categorical never + empty-set-is-data)")
 
+    # --- selfCalibration parity (§14.2 H9 self-prediction calibration reveal) ---
+    # JS selfCalibration(records, tagMap) must equal, per user, the analyzer's
+    # calibration_person_indices(calibration_axis_records(...)). Both score pred
+    # and rev with the SAME item_score and take e = pred - rev on the axis channel.
+    # Synthetic edge users are appended POST-LOAD: cov-only (no axis probe -> absent
+    # <=> ok:false), NA-tags (off-axis tag -> pn==0 -> excluded), mixed (one admitted
+    # + one NA -> n_probes==1), and negative-bias (predicted LESS virtuous than acted
+    # -> e<0 -> cal_bias negative; value-neutral both directions, so JS must carry the
+    # SIGNED bias, never abs/clamp it). The cov PRICE channel is never pooled here.
+    if node and proj_js.exists():
+        cal_recs = A.load_predictions(
+            REPO_ROOT / "analysis" / "fixtures" / "sample-predictions.json")
+        cal_recs = cal_recs + [
+            # zz-cov-only: cost-of-virtue channel only -> no axis probe -> absent
+            {"user_id": "zz-cov-only", "domain": "truth-telling", "channel": "cov",
+             "predicted_rung": "1000", "realized_rung": "never"},
+            # zz-na-tags: axis probe whose predicted tag is off-axis -> NA (pn==0), excluded
+            {"user_id": "zz-na-tags", "domain": "truth-telling", "channel": "axis",
+             "stakes_pool": None, "predicted_tags": ["zz:not-a-real-tag"],
+             "realized_tags": ["truth:partial"]},
+            # zz-mixed: one admitted probe + one NA probe -> n_probes == 1
+            {"user_id": "zz-mixed", "domain": "truth-telling", "channel": "axis",
+             "stakes_pool": None, "predicted_tags": ["truth:commission"],
+             "realized_tags": ["truth:partial"]},
+            {"user_id": "zz-mixed", "domain": "truth-telling", "channel": "axis",
+             "stakes_pool": None, "predicted_tags": ["zz:not-a-real-tag"],
+             "realized_tags": ["truth:commission"]},
+            # zz-neg: predicted LESS virtuous than acted -> e<0 -> cal_bias negative
+            {"user_id": "zz-neg", "domain": "truth-telling", "channel": "axis",
+             "stakes_pool": None, "predicted_tags": ["truth:partial"],
+             "realized_tags": ["truth:commission"]},
+        ]
+        cal_users = sorted({r["user_id"] for r in cal_recs})
+        py_cal = A.calibration_person_indices(A.calibration_axis_records(cal_recs, TAG_MAP))
+        cal_script = (
+            "const P = require(%s);\n"
+            "const tagMap = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const out = {};\n"
+            "for (const u of users) {\n"
+            "  out[u] = P.selfCalibration(recs.filter(r => r.user_id === u), tagMap);\n"
+            "}\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)), json.dumps(str(tagmap_json)))
+        cproc = subprocess.run([node, "-e", cal_script, json.dumps(cal_recs), json.dumps(cal_users)],
+                               capture_output=True, text=True)
+        if cproc.returncode != 0:
+            ok(False, "node selfCalibration run", cproc.stderr.strip()[:300])
+        else:
+            js_cal = json.loads(cproc.stdout)
+            all_c = True
+            for u in cal_users:
+                p, j = py_cal.get(u), js_cal.get(u, {})
+                if p is None:
+                    # excluded on the Python side (no admitted axis probe) <=> ok=false in JS
+                    m = (j.get("ok") is False and j.get("cal_bias") is None
+                         and j.get("cal_error") is None and j.get("n_probes") == 0)
+                else:
+                    m = (j.get("ok") is True
+                         and abs(p["cal_bias"] - j.get("cal_bias", 1e9)) < 1e-9
+                         and abs(p["cal_error"] - j.get("cal_error", 1e9)) < 1e-9
+                         and p["n_probes"] == j.get("n_probes"))
+                all_c = all_c and m
+                if not m:
+                    ok(False, f"selfCalibration parity user {u}", f"py={p} js={j}")
+            ok(all_c, f"selfCalibration: JS == Python on all {len(cal_users)} participants "
+                      f"(axis-channel-only + NA gate + signed cal_bias + absent<=>ok:false)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

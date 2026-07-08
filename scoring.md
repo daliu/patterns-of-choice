@@ -482,6 +482,8 @@ cal_error_i = mean_p |e_i^p|      # magnitude; lower = better self-knowledge
 
 **N=1 interpretability.** Because `pred` and `rev` sit on the *same* pre-defined axis (and the CoV channel on the same external dollar ladder), no cross-scale or cross-person standardization is needed — contrast the §6 gap (`interpretation.md` "Single-user domains"). `cal_bias_i` and `cal_error_i` are therefore meaningful for a single user and **eligible for the personal reveal without cohort norms** (relevant to `runtime-architecture.md` §10 #1). This is the §13 "self-against-self, N-of-1" case extended to a genuinely new quantity (self-knowledge). The reveal renders them descriptively ("you tend to predict yourself as more generous than you act, by about X, across N probes") — never a score-out-of-N (`concept.md`).
 
+**Status (BUILT — on-device 2026-07-08).** `selfCalibration` in `poc-projection.js` now ships this within-person reveal, JS↔Python parity-locked (§14.8) — the **seventh** shipped N=1 reveal for the H9–R6 family (after R1 §19.7 / R6 §20.7 / H12 §18.7 / H10 §15.7 / H11 §16.7 / R2 §17.7). H9b's discriminant stays cohort-level (§14.4, Python-only).
+
 The H9a/H9b/H9c statistics below are *cohort* research tests (like §9's H8 statistics), separate from this within-person reveal read.
 
 ### 14.3 H9a — self-enhancement bias
@@ -533,6 +535,19 @@ A participant enters H9c with ≥ 1 valid axis-channel error in *each* pool.
 - **No cross-channel pooling.** The axis-channel indices and the CoV-channel price errors are never averaged or correlated into one "self-knowledge score" (different units; a forced single-subject correlation has no reference distribution — the §13.5 discipline).
 - **No composite calibration score, no cross-person ranking of calibration in any user-facing surface.** The cohort H9a/b/c statistics live only in the research analysis; the reveal stays within-person and descriptive (§14.2).
 - **No finite calibration error across a censored cost-of-virtue endpoint** (§14.1). "I'll never sell out" predicted, then a \$5M break observed, is a categorical mismatch, not a number.
+
+### 14.8 On-device reveal (SHIPPED 2026-07-08)
+
+`selfCalibration(records, tagMap)` in `poc-projection.js` computes the §14.2 N=1 reveal on-device, mirroring — per user — `calibration_person_indices(calibration_axis_records(...))` in `analyze.py` on the same resolved prediction↔choice pairs:
+
+    { cal_bias: 0.42,    // mean_p e  — SIGNED self-enhancement (>0 = predicts more virtuous than acts)
+      cal_error: 0.55,   // mean_p |e| — magnitude; lower = better self-knowledge
+      n_probes: 6,       // admitted axis probes (descriptive denominator; small N caveated by the render)
+      ok: true }         // false ⇔ no admitted axis probe at all
+
+- **Exact analyzer mirror.** Both sides score `pred` and `rev` with the *same* parity-locked `itemScore` on the domain's primary axis, take `e = pred − rev`, and average over the participant's admitted axis probes. The **axis channel only** is consumed (`channel === "axis"`); the cost-of-virtue price channel is never pooled in (§14.7) and carries its own §14.1 censoring, deliberately absent from the reveal. The NA gate matches exactly (`pred.n === 0 || rev.n === 0` ⇔ the analyzer's `pn == 0 or rn == 0` skip — an item with no primary-axis contribution is excluded, §2.2); `ok: false` exactly when the user has no admitted axis probe ⇔ the analyzer omits them. `check_impl_parity.py` locks JS == Python on every fixture participant plus four edge users (cov-only → absent, off-axis-tag NA → excluded, mixed admitted+NA → `n_probes == 1`, negative-bias → signed `cal_bias`) — parity **15→16**.
+- **No composite score, no cross-person rank (§14.7).** `check_h9` shape-locks the emitted `H9.calibration_reveal`: every row is EXACTLY `{user, cal_bias, cal_error, n_probes}` — exact-match admits no `calibration_score` / `self_knowledge_score` / `accuracy` / `rank` / `percentile` / `verdict` / `grade` / `cross_person` key. The cohort H9a/b/c statistics stay research-side; the reveal stays within-person and descriptive (never a score-out-of-N), with `len(reveal) == person_indices_n` count-coherence.
+- **Value-neutral, both directions.** `cal_bias` is SIGNED: over-confidence (predicts more virtuous than acts) and under-confidence (a very negative bias — modesty) are both DESCRIBED, never ranked. `cal_error` is a magnitude carrying the arithmetic invariant `cal_error >= |cal_bias|` (mean|e| ≥ |mean e|, Jensen) — gate-enforced, analogous to R2's `n_professed ≤ n_slots_probed`; a lower `cal_error` (better self-knowledge) is never cross-person-ranked in any user-facing surface. Deterministic — no bootstrap, no seed consumed.
 
 ---
 
