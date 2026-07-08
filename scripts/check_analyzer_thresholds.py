@@ -58,10 +58,12 @@ Expected outcomes on the current synthetic fixtures:
   regression (check_h12_pairing_lock): a declined judgment drops the pair —
   never imputed to 0 — and the signed delta (other − self) is preserved so a
   harsher-on-self record stays NEGATIVE, never clamped (the value-neutral lock).
-- R1 (moral identity centrality): R1a internalization-facet reliability (split-
-  half odd/even, lower CI ≥ 0.40) and R1c the internalization > symbolization
-  anchor (mean_i of the within-scale delta > 0, directional) both met = True on
-  the fixtures, with ≥1 complete two-facet profile. Plus the §13.5 NO-POOL
+- R1 (moral identity centrality): R1a internalization-facet AND R1a_symbolization
+  symbolization-facet reliability (split-half odd/even, lower CI ≥ 0.40, the two
+  facets gated SEPARATELY — never one pooled reliability figure) and R1c the
+  internalization > symbolization anchor (mean_i of the within-scale delta > 0,
+  directional) all met = True on the fixtures, with ≥1 complete two-facet profile;
+  each reliability leg's met flag is re-derived against its CI. Plus the §13.5 NO-POOL
   regression (check_r1_no_pool): the two facets are DISJOINT item sets scored
   separately — never averaged into one moral-identity score — a declined item
   drops (never imputed to 0), and a facet below the item floor is suppressed.
@@ -136,7 +138,7 @@ EXPECTATIONS = {
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True, "H12b_discriminant": True}},
-    "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1c": True, "R1b_moderation": True}},
+    "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1a_symbolization": True, "R1c": True, "R1b_moderation": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True, "R6b_discriminant": True}},
     "A3": {"kind": "a3", "kappa_met": True},
     "A4": {"kind": "a4", "any_met": True, "a4b_supported": True},
@@ -602,9 +604,12 @@ def check_h12(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
 
 def check_r1(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
     """R1 moral identity centrality. Assert each present sub-hypothesis (R1a the
-    internalization-facet split-half reliability, R1c the internalization >
-    symbolization directional anchor) hit its pre-registered outcome, and that ≥1
-    participant has a complete two-facet profile. Crucially, assert the §13.5
+    internalization-facet split-half reliability, R1a_symbolization the same for the
+    symbolization facet — the two facets gated SEPARATELY, §13.5 — and R1c the
+    internalization > symbolization directional anchor) hit its pre-registered outcome,
+    and that ≥1 participant has a complete two-facet profile. Each reliability leg's
+    met flag is additionally re-derived against its CI (the gate = the arithmetic).
+    Crucially, assert the §13.5
     NO-POOL discipline is honored in the shape of the payload itself: the block
     must expose the two facets SEPARATELY (mean_internalization / mean_symbolization)
     and must NOT carry any pooled 'centrality'/'moral-identity' scalar. The facet-
@@ -647,6 +652,25 @@ def check_r1(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             )
         if sup != r1b.get("pre_registered_threshold_met"):
             return False, f"{hid}.R1b_moderation: supported vs pre_registered_threshold_met mismatch ({r1b})"
+    # The reliability legs (R1a internalization + R1a_symbolization, the two facets kept
+    # SEPARATE, §13.5) must EQUAL their arithmetic: pre_registered_threshold_met ⇔ (lower
+    # 95% CI ≥ threshold_low). Re-derive on the shipped payload so the gate can't be
+    # satisfied by a stamped flag alone (mirrors the R1b_moderation re-derivation above).
+    # A degenerate leg ships ci_low=None (NaN→None via _h9_json) ⇒ met must be None too.
+    for rel in ("R1a", "R1a_symbolization"):
+        blk = payload.get(rel)
+        if blk is None:
+            continue
+        lo, thr = blk.get("ci_low"), blk.get("threshold_low")
+        met = blk.get("pre_registered_threshold_met")
+        if thr is None:
+            return False, f"{hid}.{rel}: missing threshold_low ({blk})"
+        expected = None if (lo is None or lo != lo) else bool(lo >= thr)
+        if met != expected:
+            return False, (
+                f"{hid}.{rel}: pre_registered_threshold_met={met!r} but (ci_low {lo!r} ≥ "
+                f"threshold_low {thr}) = {expected!r} — the reliability gate must equal the arithmetic"
+            )
     if "mean_internalization" not in payload or "mean_symbolization" not in payload:
         return False, (
             f"{hid}: the two facets must be exposed separately "

@@ -2847,6 +2847,36 @@ def compute_r1a_reliability(records: list[dict]) -> dict[str, Any] | None:
     }
 
 
+def compute_r1a_symbolization_reliability(records: list[dict]) -> dict[str, Any] | None:
+    """R1a-symbolization (§19.2): the reliability leg for the SYMBOLIZATION facet —
+    identical machinery to compute_r1a_reliability (split each user's sessions
+    odd/even, recompute the facet on each half, correlate across users; supported iff
+    the lower 95% bootstrap CI of the correlation ≥ R1A_RELIABILITY_FLOOR), but on the
+    public/symbolization dimension. Reported SEPARATELY from the internalization leg
+    (§13.5 — the two facets are never pooled into one reliability figure); together the
+    two legs give R1 its complete two-facet reliability story. Symbolization is the more
+    situational, less trait-stable dimension (Aquino & Reed 2002), so passing this bar
+    is a genuine test, not a foregone conclusion. Seed BOOTSTRAP_SEED+35."""
+    odd, even = _odd_even_sessions(records)
+    c_odd = centrality_facet_by_user(records, "symbolization", lambda u, s: s in odd.get(u, set()))
+    c_even = centrality_facet_by_user(records, "symbolization", lambda u, s: s in even.get(u, set()))
+    shared = sorted(set(c_odd) & set(c_even))
+    if len(shared) < 3:
+        return None
+    xs = [c_odd[u] for u in shared]
+    ys = [c_even[u] for u in shared]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + 35)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_low != ci_low else bool(ci_low >= R1A_RELIABILITY_FLOOR)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n": len(shared),
+        "threshold_low": R1A_RELIABILITY_FLOOR, "pre_registered_threshold_met": met,
+    }
+
+
 def compute_r1c_internalization_anchor(
     records: list[dict], min_items: int = R1_MIN_ITEMS
 ) -> dict[str, Any] | None:
@@ -4353,6 +4383,7 @@ def render_r1_result(
     mean_internalization: float,
     mean_symbolization: float,
     r1b: dict[str, Any] | None = None,
+    r1a_symbol: dict[str, Any] | None = None,
 ) -> str:
     """R1 moral identity centrality (scoring.md §19). Two DISJOINT facets reported
     SEPARATELY — internalization (private) and symbolization (public) — never pooled
@@ -4361,7 +4392,7 @@ def render_r1_result(
     be integrity OR rigid self-righteousness — the dark side of moral identity), and
     internalizing is not ranked above symbolizing; the reveal describes the profile,
     never a verdict (§19.4)."""
-    if r1a is None and r1c is None and profile_n == 0 and r1b is None:
+    if r1a is None and r1a_symbol is None and r1c is None and profile_n == 0 and r1b is None:
         return (
             "(R1: insufficient data — supply --identity-log with per-item "
             "internalization + symbolization centrality responses)"
@@ -4383,6 +4414,15 @@ def render_r1_result(
         )
     else:
         lines.append("  R1a centrality reliability: insufficient data (need ≥3 users scorable in both odd & even session halves)")
+    if r1a_symbol is not None:
+        lines.append(
+            f"  R1a centrality reliability (split-half odd/even, corr of symbolization)  r = {r1a_symbol['r']:+.3f}, "
+            f"95% CI {_ci_str(r1a_symbol)}, n = {r1a_symbol['n']}"
+        )
+        lines.append(
+            f"     threshold (lower CI ≥ {r1a_symbol['threshold_low']:.2f}): "
+            f"{_met_glyph(r1a_symbol['pre_registered_threshold_met'])}"
+        )
     if r1c is not None:
         lines.append(
             f"  R1c internalization > symbolization (mean_i of the within-scale delta, cohort anchor)  "
@@ -5421,6 +5461,7 @@ def main() -> int:
     # centrality × the §6 gap / H10–H12) are cohort-coupled and DEFERRED. Python-only,
     # parity stays green — no on-device reveal this increment.
     r1a_result: dict[str, Any] | None = None
+    r1a_symbol_result: dict[str, Any] | None = None
     r1c_result: dict[str, Any] | None = None
     r1_profile_n = 0
     r1_mean_internalization = 0.0
@@ -5444,6 +5485,7 @@ def main() -> int:
             r1_mean_internalization = sum(_r1_intern[u] for u in _r1_both) / len(_r1_both)
             r1_mean_symbolization = sum(_r1_symbol[u] for u in _r1_both) / len(_r1_both)
         r1a_result = compute_r1a_reliability(identity_records)
+        r1a_symbol_result = compute_r1a_symbolization_reliability(identity_records)
         r1c_result = compute_r1c_internalization_anchor(identity_records)
         # The N=1 on-device reveal (§19.1): each person's two facet means, exposed
         # SEPARATELY (never pooled into one centrality scalar, §13.5) — None ⇔ that
@@ -5864,6 +5906,10 @@ def main() -> int:
         r1_block: dict[str, Any] = {}
         if r1a_result is not None:
             r1_block["R1a"] = _h9_json(r1a_result)
+        if r1a_symbol_result is not None:
+            # R1a for the SYMBOLIZATION facet — same split-half machinery, reported as a
+            # SEPARATE reliability leg (§13.5, never pooled with internalization).
+            r1_block["R1a_symbolization"] = _h9_json(r1a_symbol_result)
         if r1c_result is not None:
             r1_block["R1c"] = _h9_json(r1c_result)
         if r1b_moderation_result is not None:
@@ -6097,13 +6143,13 @@ def main() -> int:
                 h12a_result, h12c_result, h12_person_asymmetry_n, h12_mean_asymmetry,
                 h12b_discriminant_result,
             ))
-        if (r1a_result is not None or r1c_result is not None or r1_profile_n
-                or r1b_moderation_result is not None):
+        if (r1a_result is not None or r1a_symbol_result is not None or r1c_result is not None
+                or r1_profile_n or r1b_moderation_result is not None):
             print()
             print(render_r1_result(
                 r1a_result, r1c_result, r1_profile_n,
                 r1_mean_internalization, r1_mean_symbolization,
-                r1b_moderation_result,
+                r1b_moderation_result, r1a_symbol_result,
             ))
         if (r6a_result is not None or r6d_result is not None or r6_profile_n
                 or r6b_discriminant_result is not None):
