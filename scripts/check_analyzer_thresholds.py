@@ -138,7 +138,7 @@ EXPECTATIONS = {
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True, "H12b_discriminant": True}},
-    "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1a_symbolization": True, "R1c": True, "R1b_moderation": True, "R1b_h12_dampening": True}},
+    "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1a_symbolization": True, "R1c": True, "R1b_moderation": True, "R1b_h12_dampening": True, "R1b_h10_dampening": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True, "R6b_discriminant": True}},
     "A3": {"kind": "a3", "kappa_met": True},
     "A4": {"kind": "a4", "any_met": True, "a4b_supported": True},
@@ -177,6 +177,7 @@ def run_analyzer() -> dict:
         "--a4b-log", str(FIXTURES / "sample-a4b-log.json"),
         "--r1b-log", str(FIXTURES / "sample-r1b-log.json"),
         "--r1b-h12-log", str(FIXTURES / "sample-r1b-h12-log.json"),
+        "--r1b-h10-log", str(FIXTURES / "sample-r1b-h10-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -669,6 +670,23 @@ def check_r1(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             )
         if sup != r1b_h12.get("pre_registered_threshold_met"):
             return False, f"{hid}.R1b_h12_dampening: supported vs pre_registered_threshold_met mismatch ({r1b_h12})"
+    # R1b H10-DAMPENING leg (§19.5) — the same directional gate on a THIRD independent channel
+    # (observer gap O_i ~ internalization): supported ⇔ upper 95% CI of corr(internalization, O)
+    # < ceiling (0.0). Re-derive on the shipped payload (two-sidedness proven in
+    # check_r1b_h10_dampening_lock).
+    r1b_h10 = payload.get("R1b_h10_dampening")
+    if r1b_h10 is not None:
+        ch, ceil, sup = r1b_h10.get("ci_high"), r1b_h10.get("ceiling"), r1b_h10.get("supported")
+        if ceil is None:
+            return False, f"{hid}.R1b_h10_dampening: missing ceiling ({r1b_h10})"
+        expected = None if ch is None else bool(ch < ceil)
+        if sup != expected:
+            return False, (
+                f"{hid}.R1b_h10_dampening: supported={sup!r} but (ci_high {ch!r} < ceiling {ceil}) "
+                f"= {expected!r} — the directional gate must equal the arithmetic"
+            )
+        if sup != r1b_h10.get("pre_registered_threshold_met"):
+            return False, f"{hid}.R1b_h10_dampening: supported vs pre_registered_threshold_met mismatch ({r1b_h10})"
     # The reliability legs (R1a internalization + R1a_symbolization, the two facets kept
     # SEPARATE, §13.5) must EQUAL their arithmetic: pre_registered_threshold_met ⇔ (lower
     # 95% CI ≥ threshold_low). Re-derive on the shipped payload so the gate can't be
@@ -3130,6 +3148,159 @@ def check_r1b_h12_dampening_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_r1b_h10_dampening_lock() -> tuple[bool, list[str]]:
+    """The R1b H10-DAMPENING discipline (§19.5), asserted directly against the code — the SECOND of
+    R1b's three deferred H10–H12 dampening legs. R1b should moderate not only the §6 over-claim gap
+    (the gap leg) and the H12 self–other asymmetry (the H12 leg) but also the H10 OBSERVER EFFECT: the
+    per-person observer gap O_i = mean(public score) − mean(anonymous score) (§15, the read the H10c
+    anchor aggregates). compute_r1b_h10_dampening regresses O_i on internalization_i and calls a more
+    internalized moral identity a SIGNIFICANT dampener of the observer effect iff the UPPER 95%
+    bootstrap CI of corr(internalization_i, O_i) < R1B_MODERATION_CEILING (0.0). DIRECTIONAL — a
+    signed-slope test, not an R²-ceiling discriminant. This lock proves, on synthetic cohorts with
+    KNOWN ground truth built through the REAL §19.1 centrality + §2 item_score → §15 observer-gap
+    pipelines (context_item_records → observer_gap_by_user), holding ONE internalization profile FIXED
+    and flipping the verdict purely through the INDEPENDENT context (O_i) channel:
+      (i)   NEGATIVE (O = -z(internalization) + noise): corr < 0, upper CI < 0, SUPPORTED True —
+            a more internalized moral identity predicts a SMALLER public-vs-anonymous shift (Aquino &
+            Reed 2002's internalization/private-regard dimension → less observation-dependence);
+      (ii)  NULL (O ⊥ internalization): corr ≈ 0, CI straddles 0, SUPPORTED False — no dampening;
+      (iii) POSITIVE (O = +z(internalization) + noise): corr > 0, upper CI > 0, SUPPORTED False — the
+            WRONG direction is not rewarded (the gate is ONE-SIDED, unlike a two-tailed |slope| test);
+      (iv)  SUPPORTED is EXACTLY (upper-CI < 0) on all three cohorts — the directional gate cannot be bypassed;
+      (v)   NO ALGEBRAIC TRAP — all three cohorts share the IDENTICAL internalization log (same profile);
+            ONLY the O channel differs, yet the verdict flips True→False→False. internalization rides the
+            identity log; O_i rides the context log's public/anonymous items scored through the SAME
+            parity-locked §2 item_score the revealed pipeline uses — INDEPENDENT code paths, no affine
+            identity. Had one existed the ⊥ (NULL) cohort would pin |corr| ≡ 1, yet here it is ~0 — the
+            gate tracks the DATA, not a manufactured identity;
+      (vi)  the inclusion floor holds — < R1B_MIN_PARTICIPANTS joined users returns None (never a bare scalar);
+      (vii) the reveal is COHORT-level and value-neutral — O_i is DUAL-READ (a larger gap is norm-
+            responsiveness OR performativity; a smaller gap is authentic consistency OR context-
+            insensitivity), so no observer pole is ranked morally better, and never a per-person verdict;
+            no pooled centrality scalar. (H11/parochialism dampening stays DEFERRED — value-charged.)
+    The DIRECTIONAL analog of the H12-dampening lock on a THIRD independent (context) channel — one-sided,
+    so it additionally proves the WRONG-direction (POSITIVE) cohort is rejected. Seeds found under the +37
+    bootstrap seed via the scratchpad find_h10_seeds.py (NOT committed); the O channel is realized by
+    quantizing the target onto achievable honesty-tag item scores (anonymous pole fixed at mean 0.0)."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import itertools
+    import random
+
+    import analyze as A
+    N = 40
+    USERS = [f"lk-u{i:02d}" for i in range(N)]
+    OFFS = (-0.30, -0.10, 0.10, 0.30)          # identity: 4 Likert items, mean == target exactly (Σoff = 0)
+    tag_map = A.load_tag_axis_map(A.DEFAULT_TAG_MAP)
+
+    # honesty value -> tag (truth-telling primary axis); context:* tags are pure stratifiers.
+    VAL2TAG = {1.0: "truth:commission", 0.7: "truth:state", 0.5: "truth:partial",
+               0.3: "truth:implicit", -0.3: "discretion", -0.5: "lie:white",
+               -0.7: "lie:omission", -1.0: "lie:commission"}
+    VALS = sorted(VAL2TAG)
+    PAIRS = [((a, b), (a + b) / 2.0) for a, b in itertools.combinations_with_replacement(VALS, 2)]
+    SCALE = 0.33                               # keep O within the [-1, 1] realizable item-score range
+
+    def closest_pair(t):
+        return min(PAIRS, key=lambda p: abs(p[1] - t))
+
+    def grid(lo, hi, seed, n=N):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def zscore(xs):
+        m = sum(xs) / len(xs)
+        sd = (sum((x - m) ** 2 for x in xs) / (len(xs) - 1)) ** 0.5
+        return [(x - m) / sd for x in xs]
+
+    CEN = grid(3.2, 6.2, 4242)                 # internalization profile — FIXED across all cohorts
+    ZCEN = zscore(CEN)
+
+    def build_identity(cen, users):
+        recs = []
+        for u, t in zip(users, cen):
+            for j, off in enumerate(OFFS):
+                recs.append({"user": u, "session": f"{u}-s{j}", "facet": "internalization",
+                             "item_id": f"{u}-int-{j}", "response": round(t + off, 4)})
+        return recs
+
+    def build_context(o_targets, users):
+        # realize O_i via honesty-tag items: anonymous pole fixed at mean 0.0 (0.5 + -0.5),
+        # public pole the 2-item pair whose mean is grid-closest to SCALE*target ⇒ O_i ≈ SCALE*target.
+        recs = []
+        for u, t in zip(users, o_targets):
+            (pa, pb), _ = closest_pair(max(-1.0, min(1.0, SCALE * t)))
+            sess, dom = f"{u}-h10s", "truth-telling"
+            for i, val in enumerate((pa, pb)):
+                recs.append({"user_id": u, "session_id": sess, "domain": dom,
+                             "item_id": f"{u}-pub-{i}", "tags": [VAL2TAG[val], "context:public"],
+                             "response_time_ms": 5000})
+            for i, val in enumerate((0.5, -0.5)):
+                recs.append({"user_id": u, "session_id": sess, "domain": dom,
+                             "item_id": f"{u}-anon-{i}", "tags": [VAL2TAG[val], "context:anonymous"],
+                             "response_time_ms": 5000})
+        return recs
+
+    def make_o(mode, seed):
+        noise = zscore(grid(-1.0, 1.0, seed))
+        if mode == "neg":
+            return [-ZCEN[i] + 0.55 * noise[i] for i in range(N)]
+        if mode == "pos":
+            return [ZCEN[i] + 0.55 * noise[i] for i in range(N)]
+        return noise[:]
+
+    IDENTITY = build_identity(CEN, USERS)
+
+    def cohort(mode, seed):
+        return A.compute_r1b_h10_dampening(build_context(make_o(mode, seed), USERS), IDENTITY, tag_map)
+
+    neg = cohort("neg", 2)                      # seeds found under the +37 bootstrap seed (find_h10_seeds.py)
+    nul = cohort("null", 3)
+    pos = cohort("pos", 2)
+    # tiny cohort: below the R1B_MIN_PARTICIPANTS join floor → None
+    tiny_users = USERS[:5]
+    tiny = A.compute_r1b_h10_dampening(
+        build_context([-ZCEN[i] for i in range(5)], tiny_users),
+        build_identity(CEN[:5], tiny_users), tag_map,
+    )
+
+    render = A.render_r1_result(None, None, 0, 0.0, 0.0, None, None, None, neg)
+    POOLED = {"centrality", "centrality_score", "moral_identity", "moral_identity_score",
+              "mean_centrality", "observer_score", "observer_effect_score", "moderation_score"}
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["ci_high"] == r["ci_high"] and r["ci_high"] < r["ceiling"])
+
+    checks = [
+        ("NEGATIVE (O = -z(internalization) + noise): SUPPORTED True, corr < 0, upper CI < 0",
+         neg is not None and neg["supported"] is True and neg["ci_high"] < 0.0
+         and neg["r"] < -0.30 and neg["n_participants"] == 40),
+        ("NULL (O ⊥ internalization): SUPPORTED False, corr ≈ 0, CI straddles 0",
+         nul is not None and nul["supported"] is False and nul["ci_low"] < 0.0 < nul["ci_high"]
+         and abs(nul["r"]) < 0.30),
+        ("POSITIVE (O = +z(internalization) + noise): SUPPORTED False — the WRONG direction is one-sided rejected",
+         pos is not None and pos["supported"] is False and pos["ci_low"] > 0.0 and pos["r"] > 0.30),
+        ("SUPPORTED is EXACTLY (upper-CI < 0) on all three cohorts — the directional gate cannot be bypassed",
+         exact(neg) and exact(nul) and exact(pos)),
+        ("NO ALGEBRAIC TRAP: identical internalization profile, verdict flips True→False→False via the independent O channel",
+         neg is not None and nul is not None and pos is not None
+         and neg["supported"] is True and nul["supported"] is False and pos["supported"] is False
+         and abs(nul["r"]) < 0.30),
+        ("inclusion floor: < R1B_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — O_i DUAL-READ (observer gap not scored better), never ranked / per-person / pooled",
+         "R1b H10-DAMPENING" in render and "SMALLER observer effect" in render
+         and "a larger observer gap is dual-read" in render and "never a per-person verdict" in render
+         and not (POOLED & set(neg))),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r1b-h10-dampening: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def main() -> int:
     out = run_analyzer()
     hypotheses = out.get("hypotheses")
@@ -3285,6 +3456,12 @@ def main() -> int:
     for m in r1h12_msgs:
         print(m)
     if not r1h12_ok:
+        all_pass = False
+
+    r1h10_ok, r1h10_msgs = check_r1b_h10_dampening_lock()
+    for m in r1h10_msgs:
+        print(m)
+    if not r1h10_ok:
         all_pass = False
 
     if all_pass:

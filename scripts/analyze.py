@@ -1865,12 +1865,15 @@ def compute_h10a_reliability(records: list[dict[str, Any]]) -> dict[str, Any] | 
     }
 
 
-def compute_h10c_observer_effect(records: list[dict[str, Any]]) -> dict[str, Any] | None:
-    """H10c (observer-effect anchor, directional): per user,
-        obs_gap_i = mean(score over observed/public items) − mean(over anonymous items)
-    pooled across constructs (§1.4). Supported iff the lower 95% CI of
-    mean_i obs_gap_i > 0 (one-sided). A user enters with ≥1 item in each pole.
-    Axis scores only; no cross-channel pooling. Seed BOOTSTRAP_SEED+14."""
+def observer_gap_by_user(records: list[dict[str, Any]]) -> dict[str, float]:
+    """Per-person H10 observer gap
+        O_i = mean(score over observed/public items) − mean(score over anonymous items)
+    pooled across constructs (§1.4/§15). A user is keyed iff they have ≥1 item in EACH
+    pole (observed AND anonymous) — the SAME inclusion the H10c cohort anchor uses, so
+    O_i means exactly what that anchor aggregates. Deterministic sorted-user ordering.
+    Signed: a positive O_i is the self-presentation shift (more concern when observed);
+    a negative O_i is more concern when anonymous. Value-neutral — never a per-person
+    verdict; callers apply their own participant floor on top of the ≥1/pole rule."""
     pub: dict[str, list[float]] = defaultdict(list)
     anon: dict[str, list[float]] = defaultdict(list)
     for r in records:
@@ -1878,9 +1881,20 @@ def compute_h10c_observer_effect(records: list[dict[str, Any]]) -> dict[str, Any
             pub[r["user"]].append(r["score"])
         elif r["context"] in H10_ANONYMOUS_CONTEXTS:
             anon[r["user"]].append(r["score"])
-    gaps: list[float] = []
-    for user in sorted(set(pub) & set(anon)):
-        gaps.append(sum(pub[user]) / len(pub[user]) - sum(anon[user]) / len(anon[user]))
+    return {
+        user: sum(pub[user]) / len(pub[user]) - sum(anon[user]) / len(anon[user])
+        for user in sorted(set(pub) & set(anon))
+    }
+
+
+def compute_h10c_observer_effect(records: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """H10c (observer-effect anchor, directional): per user,
+        obs_gap_i = mean(score over observed/public items) − mean(over anonymous items)
+    pooled across constructs (§1.4). Supported iff the lower 95% CI of
+    mean_i obs_gap_i > 0 (one-sided). A user enters with ≥1 item in each pole.
+    Axis scores only; no cross-channel pooling. Seed BOOTSTRAP_SEED+14."""
+    gaps_by_user = observer_gap_by_user(records)
+    gaps = [gaps_by_user[user] for user in sorted(gaps_by_user)]
     if len(gaps) < 3:
         return None
     rng = random.Random(BOOTSTRAP_SEED + 14)
@@ -2763,6 +2777,7 @@ R1B_MIN_PARTICIPANTS = 8       # cohort floor for the moderation regression (§1
 R1B_MODERATION_CEILING = 0.0   # upper 95% CI of corr(internalization, over-claim gap) must clear this (be < 0)
 R1B_SEED_OFFSET = 34           # BOOTSTRAP_SEED offset registry: next free slot after A4b (+33)
 R1B_H12_SEED_OFFSET = 36       # BOOTSTRAP_SEED offset registry: next free after R1a_symbolization (+35); R1b H12-dampening leg (§19.5)
+R1B_H10_SEED_OFFSET = 37       # BOOTSTRAP_SEED offset registry: next free after the H12-dampening leg (+36); R1b H10-dampening leg (§19.5)
 
 
 def _centrality_response(r: dict) -> float | None:
@@ -3010,6 +3025,69 @@ def compute_r1b_h12_dampening(
     if r is None:
         return None
     rng = random.Random(BOOTSTRAP_SEED + R1B_H12_SEED_OFFSET)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_high != ci_high else bool(ci_high < R1B_MODERATION_CEILING)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(rows),
+        "ceiling": R1B_MODERATION_CEILING, "supported": met,
+        "pre_registered_threshold_met": met,
+    }
+
+
+def compute_r1b_h10_dampening(
+    context_entries: list[dict],
+    identity_records: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+) -> dict[str, Any] | None:
+    """R1b H10-DAMPENING leg (§19.5) — the SECOND of R1b's three deferred H10–H12
+    dampening legs. Moral identity should not only shrink the §6 over-claim gap (the
+    R1b gap leg) and the H12 self–other asymmetry (the H12 leg) but also DAMPEN the H10
+    OBSERVER EFFECT: the public−anonymous concern shift. Regress each person's observer
+    gap O_i on their INTERNALIZATION centrality across the cohort:
+
+        internalization_i = centrality_facet_by_user(identity, "internalization")   (§19.1)
+        O_i               = observer_gap_by_user(context)[i]                         (§15, SIGNED)
+        r                 = corr(internalization_i, O_i)   (= the STANDARDIZED moderation slope)
+
+    Supported iff the UPPER 95% bootstrap CI of r < R1B_MODERATION_CEILING (0.0), one-
+    sided: a more internalized moral identity predicts a SIGNIFICANTLY smaller (more
+    negative) observer effect — an INTERNALIZED (private-regard) moral identity is by
+    construction less contingent on being watched, so it shifts less between public and
+    anonymous items (Aquino & Reed 2002's internalization dimension → less observation-
+    dependence, applied to the §15 self-presentation gap H10c already anchors as *the*
+    observer effect). DIRECTIONAL (a signed-slope test, not an R²-ceiling discriminant),
+    exactly like the R1b gap and H12 legs — it reuses R1B_MIN_PARTICIPANTS +
+    R1B_MODERATION_CEILING (the R1b family) with its OWN bootstrap seed, and (like the
+    R1b gap leg) takes RAW context entries + tag_map and parses O_i internally via
+    context_item_records → observer_gap_by_user.
+
+    The two channels are INDEPENDENT — internalization rides the identity log; O_i rides
+    the context log's public/anonymous items — so there is no algebraic identity linking
+    them (the two-sidedness check_r1b_h10_dampening_lock exploits). COHORT-level construct
+    validity, NEVER a per-person verdict: O_i is dual-read (a large gap = norm-
+    responsiveness OR performativity; a small/negative gap = authentic consistency OR
+    context-insensitivity), so no observer pole is scored "better", and neither
+    internalization pole is ranked (§19.4). This is the value-neutral, cohort-level H10
+    analog of the H12 leg; the H11 (parochialism) dampening leg stays DEFERRED because
+    calling parochialism a "bias to dampen" would violate H11's own Singer↔Williams value-
+    neutrality. Seed BOOTSTRAP_SEED+R1B_H10_SEED_OFFSET (+37)."""
+    intern = centrality_facet_by_user(identity_records, "internalization")
+    obs = observer_gap_by_user(context_item_records(context_entries, tag_map))
+    rows: list[tuple[float, float]] = []
+    for user in sorted(set(intern) & set(obs)):
+        iv = intern[user]
+        ov = obs[user]
+        if iv != iv or ov != ov:   # drop NaN on either channel — never imputed (§1.5)
+            continue
+        rows.append((iv, ov))
+    if len(rows) < R1B_MIN_PARTICIPANTS:
+        return None
+    xs = [row[0] for row in rows]
+    ys = [row[1] for row in rows]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + R1B_H10_SEED_OFFSET)
     ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
     met = None if ci_high != ci_high else bool(ci_high < R1B_MODERATION_CEILING)
     return {
@@ -4446,6 +4524,7 @@ def render_r1_result(
     r1b: dict[str, Any] | None = None,
     r1a_symbol: dict[str, Any] | None = None,
     r1b_h12: dict[str, Any] | None = None,
+    r1b_h10: dict[str, Any] | None = None,
 ) -> str:
     """R1 moral identity centrality (scoring.md §19). Two DISJOINT facets reported
     SEPARATELY — internalization (private) and symbolization (public) — never pooled
@@ -4454,7 +4533,8 @@ def render_r1_result(
     be integrity OR rigid self-righteousness — the dark side of moral identity), and
     internalizing is not ranked above symbolizing; the reveal describes the profile,
     never a verdict (§19.4)."""
-    if r1a is None and r1a_symbol is None and r1c is None and profile_n == 0 and r1b is None and r1b_h12 is None:
+    if (r1a is None and r1a_symbol is None and r1c is None and profile_n == 0
+            and r1b is None and r1b_h12 is None and r1b_h10 is None):
         return (
             "(R1: insufficient data — supply --identity-log with per-item "
             "internalization + symbolization centrality responses)"
@@ -4530,13 +4610,31 @@ def render_r1_result(
             "insufficient data (need the {identity, hypocrisy} shared-cohort bundle via --r1b-h12-log, "
             f"≥{R1B_MIN_PARTICIPANTS} joined participants)"
         )
+    if r1b_h10 is not None:
+        lines.append(
+            f"  R1b H10-DAMPENING (observer-effect gap O_i (public − anonymous) ~ internalization, standardized slope = corr)  "
+            f"r = {r1b_h10['r']:+.3f}, 95% CI {_ci_str(r1b_h10)}, n = {r1b_h10['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {r1b_h10['ceiling']:.1f}, one-sided): "
+            f"{_met_glyph(r1b_h10['pre_registered_threshold_met'])}  "
+            f"(a more internalized moral identity predicts a SMALLER observer effect — Aquino & Reed 2002's "
+            f"internalization dimension → less observation-dependence; §19.5)"
+        )
+    else:
+        lines.append(
+            "  R1b H10-dampening (does internalization predict a smaller public-vs-anonymous observer shift?): "
+            "insufficient data (need the {identity, context} shared-cohort bundle via --r1b-h10-log, "
+            f"≥{R1B_MIN_PARTICIPANTS} joined participants)"
+        )
     lines.append(
         "  Value-neutral: a highly self-defining moral identity is NOT scored as better than a peripheral one "
         "(centrality can be integrity OR rigid self-righteousness, §19.4); the facets are described, never ranked. "
         "R1c is a cohort construct-validity anchor, not a per-person verdict. R1b is a COHORT-level moderation "
         "read — never a per-person verdict, and a very negative gap is modesty, not scored better; the H12 "
-        "dampening leg is built (§19.5 — a very negative asymmetry is harsher-on-self, not scored better), the "
-        "H10/H11 legs remain deferred (cohort-coupled), see build-and-validate.md."
+        "dampening leg is built (§19.5 — a very negative asymmetry is harsher-on-self, not scored better) and the "
+        "H10 dampening leg is built (a larger observer gap is dual-read — norm-responsiveness OR performativity — "
+        "not scored better), only the H11 leg remains deferred (value-charged), see build-and-validate.md."
     )
     return "\n".join(lines)
 
@@ -5036,6 +5134,16 @@ def main() -> int:
              "internalization → smaller holier-than-thou asymmetry).",
     )
     parser.add_argument(
+        "--r1b-h10-log",
+        type=Path,
+        default=None,
+        help="Optional combined identity + context log (object with identity/context arrays for a "
+             "SHARED cohort — identity `user` must equal context `user_id`) for the R1b H10-DAMPENING leg "
+             "(§19.5, the second of R1b's H10–H12 dampening legs): regresses the observer-effect gap O_i "
+             "(public − anonymous) on internalization_i; supported iff the upper 95%% CI of "
+             "corr(internalization, O) < 0 (higher internalization → smaller observer effect).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -5497,6 +5605,27 @@ def main() -> int:
         r1b_h12_dampening_result = compute_r1b_h12_dampening(
             r1b_h12_bundle.get("hypocrisy", []),
             r1b_h12_bundle.get("identity", []),
+        )
+
+    # R1b H10-DAMPENING leg (§19.5, the second of R1b's H10–H12 legs): does a more
+    # internalized moral identity dampen the H10 observer effect O_i (public − anonymous)?
+    # Same {identity, context} shared-cohort bundle shape; context parsed with the same
+    # tag_map the H10 records above use. Independent channels ⇒ no algebraic identity.
+    r1b_h10_dampening_result: dict[str, Any] | None = None
+    if args.r1b_h10_log:
+        try:
+            with args.r1b_h10_log.open() as f:
+                r1b_h10_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading R1b H10-dampening log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(r1b_h10_bundle, dict):
+            print("ERROR: R1b H10-dampening log must be a JSON object with identity/context arrays", file=sys.stderr)
+            return 2
+        r1b_h10_dampening_result = compute_r1b_h10_dampening(
+            r1b_h10_bundle.get("context", []),
+            r1b_h10_bundle.get("identity", []),
+            tag_map,
         )
 
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
@@ -6052,6 +6181,21 @@ def main() -> int:
                 "supported": r1b_h12_dampening_result["supported"],
                 "pre_registered_threshold_met": r1b_h12_dampening_result["pre_registered_threshold_met"],
             }
+        if r1b_h10_dampening_result is not None:
+            # R1b H10-DAMPENING leg — COHORT-level directional slope (§19.5), the second of
+            # R1b's three deferred H10–H12 dampening legs. supported is EXACTLY (corr
+            # upper-CI < ceiling 0.0) over INDEPENDENT channels (internalization ← identity
+            # log, O_i ← context log) ⇒ no algebraic identity; the gate re-derives it
+            # (check_r1b_h10_dampening_lock). Never a per-person verdict.
+            r1_block["R1b_h10_dampening"] = {
+                "r": r1b_h10_dampening_result["r"],
+                "ci_low": _nan_to_none(r1b_h10_dampening_result["ci_low"]),
+                "ci_high": _nan_to_none(r1b_h10_dampening_result["ci_high"]),
+                "ceiling": r1b_h10_dampening_result["ceiling"],
+                "n_participants": r1b_h10_dampening_result["n_participants"],
+                "supported": r1b_h10_dampening_result["supported"],
+                "pre_registered_threshold_met": r1b_h10_dampening_result["pre_registered_threshold_met"],
+            }
         if r1_block or r1_profile_n:
             r1_block["profile_n"] = r1_profile_n
             # Two facets exposed SEPARATELY — no pooled "centrality" key (§13.5).
@@ -6272,13 +6416,13 @@ def main() -> int:
             ))
         if (r1a_result is not None or r1a_symbol_result is not None or r1c_result is not None
                 or r1_profile_n or r1b_moderation_result is not None
-                or r1b_h12_dampening_result is not None):
+                or r1b_h12_dampening_result is not None or r1b_h10_dampening_result is not None):
             print()
             print(render_r1_result(
                 r1a_result, r1c_result, r1_profile_n,
                 r1_mean_internalization, r1_mean_symbolization,
                 r1b_moderation_result, r1a_symbol_result,
-                r1b_h12_dampening_result,
+                r1b_h12_dampening_result, r1b_h10_dampening_result,
             ))
         if (r6a_result is not None or r6d_result is not None or r6_profile_n
                 or r6b_discriminant_result is not None):
