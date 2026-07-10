@@ -2759,9 +2759,10 @@ R1_FACETS = ("internalization", "symbolization")
 # relationship, NEVER a per-person verdict (a very negative gap is modesty, not "better").
 # The H10–H12 dampening legs (does internalization also blunt the framing/anchor/decoy
 # effects) are a DEFERRED R1b extension — they need two more cohort channels. Seed +34.
-R1B_MIN_PARTICIPANTS = 8       # cohort floor for the moderation regression (§19.5)
+R1B_MIN_PARTICIPANTS = 8       # cohort floor for the moderation regression (§19.5); shared by the H12-dampening leg
 R1B_MODERATION_CEILING = 0.0   # upper 95% CI of corr(internalization, over-claim gap) must clear this (be < 0)
 R1B_SEED_OFFSET = 34           # BOOTSTRAP_SEED offset registry: next free slot after A4b (+33)
+R1B_H12_SEED_OFFSET = 36       # BOOTSTRAP_SEED offset registry: next free after R1a_symbolization (+35); R1b H12-dampening leg (§19.5)
 
 
 def _centrality_response(r: dict) -> float | None:
@@ -2951,6 +2952,64 @@ def compute_r1b_moderation(
     if r is None:
         return None
     rng = random.Random(BOOTSTRAP_SEED + R1B_SEED_OFFSET)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_high != ci_high else bool(ci_high < R1B_MODERATION_CEILING)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(rows),
+        "ceiling": R1B_MODERATION_CEILING, "supported": met,
+        "pre_registered_threshold_met": met,
+    }
+
+
+def compute_r1b_h12_dampening(
+    hypocrisy_records: list[dict],
+    identity_records: list[dict],
+) -> dict[str, Any] | None:
+    """R1b H12-DAMPENING leg (§19.5) — the FIRST of R1b's three deferred H10–H12
+    dampening legs. Moral identity should not only shrink the §6 over-claim gap (the
+    R1b gap leg) but also DAMPEN the H12 self–other severity asymmetry. Regress each
+    person's holier-than-thou asymmetry H_i on their INTERNALIZATION centrality across
+    the cohort:
+
+        internalization_i = centrality_facet_by_user(identity, "internalization")   (§19.1)
+        H_i               = hypocrisy_asymmetry_by_user(hypocrisy)[i]                (§18.1, SIGNED)
+        r                 = corr(internalization_i, H_i)   (= the STANDARDIZED moderation slope)
+
+    Supported iff the UPPER 95% bootstrap CI of r < R1B_MODERATION_CEILING (0.0), one-
+    sided: a more internalized moral identity predicts a SIGNIFICANTLY smaller (more
+    negative) self–other asymmetry — internalized moral identity → behavioral congruence
+    → less self-serving double standard (Aquino & Reed 2002 applied to the Tappin & McKay
+    2017 / Epley & Dunning 2000 holier-than-thou asymmetry). DIRECTIONAL (a signed-slope
+    test, not an R²-ceiling discriminant), exactly like the R1b gap leg (compute_r1b_
+    moderation) — it reuses R1B_MIN_PARTICIPANTS + R1B_MODERATION_CEILING (the R1b family)
+    with its OWN bootstrap seed.
+
+    The two channels are INDEPENDENT — internalization rides the identity log; H_i rides
+    the matched-severity hypocrisy log — so there is no algebraic identity linking them
+    (the two-sidedness check_r1b_h12_dampening_lock exploits, unlike H9b's signed cal_bias
+    echo). COHORT-level construct validity, NEVER a per-person verdict: a very negative H_i
+    is harsher-on-SELF (described, never ranked "better", §18.4), and neither internalization
+    pole is ranked (§19.4). This is DISTINCT from H12b (the discriminant, H_i ~ [gap,
+    cal_error] on an R²-ceiling) — a DIFFERENT predictor (internalization, not the person's
+    own gap/calibration) and a DIFFERENT question (moderation, not reducibility). Seed
+    BOOTSTRAP_SEED+R1B_H12_SEED_OFFSET (+36)."""
+    intern = centrality_facet_by_user(identity_records, "internalization")
+    h_by_user = hypocrisy_asymmetry_by_user(hypocrisy_records)
+    rows: list[tuple[float, float]] = []
+    for user in sorted(set(intern) & set(h_by_user)):
+        iv = intern[user]
+        hv = h_by_user[user]
+        if iv != iv or hv != hv:   # drop NaN on either channel — never imputed (§1.5)
+            continue
+        rows.append((iv, hv))
+    if len(rows) < R1B_MIN_PARTICIPANTS:
+        return None
+    xs = [row[0] for row in rows]
+    ys = [row[1] for row in rows]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + R1B_H12_SEED_OFFSET)
     ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
     met = None if ci_high != ci_high else bool(ci_high < R1B_MODERATION_CEILING)
     return {
@@ -4386,6 +4445,7 @@ def render_r1_result(
     mean_symbolization: float,
     r1b: dict[str, Any] | None = None,
     r1a_symbol: dict[str, Any] | None = None,
+    r1b_h12: dict[str, Any] | None = None,
 ) -> str:
     """R1 moral identity centrality (scoring.md §19). Two DISJOINT facets reported
     SEPARATELY — internalization (private) and symbolization (public) — never pooled
@@ -4394,7 +4454,7 @@ def render_r1_result(
     be integrity OR rigid self-righteousness — the dark side of moral identity), and
     internalizing is not ranked above symbolizing; the reveal describes the profile,
     never a verdict (§19.4)."""
-    if r1a is None and r1a_symbol is None and r1c is None and profile_n == 0 and r1b is None:
+    if r1a is None and r1a_symbol is None and r1c is None and profile_n == 0 and r1b is None and r1b_h12 is None:
         return (
             "(R1: insufficient data — supply --identity-log with per-item "
             "internalization + symbolization centrality responses)"
@@ -4453,12 +4513,30 @@ def render_r1_result(
             "insufficient data (need the {session, card_sort, identity} bundle via --r1b-log, "
             f"≥{R1B_MIN_PARTICIPANTS} joined participants)"
         )
+    if r1b_h12 is not None:
+        lines.append(
+            f"  R1b H12-DAMPENING (self–other severity asymmetry H_i ~ internalization, standardized slope = corr)  "
+            f"r = {r1b_h12['r']:+.3f}, 95% CI {_ci_str(r1b_h12)}, n = {r1b_h12['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {r1b_h12['ceiling']:.1f}, one-sided): "
+            f"{_met_glyph(r1b_h12['pre_registered_threshold_met'])}  "
+            f"(a more internalized moral identity predicts a SMALLER holier-than-thou asymmetry — "
+            f"Aquino & Reed 2002 × Tappin & McKay 2017; §19.5)"
+        )
+    else:
+        lines.append(
+            "  R1b H12-dampening (does internalization predict a smaller self–other severity asymmetry?): "
+            "insufficient data (need the {identity, hypocrisy} shared-cohort bundle via --r1b-h12-log, "
+            f"≥{R1B_MIN_PARTICIPANTS} joined participants)"
+        )
     lines.append(
         "  Value-neutral: a highly self-defining moral identity is NOT scored as better than a peripheral one "
         "(centrality can be integrity OR rigid self-righteousness, §19.4); the facets are described, never ranked. "
         "R1c is a cohort construct-validity anchor, not a per-person verdict. R1b is a COHORT-level moderation "
-        "read — never a per-person verdict, and a very negative gap is modesty, not scored better; the H10–H12 "
-        "dampening legs remain deferred (cohort-coupled), see build-and-validate.md."
+        "read — never a per-person verdict, and a very negative gap is modesty, not scored better; the H12 "
+        "dampening leg is built (§19.5 — a very negative asymmetry is harsher-on-self, not scored better), the "
+        "H10/H11 legs remain deferred (cohort-coupled), see build-and-validate.md."
     )
     return "\n".join(lines)
 
@@ -4948,6 +5026,16 @@ def main() -> int:
              "smaller over-claim).",
     )
     parser.add_argument(
+        "--r1b-h12-log",
+        type=Path,
+        default=None,
+        help="Optional combined identity + hypocrisy log (object with identity/hypocrisy arrays for a "
+             "SHARED cohort — identity `user` must equal hypocrisy `user`) for the R1b H12-DAMPENING leg "
+             "(§19.5, the first of R1b's H10–H12 dampening legs): regresses the self–other asymmetry H_i on "
+             "internalization_i; supported iff the upper 95%% CI of corr(internalization, H) < 0 (higher "
+             "internalization → smaller holier-than-thou asymmetry).",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -5387,6 +5475,28 @@ def main() -> int:
             r1b_bundle.get("card_sort", []),
             r1b_bundle.get("identity", []),
             tag_map,
+        )
+
+    # R1b H12-DAMPENING leg (scoring.md §19.5), the FIRST of R1b's three deferred H10–H12
+    # dampening legs, if a combined {identity, hypocrisy} bundle for a SHARED cohort is
+    # supplied. Regresses the self–other asymmetry H_i on internalization_i; supported iff
+    # the upper 95% CI of corr(internalization, H) < 0 (higher internalization → smaller
+    # holier-than-thou asymmetry). Cohort-level, Python-only (no on-device reveal) so parity
+    # stays green. Independent channels ⇒ no algebraic identity (the H12-dampening lock).
+    r1b_h12_dampening_result: dict[str, Any] | None = None
+    if args.r1b_h12_log:
+        try:
+            with args.r1b_h12_log.open() as f:
+                r1b_h12_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading R1b H12-dampening log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(r1b_h12_bundle, dict):
+            print("ERROR: R1b H12-dampening log must be a JSON object with identity/hypocrisy arrays", file=sys.stderr)
+            return 2
+        r1b_h12_dampening_result = compute_r1b_h12_dampening(
+            r1b_h12_bundle.get("hypocrisy", []),
+            r1b_h12_bundle.get("identity", []),
         )
 
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
@@ -5927,6 +6037,21 @@ def main() -> int:
                 "supported": r1b_moderation_result["supported"],
                 "pre_registered_threshold_met": r1b_moderation_result["pre_registered_threshold_met"],
             }
+        if r1b_h12_dampening_result is not None:
+            # R1b H12-DAMPENING leg — COHORT-level directional slope (§19.5), the first of
+            # R1b's three deferred H10–H12 dampening legs. supported is EXACTLY (corr
+            # upper-CI < ceiling 0.0) over INDEPENDENT channels (internalization ← identity
+            # log, H_i ← hypocrisy log) ⇒ no algebraic identity; the gate re-derives it
+            # (check_r1b_h12_dampening_lock). Never a per-person verdict.
+            r1_block["R1b_h12_dampening"] = {
+                "r": r1b_h12_dampening_result["r"],
+                "ci_low": _nan_to_none(r1b_h12_dampening_result["ci_low"]),
+                "ci_high": _nan_to_none(r1b_h12_dampening_result["ci_high"]),
+                "ceiling": r1b_h12_dampening_result["ceiling"],
+                "n_participants": r1b_h12_dampening_result["n_participants"],
+                "supported": r1b_h12_dampening_result["supported"],
+                "pre_registered_threshold_met": r1b_h12_dampening_result["pre_registered_threshold_met"],
+            }
         if r1_block or r1_profile_n:
             r1_block["profile_n"] = r1_profile_n
             # Two facets exposed SEPARATELY — no pooled "centrality" key (§13.5).
@@ -6146,12 +6271,14 @@ def main() -> int:
                 h12b_discriminant_result,
             ))
         if (r1a_result is not None or r1a_symbol_result is not None or r1c_result is not None
-                or r1_profile_n or r1b_moderation_result is not None):
+                or r1_profile_n or r1b_moderation_result is not None
+                or r1b_h12_dampening_result is not None):
             print()
             print(render_r1_result(
                 r1a_result, r1c_result, r1_profile_n,
                 r1_mean_internalization, r1_mean_symbolization,
                 r1b_moderation_result, r1a_symbol_result,
+                r1b_h12_dampening_result,
             ))
         if (r6a_result is not None or r6d_result is not None or r6_profile_n
                 or r6b_discriminant_result is not None):

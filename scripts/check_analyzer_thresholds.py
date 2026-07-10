@@ -138,7 +138,7 @@ EXPECTATIONS = {
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
     "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True, "H12b_discriminant": True}},
-    "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1a_symbolization": True, "R1c": True, "R1b_moderation": True}},
+    "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1a_symbolization": True, "R1c": True, "R1b_moderation": True, "R1b_h12_dampening": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True, "R6b_discriminant": True}},
     "A3": {"kind": "a3", "kappa_met": True},
     "A4": {"kind": "a4", "any_met": True, "a4b_supported": True},
@@ -176,6 +176,7 @@ def run_analyzer() -> dict:
         "--h10b-log", str(FIXTURES / "sample-h10b-log.json"),
         "--a4b-log", str(FIXTURES / "sample-a4b-log.json"),
         "--r1b-log", str(FIXTURES / "sample-r1b-log.json"),
+        "--r1b-h12-log", str(FIXTURES / "sample-r1b-h12-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -652,6 +653,22 @@ def check_r1(hid: str, payload: dict, sub_met: dict) -> tuple[bool, str]:
             )
         if sup != r1b.get("pre_registered_threshold_met"):
             return False, f"{hid}.R1b_moderation: supported vs pre_registered_threshold_met mismatch ({r1b})"
+    # R1b H12-DAMPENING leg (§19.5) — the same directional gate on an INDEPENDENT channel
+    # (H_i ~ internalization): supported ⇔ upper 95% CI of corr(internalization, H) < ceiling
+    # (0.0). Re-derive on the shipped payload (two-sidedness proven in check_r1b_h12_dampening_lock).
+    r1b_h12 = payload.get("R1b_h12_dampening")
+    if r1b_h12 is not None:
+        ch, ceil, sup = r1b_h12.get("ci_high"), r1b_h12.get("ceiling"), r1b_h12.get("supported")
+        if ceil is None:
+            return False, f"{hid}.R1b_h12_dampening: missing ceiling ({r1b_h12})"
+        expected = None if ch is None else bool(ch < ceil)
+        if sup != expected:
+            return False, (
+                f"{hid}.R1b_h12_dampening: supported={sup!r} but (ci_high {ch!r} < ceiling {ceil}) "
+                f"= {expected!r} — the directional gate must equal the arithmetic"
+            )
+        if sup != r1b_h12.get("pre_registered_threshold_met"):
+            return False, f"{hid}.R1b_h12_dampening: supported vs pre_registered_threshold_met mismatch ({r1b_h12})"
     # The reliability legs (R1a internalization + R1a_symbolization, the two facets kept
     # SEPARATE, §13.5) must EQUAL their arithmetic: pre_registered_threshold_met ⇔ (lower
     # 95% CI ≥ threshold_low). Re-derive on the shipped payload so the gate can't be
@@ -2980,6 +2997,139 @@ def check_r1b_moderation_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_r1b_h12_dampening_lock() -> tuple[bool, list[str]]:
+    """The R1b H12-DAMPENING discipline (§19.5), asserted directly against the code — the FIRST of
+    R1b's three deferred H10–H12 dampening legs. R1b should moderate not only the §6 over-claim gap
+    (the gap leg, check_r1b_moderation_lock) but also the H12 SELF–OTHER SEVERITY ASYMMETRY H_i
+    (§18.1, holier-than-thou): compute_r1b_h12_dampening regresses H_i on internalization_i and calls
+    a more internalized moral identity a SIGNIFICANT dampener of the asymmetry iff the UPPER 95%
+    bootstrap CI of corr(internalization_i, H_i) < R1B_MODERATION_CEILING (0.0). DIRECTIONAL — a
+    signed-slope test, not an R²-ceiling discriminant (that is H12b). This lock proves, on synthetic
+    cohorts with KNOWN ground truth built through the REAL §19.1 centrality + §18.1 asymmetry
+    pipelines, holding ONE internalization profile FIXED and flipping the verdict purely through the
+    INDEPENDENT hypocrisy (H_i) channel:
+      (i)   NEGATIVE (H = -z(internalization) + noise): corr < 0, upper CI < 0, SUPPORTED True —
+            a more internalized moral identity predicts a SMALLER holier-than-thou asymmetry
+            (Aquino & Reed 2002 × Tappin & McKay 2017 / Epley & Dunning 2000);
+      (ii)  NULL (H ⊥ internalization): corr ≈ 0, CI straddles 0, SUPPORTED False — no dampening;
+      (iii) POSITIVE (H = +z(internalization) + noise): corr > 0, upper CI > 0, SUPPORTED False — the
+            WRONG direction is not rewarded (the gate is ONE-SIDED, unlike a two-tailed |slope| test);
+      (iv)  SUPPORTED is EXACTLY (upper-CI < 0) on all three cohorts — the directional gate cannot be bypassed;
+      (v)   NO ALGEBRAIC TRAP — all three cohorts share the IDENTICAL internalization log (same profile);
+            ONLY the H channel differs, yet the verdict flips True→False→False. internalization rides the
+            identity log; H_i rides the matched-severity hypocrisy log — INDEPENDENT code paths, no affine
+            identity (unlike H9b's signed cal_bias = stated − revealed, and DISTINCT from H12b which
+            regresses H_i on the person's OWN [gap, cal_error]). Had one existed the ⊥ (NULL) cohort would
+            pin |corr| ≡ 1, yet here it is ~0 — the gate tracks the DATA, not a manufactured identity;
+      (vi)  the inclusion floor holds — < R1B_MIN_PARTICIPANTS joined users returns None (never a bare scalar);
+      (vii) the reveal is COHORT-level and value-neutral — a more-negative asymmetry is DESCRIBED (harsher-on-
+            self), never ranked as morally better, and never a per-person verdict; no pooled centrality scalar.
+    The DIRECTIONAL analog of check_r1b_moderation_lock on an INDEPENDENT (hypocrisy) channel — one-sided, so
+    it additionally proves the WRONG-direction (POSITIVE) cohort is rejected. Cohorts/seeds mirror the /tmp
+    generator's found windows (shared with the moderation lock; robust under the +36 bootstrap seed)."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    N = 40
+    DOMAINS = ["truth-telling", "resource-allocation", "reciprocity-cooperation"]
+    USERS = [f"lk-u{i:02d}" for i in range(N)]
+    OFFS = (-0.30, -0.10, 0.10, 0.30)          # identity: 4 Likert items, mean == target exactly (Σoff = 0)
+    HYP_OFFS = (-0.6, -0.3, 0.0, 0.3, 0.6)     # hypocrisy: 5 matched pairs, mean delta == target (Σoff = 0)
+
+    def grid(lo, hi, seed, n=N):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def zscore(xs):
+        m = sum(xs) / len(xs)
+        sd = (sum((x - m) ** 2 for x in xs) / (len(xs) - 1)) ** 0.5
+        return [(x - m) / sd for x in xs]
+
+    CEN = grid(3.2, 6.2, 4242)                 # internalization profile — FIXED across all cohorts
+    ZCEN = zscore(CEN)
+
+    def build_identity(cen, users):
+        recs = []
+        for u, t in zip(users, cen):
+            for j, off in enumerate(OFFS):
+                recs.append({"user": u, "session": f"{u}-s{j}", "facet": "internalization",
+                             "item_id": f"{u}-int-{j}", "response": round(t + off, 4)})
+        return recs
+
+    def build_hypocrisy(h_targets, users):
+        # matched self/other severity pairs (§18.1): severity_self FIXED, severity_other carries the
+        # per-user mean asymmetry via zero-sum offsets (no clamp in range ⇒ mean delta == target).
+        recs = []
+        for u, t in zip(users, h_targets):
+            for j, off in enumerate(HYP_OFFS):
+                other = max(0.0, min(10.0, 5.0 + t + off))
+                recs.append({"user": u, "session": f"{u}-s{j % 2}", "probe_id": f"{u}-judge-{j}",
+                             "domain": DOMAINS[j % len(DOMAINS)], "severity_self": 5.0,
+                             "severity_other": round(other, 4)})
+        return recs
+
+    def make_h(mode, seed):
+        noise = zscore(grid(-1.0, 1.0, seed))
+        if mode == "neg":
+            return [-ZCEN[i] + 0.55 * noise[i] for i in range(N)]
+        if mode == "pos":
+            return [ZCEN[i] + 0.55 * noise[i] for i in range(N)]
+        return noise[:]
+
+    IDENTITY = build_identity(CEN, USERS)
+
+    def cohort(mode, seed):
+        return A.compute_r1b_h12_dampening(build_hypocrisy(make_h(mode, seed), USERS), IDENTITY)
+
+    neg = cohort("neg", 10015)                 # seeds shared with the moderation lock; robust under +36
+    nul = cohort("null", 200003)
+    pos = cohort("pos", 400053)
+    # tiny cohort: below the R1B_MIN_PARTICIPANTS join floor → None
+    tiny_users = USERS[:5]
+    tiny = A.compute_r1b_h12_dampening(
+        build_hypocrisy([-ZCEN[i] for i in range(5)], tiny_users),
+        build_identity(CEN[:5], tiny_users),
+    )
+
+    render = A.render_r1_result(None, None, 0, 0.0, 0.0, None, None, neg)
+    POOLED = {"centrality", "centrality_score", "moral_identity", "moral_identity_score",
+              "mean_centrality", "hypocrisy_score", "asymmetry_score", "moderation_score"}
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["ci_high"] == r["ci_high"] and r["ci_high"] < r["ceiling"])
+
+    checks = [
+        ("NEGATIVE (H = -z(internalization) + noise): SUPPORTED True, corr < 0, upper CI < 0",
+         neg is not None and neg["supported"] is True and neg["ci_high"] < 0.0
+         and neg["r"] < -0.30 and neg["n_participants"] == 40),
+        ("NULL (H ⊥ internalization): SUPPORTED False, corr ≈ 0, CI straddles 0",
+         nul is not None and nul["supported"] is False and nul["ci_low"] < 0.0 < nul["ci_high"]
+         and abs(nul["r"]) < 0.30),
+        ("POSITIVE (H = +z(internalization) + noise): SUPPORTED False — the WRONG direction is one-sided rejected",
+         pos is not None and pos["supported"] is False and pos["ci_low"] > 0.0 and pos["r"] > 0.30),
+        ("SUPPORTED is EXACTLY (upper-CI < 0) on all three cohorts — the directional gate cannot be bypassed",
+         exact(neg) and exact(nul) and exact(pos)),
+        ("NO ALGEBRAIC TRAP: identical internalization profile, verdict flips True→False→False via the independent H channel",
+         neg is not None and nul is not None and pos is not None
+         and neg["supported"] is True and nul["supported"] is False and pos["supported"] is False
+         and abs(nul["r"]) < 0.30),
+        ("inclusion floor: < R1B_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — a more-negative asymmetry DESCRIBED (harsher-on-self), never ranked / per-person / pooled",
+         "R1b H12-DAMPENING" in render and "SMALLER holier-than-thou asymmetry" in render
+         and "harsher-on-self, not scored better" in render and "never a per-person verdict" in render
+         and not (POOLED & set(neg))),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r1b-h12-dampening: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def main() -> int:
     out = run_analyzer()
     hypotheses = out.get("hypotheses")
@@ -3129,6 +3279,12 @@ def main() -> int:
     for m in r1block_msgs:
         print(m)
     if not r1block_ok:
+        all_pass = False
+
+    r1h12_ok, r1h12_msgs = check_r1b_h12_dampening_lock()
+    for m in r1h12_msgs:
+        print(m)
+    if not r1h12_ok:
         all_pass = False
 
     if all_pass:
