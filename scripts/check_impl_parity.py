@@ -625,6 +625,80 @@ else:
             ok(all_c, f"selfCalibration: JS == Python on all {len(cal_users)} participants "
                       f"(axis-channel-only + NA gate + signed cal_bias + absent<=>ok:false)")
 
+    # --- conflictReads (A4 · scoring.md §22/§1.1): the on-device decision-conflict reveal.
+    # Python conflict_by_user_domain vs JS conflictReads on the SAME process log: conflict(i,d)
+    # = the within-person mean rt_z over person i's domain-d items, where rt_z is the z-score of
+    # response_time_ms RESIDUALIZED on [prompt_chars, presented_position] (OLS, plain stdlib
+    # Gaussian elimination), timeouts + the TIMED quick-fire set excluded. This reveal is N=1
+    # SELF-CONTAINED — the within-person z-score/mean never touch another person's records, so the
+    # cohort-filtered analyzer value equals the on-device solo value exactly; the gate feeds JS one
+    # participant's records at a time and asserts JS == Python. Three synthetic users appended
+    # POST-LOAD pin the discrete branches that a float tolerance can't catch: zz-below-floor (3 < 4
+    # scorable items => below A4_MIN_ITEMS => no cells => Python-absent ⇔ JS ok=false); zz-rankdef
+    # (constant presented_position => rank-deficient design => _ols_residuals None => within-person
+    # mean-centering fallback with sd>0); zz-flat (constant prompt_chars => rank-deficient AND
+    # constant response_time_ms => residuals exactly 0 => sd==0 => conflict 0.0). VALUE-NEUTRAL
+    # (§3): conflict is descriptive effort/ambivalence, never a virtue ranking; NEVER pooled (§13.5).
+    if node and proj_js.exists():
+        a4_recs = json.loads(
+            (REPO_ROOT / "analysis" / "fixtures" / "sample-process-log.json").read_text())
+        a4_recs = a4_recs + [
+            # zz-below-floor: 3 scorable items < A4_MIN_ITEMS(4) => excluded => no cells on either side
+            {"user": "zz-below-floor", "session": "zz-s", "domain": "zz-harm", "item": "zzf1", "prompt_chars": 40, "presented_position": 1, "response_time_ms": 800},
+            {"user": "zz-below-floor", "session": "zz-s", "domain": "zz-harm", "item": "zzf2", "prompt_chars": 55, "presented_position": 2, "response_time_ms": 1200},
+            {"user": "zz-below-floor", "session": "zz-s", "domain": "zz-truth", "item": "zzf3", "prompt_chars": 48, "presented_position": 3, "response_time_ms": 950},
+            # zz-rankdef: 4 items, CONSTANT presented_position(=3) => position collinear with the
+            # intercept => rank-deficient => mean-centering fallback, sd>0 (real within-person z's)
+            {"user": "zz-rankdef", "session": "zz-s", "domain": "zz-harm", "item": "zzr1", "prompt_chars": 40, "presented_position": 3, "response_time_ms": 700},
+            {"user": "zz-rankdef", "session": "zz-s", "domain": "zz-harm", "item": "zzr2", "prompt_chars": 52, "presented_position": 3, "response_time_ms": 1100},
+            {"user": "zz-rankdef", "session": "zz-s", "domain": "zz-truth", "item": "zzr3", "prompt_chars": 47, "presented_position": 3, "response_time_ms": 900},
+            {"user": "zz-rankdef", "session": "zz-s", "domain": "zz-truth", "item": "zzr4", "prompt_chars": 61, "presented_position": 3, "response_time_ms": 1300},
+            # zz-flat: 4 items, CONSTANT prompt_chars(=50) => rank-deficient => fallback; CONSTANT
+            # response_time_ms(=900) => residuals exactly 0 => sd==0 => conflict 0.0 (both sides)
+            {"user": "zz-flat", "session": "zz-s", "domain": "zz-harm", "item": "zzt1", "prompt_chars": 50, "presented_position": 1, "response_time_ms": 900},
+            {"user": "zz-flat", "session": "zz-s", "domain": "zz-harm", "item": "zzt2", "prompt_chars": 50, "presented_position": 2, "response_time_ms": 900},
+            {"user": "zz-flat", "session": "zz-s", "domain": "zz-truth", "item": "zzt3", "prompt_chars": 50, "presented_position": 3, "response_time_ms": 900},
+            {"user": "zz-flat", "session": "zz-s", "domain": "zz-truth", "item": "zzt4", "prompt_chars": 50, "presented_position": 4, "response_time_ms": 900},
+        ]
+        a4_users = sorted({A._a4_user(r) for r in a4_recs})
+        py_cells = A.conflict_by_user_domain(a4_recs)   # {(user, domain): conflict}
+        py_a4 = {}                                      # {user: {domain: conflict}}
+        for (u, dom), val in py_cells.items():
+            py_a4.setdefault(u, {})[dom] = val
+        a4_script = (
+            "const P = require(%s);\n"
+            "const recs = JSON.parse(process.argv[1]);\n"
+            "const users = JSON.parse(process.argv[2]);\n"
+            "const au = r => (r.user !== undefined && r.user !== null) ? r.user : r.user_id;\n"
+            "const out = {};\n"
+            "for (const u of users) out[u] = P.conflictReads(recs.filter(r => au(r) === u));\n"
+            "console.log(JSON.stringify(out));\n"
+        ) % (json.dumps(str(proj_js)),)
+        aproc = subprocess.run([node, "-e", a4_script, json.dumps(a4_recs), json.dumps(a4_users)],
+                               capture_output=True, text=True)
+        if aproc.returncode != 0:
+            ok(False, "node conflictReads run", aproc.stderr.strip()[:300])
+        else:
+            js_a4 = json.loads(aproc.stdout)
+            all_a4 = True
+            for u in a4_users:
+                p_doms = py_a4.get(u, {})               # {domain: conflict} — {} when below floor / all excluded
+                j = js_a4.get(u, {})
+                j_doms = {d["domain"]: d for d in j.get("domains", [])}
+                if not p_doms:
+                    # below the item floor / all excluded: suppressed on both sides (DATA, not a score)
+                    m = (j.get("ok") is False and j.get("n_domains") == 0 and not j.get("domains"))
+                else:
+                    m = (j.get("ok") is True
+                         and j.get("n_domains") == len(p_doms)
+                         and set(j_doms.keys()) == set(p_doms.keys())
+                         and all(abs(p_doms[dom] - j_doms[dom]["conflict"]) < 1e-9 for dom in p_doms))
+                all_a4 = all_a4 and m
+                if not m:
+                    ok(False, f"conflictReads parity user {u}", f"py={p_doms} js={j}")
+            ok(all_a4, f"conflictReads: JS == Python on all {len(a4_users)} participants "
+                       f"(within-person residualized-RT z + A4_MIN_ITEMS floor + rank-deficient fallback + sd==0)")
+
 
 print(f"\n{passed} passed, {failed} failed")
 sys.exit(1 if failed else 0)

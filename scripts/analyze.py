@@ -3406,8 +3406,10 @@ def foundation_profile_by_user(
 # character signal). EXPLORATORY, RT-ONLY: answer-revision capture is a Dave/runtime-gated open
 # question (§4 Q1), so this increment omits `rev` and reads RT alone. NO PUBLIC CARD (§1.4): A4 is
 # an analysis adjunct — a flag on which of a person's choices were hard-won vs. automatic, context
-# for the reveal, never a browsable headline. Parity-gated in principle; the on-device conflict
-# reveal + its JS parity lock are DEFERRED this increment (as the H9–R6 on-device reveals are).
+# for the reveal, never a browsable headline. ON-DEVICE REVEAL SHIPPED: conflict_by_user_domain is
+# mirrored by the runtime's conflictReads (poc-projection.js) under the JS↔Python parity lock in
+# check_impl_parity.py — legitimate as an N=1 on-device read because the within-person z-score/mean
+# are self-contained (the cohort-filtered value equals the solo value exactly; no cohort needed).
 A4A_RELIABILITY_FLOOR = 0.40   # conflict split-half reliability lower 95% CI (§1.2) — the exploratory bar
 A4_MIN_ITEMS = 4               # per-user scorable-item floor for a within-person residualized RT fit (intercept + 2 predictors + slack)
 A4A_SEED_OFFSET = 25           # bootstrap seed band BOOTSTRAP_SEED+25 (+ per-domain i, via _domain_test_retest_r); A3 consumed none, R6d used +24
