@@ -136,7 +136,7 @@ EXPECTATIONS = {
     "H9": {"kind": "h9", "sub_met": {"H9a": True, "H9b_stability": True, "H9b_discriminant": True, "H9c": True}},
     "H10": {"kind": "h10", "sub_met": {"H10a": True, "H10c": True, "H10b_discriminant": True}},
     "H11": {"kind": "h11", "sub_met": {"H11a": True, "H11b": True, "H11c": True}},
-    "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True}},
+    "R2": {"kind": "r2", "sub_met": {"R2a": True, "R2b": True, "R2c_discriminant": True}},
     "H12": {"kind": "h12", "sub_met": {"H12a": True, "H12c": True, "H12b_discriminant": True}},
     "R1": {"kind": "r1", "sub_met": {"R1a": True, "R1a_symbolization": True, "R1c": True, "R1b_moderation": True, "R1b_h12_dampening": True, "R1b_h10_dampening": True}},
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True, "R6b_discriminant": True}},
@@ -173,6 +173,7 @@ def run_analyzer() -> dict:
         "--h9b-log", str(FIXTURES / "sample-h9b-log.json"),
         "--h12b-log", str(FIXTURES / "sample-h12b-log.json"),
         "--r6b-log", str(FIXTURES / "sample-r6b-log.json"),
+        "--r2c-log", str(FIXTURES / "sample-r2c-log.json"),
         "--h10b-log", str(FIXTURES / "sample-h10b-log.json"),
         "--a4b-log", str(FIXTURES / "sample-a4b-log.json"),
         "--r1b-log", str(FIXTURES / "sample-r1b-log.json"),
@@ -1200,7 +1201,11 @@ def check_r2_censoring() -> tuple[bool, list[str]]:
             ladder ceiling + 1), never a finite break-point (§4 / §13.2);
       (iii) protected_value_sets holds the value_slot STRING, no price attached;
       (iv)  R2a EXCLUDES a user whose protected union is empty in both waves
-            (undefined Jaccard), never scoring it as perfect agreement."""
+            (undefined Jaccard), never scoring it as perfect agreement;
+      (v)   R2c's price predictor (_r2c_mean_logprice_by_user) EXCLUDES a protected
+            `never` cell — even one carrying a spurious finite stake — so a `never`
+            is never finitized into the mean log-price (§13.2), and a user whose
+            cells are ALL `never` is DROPPED (no mean), never priced at 0."""
     sys.path.insert(0, str(REPO_ROOT / "scripts"))
     import analyze as A
     inv = A.load_probe_inversion_map()
@@ -1227,6 +1232,22 @@ def check_r2_censoring() -> tuple[bool, list[str]]:
         for w in ("w1", "w2")
     ]
     r2a_empty = A.compute_r2a_reliability(two_wave)
+    # (v) R2c price predictor: two finite cells (log10 100=2, log10 10000=4 → mean 3.0)
+    # plus a protected `never` carrying a SPURIOUS finite stake (must still be excluded);
+    # a second user whose cells are ALL `never` must be dropped entirely.
+    r2c_price_recs = [
+        {"user_id": "m1", "value_slot": "cov-0", "first_accept_rung": "r3",
+         "first_accept_stake": 100, "no_break_point": False},
+        {"user_id": "m1", "value_slot": "cov-1", "first_accept_rung": "r4",
+         "first_accept_stake": 10000, "no_break_point": False},
+        {"user_id": "m1", "value_slot": "cov-2", "first_accept_rung": "never",
+         "first_accept_stake": 999999, "no_break_point": True},
+        {"user_id": "m2", "value_slot": "cov-0", "first_accept_rung": "never",
+         "first_accept_stake": None, "no_break_point": True},
+        {"user_id": "m2", "value_slot": "cov-1", "first_accept_rung": "never",
+         "first_accept_stake": None, "no_break_point": True},
+    ]
+    r2c_price = A._r2c_mean_logprice_by_user(r2c_price_recs)
     checks = [
         ("a `never` response is protected; a finite-price response is not",
          A._cov_response_is_protected(never_resp) is True and A._cov_response_is_protected(fin_resp) is False),
@@ -1236,6 +1257,8 @@ def check_r2_censoring() -> tuple[bool, list[str]]:
          pset == {"honesty"} and all(isinstance(v, str) for v in pset)),
         ("R2a EXCLUDES an empty-in-both-waves user (undefined Jaccard), never scores it 1.0",
          r2a_empty is not None and r2a_empty["n_excluded_empty"] == 1 and r2a_empty["n_participants"] == 3),
+        ("R2c price EXCLUDES a protected `never` (even with a spurious finite stake) & DROPS an all-`never` user",
+         "m1" in r2c_price and abs(r2c_price["m1"] - 3.0) < 1e-9 and "m2" not in r2c_price),
     ]
     msgs, okall = [], True
     for label, passed in checks:
@@ -2367,6 +2390,158 @@ def check_r6b_discriminant_lock() -> tuple[bool, list[str]]:
     return okall, msgs
 
 
+def check_r2c_discriminant_lock() -> tuple[bool, list[str]]:
+    """The R2c sacred / protected-values DISCRIMINANT discipline (§17.4), asserted directly against the
+    code. R2c regresses sacredness_i = |P_i| (the SIZE of a person's protected/`never` set, R2/§17.1) on
+    TWO "ordinary value strength" constructs drawn from TWO DIFFERENT channels — inventory importance
+    (§5.1, aspirational card-sort endorsement breadth) and mean log-price (the FINITE cost-of-virtue tail,
+    §13.2) — and calls protectedness DISCRIMINABLE from "important + expensive" iff the UPPER 95% bootstrap
+    CI of the model R² < R2C_R2_CEILING. Widens R2b's "protected ≠ expensive" to "protected ≠ (important
+    AND expensive)" as a joint R²; completes R2 = reliability ∧ distinctness ∧ discriminant (the shape of
+    R6 / H12). This lock proves, on synthetic cohorts with KNOWN ground truth built through the REAL
+    §17.1 / §5.1 pipelines:
+      (i)   INDEPENDENT (|P_i| drawn ⊥ [importance, log-price]): R² ~ 0, upper CI clears the 0.50 ceiling,
+            SUPPORTED True — protectedness is a genuinely distinct construct (Tetlock 2003 / Baron &
+            Spranca 1997: sacred values are quantitatively INSENSITIVE, not merely very costly);
+      (ii)  REDUCIBLE (|P_i| made a noisy linear function of importance + log-price): R² high, upper CI ≥
+            ceiling, SUPPORTED False — a "sacredness" that IS just important-and-expensive is not supported;
+      (iii) SUPPORTED is EXACTLY (upper-CI < ceiling) on both cohorts — the CI gate cannot be bypassed;
+      (iv)  NO ALGEBRAIC TRAP — as with R6b / H12b, both cohorts share the IDENTICAL predictors (same
+            card-sort → same importance; same finite-price LEVELS → same mean log-price, unchanged by how
+            many cells are `never` since every user keeps ≥2 finite cells); ONLY the sacredness OUTCOME
+            channel differs, and the verdict flips True→False. Because |P_i| is a COUNT on the cov-`never`
+            channel (not an affine echo of importance/price the way H9b's signed cal_bias = stated −
+            revealed was), no construction forces the R²: had such an identity existed the ⊥ draw would
+            pin R² ≡ 1, yet here it is ~0. The gate tracks the DATA, not a manufactured identity;
+      (v)   the descriptive companion localizes leakage — |P_i|·predictor r all small when independent,
+            |P_i|·importance r large when reducible — WITHOUT pooling anything per person (§13.5);
+      (vi)  the inclusion floor holds — < R2C_MIN_PARTICIPANTS joined users returns None (never a scalar);
+      (vii) the reveal is COHORT-level and value-neutral — a large protected set names integrity OR
+            dogmatism, never ranked; |P_i| stays a categorical set SIZE, never a price (§13.2) or pool
+            (§13.5). The §13.2 EXCLUSION of the `never` cell from the price predictor (never finitized) is
+            asserted in check_r2_censoring. This is the R2 analog of the R6b / H12b discriminant locks."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import random
+
+    import analyze as A
+    DECK = A.load_values_deck_domains()
+    DOMAINS = sorted({d for d in DECK.values()})
+    VBD = {d: [v for v, dd in DECK.items() if dd == d] for d in DOMAINS}
+    N_SLOTS = 10                                            # 10 cov slots → |P_i| ∈ {0..8}, always ≥2 finite → price defined
+    CoV_SLOTS = [f"cov-slot-{k}" for k in range(N_SLOTS)]
+
+    def grid(lo, hi, n, seed):
+        r = random.Random(seed)
+        v = [lo + (hi - lo) * k / (n - 1) for k in range(n)]
+        r.shuffle(v)
+        return v
+
+    def zscore(xs):
+        m = sum(xs) / len(xs)
+        sd = (sum((x - m) ** 2 for x in xs) / len(xs)) ** 0.5 or 1.0
+        return [(x - m) / sd for x in xs]
+
+    def build_protected(sac, logprice):
+        # |P_i| = k `never` cells; the remaining cells finite at THIS user's price LEVEL 10**logprice[i]
+        # (constant per user → mean log-price = logprice[i] regardless of how many cells stay finite).
+        recs = []
+        for i, k in enumerate(sac):
+            u = f"r{i:02d}"
+            stake = round(10 ** logprice[i], 4)
+            for j, slot in enumerate(CoV_SLOTS):
+                prot = j < k
+                recs.append({"user_id": u, "wave": "w1", "value_slot": slot,
+                             "no_break_point": bool(prot),
+                             "first_accept_rung": "never" if prot else "r4",
+                             "first_accept_stake": None if prot else stake})
+        return recs
+
+    def build_cardsort(totals):
+        recs = []
+        for i, T in enumerate(totals):
+            u = f"r{i:02d}"
+            sel, remaining = [], T
+            for d in DOMAINS:
+                take = min(len(VBD[d]), remaining)
+                sel.extend(VBD[d][:take])
+                remaining -= take
+            recs.append({"user_id": u, "layer": "aspirational_self", "selected_value_ids": sel})
+        return recs
+
+    def base_corpus(n, seed):
+        # Fixed card-sort (importance) + finite-price LEVELS → fixed [importance, log-price] predictors.
+        totals = [int(round(x)) for x in grid(2, 18, n, seed + 1)]
+        logprice = grid(2.0, 4.0, n, seed + 2)
+        card_sort = build_cardsort(totals)
+        _cs = A.card_sort_scores(card_sort, DECK)
+        acc: dict[str, list[float]] = {}
+        for (u, _d, layer), s in _cs.items():
+            if layer == "aspirational_self":
+                acc.setdefault(u, []).append(s)
+        imp = [sum(acc[f"r{i:02d}"]) / len(acc[f"r{i:02d}"]) for i in range(n)]
+        return card_sort, logprice, imp
+
+    def indep_sac(n, seed, imp, logprice):
+        for cand in range(seed + 900, seed + 200000):
+            sr = random.Random(cand)
+            sac = [sr.randint(0, N_SLOTS - 2) for _ in range(n)]
+            if len(set(sac)) < 5:
+                continue
+            if (abs(A._pearson_r([float(x) for x in sac], imp)) < 0.05
+                    and abs(A._pearson_r([float(x) for x in sac], logprice)) < 0.05):
+                return sac
+        return [random.Random(seed).randint(0, N_SLOTS - 2) for _ in range(n)]
+
+    def reducible_sac(n, seed, imp, logprice):
+        # |P_i| made a NOISY linear function of importance + log-price (importance-dominant), clipped to
+        # [0, N_SLOTS-2] so every user keeps ≥2 finite cells — a statistical reducibility, not an identity.
+        zi, zp = zscore(imp), zscore(logprice)
+        noise = grid(-0.6, 0.6, n, seed + 1300)
+        raw = [3.0 + 2.2 * zi[i] + 1.1 * zp[i] + noise[i] for i in range(n)]
+        return [max(0, min(N_SLOTS - 2, int(round(x)))) for x in raw]
+
+    # ONE base corpus → the SAME [importance, log-price] predictors feed both verdicts; only |P_i| changes.
+    card_sort, logprice, imp = base_corpus(40, 770000)
+    ind = A.compute_r2c_discriminant(build_protected(indep_sac(40, 770000, imp, logprice), logprice), card_sort)
+    red = A.compute_r2c_discriminant(build_protected(reducible_sac(40, 770000, imp, logprice), logprice), card_sort)
+    tcs, tlp, timp = base_corpus(6, 770000)                 # < 8-participant floor
+    tiny = A.compute_r2c_discriminant(build_protected(indep_sac(6, 770000, timp, tlp), tlp), tcs)
+
+    render = A.render_r2_result(None, None, 0, 0, [], ind)
+    ceil = A.R2C_R2_CEILING
+
+    def exact(r):
+        return r is not None and r["supported"] == (r["r2_ci_high"] == r["r2_ci_high"] and r["r2_ci_high"] < ceil)
+
+    def max_abs_r(r):
+        return max(abs(r["s_importance_r"]), abs(r["s_logprice_r"]))
+
+    checks = [
+        ("INDEPENDENT (|P_i| ⊥ [importance, log-price]): SUPPORTED True, R² ~ 0, upper CI clears the ceiling",
+         ind is not None and ind["supported"] is True and ind["r2"] < 0.10
+         and ind["r2_ci_high"] == ind["r2_ci_high"] and ind["r2_ci_high"] < ceil and ind["n_participants"] == 40),
+        ("REDUCIBLE (|P_i| = f([importance, log-price]) + noise): SUPPORTED False, R² high, upper CI ≥ ceiling",
+         red is not None and red["supported"] is False and red["r2"] > ceil and red["r2_ci_high"] >= ceil),
+        ("SUPPORTED is EXACTLY (upper-CI < ceiling) on both cohorts — the CI gate cannot be bypassed",
+         exact(ind) and exact(red)),
+        ("NO ALGEBRAIC TRAP: identical [importance, log-price] predictors, verdict flips True→False via the sacredness outcome channel alone",
+         ind is not None and red is not None and ind["n_participants"] == red["n_participants"] == 40
+         and ind["supported"] is True and red["supported"] is False),
+        ("descriptive companion localizes leakage: |P_i|·predictor r all small when independent, importance strongly signed when reducible",
+         ind is not None and red is not None and max_abs_r(ind) < 0.20 and abs(red["s_importance_r"]) > 0.50),
+        ("inclusion floor: < R2C_MIN_PARTICIPANTS joined users returns None (never a bare scalar)",
+         tiny is None),
+        ("reveal is COHORT-level & value-neutral — protectedness NOT reducible to how important/expensive the values are, cohort/no-pool",
+         "protectedness NOT reducible to how important/expensive the values are" in render
+         and "cohort/no-pool" in render and "|P_i|·importance r" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r2c-discriminant: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
 def check_h10b_discriminant_lock() -> tuple[bool, list[str]]:
     """The H10b cross-situational-consistency DISCRIMINANT discipline (§15.3), asserted directly
     against the code. H10b is TWO-legged and BOTH legs must clear H10B_R2_CEILING:
@@ -3432,6 +3607,12 @@ def main() -> int:
     for m in r6block_msgs:
         print(m)
     if not r6block_ok:
+        all_pass = False
+
+    r2cblock_ok, r2cblock_msgs = check_r2c_discriminant_lock()
+    for m in r2cblock_msgs:
+        print(m)
+    if not r2cblock_ok:
         all_pass = False
 
     h10block_ok, h10block_msgs = check_h10b_discriminant_lock()

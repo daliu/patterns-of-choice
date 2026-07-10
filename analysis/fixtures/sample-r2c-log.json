@@ -1,0 +1,2887 @@
+{
+  "_comment": "Synthetic R2c sacred-values DISCRIMINANT cohort (scoring.md \u00a717.4). 30 participants across two channels (protected / card_sort), a SHARED cohort keyed r2c-u00..r2c-u29. Sacredness |P_i| (0..8 `never` slots of 10) is drawn INDEPENDENT of inventory importance (aspirational_self card-sort) and of mean log-price (finite cov cells), so the cohort R\u00b2 of |P_i| ~ [importance, log-price] is ~0 and its upper 95% CI clears the 0.50 ceiling \u2192 R2c SUPPORTED (protectedness is a distinct construct, not merely important-and-expensive). The price predictor is FINITE-only; every `never` carries first_accept_stake=null, never finitized (\u00a713.2). Ground truth: SUPPORTED. Regenerate via scratchpad/gen_r2c.py (never committed).",
+  "protected": [
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 137.38
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 137.38
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 137.38
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 137.38
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 137.38
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 137.38
+    },
+    {
+      "user_id": "r2c-u00",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 137.38
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 788.05
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 788.05
+    },
+    {
+      "user_id": "r2c-u01",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 788.05
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 489.39
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 489.39
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 489.39
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 489.39
+    },
+    {
+      "user_id": "r2c-u02",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 489.39
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1268.96
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1268.96
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1268.96
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1268.96
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1268.96
+    },
+    {
+      "user_id": "r2c-u03",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1268.96
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u04",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 303.92
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 5298.32
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 5298.32
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 5298.32
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 5298.32
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 5298.32
+    },
+    {
+      "user_id": "r2c-u05",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 5298.32
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1487.35
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1487.35
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1487.35
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1487.35
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1487.35
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1487.35
+    },
+    {
+      "user_id": "r2c-u06",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1487.35
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u07",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2807.22
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 3856.62
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 3856.62
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 3856.62
+    },
+    {
+      "user_id": "r2c-u08",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 3856.62
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 221.22
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 221.22
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 221.22
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 221.22
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 221.22
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 221.22
+    },
+    {
+      "user_id": "r2c-u09",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 221.22
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 6210.17
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 6210.17
+    },
+    {
+      "user_id": "r2c-u10",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 6210.17
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 573.62
+    },
+    {
+      "user_id": "r2c-u11",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 573.62
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 10000.0
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 10000.0
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 10000.0
+    },
+    {
+      "user_id": "r2c-u12",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 10000.0
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1743.33
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1743.33
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1743.33
+    },
+    {
+      "user_id": "r2c-u13",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1743.33
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1082.64
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1082.64
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1082.64
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1082.64
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1082.64
+    },
+    {
+      "user_id": "r2c-u14",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 1082.64
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 188.74
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 188.74
+    },
+    {
+      "user_id": "r2c-u15",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 188.74
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 417.53
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 417.53
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 417.53
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 417.53
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 417.53
+    },
+    {
+      "user_id": "r2c-u16",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 417.53
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u17",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 259.29
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 161.03
+    },
+    {
+      "user_id": "r2c-u18",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 161.03
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u19",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 8531.68
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 923.67
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 923.67
+    },
+    {
+      "user_id": "r2c-u20",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 923.67
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 672.34
+    },
+    {
+      "user_id": "r2c-u21",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 672.34
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 3290.34
+    },
+    {
+      "user_id": "r2c-u22",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 3290.34
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2043.36
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2043.36
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2043.36
+    },
+    {
+      "user_id": "r2c-u23",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2043.36
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u24",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 4520.35
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 100.0
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 100.0
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 100.0
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 100.0
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 100.0
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 100.0
+    },
+    {
+      "user_id": "r2c-u25",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 100.0
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 117.21
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 117.21
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 117.21
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 117.21
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 117.21
+    },
+    {
+      "user_id": "r2c-u26",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 117.21
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 7278.95
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 7278.95
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 7278.95
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 7278.95
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 7278.95
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 7278.95
+    },
+    {
+      "user_id": "r2c-u27",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 7278.95
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 356.22
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 356.22
+    },
+    {
+      "user_id": "r2c-u28",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 356.22
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-0",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-1",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-2",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-3",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-4",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-5",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-6",
+      "no_break_point": true,
+      "first_accept_rung": "never",
+      "first_accept_stake": null
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-7",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2395.03
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-8",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2395.03
+    },
+    {
+      "user_id": "r2c-u29",
+      "wave": "w1",
+      "value_slot": "cov-slot-9",
+      "no_break_point": false,
+      "first_accept_rung": "r4",
+      "first_accept_stake": 2395.03
+    }
+  ],
+  "card_sort": [
+    {
+      "user_id": "r2c-u00",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure",
+        "self_reliance",
+        "honesty",
+        "tact"
+      ]
+    },
+    {
+      "user_id": "r2c-u01",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust"
+      ]
+    },
+    {
+      "user_id": "r2c-u02",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism"
+      ]
+    },
+    {
+      "user_id": "r2c-u03",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity"
+      ]
+    },
+    {
+      "user_id": "r2c-u04",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness"
+      ]
+    },
+    {
+      "user_id": "r2c-u05",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness"
+      ]
+    },
+    {
+      "user_id": "r2c-u06",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries"
+      ]
+    },
+    {
+      "user_id": "r2c-u07",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure",
+        "self_reliance",
+        "honesty",
+        "tact"
+      ]
+    },
+    {
+      "user_id": "r2c-u08",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism"
+      ]
+    },
+    {
+      "user_id": "r2c-u09",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation"
+      ]
+    },
+    {
+      "user_id": "r2c-u10",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure"
+      ]
+    },
+    {
+      "user_id": "r2c-u11",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure"
+      ]
+    },
+    {
+      "user_id": "r2c-u12",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure",
+        "self_reliance",
+        "honesty"
+      ]
+    },
+    {
+      "user_id": "r2c-u13",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation"
+      ]
+    },
+    {
+      "user_id": "r2c-u14",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust"
+      ]
+    },
+    {
+      "user_id": "r2c-u15",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness"
+      ]
+    },
+    {
+      "user_id": "r2c-u16",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence"
+      ]
+    },
+    {
+      "user_id": "r2c-u17",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries"
+      ]
+    },
+    {
+      "user_id": "r2c-u18",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure",
+        "self_reliance",
+        "honesty"
+      ]
+    },
+    {
+      "user_id": "r2c-u19",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality"
+      ]
+    },
+    {
+      "user_id": "r2c-u20",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism"
+      ]
+    },
+    {
+      "user_id": "r2c-u21",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality"
+      ]
+    },
+    {
+      "user_id": "r2c-u22",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity"
+      ]
+    },
+    {
+      "user_id": "r2c-u23",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure",
+        "self_reliance",
+        "honesty",
+        "tact",
+        "transparency"
+      ]
+    },
+    {
+      "user_id": "r2c-u24",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure",
+        "self_reliance"
+      ]
+    },
+    {
+      "user_id": "r2c-u25",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity",
+        "reciprocity_pure",
+        "self_reliance"
+      ]
+    },
+    {
+      "user_id": "r2c-u26",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence"
+      ]
+    },
+    {
+      "user_id": "r2c-u27",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness",
+        "need_sensitivity"
+      ]
+    },
+    {
+      "user_id": "r2c-u28",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance"
+      ]
+    },
+    {
+      "user_id": "r2c-u29",
+      "layer": "aspirational_self",
+      "selected_value_ids": [
+        "loyalty",
+        "universalism",
+        "particularism",
+        "hospitality",
+        "boundaries",
+        "trust",
+        "vigilance",
+        "cooperation",
+        "independence",
+        "forgiveness",
+        "generosity",
+        "fairness"
+      ]
+    }
+  ]
+}

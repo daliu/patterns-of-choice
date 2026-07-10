@@ -2357,9 +2357,16 @@ def compute_h11b_discriminant(
 # costless, so P_i is labelled PROFESSED protected values; real-stakes validation
 # (which `never`s survive a real price) rides H-A2 → Phase-2 (IRB-gated, to Dave).
 # No composite (§13.5): P_i is a set, taboo a marker — never summed into a
-# "sacredness score" (§4 rejected exactly that). R2c (discriminant vs importance
-# rank) is DEFERRED — cohort-coupled, needs the inventory-rank + log-price
-# pipeline (like the H9b/H11b deferred halves). This re-reads the cov break-point
+# "sacredness score" (§4 rejected exactly that).
+#   R2c — protected ≠ (important AND expensive) (§17.4, the DISCRIMINANT): regress
+#         sacredness_i = |P_i| on [ inventory importance_i, mean log-price_i ]; a
+#         `never` is a DISTINCT construct iff the UPPER 95% CI of that cohort R²
+#         < R2C_R2_CEILING — protectedness carries variance stated importance +
+#         willingness-to-pay do not (Tetlock 2003 / Baron & Spranca 1997: sacred
+#         values are quantitatively INSENSITIVE, not merely very costly). Completes
+#         R2 = reliability ∧ distinctness ∧ discriminant (the shape of R6 / H12).
+#         COHORT-level, mirrors compute_r6b_discriminant; the price predictor is
+#         FINITE-only, so a `never` is never finitized (§13.2). This re-reads the cov break-point
 # PRIMITIVE (already parity-locked; the runtime emits per-slot no_break_point at
 # poc-projection.js:212) without changing it; the on-device P_i reveal is
 # protectedValues in poc-projection.js, mirroring protected_profile_by_user
@@ -2368,6 +2375,9 @@ def compute_h11b_discriminant(
 
 R2A_RELIABILITY_FLOOR = 0.40   # protected-set test-retest Jaccard lower 95% CI (§17.2)
 # R2b is directional: lower 95% CI of the mean (taboo|never − taboo|finite) > 0 (§17.3).
+R2C_R2_CEILING = 0.50          # discriminant: UPPER 95% CI of |P_i| ~ [importance, log-price] R² must clear this (§17.4)
+R2C_MIN_PARTICIPANTS = 8       # ≥8 users with importance + a finite-price mean + a protected-set read before a 2-predictor R² is stable
+R2C_SEED_OFFSET = 38           # bootstrap seed band for the R² CI (R1b-H10 dampening 37; next free)
 
 
 def _cov_response_is_protected(r: dict) -> bool:
@@ -2530,6 +2540,126 @@ def compute_r2b_distinctness(responses: list[dict]) -> dict[str, Any] | None:
         "mean_contrast": sum(contrasts) / len(contrasts),
         "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(contrasts),
         "threshold": 0.0, "pre_registered_threshold_met": met,
+    }
+
+
+def _r2c_mean_logprice_by_user(responses: list[dict]) -> dict[str, float]:
+    """Per-user MEAN log10(finite cost-of-virtue price) — the R2c "how expensive are
+    this person's values in general" predictor (§17.4), computed over FINITE-priced
+    cells ONLY. A protected `never` (the right-censored tail, §13.2) has NO finite
+    price and is EXCLUDED: its null stake is never finitized into a log-price (the
+    |8.0| ceiling lock is the pattern). A user with only `never`s therefore has no
+    finite mean and is ABSENT from the dict (dropped, never imputed — §1.5); their
+    sacredness still counts in |P_i|, they simply carry no price signal to regress
+    on. Non-positive / absent / boolean stakes are skipped (no log). Keyed
+    user → mean log10 price. The R2c-discriminant analog of R2b's finite-cell read."""
+    prices: dict[str, list[float]] = defaultdict(list)
+    for r in responses:
+        user = r.get("user_id")
+        if user is None:
+            continue
+        if _cov_response_is_protected(r):        # `never` → no finite price, EXCLUDED (§13.2)
+            continue
+        stake = r.get("first_accept_stake")
+        if not isinstance(stake, (int, float)) or isinstance(stake, bool):
+            continue
+        if stake <= 0:
+            continue
+        prices[user].append(math.log10(stake))
+    return {u: sum(v) / len(v) for u, v in prices.items()}
+
+
+def compute_r2c_discriminant(
+    protected_responses: list[dict],
+    card_sort_responses: list[dict],
+) -> dict[str, Any] | None:
+    """R2c — the sacred / protected-values DISCRIMINANT (§17.4), the deferred sibling of the
+    R2a set-reliability and R2b protected≠expensive halves, completing R2 = reliability ∧
+    distinctness ∧ discriminant (the shape of R6 = R6a ∧ R6d ∧ R6b and H12 = H12a ∧ H12c ∧
+    H12b). Protectedness must be MORE than "a merely top-ranked, generally-expensive value":
+    regress a person's sacredness_i = |P_i| (the SIZE of their protected/`never` set, §17.1)
+    on TWO neighbouring "ordinary value strength" constructs, each from its OWN channel:
+        importance_i    = mean aspirational_self card-sort endorsement (§5.1 — how broadly a
+                          person holds their values up as their ideal; the STATED inventory)
+        mean_logprice_i = mean log10(finite cost-of-virtue price) over FINITE-priced cells
+                          ONLY (§13.2 — a `never` has NO price and is EXCLUDED, never
+                          finitized; the |8.0| censoring lock is the pattern)
+    Protectedness is a DISTINCT construct — NOT reducible to how IMPORTANT a person rates
+    their values on the inventory nor how EXPENSIVE they price them — iff the UPPER 95%
+    bootstrap CI of the model R² < R2C_R2_CEILING (a `never` carries variance stated
+    importance + willingness-to-pay do not; Tetlock 2003 protected values / Baron & Spranca
+    1997 sacred values are quantitatively INSENSITIVE, not just very costly). This is R2b's
+    "protected ≠ expensive" widened to "protected ≠ (important AND expensive)" as a joint R².
+
+    NO algebraic trap — by design (as with R6b / H12b). sacredness_i = |P_i| is a COUNT of
+    censored-`never` value_slots on the cost-of-virtue channel; the importance predictor rides
+    the INDEPENDENT card-sort channel and the price predictor the FINITE cost-of-virtue tail —
+    neither an affine echo of |P_i| the way H9b's signed cal_bias = stated − revealed was — so
+    the discriminant cannot be manufactured true or false by construction: the lock is honestly
+    two-sided — SUPPORTED when protectedness carries its own variance, NOT-supported when |P_i|
+    is linearly reducible to importance + price. check_r2c_discriminant_lock exercises both
+    directions on real-pipeline cohorts (identical predictors, only the sacredness outcome
+    channel flips the verdict). COHORT-level statistic, NEVER a per-person reveal: |P_i| stays a
+    categorical set-SIZE (§13.2, never a price), importance and price stay separate facets,
+    never pooled into a "sacredness score" (§13.5 / §4 rejected exactly that); a large protected
+    set is NOT scored better (integrity OR dogmatism, §17.5). The two predictors / outcome ride
+    TWO DIFFERENT logs, coupling the R2 + card-sort pipelines while keeping every channel
+    isolated. Seed BOOTSTRAP_SEED+38.
+
+    UNIT reading (surfaced to Dave, PROPOSED not locked — DECISIONS §22): "P_i-membership"
+    (§17.4) is read as the per-person set-SIZE |P_i| regressed on per-person [importance,
+    log-price] — the person-level grain the WHOLE R2/R6 family uses — NOT a per-(person×value)
+    cell linear-probability model (the literal `_v`-subscript alternative, which collides with
+    §13.2 because a protected cell has no finite log-price_v to serve as a predictor). The
+    person-level read keeps the censoring discipline intact and mirrors R6b bit-for-bit; the
+    cell-LPM is a richer future option Dave can pin (it would need a person-cluster bootstrap
+    and a censoring-safe treatment of the never-cell covariate)."""
+    sets, waves_seen = protected_value_sets(protected_responses)
+    sacredness: dict[str, int] = {}
+    for user in waves_seen:
+        slots: set[str] = set()
+        for w in waves_seen[user]:
+            slots |= sets.get((user, w), set())
+        sacredness[user] = len(slots)            # |P_i| — a count, never a price (§13.2 censoring)
+    value_domain = load_values_deck_domains()
+    cs = card_sort_scores(card_sort_responses, value_domain)
+    imp_by_user: dict[str, list[float]] = defaultdict(list)
+    for (user, _domain, layer), s in cs.items():
+        if layer == "aspirational_self":
+            imp_by_user[user].append(s)
+    importance = {u: sum(v) / len(v) for u, v in imp_by_user.items()}
+    mean_logprice = _r2c_mean_logprice_by_user(protected_responses)
+    rows: list[tuple[float, float, float]] = []
+    for user in sorted(set(sacredness) & set(importance) & set(mean_logprice)):
+        sv = float(sacredness[user])
+        iv = importance[user]
+        pv = mean_logprice[user]
+        if sv != sv or iv != iv or pv != pv:
+            continue
+        rows.append((iv, pv, sv))                # predictors = [importance, log-price]; y = |P_i|
+    if len(rows) < R2C_MIN_PARTICIPANTS:
+        return None
+    predictors = [[r[0] for r in rows], [r[1] for r in rows]]
+    y = [r[2] for r in rows]
+    r2 = _ols_r_squared(predictors, y)
+    if r2 is None:
+        return None
+    ci_low, ci_high = _bootstrap_ci_r2(rows, random.Random(BOOTSTRAP_SEED + R2C_SEED_OFFSET))
+    supported = None if ci_high != ci_high else bool(ci_high < R2C_R2_CEILING)
+    # Descriptive companions (reported, NOT the gate): |P_i|'s bare correlation with each
+    # predictor alone, so a reader sees WHICH channel (if any) carries leakage — no pool.
+    s_importance_r = _pearson_r([r[0] for r in rows], y)
+    s_logprice_r = _pearson_r([r[1] for r in rows], y)
+    return {
+        "r2": r2,
+        "r2_ci_low": ci_low,
+        "r2_ci_high": ci_high,
+        "ceiling": R2C_R2_CEILING,
+        "s_importance_r": s_importance_r,
+        "s_logprice_r": s_logprice_r,
+        "n_participants": len(rows),
+        "supported": supported,
+        "pre_registered_threshold_met": supported,
     }
 
 
@@ -4398,11 +4528,13 @@ def render_r2_result(
     protected_set_n: int,
     protected_none_n: int,
     protected_set_sizes: list[int],
+    r2c: dict[str, Any] | None = None,
 ) -> str:
     """R2 sacred / protected values (scoring.md §17). Value-neutral: P_i names the
     values a person won't price (professed) — integrity OR dogmatism, never ranked
     (§17.5). The `never` tail is read categorically, never finitized (§13.2)."""
-    if r2a is None and r2b is None and protected_set_n == 0 and protected_none_n == 0:
+    if (r2a is None and r2b is None and r2c is None
+            and protected_set_n == 0 and protected_none_n == 0):
         return (
             "(R2: insufficient data — supply --protected-log with cost-of-virtue "
             "responses carrying value_slot + wave (+ taboo) to read the protected set)"
@@ -4440,10 +4572,24 @@ def render_r2_result(
         )
     else:
         lines.append("  R2b protected ≠ expensive: insufficient data (need ≥3 users with both a taboo-marked `never` and finite response)")
+    if r2c is not None:
+        lines.append(
+            f"  R2c DISCRIMINANT (sacredness |P_i| ~ [inventory importance, mean log-price])  "
+            f"R² = {r2c['r2']:.3f}, upper 95% CI {_f3(r2c['r2_ci_high'])}, n = {r2c['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {r2c['ceiling']:.2f} — protectedness NOT reducible to how "
+            f"important/expensive the values are, §17.4): {_met_glyph(r2c['pre_registered_threshold_met'])}  "
+            f"(|P_i|·importance r = {_f3(r2c['s_importance_r'])}, |P_i|·log-price r = {_f3(r2c['s_logprice_r'])}, "
+            f"cohort/no-pool)"
+        )
+    else:
+        lines.append("  R2c discriminant (vs importance + price): insufficient data (need ≥8 users with importance + a finite-price mean + a protected-set read)")
     lines.append(
         "  Value-neutral: a large protected set is not scored as better (integrity vs rigid "
-        "dogmatism, §17.5). Cheap-talk: these are PROFESSED protected values — real-stakes "
-        "validation (H-A2) is Phase-2. R2c discriminant (vs importance rank) deferred; see build-and-validate.md."
+        "dogmatism, §17.5); |P_i| is a categorical set SIZE, never a price (§13.2) or a pooled "
+        "score (§13.5). Cheap-talk: these are PROFESSED protected values — real-stakes "
+        "validation (H-A2) is Phase-2."
     )
     return "\n".join(lines)
 
@@ -5096,6 +5242,15 @@ def main() -> int:
              "sacredness (|P_i|) + R1 centrality (internalization) + value-importance.",
     )
     parser.add_argument(
+        "--r2c-log",
+        type=Path,
+        default=None,
+        help="Optional combined protected-values + card-sort log (object with protected/card_sort arrays "
+             "for a SHARED cohort) for the R2c sacred-values DISCRIMINANT (§17.4): tests whether sacredness "
+             "|P_i| is reducible to stated inventory importance + mean log-price (protected ≠ merely "
+             "important-and-expensive). Price predictor is FINITE-only; a `never` is never finitized (§13.2).",
+    )
+    parser.add_argument(
         "--h10b-log",
         type=Path,
         default=None,
@@ -5523,6 +5678,26 @@ def main() -> int:
             r6b_bundle.get("protected", []),
             r6b_bundle.get("identity", []),
             r6b_bundle.get("card_sort", []),
+        )
+
+    # R2c sacred-values DISCRIMINANT (§17.4): |P_i| ~ [inventory importance, mean log-price].
+    # Its own combined bundle (like --r6b-log) so the R2a/R2b --protected-log path is untouched;
+    # the price predictor is FINITE-only, so a `never` is never finitized (§13.2). Python-only,
+    # parity stays green — cohort-level, no on-device reveal (same scope as the R6b/H12b halves).
+    r2c_discriminant_result: dict[str, Any] | None = None
+    if args.r2c_log:
+        try:
+            with args.r2c_log.open() as f:
+                r2c_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading R2c log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(r2c_bundle, dict):
+            print("ERROR: R2c log must be a JSON object with protected/card_sort arrays", file=sys.stderr)
+            return 2
+        r2c_discriminant_result = compute_r2c_discriminant(
+            r2c_bundle.get("protected", []),
+            r2c_bundle.get("card_sort", []),
         )
 
     h10b_discriminant_result: dict[str, Any] | None = None
@@ -6098,6 +6273,23 @@ def main() -> int:
             r2_block["R2a"] = _h9_json(r2a_result)
         if r2b_result is not None:
             r2_block["R2b"] = _h9_json(r2b_result)
+        if r2c_discriminant_result is not None:
+            # R2c DISCRIMINANT half — COHORT-level R² (§17.4). NO pooled per-person scalar:
+            # sacredness |P_i|, importance and mean log-price stay separate facets (§13.5);
+            # the price predictor is FINITE-only, so a `never` is never finitized (§13.2).
+            # supported is EXACTLY (r2 upper-CI < ceiling); the gate re-derives it
+            # (check_r2c_discriminant_lock).
+            r2_block["R2c_discriminant"] = {
+                "r2": r2c_discriminant_result["r2"],
+                "r2_ci_low": _nan_to_none(r2c_discriminant_result["r2_ci_low"]),
+                "r2_ci_high": _nan_to_none(r2c_discriminant_result["r2_ci_high"]),
+                "ceiling": r2c_discriminant_result["ceiling"],
+                "s_importance_r": r2c_discriminant_result["s_importance_r"],
+                "s_logprice_r": r2c_discriminant_result["s_logprice_r"],
+                "n_participants": r2c_discriminant_result["n_participants"],
+                "supported": r2c_discriminant_result["supported"],
+                "pre_registered_threshold_met": r2c_discriminant_result["pre_registered_threshold_met"],
+            }
         if r2_block or r2_protected_set_n or r2_protected_none_n:
             r2_block["protected_set_n"] = r2_protected_set_n
             r2_block["protected_none_n"] = r2_protected_none_n
@@ -6401,11 +6593,13 @@ def main() -> int:
                 h11a_result, h11c_result, h11_person_shape_n,
                 h11_radius_finite, h11_radius_censored, h11b_result,
             ))
-        if r2a_result is not None or r2b_result is not None or r2_protected_set_n or r2_protected_none_n:
+        if (r2a_result is not None or r2b_result is not None or r2c_discriminant_result is not None
+                or r2_protected_set_n or r2_protected_none_n):
             print()
             print(render_r2_result(
                 r2a_result, r2b_result, r2_protected_set_n,
                 r2_protected_none_n, r2_protected_set_sizes,
+                r2c_discriminant_result,
             ))
         if (h12a_result is not None or h12c_result is not None or h12_person_asymmetry_n
                 or h12b_discriminant_result is not None):

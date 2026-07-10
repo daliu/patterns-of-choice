@@ -700,7 +700,7 @@ Seed `20260510 + 16`. `circle_radius` scores only — no cross-channel pooling. 
 
 Design source: [`r2-sacred-protected-values.md`](r2-sacred-protected-values.md). R2 asks which values a person **refuses to price at any stake** — protected/sacred values (Baron & Spranca 1997; Tetlock 2000 *taboo trade-offs*; Fiske & Tetlock 1997 *incommensurability*), where the resistance to trade-off is quantity-insensitive (Bartels & Medin 2007) and load-bearing in conflict (Ginges et al. 2007). It is a **pure re-read** of the cost-of-virtue channel (§4, §13.2): the **right-censored `never` tail** — the values a person won't sell at any rung in range — **is** their protected set. **No new break-point math**; the censoring discipline was already storing this construct.
 
-**Status.** R2a + R2b + the per-person `P_i` reveal quantity are BUILT (`analyze.py --protected-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-protected-values-log.json`; the cohort statistics stay Python-only). The on-device protected-set reveal is BUILT (2026-07-03 — `protectedValues` in `poc-projection.js`, §17.7, parity 14→15); R2c stays DEFERRED (§17.4, cohort-coupled). The `taboo` marker (§17.5) is a **new light data-contract field** scored here on synthetic fixtures; real collection + its exact phrasing are runtime/design-gated (surfaced to Dave). This re-reads the CoV break-point **primitive** (already parity-locked; the runtime emits per-slot `no_break_point` at `poc-projection.js:212`) **without changing it**.
+**Status.** R2a + R2b + R2c + the per-person `P_i` reveal quantity are BUILT (`analyze.py --protected-log` / `--r2c-log`, gated in `check_analyzer_thresholds.py` on `analysis/fixtures/sample-protected-values-log.json` + `sample-r2c-log.json` with a dedicated discriminant lock `check_r2c_discriminant_lock`; the cohort statistics stay Python-only). The on-device protected-set reveal is BUILT (2026-07-03 — `protectedValues` in `poc-projection.js`, §17.7, parity 14→15); R2 = R2a (reliability) ∧ R2b (protected≠expensive) ∧ R2c (discriminant) is now complete, the shape of R6 / H12. The `taboo` marker (§17.5) is a **new light data-contract field** scored here on synthetic fixtures; real collection + its exact phrasing are runtime/design-gated (surfaced to Dave). This re-reads the CoV break-point **primitive** (already parity-locked; the runtime emits per-slot `no_break_point` at `poc-projection.js:212`) **without changing it**.
 
 ### 17.1 Measurement primitive (§1.1 of the design doc)
 
@@ -730,14 +730,20 @@ The distinctness that makes protected values a real construct rather than a rela
 
 Seed `20260510 + 18`. Without R2b a `never` is just "off the top of the ladder"; the taboo contrast is what separates a **sacred** value from a **very expensive** one. (The complementary *quantity-insensitivity* leg — a flat refusal that doesn't soften as the offer climbs — needs per-rung acceptance trajectories the single-break-point contract doesn't carry; bounded/deferred per §17.5 and design-doc §6 Q3. The taboo contrast is the primary distinctness test.)
 
-### 17.4 R2c — discriminant validity (DEFERRED — cohort-coupled)
+### 17.4 R2c — discriminant validity (BUILT — `compute_r2c_discriminant`)
 
-Protectedness must not be a proxy for how *important* a value is on the stated inventory (a merely top-ranked value):
+Protectedness must not be a proxy for how *important* a value is on the stated inventory **and** how *expensive* it is on the cost-of-virtue ladder — a "sacred" value that is merely "top-ranked AND high-priced" is a relabeling, not a construct. R2c widens R2b's *protected ≠ expensive* (§17.3) to the **joint** *protected ≠ (important AND expensive)*, the discriminant shape of R6 = R6a ∧ R6d ∧ R6b and H12 = H12a ∧ H12c ∧ H12b. It regresses the **size** of a person's protected set on the two "ordinary value strength" channels and asks whether that size survives them:
 
-    regress P_i-membership on [ inventory rank_v,  log-price_v ]
-    R2c (discriminant) supported  ⇔  upper 95% CI of  R²  < 0.50
+    sacredness_i   = | P_i |                        # SIZE of the protected/`never` set — a COUNT, never a price (§13.2)
+    importance_i   = mean aspirational-self card-sort endorsement (§5.1, R6b's exact `importance`)
+    logprice_i     = mean log10(first_accept_stake)  over FINITE-priced cells ONLY
+    R2c supported  ⇔  upper 95% bootstrap CI of  R²( sacredness_i ~ [ importance_i, logprice_i ] )  <  0.50
 
-**DEFERRED** because it couples to the cohort inventory-rank + log-price pipeline, exactly as the H9b/H10b/H11b discriminant halves do — the current increment stays isolated on its own fixture.
+Pre-committed seed `20260510 + 38`. Two-sided lock: an INDEPENDENT `|P_i|` (upper CI clears 0.50) reads SUPPORTED — protectedness is a distinct construct (Tetlock 2003 / Baron & Spranca 1997: sacred values are quantitatively *insensitive*, not merely very costly); a REDUCIBLE `|P_i|` (upper CI ≥ 0.50) reads NOT supported. Descriptive Pearson companions (`|P_i|·importance r`, `|P_i|·log-price r`) localize any leakage without pooling per person (§13.5). Cohort-level, Python-only — no on-device reveal, parity untouched.
+
+**§13.2 discipline — the price predictor never finitizes a `never`.** `logprice_i` is a mean over that person's **finite-priced cells only**; a protected `never` cell carries no finite stake and is **EXCLUDED** from the mean (asserted in `check_r2_censoring` — a `never` bearing even a spurious finite stake is still dropped, and an all-`never` user has no `logprice_i` at all, never priced at 0). So no `never` is ever coerced into a number: it counts *toward* `|P_i|` (the outcome) and *out of* `logprice_i` (the predictor).
+
+**PROPOSED interpretive choice (pending DECISIONS §22 lock — not auto-locked).** The design line "*regress `P_i`-membership on [inventory rank_v, log-price_v]*" reads literally as a per-`(person × value)` cell LPM. That cell formulation collides with §13.2 — a protected cell **has no finite `log-price_v`**, so the literal covariate is undefined exactly where the outcome is 1. The BUILT reading lifts the regression to the **person level** (mirroring R6b's per-person discriminant): the outcome becomes the protected-set *size* `|P_i|` (§13.2-clean — a count, not a price), and `log-price` enters as the person's mean over finite cells only. This is the §13.2-safe reading and is **proposed, not locked** — the per-cell LPM (with a cluster/participant bootstrap and a censoring-safe treatment of the undefined protected-cell price) remains a documented alternative for Dave to arbitrate at pre-registration.
 
 ### 17.5 Taboo marker, cheap-talk, N=1, value-neutrality (§1.5 of the design doc)
 
