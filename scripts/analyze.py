@@ -2908,6 +2908,7 @@ R1B_MODERATION_CEILING = 0.0   # upper 95% CI of corr(internalization, over-clai
 R1B_SEED_OFFSET = 34           # BOOTSTRAP_SEED offset registry: next free slot after A4b (+33)
 R1B_H12_SEED_OFFSET = 36       # BOOTSTRAP_SEED offset registry: next free after R1a_symbolization (+35); R1b H12-dampening leg (§19.5)
 R1B_H10_SEED_OFFSET = 37       # BOOTSTRAP_SEED offset registry: next free after the H12-dampening leg (+36); R1b H10-dampening leg (§19.5)
+R1B_H11_SEED_OFFSET = 39       # BOOTSTRAP_SEED offset registry: next free after R2c (+38); R1b H11-dampening leg (§19.5, Dave-locked 2026-07-11)
 
 
 def _centrality_response(r: dict) -> float | None:
@@ -3198,9 +3199,11 @@ def compute_r1b_h10_dampening(
     responsiveness OR performativity; a small/negative gap = authentic consistency OR
     context-insensitivity), so no observer pole is scored "better", and neither
     internalization pole is ranked (§19.4). This is the value-neutral, cohort-level H10
-    analog of the H12 leg; the H11 (parochialism) dampening leg stays DEFERRED because
-    calling parochialism a "bias to dampen" would violate H11's own Singer↔Williams value-
-    neutrality. Seed BOOTSTRAP_SEED+R1B_H10_SEED_OFFSET (+37)."""
+    analog of the H12 leg; the H11 (parochialism) dampening leg — long DEFERRED because
+    calling parochialism a "bias to dampen" risked violating H11's own Singer↔Williams
+    value-neutrality — is now BUILT as compute_r1b_h11_dampening under Dave's 2026-07-11
+    value-lock, which licenses "dampening" as descriptive covariance direction only (the
+    dual-read keeps both poles unranked). Seed BOOTSTRAP_SEED+R1B_H10_SEED_OFFSET (+37)."""
     intern = centrality_facet_by_user(identity_records, "internalization")
     obs = observer_gap_by_user(context_item_records(context_entries, tag_map))
     rows: list[tuple[float, float]] = []
@@ -3218,6 +3221,76 @@ def compute_r1b_h10_dampening(
     if r is None:
         return None
     rng = random.Random(BOOTSTRAP_SEED + R1B_H10_SEED_OFFSET)
+    ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
+    met = None if ci_high != ci_high else bool(ci_high < R1B_MODERATION_CEILING)
+    return {
+        "r": r, "ci_low": ci_low, "ci_high": ci_high, "n_participants": len(rows),
+        "ceiling": R1B_MODERATION_CEILING, "supported": met,
+        "pre_registered_threshold_met": met,
+    }
+
+
+def compute_r1b_h11_dampening(
+    circle_entries: list[dict],
+    identity_records: list[dict],
+    tag_map: dict[tuple[str, str], tuple[str, float]],
+    dist_map: dict[str, int],
+) -> dict[str, Any] | None:
+    """R1b H11-DAMPENING leg (§19.5) — the THIRD and FINAL of R1b's three deferred H10–H12
+    dampening legs. Moral identity should not only shrink the §6 over-claim gap (the R1b
+    gap leg), the H12 self–other asymmetry (the H12 leg), and the H10 observer effect (the
+    H10 leg) but also DAMPEN the H11 PAROCHIALISM GRADIENT: the rate at which concern
+    DECLINES with counterparty distance (§16's β_i, the OLS slope of circle-radius concern
+    on distance bin). Regress each person's parochialism STEEPNESS on their INTERNALIZATION
+    centrality across the cohort:
+
+        internalization_i = centrality_facet_by_user(identity, "internalization")   (§19.1)
+        β_i               = circle_shape_by_user(circle)[i]["beta"]                 (§16, SIGNED)
+        p_i               = -β_i                        (parochialism STEEPNESS, positive = parochial)
+        r                 = corr(internalization_i, p_i)   (= the STANDARDIZED moderation slope)
+
+    SIGN CONVENTION (§16): the distance bin index rises with distance, so a parochial
+    person — concern falling off with distance — has β_i < 0 (steeper = more parochial),
+    and an impartial person has β_i ≈ 0. We score p_i = -β_i so that parochialism reads as
+    a POSITIVE magnitude (impartial ≈ 0), which keeps this leg's gate BYTE-IDENTICAL to the
+    H10/H12 family: supported iff the UPPER 95% bootstrap CI of r < R1B_MODERATION_CEILING
+    (0.0), one-sided — a more internalized moral identity predicts a SIGNIFICANTLY smaller
+    parochialism steepness (a flatter circle of concern). Unlike the right-censored radius
+    R_i, β_i is always finite, so p_i needs no censoring bookkeeping here. DIRECTIONAL (a
+    signed-slope test, not an R²-ceiling discriminant), exactly like the R1b gap, H12, and
+    H10 legs — it reuses R1B_MIN_PARTICIPANTS + R1B_MODERATION_CEILING (the R1b family)
+    with its OWN bootstrap seed, and takes RAW circle entries + tag_map + dist_map and
+    parses p_i internally via circle_item_records → circle_shape_by_user.
+
+    The two channels are INDEPENDENT — internalization rides the identity log; β_i rides
+    the circle log's counterparty-distance items — so there is no algebraic identity linking
+    them (the two-sidedness check_r1b_h11_dampening_lock exploits). COHORT-level construct
+    validity, NEVER a per-person verdict: β_i is DUAL-READ under H11's Singer↔Williams
+    value-neutrality — a steep gradient = special obligations / loyalty & partiality
+    (Williams) OR a failure of impartial concern (Singer); a flat gradient = impartial
+    beneficence (Singer) OR cold detachment from near ties (Williams) — so no parochialism
+    pole is scored "better", and neither internalization pole is ranked (§19.4). Dave's
+    2026-07-11 value-lock LICENSES the word "dampening" here strictly as the DIRECTION of a
+    cohort-level descriptive covariance (internalization flattens the gradient), NOT a claim
+    that impartiality is morally superior; the dual-read keeps BOTH poles unranked and the
+    reveal descriptive-only. Seed BOOTSTRAP_SEED+R1B_H11_SEED_OFFSET (+39)."""
+    intern = centrality_facet_by_user(identity_records, "internalization")
+    shapes = circle_shape_by_user(circle_item_records(circle_entries, tag_map, dist_map))
+    rows: list[tuple[float, float]] = []
+    for user in sorted(set(intern) & set(shapes)):
+        iv = intern[user]
+        pv = -shapes[user]["beta"]   # parochialism steepness p_i = -β_i (positive = parochial)
+        if iv != iv or pv != pv:   # drop NaN on either channel — never imputed (§1.5)
+            continue
+        rows.append((iv, pv))
+    if len(rows) < R1B_MIN_PARTICIPANTS:
+        return None
+    xs = [row[0] for row in rows]
+    ys = [row[1] for row in rows]
+    r = _pearson_r(xs, ys)
+    if r is None:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED + R1B_H11_SEED_OFFSET)
     ci_low, ci_high = _bootstrap_ci_r(xs, ys, rng)
     met = None if ci_high != ci_high else bool(ci_high < R1B_MODERATION_CEILING)
     return {
@@ -4671,6 +4744,7 @@ def render_r1_result(
     r1a_symbol: dict[str, Any] | None = None,
     r1b_h12: dict[str, Any] | None = None,
     r1b_h10: dict[str, Any] | None = None,
+    r1b_h11: dict[str, Any] | None = None,
 ) -> str:
     """R1 moral identity centrality (scoring.md §19). Two DISJOINT facets reported
     SEPARATELY — internalization (private) and symbolization (public) — never pooled
@@ -4680,7 +4754,7 @@ def render_r1_result(
     internalizing is not ranked above symbolizing; the reveal describes the profile,
     never a verdict (§19.4)."""
     if (r1a is None and r1a_symbol is None and r1c is None and profile_n == 0
-            and r1b is None and r1b_h12 is None and r1b_h10 is None):
+            and r1b is None and r1b_h12 is None and r1b_h10 is None and r1b_h11 is None):
         return (
             "(R1: insufficient data — supply --identity-log with per-item "
             "internalization + symbolization centrality responses)"
@@ -4773,14 +4847,33 @@ def render_r1_result(
             "insufficient data (need the {identity, context} shared-cohort bundle via --r1b-h10-log, "
             f"≥{R1B_MIN_PARTICIPANTS} joined participants)"
         )
+    if r1b_h11 is not None:
+        lines.append(
+            f"  R1b H11-DAMPENING (parochialism steepness p_i = −β_i (concern↓ w/ distance) ~ internalization, standardized slope = corr)  "
+            f"r = {r1b_h11['r']:+.3f}, 95% CI {_ci_str(r1b_h11)}, n = {r1b_h11['n_participants']}"
+        )
+        lines.append(
+            f"     threshold (upper CI < {r1b_h11['ceiling']:.1f}, one-sided): "
+            f"{_met_glyph(r1b_h11['pre_registered_threshold_met'])}  "
+            f"(a more internalized moral identity predicts a FLATTER circle of concern — Aquino & Reed 2002 × §16; "
+            f"Dave-locked descriptive framing, both poles unranked; §19.5)"
+        )
+    else:
+        lines.append(
+            "  R1b H11-dampening (does internalization predict a flatter parochialism gradient?): "
+            "insufficient data (need the {identity, circle} shared-cohort bundle via --r1b-h11-log, "
+            f"≥{R1B_MIN_PARTICIPANTS} joined participants)"
+        )
     lines.append(
         "  Value-neutral: a highly self-defining moral identity is NOT scored as better than a peripheral one "
         "(centrality can be integrity OR rigid self-righteousness, §19.4); the facets are described, never ranked. "
         "R1c is a cohort construct-validity anchor, not a per-person verdict. R1b is a COHORT-level moderation "
         "read — never a per-person verdict, and a very negative gap is modesty, not scored better; the H12 "
-        "dampening leg is built (§19.5 — a very negative asymmetry is harsher-on-self, not scored better) and the "
+        "dampening leg is built (§19.5 — a very negative asymmetry is harsher-on-self, not scored better), the "
         "H10 dampening leg is built (a larger observer gap is dual-read — norm-responsiveness OR performativity — "
-        "not scored better), only the H11 leg remains deferred (value-charged), see build-and-validate.md."
+        "not scored better), and the H11 dampening leg is now built (§19.5, Dave-locked 2026-07-11 — a steeper "
+        "parochialism gradient is dual-read, special obligations OR failure of impartial concern, not scored "
+        "better); all three R1b H10–H12 dampening legs are complete, see build-and-validate.md."
     )
     return "\n".join(lines)
 
@@ -5299,6 +5392,17 @@ def main() -> int:
              "corr(internalization, O) < 0 (higher internalization → smaller observer effect).",
     )
     parser.add_argument(
+        "--r1b-h11-log",
+        type=Path,
+        default=None,
+        help="Optional combined identity + circle log (object with identity/circle arrays for a "
+             "SHARED cohort — identity `user` must equal circle `user_id`) for the R1b H11-DAMPENING leg "
+             "(§19.5, the third of R1b's H10–H12 dampening legs, Dave-locked 2026-07-11): regresses the "
+             "parochialism steepness p_i = −β_i (concern falling off with counterparty distance, §16) on "
+             "internalization_i; supported iff the upper 95%% CI of corr(internalization, p) < 0 (higher "
+             "internalization → flatter circle of concern). Counterparty→distance ordering from --distance-map.",
+    )
+    parser.add_argument(
         "--min-items",
         type=int,
         default=3,
@@ -5801,6 +5905,29 @@ def main() -> int:
             r1b_h10_bundle.get("context", []),
             r1b_h10_bundle.get("identity", []),
             tag_map,
+        )
+
+    r1b_h11_dampening_result: dict[str, Any] | None = None
+    if args.r1b_h11_log:
+        try:
+            with args.r1b_h11_log.open() as f:
+                r1b_h11_bundle = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading R1b H11-dampening log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(r1b_h11_bundle, dict):
+            print("ERROR: R1b H11-dampening log must be a JSON object with identity/circle arrays", file=sys.stderr)
+            return 2
+        try:
+            r1b_h11_dist_map, _ = load_counterparty_distance_map(args.distance_map)
+        except FileNotFoundError:
+            print(f"ERROR: distance map not found at {args.distance_map}", file=sys.stderr)
+            return 2
+        r1b_h11_dampening_result = compute_r1b_h11_dampening(
+            r1b_h11_bundle.get("circle", []),
+            r1b_h11_bundle.get("identity", []),
+            tag_map,
+            r1b_h11_dist_map,
         )
 
     # R2 sacred / protected values (scoring.md §17) if a cost-of-virtue log with
@@ -6388,6 +6515,22 @@ def main() -> int:
                 "supported": r1b_h10_dampening_result["supported"],
                 "pre_registered_threshold_met": r1b_h10_dampening_result["pre_registered_threshold_met"],
             }
+        if r1b_h11_dampening_result is not None:
+            # R1b H11-DAMPENING leg — COHORT-level directional slope (§19.5), the third and
+            # final of R1b's three deferred H10–H12 dampening legs (Dave-locked 2026-07-11).
+            # supported is EXACTLY (corr upper-CI < ceiling 0.0) over INDEPENDENT channels
+            # (internalization ← identity log, p_i = −β_i ← circle log) ⇒ no algebraic
+            # identity; the gate re-derives it (check_r1b_h11_dampening_lock). Never a
+            # per-person verdict — β_i is dual-read (Singer↔Williams), both poles unranked.
+            r1_block["R1b_h11_dampening"] = {
+                "r": r1b_h11_dampening_result["r"],
+                "ci_low": _nan_to_none(r1b_h11_dampening_result["ci_low"]),
+                "ci_high": _nan_to_none(r1b_h11_dampening_result["ci_high"]),
+                "ceiling": r1b_h11_dampening_result["ceiling"],
+                "n_participants": r1b_h11_dampening_result["n_participants"],
+                "supported": r1b_h11_dampening_result["supported"],
+                "pre_registered_threshold_met": r1b_h11_dampening_result["pre_registered_threshold_met"],
+            }
         if r1_block or r1_profile_n:
             r1_block["profile_n"] = r1_profile_n
             # Two facets exposed SEPARATELY — no pooled "centrality" key (§13.5).
@@ -6610,13 +6753,15 @@ def main() -> int:
             ))
         if (r1a_result is not None or r1a_symbol_result is not None or r1c_result is not None
                 or r1_profile_n or r1b_moderation_result is not None
-                or r1b_h12_dampening_result is not None or r1b_h10_dampening_result is not None):
+                or r1b_h12_dampening_result is not None or r1b_h10_dampening_result is not None
+                or r1b_h11_dampening_result is not None):
             print()
             print(render_r1_result(
                 r1a_result, r1c_result, r1_profile_n,
                 r1_mean_internalization, r1_mean_symbolization,
                 r1b_moderation_result, r1a_symbol_result,
                 r1b_h12_dampening_result, r1b_h10_dampening_result,
+                r1b_h11_dampening_result,
             ))
         if (r6a_result is not None or r6d_result is not None or r6_profile_n
                 or r6b_discriminant_result is not None):
