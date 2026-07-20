@@ -142,6 +142,7 @@ EXPECTATIONS = {
     "R6": {"kind": "r6", "sub_met": {"R6a": True, "R6d": True, "R6b_discriminant": True}},
     "A3": {"kind": "a3", "kappa_met": True},
     "A4": {"kind": "a4", "any_met": True, "a4b_supported": True},
+    "R3": {"kind": "r3", "any_met": True},
     "H8": {"kind": "a8a", "supported": True},
 }
 
@@ -180,6 +181,7 @@ def run_analyzer() -> dict:
         "--r1b-h12-log", str(FIXTURES / "sample-r1b-h12-log.json"),
         "--r1b-h10-log", str(FIXTURES / "sample-r1b-h10-log.json"),
         "--r1b-h11-log", str(FIXTURES / "sample-r1b-h11-log.json"),
+        "--r3-log", str(FIXTURES / "sample-r3-log.json"),
         "--json",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -1007,6 +1009,84 @@ def check_a4(hid: str, payload: dict, any_met: bool, a4b_supported: bool | None 
     )
 
 
+def check_r3(hid: str, payload: dict, any_met: bool) -> tuple[bool, str]:
+    """R3 moral-disengagement channel — the κ-free choice detector + the R3a profile-reliability
+    gate (§23). Assert the split-half per-mechanism test–retest hit its expected outcome AND that
+    the value-neutral / no-pool discipline holds in the SHAPE of the payload: D_i(mechanism) is
+    WHICH mechanisms a person reaches for, so there must be NO pooled 'disengagement score' scalar
+    (§4 rejected it) and NO bad-faith / culpability valence label anywhere — reaching for a reframe
+    is not automatically culpable (§1.5). The profile is exposed as a per_mechanism reliability
+    VECTOR with its bootstrap CI + n (never a bare scalar). The exploratory bar is the lower CI ≥
+    0.40, and each mechanism's `pre_registered_threshold_met` must AGREE with its own ci_low ≥
+    threshold (the gate can't disagree with its own arithmetic). The odd/even split, the
+    self-serving-BY-CONSTRUCTION scoring, the two-sided reliability gate, and the reliability-≠-
+    validity render caveat are asserted directly against the code in check_r3_disengagement_lock()."""
+    if not isinstance(payload, dict):
+        return False, f"{hid}: missing or not a dict"
+    # No pooled amount, no valence label — D_i is a PROFILE of which mechanisms, never a graded
+    # amount-of-disengagement and never a culpability/bad-faith verdict (§1.5, §4 rejected).
+    banned_keys = {"disengagement_score", "moral_disengagement_score", "d_score", "md_score",
+                   "disengagement", "mechanism_score", "culpability", "culpability_score",
+                   "guilt_score", "bad_faith", "bad_faith_score", "manipulativeness"}
+    def _scan(d, where):
+        present = banned_keys & set(d)
+        if present:
+            return (f"{hid}: pooled/valence key(s) {sorted(present)} present in {where} "
+                    f"— disengagement is a per-mechanism PROFILE, never a pooled amount and never "
+                    f"a bad-faith verdict (reaching for a reframe is not automatically culpable; §1.5)")
+        return None
+    top_bad = _scan(payload, "the R3 block")
+    if top_bad:
+        return False, top_bad
+    r3a = payload.get("R3a")
+    if not isinstance(r3a, dict):
+        return False, f"{hid}: missing the R3a profile-reliability block"
+    r3a_bad = _scan(r3a, "R3a")
+    if r3a_bad:
+        return False, r3a_bad
+    if r3a.get("any_met") != any_met:
+        return False, f"{hid}: R3a any_met = {r3a.get('any_met')!r}, expected {any_met!r}"
+    if abs(r3a.get("threshold_low", -1) - 0.40) > 1e-9:
+        return False, (
+            f"{hid}: R3a threshold_low = {r3a.get('threshold_low')!r}, expected 0.40 "
+            f"(the exploratory lower-CI bar, §23.2)"
+        )
+    per_mech = r3a.get("per_mechanism")
+    if not isinstance(per_mech, list) or not per_mech:
+        return False, f"{hid}: R3a per_mechanism must be a non-empty reliability vector"
+    n_met = 0
+    for cell in per_mech:
+        if not isinstance(cell, dict):
+            return False, f"{hid}: R3a per_mechanism cell is not a dict"
+        for key in ("mechanism", "r", "ci_low", "ci_high", "n", "pre_registered_threshold_met", "threshold"):
+            if key not in cell:
+                return False, f"{hid}: R3a per_mechanism cell missing '{key}' (must carry its CI + n)"
+        # The gate must agree with its own arithmetic: met iff lower CI clears the threshold.
+        met = cell["pre_registered_threshold_met"]
+        ci_low, thr = cell["ci_low"], cell["threshold"]
+        if isinstance(ci_low, (int, float)) and isinstance(thr, (int, float)):
+            if met != (ci_low >= thr):
+                return False, (
+                    f"{hid}: mechanism {cell['mechanism']!r} met={met!r} disagrees with "
+                    f"ci_low {ci_low:.3f} vs threshold {thr:.2f}"
+                )
+        if met:
+            n_met += 1
+    if r3a.get("any_met") != (n_met > 0):
+        return False, f"{hid}: any_met = {r3a.get('any_met')!r} but {n_met} mechanism(s) actually met"
+    if r3a.get("n_mechanisms_met") != n_met:
+        return False, f"{hid}: n_mechanisms_met = {r3a.get('n_mechanisms_met')!r} but counted {n_met}"
+    cells = payload.get("n_disengagement_cells")
+    if not isinstance(cells, int) or cells < 1:
+        return False, f"{hid}: no disengagement cells (n_disengagement_cells={cells!r})"
+    glyph = "✓" if any_met else "✗"
+    return True, (
+        f"{hid}: {glyph} R3a profile reliability {n_met}/{len(per_mech)} mechanism(s) clear "
+        f"lower-CI ≥ 0.40 (which-mechanisms profile, no pool, no valence label), "
+        f"{cells} disengagement cell(s)×{payload.get('n_participants')} participant(s)"
+    )
+
+
 def check_h8a(hid: str, payload: dict, supported: bool) -> tuple[bool, str]:
     """H8 narrative-immersion — the COHORT-level debiasing test (§9.2). H8a is a SECONDARY research
     hypothesis, NEVER a per-person reveal and never a gate-criterion (§9.5): assert the payload shape
@@ -1668,6 +1748,95 @@ def check_a4_conflict_lock() -> tuple[bool, list[str]]:
     msgs, okall = [], True
     for label, passed in checks:
         msgs.append(f"  a4-conflict: {'✓' if passed else '✗'} {label}")
+        okall = okall and passed
+    return okall, msgs
+
+
+def check_r3_disengagement_lock() -> tuple[bool, list[str]]:
+    """The R3 moral-disengagement discipline (§23), asserted directly against the code so a
+    regression is caught even if the fixture is later changed:
+      (i)   the choice channel scores the DISENGAGING framing — a participant who always endorses
+            the disengaging option has D_i(mechanism) = 1.0, one who always owns has 0.0 (the rate
+            is of picking the self-serving reframe, not of merely answering);
+      (ii)  the per-mechanism min-items floor holds — a (user, mechanism) cell with < 3 parsed
+            framing choices yields NO rate (never a 1-item rate masquerading as a profile);
+      (iii) an unparseable/absent framing_choice is DROPPED, never silently scored as owning;
+      (iv)  the R3a reliability gate is TWO-SIDED — a corpus where users carry a STABLE per-mechanism
+            disengaging propensity clears the lower-CI ≥ 0.40 bar (any_met True), while the SAME corpus
+            with each propensity FLIPPED at retest does NOT (any_met False): reliability is earned,
+            not structural;
+      (v)   the reveal is value-NEUTRAL and NO-POOL — the render names mechanisms as a descriptive
+            PROFILE, states reliability ≠ validity (the §1.4 discriminant is DEFERRED), and never emits
+            a pooled amount-of-disengagement or a bad-faith verdict (§1.5)."""
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import analyze as A
+    import random
+
+    # (i) scoring direction — always-disengage -> 1.0, always-own -> 0.0.
+    always_dis = [{"user": "d", "session": "s1", "item": f"i{k}", "mechanism": "dehumanization",
+                   "framing_choice": "disengage"} for k in range(4)]
+    always_own = [{"user": "o", "session": "s1", "item": f"i{k}", "mechanism": "dehumanization",
+                   "framing_choice": "own"} for k in range(4)]
+    prof = A.disengagement_profile_by_user_mechanism(always_dis + always_own)
+    rate_dis = prof.get(("d", "dehumanization"))
+    rate_own = prof.get(("o", "dehumanization"))
+
+    # (ii) min-items floor — a 2-choice cell yields no rate.
+    two_only = [{"user": "t", "session": "s1", "item": f"i{k}", "mechanism": "attribution-of-blame",
+                 "framing_choice": "disengage"} for k in range(2)]
+    prof_floor = A.disengagement_profile_by_user_mechanism(two_only)
+
+    # (iii) unparseable framing_choice dropped, never scored as owning.
+    junk = [{"user": "j", "session": "s1", "item": f"i{k}", "mechanism": "euphemistic-labeling",
+             "framing_choice": "maybe"} for k in range(4)]
+    prof_junk = A.disengagement_profile_by_user_mechanism(junk)
+
+    # (iv) two-sided reliability — stable per-mechanism propensity clears; flip at retest and it does not.
+    def _r3_corpus(scramble):
+        rng = random.Random(4041)
+        mechs = list(A.R3_MECHANISMS)
+        sessions = ["s1", "s2", "s3", "s4", "s5", "s6"]   # odd {s1,s3,s5} / even {s2,s4,s6}
+        recs, n_users = [], 14
+        for ui in range(n_users):
+            u = f"u{ui:02d}"
+            for mi, mech in enumerate(mechs):
+                base = 0.10 + 0.80 * (ui / (n_users - 1))       # wide cross-user spread -> reliability
+                theta = max(0.05, min(0.95, base + (mi - 3.5) * 0.03))
+                for si, sess in enumerate(sessions):
+                    th = (1.0 - theta) if (scramble and si % 2 == 1) else theta
+                    for k in range(4):
+                        recs.append({"user": u, "session": sess,
+                                     "item": f"{mech}-{u}-{sess}-{k}", "mechanism": mech,
+                                     "framing_choice": "disengage" if rng.random() < th else "own"})
+        return recs
+    rel = A.compute_r3a_profile_reliability(_r3_corpus(False))
+    scr = A.compute_r3a_profile_reliability(_r3_corpus(True))
+
+    # (v) value-neutral, no-pool render.
+    rel_cells = A.disengagement_profile_by_user_mechanism(_r3_corpus(False))
+    render = A.render_r3_result(rel, len(rel_cells), len({u for u, _m in rel_cells}))
+    POOLED = ("disengagement score", "bad faith", "culpability", "amount of disengagement")
+
+    checks = [
+        ("the choice channel scores the DISENGAGING framing — always-disengage D_i=1.0, always-own 0.0",
+         rate_dis == 1.0 and rate_own == 0.0),
+        ("the per-mechanism min-items floor holds — a 2-choice cell yields NO rate",
+         ("t", "attribution-of-blame") not in prof_floor),
+        ("an unparseable framing_choice is DROPPED, never scored as owning (no cell)",
+         ("j", "euphemistic-labeling") not in prof_junk),
+        ("R3a gate CLEARS on a stable-propensity corpus (any_met True, ≥1 mechanism over lower-CI 0.40)",
+         rel is not None and rel["any_met"] is True and rel["n_mechanisms_met"] >= 1),
+        ("R3a gate HOLDS on the SAME corpus with the propensity flipped at retest (any_met False)",
+         scr is not None and scr["any_met"] is False and scr["n_mechanisms_met"] == 0),
+        ("the reveal is value-neutral: names mechanisms, states reliability ≠ validity, discriminant DEFERRED",
+         "RELIABILITY ≠ VALIDITY" in render and "DEFERRED" in render
+         and "attribution-of-blame" in render and "moral-justification" in render),
+        ("the reveal is NO-POOL — never a pooled amount-of-disengagement or a bad-faith verdict",
+         not any(p in render.lower() for p in POOLED) and "never a pooled amount" in render),
+    ]
+    msgs, okall = [], True
+    for label, passed in checks:
+        msgs.append(f"  r3-disengagement: {'✓' if passed else '✗'} {label}")
         okall = okall and passed
     return okall, msgs
 
@@ -3681,6 +3850,8 @@ def main() -> int:
             ok, msg = check_a3(hid, payload, spec["kappa_met"])
         elif spec["kind"] == "a4":
             ok, msg = check_a4(hid, payload, spec["any_met"], spec.get("a4b_supported"))
+        elif spec["kind"] == "r3":
+            ok, msg = check_r3(hid, payload, spec["any_met"])
         elif spec["kind"] == "a8a":
             ok, msg = check_h8a(hid, payload, spec["supported"])
         else:
@@ -3747,6 +3918,12 @@ def main() -> int:
     for m in a4lock_msgs:
         print(m)
     if not a4lock_ok:
+        all_pass = False
+
+    r3lock_ok, r3lock_msgs = check_r3_disengagement_lock()
+    for m in r3lock_msgs:
+        print(m)
+    if not r3lock_ok:
         all_pass = False
 
     h8lock_ok, h8lock_msgs = check_h8a_decoupling_lock()

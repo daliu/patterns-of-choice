@@ -1147,6 +1147,54 @@ Built earlier: the conflict primitive + the A4a reliability gate + the synthetic
 
 ---
 
+## 23. R3 — the moral-disengagement channel: which mechanisms deactivate self-sanction (PROPOSED — pending DECISIONS §29 lock)
+
+> **Numbering.** This is **sequential §23** in scoring.md (the running build order §14 H9 … §21 A3, §22 A4, §23 R3). The design doc `r3-moral-disengagement.md` refers to a *notional* §28 for this channel — but that is its notional *scoring.md section* number, and §28 is already taken (sequential §23 is the next free section slot; §28 is separately H8's DECISIONS lock), so scoring.md places R3 at sequential section **§23**, as A3 (notional §20 → sequential §21) and A4 did. The DECISIONS lock is proposed as **§29** (A3 §26, A4 §27, H8 §28).
+
+R3 reads a distinct construct from the four value/process channels: **moral disengagement** — Bandura's (1999, 2002) machinery by which a person **deactivates moral self-sanction** and so violates a standard **without guilt**. It is the negative pole of the felt-guilt axis (A5, `h-a4-a5-process-emotion.md`, not yet built), and it is detected as a **profile** — *which* of the eight mechanisms a person reaches for, across four loci: **reconstrue the ACT** (moral justification, euphemistic labeling, advantageous comparison), **obscure AGENCY** (displacement of responsibility, diffusion of responsibility), **disregard the HARM** (distortion / minimizing of consequences), **devalue the TARGET** (dehumanization, attribution of blame).
+
+**The load-bearing discipline: disengagement is indistinguishable *in form* from legitimate justification (§1.4).** The single most important constraint on R3 is what it must **not** do: flag a reason as disengagement merely for being a reason. A genuine ethical justification and a self-serving rationalization can read identically at the item level; the discriminating signature is **self-serving + inconsistent (a self-vs-other double standard — H12's tell) + post-hoc (latency) + standard-preserving (it removes the guilt without lowering the professed bar)**. That full four-part discriminant needs the H12 self–other data and response latency and is **DEFERRED to a later R3 validity leg** — this increment builds **only the reliability of the choice-channel profile** (below), where the disengaging option is self-serving / standard-preserving **by item construction**, not by inference.
+
+### 23.1 Measurement primitive
+
+A **paired-framing choice log** (the **κ-free** channel — the primary R3a detector): a subset of items offer, for the **same act**, a self-serving **disengaging** framing vs. a responsibility-**owning** framing; each record is `{user, session, item, act_id, mechanism, framing_choice ∈ {disengage, own}}`. The disengagement primitive is a **per-mechanism endorsement rate**:
+
+    D_i(mechanism) = mean over person i's items tagged that mechanism of [framing_choice == disengage]     # a rate in [0, 1]
+
+`disengagement_profile_by_user_mechanism` returns `{(user, mechanism): rate}`, requiring **≥3 parsed framing choices** per `(user, mechanism)` cell (the §1.5 N=1 floor; an unparseable/absent `framing_choice` is **dropped**, never silently scored as owning). `D_i` is **which mechanisms** a person reaches for — a **profile**, never a pooled amount. The **language** channel (A3 §21, κ-gated) and the Moore (2012) self-report adjunct are **separate later tiers**; the choice channel needs no coder, so it carries **no κ gate** (Dave-unblocked 2026-07-20: AI-panel κ drives the language tier, human κ reported as a non-gating independence caveat).
+
+### 23.2 The binding R3a reliability gate (BUILT: machinery only)
+
+    R3a machinery certified  ⇔  per-mechanism split-half test–retest, lower 95% CI ≥ R3A_RELIABILITY_FLOOR (0.40)   # any_met
+
+`compute_r3a_profile_reliability` splits each person's sessions **odd/even**, recomputes `D_i(mechanism)` in each half, and correlates the two halves **across people, per mechanism** (participant-level non-parametric bootstrap, reusing `_domain_test_retest_r` with **mechanism** as the key; seed band `BOOTSTRAP_SEED + 40..+47`, one per mechanism). The gate is the **exploratory** bar — the *lower* 95% CI of the per-mechanism test–retest r ≥ **0.40** (as A4a / R2a). `any_met` is True iff **at least one** mechanism clears it. On the synthetic fixture (`sample-r3-log.json`, 16 users × 6 sessions × 8 mechanisms) **7 of 8** mechanisms clear (the eighth lands at CI-low 0.31 — the bar is real, not a rubber stamp). This certifies **the machinery only** — that the odd/even split, the endorsement-rate primitive, the per-mechanism averaging, and the bootstrap are correct — never that a *real* cohort's disengagement profile is reliable, and never (§23 intro) that a picked framing *is* disengagement. The gate is **two-sided**: `check_r3_disengagement_lock` asserts a corpus with a stable per-mechanism disengaging propensity clears the bar (`any_met` True) while the **same** corpus with each propensity flipped at retest does **not** (`any_met` False) — reliability is earned, not structural.
+
+### 23.3 No pooled score, no bad-faith label, value-neutrality (EXTRA force)
+
+- **No pooled disengagement scalar (§13.5, §4-rejected).** R3 emits per-`(user, mechanism)` endorsement-rate cells and a per-mechanism reliability vector — **never** a summed "disengagement score" (the §4-considered-and-rejected headline). `check_r3` rejects any `disengagement_score` / `moral_disengagement_score` / `d_score` / `mechanism_score` key.
+- **No bad-faith / culpability label — the value-neutrality wall.** Reaching for a reframe is **not** automatically culpable: much of what these mechanisms name is ordinary, legitimate reasoning (§1.4 is the whole reason). `check_r3` rejects `culpability` / `guilt_score` / `bad_faith` / `manipulativeness` keys; the lock asserts the render names mechanisms **descriptively** and never emits a bad-faith verdict.
+- **Reliability ≠ validity — asserted in the render.** R3a certifies the profile is **stable**, not that a framing **is** disengagement vs. legitimate justification; the render states this and names the §1.4 discriminant as the DEFERRED leg. The lock asserts the "RELIABILITY ≠ VALIDITY … DEFERRED" caveat is present.
+- **N=1 interpretability.** `D_i(mechanism)` is reveal-eligible for a single user with no cohort standardization ("when you fall short, you tend toward *'everyone does it'*") — descriptively, naming the mechanism, never moralizing it. The on-device reveal itself is a **later increment** (§23.4).
+
+### 23.4 What's built / deferred
+
+Built this increment: the **κ-free choice-channel primitive** + the **R3a reliability gate** + the synthetic reliability fixture + the two-sided lock. Status by leg:
+
+- **R3a — profile reliability — BUILT (machinery only).** `compute_r3a_profile_reliability` + `--r3-log`; `check_r3` (payload / no-pool / self-consistent arithmetic) + `check_r3_disengagement_lock` (two-sided reliability + scoring direction + min-items floor + unparseable-drop + value-neutral render); fixture `sample-r3-log.json`. **Cohort-level, Python-only, no on-device reveal → parity stays green (17/17).**
+- **R3b — the gap↔guilt decoupling (load-bearing) — DEFERRED (needs A5).** Among comparable-gap participants, `corr(D_i, felt-pull toward the stated value) < 0` with the upper CI < 0: the disengaged fall short **without** the guilt that would otherwise pull them back. This is R3's criterion that the profile *matters*, and it **requires the A5 felt-guilt axis** (`h-a4-a5-process-emotion.md`) — surfaced to Dave; A5 is the next build in the ordered queue.
+- **The §1.4 justification discriminant — DEFERRED.** The four-part signature (self-serving + inconsistent + post-hoc + standard-preserving) that separates disengagement from legitimate justification; needs the H12 self–other double-standard tell + response latency. R3's harder later validity leg (§6 Q1 flags it may be detectable only across a person's *pattern*, not at item level).
+- **The language channel + the Moore self-report — DEFERRED.** The A3 (§21) language detectors (κ-gated) and a desirability-discounted self-report adjunct are separate later tiers.
+- **The on-device `D_i(mechanism)` reveal — DEFERRED.** `D_i` is N=1 reveal-eligible (self-contained per person, like A4's `conflict`), but the on-device projection + its parity lock are a later increment (as R2's / H9's reveals came after their reliability legs). This increment is cohort-level only.
+
+### 23.5 What §23 deliberately does not compute
+
+- **No disengagement score / no pooling.** Per-mechanism endorsement-rate cells + a per-mechanism reliability vector; no summed "disengagement" scalar, never blended across channels (§13.5). Asserted by `check_r3` + `check_r3_disengagement_lock`.
+- **No auto-scoring of justification as disengagement (§1.4).** The central error the branch exists to avoid; R3a scores the disengaging framing only because the item is a self-serving / standard-preserving reframe **by construction**, and claims reliability, not validity. The full discriminant is DEFERRED, not assumed.
+- **No promotion on synthetic reliability.** Synthetic `any_met` certifies the machinery; a *real* cohort's profile reliability — and the §1.4 discriminant, and R3b's guilt link — are unproven until real data + A5. Exploratory-only.
+- **No public card (§1.4).** R3 is an **analysis adjunct** (like A4) — context for a future reveal, never a headline card in `research-program.json`, until the §1.4 discriminant and R3b are built and it earns confirmatory standing.
+
+---
+
 ## 12. What's not yet specified (open questions)
 
 - **Narrative-indicator scoring detail.** Each branching-narrative terminal scene has `resolution:*` tags. Whether to map each terminal directly to a primary-axis score (1:1) or compute the score from the *path* (sequence of decisions) is unresolved. Defer to a pilot read on whether path-based scoring adds discriminating signal beyond terminal-based.

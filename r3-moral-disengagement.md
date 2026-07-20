@@ -2,6 +2,8 @@
 
 **Status:** Design proposal, drafted 2026-06-26 (extension loop, iteration 14 — Round 2). Develops **R3** of [`measurement-avenues.md`](measurement-avenues.md) §"Round 2". **MVP-1 exploratory** (detection leans on the choices + the κ-gated language channel). Carded. The lock is Dave's.
 
+**Build status (2026-07-20, build-loop iteration 49).** **R3a (choice-channel profile reliability) is BUILT** — `scoring.md §23`; `analyze.py --r3-log` (`disengagement_profile_by_user_mechanism` → `D_i(mechanism)` = the rate a person picks the self-serving disengaging framing over the responsibility-owning one on same-act paired items, ≥3 parsed choices/cell; `compute_r3a_profile_reliability`, split-half odd/even per-mechanism test–retest, lower 95% CI ≥ 0.40, seed band `BOOTSTRAP_SEED + 40..+47`), gated in `check_analyzer_thresholds.py` (`check_r3` + the two-sided `check_r3_disengagement_lock`, 7 assertions) on `analysis/fixtures/sample-r3-log.json` (16 users × 6 sessions × 8 mechanisms × 4 items; **7 of 8** mechanisms clear the 0.40 bar). The **choice channel is κ-free** (needs no coder), **cohort-level, no on-device reveal → parity stays 17/17.** R3a claims **RELIABILITY only, never validity** — the §1.4 justification discriminant is **DEFERRED** (needs H12 self–other + response latency), and **R3b** (§1.3, the gap↔guilt decoupling) is **DEFERRED** until the **A5** felt-guilt axis exists (next in the build queue). The DECISIONS lock is proposed as **§29** (not the notional §28 below, which reads as A2's *scoring-section* number and separately collides with H8's DECISIONS §28 — scoring.md places R3 at sequential section §23). Everything below is the design proposal as drafted; the build honors it in shape (no pooled score, no bad-faith label, RELIABILITY ≠ VALIDITY).
+
 **Provenance.** R3. A5 measures the **felt pull** when you act against a norm — the residual guilt that says the norm is internalized even in violation. Moral disengagement (Bandura 1999/2002) is the **opposite machinery**: the cognitive moves that *deactivate* moral self-sanction so you can violate your own standard **without** the guilt. R3 measures that machinery — and sits as the negative pole of the same axis A5 anchors: when you fall short, do you *feel* it (A5) or *neutralize* it (R3)?
 
 ---
@@ -18,8 +20,8 @@ Bandura's eight mechanisms, in four loci: **moral justification**, **euphemistic
 - **Language** (A3 / `scoring.md §20`) — disengagement markers in free-text (euphemism, blame-attribution, "everyone does it"); the moral-language channel is the natural detector.
 - *(Optional)* a short validated self-report (Moore et al. 2012 Propensity-to-Morally-Disengage), heavily desirability-discounted (§1.5).
 
-### 1.2 R3a — the disengagement profile is reliable
-Split-window test–retest of `D_i` (which mechanisms a person reaches for): lower 95% CI ≥ **0.40**. Some people chronically reach for blame-attribution, others for diffusion, others for none. Bootstrap per §8.
+### 1.2 R3a — the disengagement profile is reliable — ✅ BUILT (2026-07-20)
+Split-window test–retest of `D_i` (which mechanisms a person reaches for): lower 95% CI ≥ **0.40**. Some people chronically reach for blame-attribution, others for diffusion, others for none. Bootstrap per §8. **Built** on the κ-free choice channel — see the Build status note above; the eighth mechanism (diffusion) landing at CI-low ≈ 0.31 on the synthetic fixture demonstrates the 0.40 bar is per-mechanism discriminating, not a rubber stamp.
 
 ### 1.3 R3b — disengagement decouples the gap from guilt (load-bearing; the A5 link)
 The distinctive claim: disengagement is *what lets a gap exist without a remainder*. For a matched stated–revealed gap (§6), higher `D_i` predicts **lower** A5 felt-pull/guilt:

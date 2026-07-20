@@ -4113,6 +4113,193 @@ def compute_a4b_discriminant(
 
 
 # ---------------------------------------------------------------------------
+# R3 — MORAL DISENGAGEMENT (scoring.md §23, r3-moral-disengagement.md). Bandura's
+# (1999, 2002) machinery by which a person deactivates moral self-sanction and so
+# violates a standard WITHOUT guilt — the negative pole of the A5 felt-guilt axis.
+# Eight mechanisms across four loci: reconstrue the ACT (moral justification,
+# euphemistic labeling, advantageous comparison); obscure AGENCY (displacement of
+# responsibility, diffusion of responsibility); disregard the HARM (distortion /
+# minimizing of consequences); devalue the TARGET (dehumanization, attribution of
+# blame).
+#
+# THE CHOICE CHANNEL (κ-FREE — the primary R3a detector): a subset of items offer,
+# for the SAME act, a self-serving disengaging FRAMING vs. a responsibility-owning
+# framing; which the person endorses reveals WHICH mechanisms they reach for. The
+# per-mechanism ENDORSEMENT RATE is D_i(mechanism) — the disengagement PROFILE (which
+# mechanisms, not a pooled amount). The language channel (A3, §26) and the Moore
+# (2012) self-report adjunct are SEPARATE later tiers; the choice channel needs no
+# coder, so it carries NO κ gate (Dave-unblocked 2026-07-20 — AI-panel κ drives the
+# language tier, human κ a non-gating independence caveat).
+#
+# THIS INCREMENT BUILDS R3a — the PROFILE-RELIABILITY leg (§23.2 / §1.2). Split each
+# user's sessions odd/even, recompute D_i(mechanism) on each half, per-mechanism
+# test–retest correlation across users; reliable iff the lower 95% bootstrap CI ≥ 0.40
+# (the exploratory bar, as A4a/R2a). Reuses the shared _domain_test_retest_r machinery
+# (mechanism as the key), users the independent bootstrap unit, seed BAND
+# BOOTSTRAP_SEED+40..+47 (one per mechanism i).
+#
+# SCOPING, HONESTLY (§1.4 — the load-bearing validity problem, DEFERRED here):
+# disengagement is indistinguishable IN FORM from legitimate justification; the full
+# discriminant (self-serving + inconsistent + post-hoc + standard-preserving) needs the
+# H12 self–other double-standard tell + response latency and is R3's SEPARATE later
+# validity leg. R3a claims only that the choice-channel profile is STABLE (reliability),
+# NOT that a picked framing IS disengagement — the disengaging option is self-serving /
+# standard-preserving BY ITEM CONSTRUCTION, and the fixture's ground truth is a stable
+# per-mechanism propensity, nothing more. D_i is N=1 reveal-eligible / descriptive (§1.5),
+# but the on-device reveal is a later increment; R3a is COHORT-level, Python-only (parity
+# stays green), no public card (§1.4).
+#
+# VALUE-NEUTRAL, NO POOL (§1.5 — the §4-rejected "disengagement score"): D_i is a
+# per-mechanism PROFILE, never summed into a scalar amount-of-disengagement and never
+# moralized (reaching for a reframe is not automatically bad faith). The payload carries
+# only the per-mechanism reliability VECTOR; the render names mechanisms descriptively and
+# states reliability ≠ validity.
+
+R3_MECHANISMS = (
+    "moral-justification", "euphemistic-labeling", "advantageous-comparison",
+    "displacement-of-responsibility", "diffusion-of-responsibility",
+    "distortion-of-consequences", "dehumanization", "attribution-of-blame",
+)
+R3A_RELIABILITY_FLOOR = 0.40      # disengagement-profile split-half reliability lower 95% CI (§23.2/§1.2) — the exploratory bar
+R3A_SEED_OFFSET = 40              # BOOTSTRAP_SEED offset registry: next free after R1b-H11 (+39); consumes the BAND +40..+47 (one per mechanism i, via _domain_test_retest_r); next free +48
+R3_MIN_ITEMS_PER_MECHANISM = 3    # a (user, mechanism) cell needs ≥3 parsed framing choices in a window to yield a rate (§1.5 N=1 floor)
+
+
+def _r3_user(r: dict) -> str | None:
+    """Participant id — tolerant of the extension-log `user` and the primary `user_id`."""
+    return r.get("user") if r.get("user") is not None else r.get("user_id")
+
+
+def _r3_session(r: dict) -> str | None:
+    return r.get("session") if r.get("session") is not None else r.get("session_id")
+
+
+def _r3_is_disengage(r: dict) -> bool | None:
+    """Did the participant endorse the DISENGAGING framing (vs. the responsibility-owning one)
+    of the same act? Tolerant of a categorical `framing_choice` ∈ {disengage, own} or a boolean
+    `chose_disengage`. Returns None for an absent/unparseable choice — the item is then NOT
+    counted (never silently scored as owning)."""
+    fc = r.get("framing_choice")
+    if isinstance(fc, str):
+        v = fc.strip().lower()
+        if v in ("disengage", "disengaging", "reframe"):
+            return True
+        if v in ("own", "owning", "responsibility", "accept"):
+            return False
+        return None
+    cd = r.get("chose_disengage")
+    if isinstance(cd, bool):
+        return cd
+    return None
+
+
+def disengagement_profile_by_user_mechanism(
+    records: list[dict], min_items: int = R3_MIN_ITEMS_PER_MECHANISM
+) -> dict[tuple[str, str], float]:
+    """D_i(mechanism) (§23.1): person i's ENDORSEMENT RATE of the self-serving disengaging framing
+    over their paired-framing items tagged that mechanism — WHICH of Bandura's mechanisms they reach
+    for, the unit R3a's reliability is computed over and the §1.5 reveal reads. A per-(user, mechanism)
+    rate in [0, 1], NEVER pooled into a scalar amount-of-disengagement (§4 rejected the "disengagement
+    score") and NEVER moralized (reaching for a reframe is not automatically bad faith; the
+    disengagement-vs-legitimate-justification discriminant is the DEFERRED §1.4 leg). A cell needs
+    ≥ min_items parsed framing choices to yield a rate (§1.5 N=1 floor)."""
+    cells: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for r in records:
+        user = _r3_user(r)
+        mech = r.get("mechanism")
+        if user is None or mech not in R3_MECHANISMS:
+            continue
+        chose = _r3_is_disengage(r)
+        if chose is None:
+            continue
+        cells[(user, mech)].append(1.0 if chose else 0.0)
+    return {k: sum(v) / len(v) for k, v in cells.items() if len(v) >= min_items}
+
+
+def _odd_even_sessions_r3(records: list[dict]) -> tuple[dict[str, set], dict[str, set]]:
+    """Odd/even session split (as A4a's _odd_even_sessions_a4) via the tolerant R3 accessors, so
+    R3a runs on either the extension `user`/`session` log or the primary `user_id`/`session_id` log."""
+    user_sessions: dict[str, set] = defaultdict(set)
+    for r in records:
+        u, s = _r3_user(r), _r3_session(r)
+        if u is not None and s is not None:
+            user_sessions[u].add(s)
+    odd: dict[str, set] = {}
+    even: dict[str, set] = {}
+    for user, sess in user_sessions.items():
+        ordered = sorted(sess)
+        odd[user] = set(ordered[0::2])
+        even[user] = set(ordered[1::2])
+    return odd, even
+
+
+def compute_r3a_profile_reliability(records: list[dict]) -> dict[str, Any] | None:
+    """R3a (§23.2): split each user's sessions odd/even, recompute D_i(mechanism) on each half,
+    per-mechanism test–retest correlation across users. Reliable iff the lower 95% bootstrap CI ≥
+    R3A_RELIABILITY_FLOOR (0.40 — the exploratory bar). Reuses the shared _domain_test_retest_r
+    machinery (mechanism as the key), users the independent bootstrap unit, seed band
+    BOOTSTRAP_SEED+40 (+ per-mechanism i). Reliability of the PROFILE only — NOT validity that a
+    picked framing IS disengagement (the §1.4 self-serving + inconsistent + post-hoc +
+    standard-preserving discriminant is the DEFERRED leg). COHORT-level, value-neutral, no public
+    card (§1.4). Returns None below the per-mechanism ≥3-users-in-both-windows floor (never a bare
+    scalar)."""
+    odd, even = _odd_even_sessions_r3(records)
+    window_a = disengagement_profile_by_user_mechanism(
+        [r for r in records if _r3_session(r) in odd.get(_r3_user(r), set())]
+    )
+    window_b = disengagement_profile_by_user_mechanism(
+        [r for r in records if _r3_session(r) in even.get(_r3_user(r), set())]
+    )
+    per_mech = _domain_test_retest_r(window_a, window_b, R3A_SEED_OFFSET, R3A_RELIABILITY_FLOOR)
+    if not per_mech:
+        return None
+    n_met = sum(1 for d in per_mech.values() if d.get("pre_registered_threshold_met"))
+    return {
+        "per_mechanism": per_mech,
+        "n_mechanisms": len(per_mech),
+        "n_mechanisms_met": n_met,
+        "threshold_low": R3A_RELIABILITY_FLOOR,
+        "any_met": bool(n_met > 0),
+    }
+
+
+def render_r3_result(r3a: dict[str, Any] | None, n_cells: int, n_users: int) -> str:
+    """Value-neutral R3 render (§1.5): name the mechanisms a person's profile is RELIABLE over,
+    never a pooled amount-of-disengagement and never a bad-faith verdict (reaching for a reframe is
+    not automatically culpable). States reliability ≠ validity — the §1.4 disengagement-vs-legitimate-
+    justification discriminant is a DEFERRED leg, so R3a certifies only that the choice-channel PROFILE
+    is STABLE."""
+    if r3a is None:
+        return (
+            "R3 (moral disengagement — choice channel): insufficient data — supply --r3-log with "
+            "per-item paired-framing choices (mechanism + framing_choice ∈ {disengage, own}) across "
+            "≥2 sessions/user (≥3 choices per mechanism per half; ≥3 users scorable per mechanism in "
+            "both halves)."
+        )
+    lines = [
+        "R3 (moral disengagement — which mechanisms a person reaches for, value-neutral, exploratory):",
+        f"  D_i(mechanism) = endorsement rate of the self-serving disengaging framing over paired "
+        f"same-act items (κ-free choice channel); a PROFILE, never a pooled amount-of-disengagement "
+        f"and never a bad-faith verdict. {n_cells} (user × mechanism) cell(s) over {n_users} participant(s).",
+        f"  R3a profile reliability (split-half odd/even, per-mechanism test–retest): "
+        f"{r3a['n_mechanisms_met']}/{r3a['n_mechanisms']} mechanism(s) clear the lower-CI ≥ "
+        f"{r3a['threshold_low']:.2f} bar  {_met_glyph(r3a['any_met'])}",
+    ]
+    for mech in sorted(r3a["per_mechanism"]):
+        res = r3a["per_mechanism"][mech]
+        lines.append(
+            f"     {mech}: r = {res['r']:+.3f}, 95% CI {_ci_str(res)}, n = {res['n']}  "
+            f"{_met_glyph(res.get('pre_registered_threshold_met'))}"
+        )
+    lines.append(
+        "  RELIABILITY ≠ VALIDITY: R3a certifies the PROFILE is stable, NOT that a picked framing IS "
+        "disengagement vs. legitimate justification — that discriminant (self-serving + inconsistent + "
+        "post-hoc + standard-preserving) is the DEFERRED §1.4 leg."
+    )
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # H8 — narrative-immersion (scoring.md §9). A SECONDARY, COHORT-level hypothesis:
 # does an established-arc "narrative" form of a moral choice pull behaviour toward
 # a person's stated values relative to a structurally-equivalent "abstract" quick-
@@ -5289,6 +5476,12 @@ def main() -> int:
         help="Optional decision-process log (per-item response_time_ms + prompt_chars + presented_position) for the A4 conflict channel (§22).",
     )
     parser.add_argument(
+        "--r3-log",
+        type=Path,
+        default=None,
+        help="Optional moral-disengagement paired-framing log (per-item mechanism + framing_choice ∈ {disengage, own}) for the R3a profile-reliability channel (§23).",
+    )
+    parser.add_argument(
         "--h8-log",
         type=Path,
         default=None,
@@ -6140,6 +6333,31 @@ def main() -> int:
         a4_n_users = len({u for (u, _d) in _a4_cells})
         a4a_result = compute_a4a_conflict_reliability(process_records)
 
+    # --- R3 moral disengagement — the κ-FREE choice channel (scoring.md §23). A subset of items
+    # offer, for the same act, a self-serving disengaging framing vs. a responsibility-owning one;
+    # D_i(mechanism) is the per-mechanism endorsement rate — WHICH of Bandura's mechanisms a person
+    # reaches for (a PROFILE, never a pooled amount). This increment builds R3a — profile reliability
+    # (split-half odd/even per-mechanism test–retest, lower CI ≥ 0.40). RELIABILITY only, not the §1.4
+    # disengagement-vs-justification discriminant (DEFERRED). COHORT-level, value-neutral, no on-device
+    # reveal yet (parity stays green), no public card (like A4/H8).
+    r3a_result: dict[str, Any] | None = None
+    r3_n_cells = 0
+    r3_n_users = 0
+    if args.r3_log:
+        try:
+            with args.r3_log.open() as f:
+                r3_records = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"ERROR loading R3 log: {e}", file=sys.stderr)
+            return 2
+        if not isinstance(r3_records, list):
+            print("ERROR: R3 log must be a JSON array", file=sys.stderr)
+            return 2
+        _r3_cells = disengagement_profile_by_user_mechanism(r3_records)
+        r3_n_cells = len(_r3_cells)
+        r3_n_users = len({u for (u, _m) in _r3_cells})
+        r3a_result = compute_r3a_profile_reliability(r3_records)
+
     # --- H8 narrative immersion — the COHORT secondary channel (scoring.md §9). Re-uses the §2–§3
     # item scoring: the log carries already-scored primary-axis values per (user, pair, form); the
     # manifest supplies pairing/domain/stakes. H8a (debiasing, low-stakes) tests whether the narrative
@@ -6632,6 +6850,34 @@ def main() -> int:
         if a4_block:
             hypotheses["A4"] = a4_block
 
+        if r3a_result is not None:
+            # R3 moral disengagement (§23): the per-mechanism reliability VECTOR only — NO pooled
+            # "disengagement_score" (§4 rejected) and NO bad-faith / culpability label. D_i(mechanism)
+            # is WHICH mechanisms a person reaches for, value-neutral (§1.5). Reliability ≠ validity: the
+            # §1.4 disengagement-vs-legitimate-justification discriminant is the DEFERRED leg.
+            hypotheses["R3"] = {
+                "R3a": {
+                    "per_mechanism": [
+                        {
+                            "mechanism": mech,
+                            "r": res["r"],
+                            "ci_low": _nan_to_none(res["ci_low"]),
+                            "ci_high": _nan_to_none(res["ci_high"]),
+                            "n": res["n"],
+                            "pre_registered_threshold_met": res.get("pre_registered_threshold_met"),
+                            "threshold": res.get("threshold"),
+                        }
+                        for mech, res in sorted(r3a_result["per_mechanism"].items())
+                    ],
+                    "n_mechanisms": r3a_result["n_mechanisms"],
+                    "n_mechanisms_met": r3a_result["n_mechanisms_met"],
+                    "threshold_low": r3a_result["threshold_low"],
+                    "any_met": r3a_result["any_met"],
+                },
+                "n_disengagement_cells": r3_n_cells,
+                "n_participants": r3_n_users,
+            }
+
         if h8a_result is not None:
             # H8a debiasing — COHORT secondary (§9.2). NO pooled narrative/immersion/transportation
             # scalar: the reveal is never per-person (§9.5). `supported` requires the headline CI AND
@@ -6777,6 +7023,9 @@ def main() -> int:
         if a4a_result is not None or a4_n_cells or a4b_discriminant_result is not None:
             print()
             print(render_a4_result(a4a_result, a4_n_users, a4_n_cells, a4b_discriminant_result))
+        if r3a_result is not None or r3_n_cells:
+            print()
+            print(render_r3_result(r3a_result, r3_n_cells, r3_n_users))
         if h8a_result is not None:
             print()
             print(render_h8_result(h8a_result))
